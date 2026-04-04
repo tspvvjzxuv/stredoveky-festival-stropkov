@@ -1,0 +1,41 @@
+================================================================================
+Nasadenie na Render.com (Web Service)
+================================================================================
+
+Čo je v repozitári
+------------------
+• server.js     — Node + Express, servuje celý koreň projektu (HTML, css, js…)
+• npm start     — spustí server.js (Render nastaví premennú PORT)
+• GET /api/health — kontrola že služba beží (Render health check)
+
+
+Postup v Render Dashboard
+-------------------------
+1. Účet na https://render.com (prihlásenie cez GitHub odporúčané).
+
+2. „New +“ → „Web Service“ (nie Static Site — potrebujeme Node).
+
+3. Pripojte tento GitHub repozitár (mircoft/stredoveky-festival-stropkov alebo fork).
+
+4. Nastavenie:
+   • Runtime: Node
+   • Build Command:  npm install
+   • Start Command:   npm start
+   • Plan: Free (alebo vyšší podľa potreby)
+
+5. „Create Web Service“ — po builde uvidíte URL typu
+   https://stredoveky-festival-stropkov.onrender.com
+
+6. Voliteľné: „New“ → „Blueprint“ a vyberte repo — použije sa súbor render.yaml
+
+
+Poznámky
+--------
+• Free tier Web Service po nečinnosti „zaspí“ — prvé načítanie môže trvať ~30 s.
+• GitHub Pages môžete nechať ako zálohu alebo presmerovanie; na Renderi máte
+  základ pre budúce API (peňaženka, webhooky).
+
+• Lokálny test: v koreni projektu spustite  npm install  a  npm start
+  → http://localhost:3000
+
+================================================================================

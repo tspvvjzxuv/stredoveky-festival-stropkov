@@ -1,9 +1,16 @@
 {
   "name": "stredoveky-festival-stropkov",
   "private": true,
+  "engines": {
+    "node": ">=18"
+  },
   "scripts": {
+    "start": "node server.js",
     "dev": "live-server --port=5500 --open=/",
-    "start": "npm run dev"
+    "dev:node": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.21.2"
   },
   "devDependencies": {
     "live-server": "^1.2.2"
