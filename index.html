@@ -11,7 +11,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Bebas+Neue&display=swap"
       rel="stylesheet"
     />
     <link rel="stylesheet" href="css/style.css" />
@@ -53,7 +53,11 @@
       >
         <!-- Zdroj nastaví main.js z FESTIVAL_CONFIG.bannerVideoUrl -->
       </video>
+      <div class="hero-fx" aria-hidden="true"></div>
+      <div class="hero-letterbox hero-letterbox--top" aria-hidden="true"></div>
+      <div class="hero-letterbox hero-letterbox--bottom" aria-hidden="true"></div>
       <div class="hero-inner">
+        <p class="hero-kicker">Pod vlekom · Stropkov</p>
         <h1>Stredoveký festival<br />Stropkov <span id="hero-year">2026</span></h1>
         <p id="profile-greeting" class="profile-greeting" hidden></p>
         <p class="tagline">
@@ -69,9 +73,13 @@
           <a class="btn btn-outline" href="#faq">Otázky</a>
         </div>
       </div>
+      <div class="hero-scroll-cue" aria-hidden="true">
+        <span class="hero-scroll-cue__line"></span>
+        <span class="hero-scroll-cue__text">Ďalej</span>
+      </div>
     </section>
 
-    <main>
+    <main class="page-main">
       <section id="o-festivale">
         <h2>O festivale</h2>
         <p class="lead">

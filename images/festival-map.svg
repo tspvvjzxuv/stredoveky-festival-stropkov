@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 580" role="img" aria-labelledby="mapTitle mapDesc">
-  <title id="mapTitle">Mapa festivalového areálu — divadlo, turnaj, strelnica, táborák, rytierska cesta</title>
-  <desc id="mapDesc">Stredoveká mapa so zónami: šerm, divadlo, lukostre?ba, strelnica deti, šach, guláš, nápoje, táborák, pokladnica.</desc>
+  <title id="mapTitle">Mapa festivalov&#233;ho are&#225;lu &#8212; divadlo, turnaj, strelnica, t&#225;bor&#225;k, rytierska cesta</title>
+  <desc id="mapDesc">Stredovek&#225; mapa so z&#243;nami: &#353;erm, divadlo, lukostre&#318;ba, strelnica deti, &#353;ach, gul&#225;&#353;, n&#225;poje, t&#225;bor&#225;k, pokladnica.</desc>
   <defs>
     <linearGradient id="parchment" x1="0%" y1="0%" x2="100%" y2="100%">
       <stop offset="0%" style="stop-color:#f2e6d0"/>
@@ -34,15 +34,15 @@
 
   <g font-family="Georgia, serif" font-size="11" fill="#3d2914" font-weight="bold">
     <rect x="48" y="228" width="118" height="36" rx="3" fill="#f4e8d4" stroke="#5c1a1a" stroke-width="1.5"/>
-    <text x="107" y="244" text-anchor="middle" font-size="10">ŠERMIARI</text>
-    <text x="107" y="256" text-anchor="middle" font-size="9" font-weight="normal">remeslá</text>
+    <text x="107" y="244" text-anchor="middle" font-size="10">&#352;ERMIARI</text>
+    <text x="107" y="256" text-anchor="middle" font-size="9" font-weight="normal">remesl&#225;</text>
 
     <rect x="385" y="66" width="118" height="36" rx="3" fill="#f4e8d4" stroke="#5c1a1a" stroke-width="1.5"/>
     <text x="444" y="82" text-anchor="middle" font-size="10">DIVADLO</text>
-    <text x="444" y="94" text-anchor="middle" font-size="9" font-weight="normal">festivalové</text>
+    <text x="444" y="94" text-anchor="middle" font-size="9" font-weight="normal">festivalov&#233;</text>
 
     <rect x="688" y="208" width="124" height="40" rx="3" fill="#f4e8d4" stroke="#5c1a1a" stroke-width="1.5"/>
-    <text x="750" y="225" text-anchor="middle" font-size="10">LUKOSTRE?BA</text>
+    <text x="750" y="225" text-anchor="middle" font-size="10">LUKOSTRE&#317;BA</text>
     <text x="750" y="238" text-anchor="middle" font-size="9" font-weight="normal">turnaj</text>
 
     <rect x="168" y="392" width="118" height="36" rx="3" fill="#f4e8d4" stroke="#5c1a1a" stroke-width="1.5"/>
@@ -50,21 +50,21 @@
     <text x="227" y="420" text-anchor="middle" font-size="9" font-weight="normal">aj pre deti</text>
 
     <rect x="318" y="288" width="100" height="30" rx="3" fill="#f4e8d4" stroke="#5c1a1a" stroke-width="1.5"/>
-    <text x="368" y="307" text-anchor="middle" font-size="10">ŠACH</text>
+    <text x="368" y="307" text-anchor="middle" font-size="10">&#352;ACH</text>
 
     <rect x="588" y="432" width="118" height="36" rx="3" fill="#f4e8d4" stroke="#5c1a1a" stroke-width="1.5"/>
-    <text x="647" y="448" text-anchor="middle" font-size="10">TÁBORÁK</text>
-    <text x="647" y="460" text-anchor="middle" font-size="9" font-weight="normal">guláš</text>
+    <text x="647" y="448" text-anchor="middle" font-size="10">T&#193;BOR&#193;K</text>
+    <text x="647" y="460" text-anchor="middle" font-size="9" font-weight="normal">gul&#225;&#353;</text>
 
     <rect x="330" y="492" width="200" height="34" rx="3" fill="#f4e8d4" stroke="#c9a227" stroke-width="2"/>
-    <text x="430" y="508" text-anchor="middle" font-size="10">JEDLO · NÁPOJE</text>
-    <text x="430" y="520" text-anchor="middle" font-size="9" font-weight="normal">po?as podujatia</text>
+    <text x="430" y="508" text-anchor="middle" font-size="10">JEDLO &#183; N&#193;POJE</text>
+    <text x="430" y="520" text-anchor="middle" font-size="9" font-weight="normal">po&#269;as podujatia</text>
 
     <rect x="560" y="500" width="110" height="28" rx="3" fill="#f4e8d4" stroke="#c9a227" stroke-width="2"/>
     <text x="615" y="518" text-anchor="middle" font-size="10">POKLADNICA</text>
 
     <rect x="72" y="458" width="76" height="26" rx="3" fill="#f4e8d4" stroke="#5c1a1a" stroke-width="1.5"/>
-    <text x="110" y="476" text-anchor="middle" font-size="11">BRÁNA</text>
+    <text x="110" y="476" text-anchor="middle" font-size="11">BR&#193;NA</text>
   </g>
 
   <g stroke="#5c1a1a" stroke-width="2" fill="none" opacity="0.6">
@@ -76,49 +76,49 @@
 
   <g id="ulohy" filter="url(#shadow)">
     <g id="uloha-1">
-      <title>Úloha 1 — rytierska cesta pri bráne</title>
+      <title>&#218;loha 1 &#8212; rytierska cesta pri br&#225;ne</title>
       <circle cx="110" cy="430" r="22" fill="#5c1a1a" stroke="#c9a227" stroke-width="3"/>
       <text x="110" y="437" text-anchor="middle" fill="#f4e8d4" font-family="Georgia, serif" font-size="18" font-weight="bold">1</text>
     </g>
     <g id="uloha-2">
-      <title>Úloha 2 — šermiári</title>
+      <title>&#218;loha 2 &#8212; &#353;ermiari</title>
       <circle cx="130" cy="300" r="22" fill="#5c1a1a" stroke="#c9a227" stroke-width="3"/>
       <text x="130" y="307" text-anchor="middle" fill="#f4e8d4" font-family="Georgia, serif" font-size="18" font-weight="bold">2</text>
     </g>
     <g id="uloha-3">
-      <title>Úloha 3 — festivalové divadlo</title>
+      <title>&#218;loha 3 &#8212; festivalov&#233; divadlo</title>
       <circle cx="450" cy="155" r="22" fill="#5c1a1a" stroke="#c9a227" stroke-width="3"/>
       <text x="450" y="162" text-anchor="middle" fill="#f4e8d4" font-family="Georgia, serif" font-size="18" font-weight="bold">3</text>
     </g>
     <g id="uloha-4">
-      <title>Úloha 4 — lukostrelecký turnaj</title>
+      <title>&#218;loha 4 &#8212; lukostreleck&#253; turnaj</title>
       <circle cx="700" cy="300" r="22" fill="#5c1a1a" stroke="#c9a227" stroke-width="3"/>
       <text x="700" y="307" text-anchor="middle" fill="#f4e8d4" font-family="Georgia, serif" font-size="18" font-weight="bold">4</text>
     </g>
     <g id="uloha-5">
-      <title>Úloha 5 — strelnica pre deti</title>
+      <title>&#218;loha 5 &#8212; strelnica pre deti</title>
       <circle cx="250" cy="390" r="22" fill="#5c1a1a" stroke="#c9a227" stroke-width="3"/>
       <text x="250" y="397" text-anchor="middle" fill="#f4e8d4" font-family="Georgia, serif" font-size="18" font-weight="bold">5</text>
     </g>
     <g id="uloha-6">
-      <title>Úloha 6 — táborák a guláš</title>
+      <title>&#218;loha 6 &#8212; t&#225;bor&#225;k a gul&#225;&#353;</title>
       <circle cx="640" cy="400" r="22" fill="#5c1a1a" stroke="#c9a227" stroke-width="3"/>
       <text x="640" y="407" text-anchor="middle" fill="#f4e8d4" font-family="Georgia, serif" font-size="18" font-weight="bold">6</text>
     </g>
     <g id="uloha-7">
-      <title>Úloha 7 — šach, jedlo a nápoje</title>
+      <title>&#218;loha 7 &#8212; &#353;ach, jedlo a n&#225;poje</title>
       <circle cx="400" cy="318" r="22" fill="#5c1a1a" stroke="#c9a227" stroke-width="3"/>
       <text x="400" y="325" text-anchor="middle" fill="#f4e8d4" font-family="Georgia, serif" font-size="18" font-weight="bold">7</text>
     </g>
     <g id="uloha-8">
-      <title>Úloha 8 — pokladnica žetónov</title>
+      <title>&#218;loha 8 &#8212; pokladnica &#382;et&#243;nov</title>
       <circle cx="520" cy="478" r="22" fill="#5c1a1a" stroke="#c9a227" stroke-width="3"/>
       <text x="520" y="485" text-anchor="middle" fill="#f4e8d4" font-family="Georgia, serif" font-size="18" font-weight="bold">8</text>
     </g>
   </g>
 
-  <text x="450" y="42" text-anchor="middle" fill="#5c1a1a" font-family="Georgia, serif" font-size="20" font-weight="bold" letter-spacing="0.12em">PÚ? PO AREÁLI</text>
-  <text x="450" y="62" text-anchor="middle" fill="#6b4420" font-family="Georgia, serif" font-size="11" font-style="italic">Stredoveký festival — Pod vlekom</text>
+  <text x="450" y="42" text-anchor="middle" fill="#5c1a1a" font-family="Georgia, serif" font-size="20" font-weight="bold" letter-spacing="0.12em">P&#218;&#356; PO ARE&#193;LI</text>
+  <text x="450" y="62" text-anchor="middle" fill="#6b4420" font-family="Georgia, serif" font-size="11" font-style="italic">Stredovek&#253; festival &#8212; Pod vlekom</text>
 
   <g transform="translate(820, 68)" opacity="0.7">
     <circle r="28" fill="#f4e8d4" stroke="#5c1a1a" stroke-width="1.5"/>
