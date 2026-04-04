@@ -1,26 +1,55 @@
 /**
- * Nahraďte odkazy vlastnými Stripe Payment Links
- * Vytvoríte ich v: Stripe Dashboard → Produktové katalógy → Platobné odkazy
+ * Platby: buď priamo Stripe Payment Links, alebo WooCommerce (WordPress) + Stripe v pokladni.
+ * GitHub Pages = len táto prezentačná stránka. WooCommerce musí bežať na hostingu s WordPressom.
  */
 window.FESTIVAL_CONFIG = {
-  stripeVstupenky: "https://buy.stripe.com/test_REPLACE_ME",
-  stripeZetony: "https://buy.stripe.com/test_REPLACE_ME",
   rok: 2026,
   miesto: "Stropkov",
+
   /**
-   * Banner: fotka za textom v hornom banneri. Pridajte súbor do images/ alebo URL.
-   * Príklad: "images/banner.jpg" — kým je prázdne, zobrazí sa len gradient.
+   * "stripe_links" = tlačidlá použijú nižšie uvedené buy.stripe.com odkazy.
+   * "woocommerce"  = tlačidlá smerujú na produkty vo vašom WooCommerce (cesty relatívne k zakladnaUrl).
    */
-  bannerObrazok: "",
-  /** Voliteľné: URL Cloudflare Workeru (bez lomky na konci). */
-  overenieApiUrl: "",
+  platbyRezim: "stripe_links",
+
+  /** Základná adresa WordPress/Woo obchodu, bez koncovej lomky. Príklad: https://festivalvasadomena.sk */
+  woocommerceZakladnaUrl: "",
+
   /**
-   * Stripe odkazy na rezervácie / platby za jednotlivé aktivity (Payment Links).
+   * Stránka katalógu alebo „Obchod“ vo WooCommerce (relatívna cesta alebo plné URL).
+   * Príklady: /obchod/  /shop/  (závisí od trvalých odkazov vo WP)
    */
+  woocommerceObchodStranka: "/obchod/",
+
+  /**
+   * Relatívne cesty k produktom (od zakladnaUrl) alebo plné https://… URL na konkrétny produkt.
+   * Vytvorte produkty vo Woo → skopírujte odkaz „Zobraziť produkt“ a použite len cestu alebo celú URL.
+   */
+  woocommerceProdukty: {
+    vstupenky: "",
+    zetony: "",
+    lukostrelba: "",
+    serm: "",
+    deti: "",
+    remeslo: "",
+  },
+
+  /** Priame Stripe Payment Links (keď platbyRezim === "stripe_links") */
+  stripeVstupenky: "https://buy.stripe.com/test_REPLACE_ME",
+  stripeZetony: "https://buy.stripe.com/test_REPLACE_ME",
   stripeRezervacia: {
     lukostrelba: "https://buy.stripe.com/test_REPLACE_ME",
     serm: "https://buy.stripe.com/test_REPLACE_ME",
     deti: "https://buy.stripe.com/test_REPLACE_ME",
     remeslo: "https://buy.stripe.com/test_REPLACE_ME",
   },
+
+  /**
+   * Banner: fotka za textom v hornom banneri.
+   * Príklad: "images/banner.jpg" — kým je prázdne, zobrazí sa len gradient.
+   */
+  bannerObrazok: "",
+
+  /** Voliteľné: URL Cloudflare Workeru pre overenie kupónov (bez lomky na konci). */
+  overenieApiUrl: "",
 };

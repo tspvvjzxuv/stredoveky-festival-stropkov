@@ -28,6 +28,7 @@
           <a href="#vstupenky">Vstupenky</a>
           <a href="#rezervacie-aktivity">Rezervácie</a>
           <a href="#zetony">Žetóny</a>
+          <a id="nav-obchod" href="#vstupenky-rezervacie">Obchod</a>
         </nav>
       </div>
     </header>
@@ -51,15 +52,21 @@
       <section id="o-festivale">
         <h2>O festivale</h2>
         <p class="lead">
-          Vitajte na oficiálnej stránke stredovekého festivalu v Stropkove. Nájdete
-          tu harmonogram, nákup vstupeniek cez Stripe, rezervácie na vybrané
-          aktivity (tiež cez Stripe) a samostatný odkaz na žetóny na mieste.
+          Vitajte na oficiálnej stránke stredovekého festivalu v Stropkove.
+          Harmonogram, vstupenky, rezervácie na aktivity a žetóny môžete riešiť
+          cez vlastný <strong>WooCommerce</strong> obchod na WordPresse (platba
+          cez plugin <strong>Stripe</strong>) alebo dočasne cez priame Stripe
+          Payment Links — prepínač je v <code>js/config.js</code> (<code>platbyRezim</code>).
         </p>
         <p>
-          Fotku v baneri pridáte do <code>images/</code> (napr.
-          <code>images/banner.jpg</code>) a v <code>js/config.js</code> nastavíte
-          <code>bannerObrazok</code> na tú cestu alebo na URL obrázka. Texty a
-          aktivity upravíte v <code>index.html</code> a v konfigurácii.
+          Táto stránka na GitHub Pages je len prezentácia a odkazy na platby.
+          WooCommerce vyžaduje <strong>hosting s WordPressom</strong> (PHP, SSL,
+          databáza). Postup a Fio banka: súbor <code>NASTAVENIE-PLATIEB.txt</code>
+          v koreni projektu.
+        </p>
+        <p>
+          Fotku v baneri pridáte do <code>images/</code> a v konfigurácii
+          <code>bannerObrazok</code>.
         </p>
       </section>
 
@@ -114,23 +121,24 @@
       <section id="vstupenky-rezervacie" aria-labelledby="heading-vstup-rez">
         <h2 id="heading-vstup-rez">Vstupenky a rezervácie</h2>
         <p class="lead">
-          Najprv si zakúpte vstup na festival. Na vybrané aktivity s obmedzenou
-          kapacitou môžete cez Stripe rezervovať miesto alebo zaplatiť
-          workshop — každá aktivita má vlastný platobný odkaz.
+          Najprv si zakúpte vstup na festival. Na aktivity s obmedzenou kapacitou
+          si vyberte samostatný produkt alebo variant vo vašom obchode — v
+          WooCommerce má každá položka vlastnú stránku produktu.
         </p>
 
         <div id="vstupenky" class="section-block">
           <h3>Vstupenky</h3>
           <p>
-            Vstupenky zakúpite bezpečne cez Stripe (Payment Link). Po platbe
-            príde potvrdenie e-mailom od Stripe.
+            V režime WooCommerce vás odkaz presmeruje do košíka / na produkt vo
+            WordPresse; platba prebehne cez Stripe podľa nastavenia v WooCommerce.
+            V režime Stripe Payment Links ide o priamy odkaz od Stripe.
           </p>
           <div class="purchase-grid">
             <div class="card purchase-card">
               <h4>Predpredaj / denný vstup</h4>
               <p>
-                Typy a ceny vstupeniek nastavíte vo svojom Stripe účte pri
-                vytváraní Payment Linku.
+                Ceny a varianty nastavíte ako produkt vo WooCommerce alebo ako
+                ponuku v Stripe (podľa <code>platbyRezim</code> v konfigurácii).
               </p>
               <a
                 id="link-vstupenky"
@@ -138,7 +146,7 @@
                 href="#"
                 target="_blank"
                 rel="noopener noreferrer"
-                >Kúpiť vstupenku cez Stripe</a
+                >Kúpiť vstupenku online</a
               >
             </div>
           </div>
@@ -147,13 +155,14 @@
         <div id="rezervacie-aktivity" class="section-block">
           <h3>Rezervácie na aktivity</h3>
           <p>
-            Nižšie si vyberte aktivitu a prejdite na platbu / rezerváciu cez
-            Stripe. Názvy, popisy a počet odkazov zmeňte podľa reálnej ponuky.
+            Každé tlačidlo smeruje na konkrétny produkt (WooCommerce) alebo
+            Payment Link (Stripe). Názvy a počet kariet upravte v
+            <code>index.html</code> a cesty v <code>js/config.js</code>.
           </p>
           <div class="purchase-grid">
             <div class="card purchase-card">
               <h4>Lukostrelba</h4>
-              <p>Rezervácia termínu alebo platba za súťažný vstup — podľa vášho nastavenia vo Stripe.</p>
+              <p>Rezervácia alebo platba — kapacitu riešte zásobou produktu alebo doplnkom vo WooCommerce.</p>
               <a
                 id="link-rez-lukostrelba"
                 class="stripe-btn"
@@ -165,7 +174,7 @@
             </div>
             <div class="card purchase-card">
               <h4>Šerm — workshop</h4>
-              <p>Kratší workshop podľa kapacity; čas a cenu nastavíte v Stripe.</p>
+              <p>Kratší workshop podľa kapacity; čas a cenu nastavíte v produkte / objednávke.</p>
               <a
                 id="link-rez-serm"
                 class="stripe-btn"
@@ -189,7 +198,7 @@
             </div>
             <div class="card purchase-card">
               <h4>Remeselný workshop</h4>
-              <p>Napr. keramika, tkanie alebo iné remeslo — vlastný Payment Link.</p>
+              <p>Napr. keramika, tkanie alebo iné remeslo — samostatný produkt v obchode.</p>
               <a
                 id="link-rez-remeslo"
                 class="stripe-btn"
@@ -214,8 +223,8 @@
           <div class="card purchase-card">
             <h3>Balíky žetónov</h3>
             <p>
-              Ceny a balíky (napr. 5 / 10 / 20 žetónov) nastavíte ako samostatné
-              produkty alebo varianty v Stripe Payment Links.
+              Ceny a balíky (napr. 5 / 10 / 20 žetónov) zadáte ako varianty
+              produktu vo WooCommerce alebo ako samostatné Stripe Payment Links.
             </p>
             <a
               id="link-zetony"
@@ -223,7 +232,7 @@
               href="#"
               target="_blank"
               rel="noopener noreferrer"
-              >Kúpiť žetóny cez Stripe</a
+              >Kúpiť žetóny online</a
             >
           </div>
         </div>

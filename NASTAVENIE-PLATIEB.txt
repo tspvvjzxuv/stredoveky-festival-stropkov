@@ -1,0 +1,74 @@
+================================================================================
+Platobný systém: WooCommerce + Stripe + bankový účet (napr. Fio banka)
+Projekt: Stredoveký festival — Stropkov (GitHub Pages + vlastný obchod)
+================================================================================
+
+1) ČO KDE BEŽÍ
+--------------
+• GitHub Pages (táto statická stránka) = len harmonogram, texty a ODKAZY na
+  produkty. Nemôže na sebe spúšťať WooCommerce ani databázu.
+
+• WooCommerce = plugin pre WordPress. Potrebujete hosting s:
+  - PHP, MySQL/MariaDB, HTTPS (SSL), vlastná doména odporúčaná.
+
+• Stripe = platobná brána. Vo WooCommerce ju zapnete oficiálnym pluginom
+  „WooCommerce Stripe Payment Gateway“ (alebo podobným od Woo/Stripe).
+
+Tok peňazí: zákazník zaplatí kartou cez Stripe → Stripe po overení pošle
+výplatu (payout) na váš podnikateľský bankový účet v EUR (SEPA), napr. Fio.
+
+
+2) ÚČET VO FIO BANKE (orientačné kroky)
+---------------------------------------
+• Pre festival ako podnikanie zvyčajne potrebujete živnosť alebo spoločnosť
+  (s.r.o.) a účet označený pre podnikanie — presné podmienky a dokumenty
+  vždy overte na https://www.fio.cz alebo v pobočke / u obchodného bankára.
+
+• Stripe pri registrácii účtu žiada údaje o subjekte (IČO, adresa) a bankový
+  účet na výplaty: IBAN vášho Fio účtu v formáte SK…
+
+• Fio podporuje bežné SEPA platby v eurách; konkrétne poplatky za príjem
+  výplat od Stripe si overte v cenníku Fio a v dokumentácii Stripe pre Slovensko.
+
+(Nevieme za vás založiť účet — len pobočka Fio / online onboarding + vaše
+doklady to vybavia.)
+
+
+3) STRIPE + WOOCOMMERCE
+-----------------------
+a) Založte účet na https://stripe.com (režim Test / Live podľa fázy).
+
+b) Vo WordPress nainštalujte WooCommerce, dokončite sprievodcu obchodom.
+
+c) Nainštalujte a zapnite Stripe platobný plugin, vložte Live / Test API kľúče
+   zo Stripe Dashboard (Developers → API keys).
+
+d) Vytvorte produkty: vstupenky (varianty dospelý / dieťa), žetóny, aktivity.
+   Pre obmedzenú kapacitu použite „zásoba“ alebo doplnky (napr. rezervačné).
+
+e) Skopírujte verejné URL produktov a vložte ich do js/config.js:
+   platbyRezim: "woocommerce"
+   woocommerceZakladnaUrl: "https://vasa-domena.sk"
+   woocommerceObchodStranka: "/obchod/"   (alebo /shop/ — ako máte v WP)
+   woocommerceProdukty: { vstupenky: "/produkt/…", … }
+
+f) Voliteľne: rovnakú doménu použite aj pre WordPress; GitHub Pages môže
+   zostať na subdoméne (napr. info.) a „Obchod“ vedie na hlavnú doménu.
+
+
+4) OVERENIE VSTUPENIEK
+----------------------
+Statická stránka + Worker na overenie kódov zostáva samostatná. Ak kódy
+generuje WooCommerce (email po objednávke), treba ich exportovať / synchronizovať
+do KV Workera alebo použiť iný nástroj — to je už vlastná integrácia.
+
+
+5) KONTROLA ZO ZOZNAMU
+----------------------
+• Stripe Dashboard → Platby, Payouts.
+• WooCommerce → Objednávky.
+• Fio → výpisy účtu, prichádzajúce SEPA platby od Stripe.
+
+================================================================================
+Posledná aktualizácia: podľa stavu projektu (doplňte dátum pri zmene procesu).
+================================================================================

@@ -331,6 +331,16 @@ section h2 {
   color: #fff !important;
 }
 
+/* WooCommerce režim — main.js pridá triedu woo-pay-btn k tlačidlám platieb */
+a.stripe-btn.woo-pay-btn {
+  background: #7f54b3;
+}
+
+a.stripe-btn.woo-pay-btn:hover {
+  background: #6d4799;
+  color: #fff !important;
+}
+
 .note {
   font-size: 1rem;
   font-style: italic;
