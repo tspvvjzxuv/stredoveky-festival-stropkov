@@ -75,7 +75,7 @@ Ako to zvyčajne funguje (zjednodušene)
 ------------------------------------------
 • Cloudflare Workers + D1 / KV (podobne ako už máte návrh na overenie kupónov).
 • Supabase alebo Firebase (auth + databáza + funkcie).
-• Malý backend na Render / Fly.io.
+• Malý backend na cloudovom hostingu (Fly.io, VPS, …).
 
 GitHub Pages môže zostať ako prezentácia; samotná peňaženka a API môžu byť na
 subdoméne alebo na tom istom Workeri.
