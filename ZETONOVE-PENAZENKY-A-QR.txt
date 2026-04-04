@@ -1,0 +1,85 @@
+================================================================================
+Virtuálna peňaženka + platba žetónmi cez QR pri stánku
+================================================================================
+
+Odpoveď na „dalo by sa?“
+------------------------
+ÁNO — ale nie len HTML na GitHub Pages. Potrebujete aspoň jeden dôveryhodný
+server (alebo serverless službu), ktorá drží zostatok žetónov a schvaľuje
+platby. Prehliadač a QR kód sú len rozhranie; pravda o zostatku musí byť v
+databáze.
+
+
+Prečo nie čisto „vo fronte“
+----------------------------
+Ak by bol zostatok len v cookies alebo v JavaScripte, návštevník by si vedel
+čísla zmeniť v konzole. Preto musí stánok vždy volať server: „odpočítaj 3
+žetóny z peňaženky X“ a server odpovie áno/nie.
+
+
+Ako to zvyčajne funguje (zjednodušene)
+---------------------------------------
+
+1) DOBITIE ŽETÓNOV
+   • Zákazník kúpi balík online (Stripe / Snipcart / Woo…) → po zaplatení
+     webhook zavolá váš backend a pripíše napr. +20 žetónov na jeho účet.
+
+2) PEŇAŽENKA
+   • Účet = prihlásenie (e-mail + magic link), alebo anonymné ID v odkaze
+     / v aplikácii, ktoré si uloží do telefónu.
+   • Zostatok vidí na stránke „Moja peňaženka“ (PWA alebo bežná webstránka).
+
+3) QR PRI STÁNKU (dva bežné spôsoby)
+
+   A) Zákazník ukáže QR (odporúčané pre rýchly predaj)
+      • QR obsahuje jednorazový alebo krátko platný kód (token), ktorý server
+        pozná, alebo ID peňaženky + podpis.
+      • Predavač pri stánku naskenuje → aplikácia (telefón/tablet) pošle na
+        server: odpíš N žetónov z tejto peňaženky.
+      • Server skontroluje zostatok, odpíše, vráti OK → môže dať tovar.
+
+   B) Stánok ukáže QR so žiadosťou o platbu
+      • QR obsahuje ID transakcie / sumu v žetónoch.
+      • Zákazníček naskenuje, potvrdí v telefóne → server stiahne žetóny.
+
+   V oboch prípadoch rozhoduje SERVER, nie len telefón.
+
+
+Čo musíte mať technicky
+-----------------------
+• Databáza: používateľ / peňaženka, zostatok, história transakcií.
+• API (REST alebo podobné): pripísať, odpísať, overiť, voliteľne „vytvoriť
+  QR token“.
+• Zabezpečenie predavača: tajný kľúč alebo prihlásenie do „pokladničnej“
+  aplikácie, aby hocikto nemohol odpisovať cudzie žetóny.
+• HTTPS všade.
+
+
+Čím to môžete postaviť (bez vlastného VPS)
+------------------------------------------
+• Cloudflare Workers + D1 / KV (podobne ako už máte návrh na overenie kupónov).
+• Supabase alebo Firebase (auth + databáza + funkcie).
+• Malý backend na Render / Fly.io.
+
+GitHub Pages môže zostať ako prezentácia; samotná peňaženka a API môžu byť na
+subdoméne alebo na tom istom Workeri.
+
+
+Súvis s fyzickými žetónmi
+-------------------------
+Môžete mať naraz:
+• len virtuálne žetóny v peňaženke, alebo
+• online nákup → virtuálne + voliteľne tlač „voucher“, alebo
+• výhradne fyzické žetóny bez peňaženky.
+
+Virtuálna peňaženka nahrádza „kredit na karte“ namiesto plastových žetónov.
+
+
+Ďalší krok
+----------
+Ak budete chcieť, dá sa k existujúcemu návrhu (Worker + KV) doplniť tabuľku
+peňaženiek a endpointy pre naskenovanie QR — to už je konkrétna implementácia
+na niekoľko hodín/dní vývoja a testovania, vrátane jednoduchej „pokladne“ pre
+stánkárov v prehliadači.
+
+================================================================================
