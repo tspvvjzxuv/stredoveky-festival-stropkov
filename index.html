@@ -40,7 +40,19 @@
       </div>
     </header>
 
-    <section class="hero">
+    <section class="hero" id="hero">
+      <video
+        id="hero-video"
+        class="hero-video"
+        muted
+        loop
+        playsinline
+        preload="metadata"
+        aria-hidden="true"
+        poster=""
+      >
+        <!-- Zdroj nastaví main.js z FESTIVAL_CONFIG.bannerVideoUrl -->
+      </video>
       <div class="hero-inner">
         <h1>Stredoveký festival<br />Stropkov <span id="hero-year">2026</span></h1>
         <p id="profile-greeting" class="profile-greeting" hidden></p>

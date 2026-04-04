@@ -7,7 +7,31 @@
   if (footerYear) footerYear.textContent = String(y);
 
   var hero = document.querySelector(".hero");
-  if (hero && cfg.bannerObrazok && String(cfg.bannerObrazok).trim()) {
+  var videoUrl = cfg.bannerVideoUrl && String(cfg.bannerVideoUrl).trim();
+  var heroVideo = document.getElementById("hero-video");
+
+  var reduceMotion =
+    window.matchMedia &&
+    window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  if (hero && videoUrl && heroVideo && !reduceMotion) {
+    hero.classList.add("hero--has-video");
+    while (heroVideo.firstChild) {
+      heroVideo.removeChild(heroVideo.firstChild);
+    }
+    var srcEl = document.createElement("source");
+    srcEl.src = videoUrl.replace(/"/g, "");
+    srcEl.type = "video/mp4";
+    heroVideo.appendChild(srcEl);
+    if (cfg.bannerVideoPoster && String(cfg.bannerVideoPoster).trim()) {
+      heroVideo.poster = String(cfg.bannerVideoPoster).trim().replace(/"/g, "");
+    }
+    heroVideo.load();
+    var playTry = heroVideo.play();
+    if (playTry && typeof playTry.catch === "function") {
+      playTry.catch(function () {});
+    }
+  } else if (hero && cfg.bannerObrazok && String(cfg.bannerObrazok).trim()) {
     var src = String(cfg.bannerObrazok).trim().replace(/"/g, "");
     hero.style.setProperty("--hero-photo", 'url("' + src + '")');
   }

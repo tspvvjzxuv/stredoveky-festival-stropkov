@@ -44,10 +44,23 @@ window.FESTIVAL_CONFIG = {
   },
 
   /**
-   * Banner: fotka za textom v hornom banneri.
-   * Príklad: "images/banner.jpg" — kým je prázdne, zobrazí sa len gradient.
+   * Banner: fotka za textom (ak nepoužívate video alebo ako záloha).
+   * Môže byť aj animovaný GIF: "images/hero.gif"
    */
   bannerObrazok: "",
+
+  /**
+   * Video na pozadí hero (stredoveká atmosféra). Prázdne = žiadne video.
+   * Predvolené: stock „meče v tráve“ (Mixkit, zdarma na web).
+   * Vlastné: nahrajte napr. videos/hero.mp4 do repa a dajte relatívnu cestu.
+   * Pozn.: materiál z Netflix Witcher je autorsky chránený — nepoužívajte bez licencie.
+   */
+  /** Dynamickejší záber (rytieri v súboji); tichší variant: …/34697/34697-720.mp4 (meče v tráve). */
+  bannerVideoUrl:
+    "https://assets.mixkit.co/videos/13029/13029-720.mp4",
+
+  /** Voliteľný náhľad pred spustením videa (cesta alebo URL obrázka). */
+  bannerVideoPoster: "",
 
   /** Voliteľné: URL Cloudflare Workeru pre overenie kupónov (bez lomky na konci). */
   overenieApiUrl: "",
