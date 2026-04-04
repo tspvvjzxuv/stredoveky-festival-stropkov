@@ -1,8 +1,12 @@
 ================================================================================
 Virtuálna peňaženka + platba žetónmi cez QR pri stánku
 ================================================================================
+AKTUÁLNY STAV PROJEKTU (ročník): žiadna apka / žiadna digitálna peňaženka.
+Žetóny len fyzicky — jedna centrálna pokladnica, hotovosť. Tento súbor ostáva
+len ako archív nápadov do budúcna.
+================================================================================
 
-Rozhodnutie projektu: bez náramkov, overenie cez QR v mobile
+Rozhodnutie projektu (historické): bez náramkov, overenie cez QR v mobile
 ------------------------------------------------------------
 • NFC náramky ani špeciálne čipy sa nepoužívajú.
 • Zákazník má na telefóne stránku „moja peňaženka“ (ideálne PWA / záložka),

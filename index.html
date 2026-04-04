@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta
       name="description"
-      content="Stredoveký festival v Stropkove — areál Pod vlekom, harmonogram, mapa, profil, vstupenky."
+      content="Stredoveký festival v Stropkove — areál Pod vlekom, harmonogram, žetóny len na mieste (jedna pokladnica)."
     />
     <title>Stredoveký festival — Stropkov</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -61,14 +61,15 @@
         <h2>O festivale</h2>
         <p class="lead">
           Vitajte na stránke stredovekého festivalu v Stropkove. Nájdete tu
-          <strong>harmonogram</strong> s návrhmi, čo robiť v danom čase,
-          <strong>mapu areálu</strong> Pod vlekom, jednoduchý <strong>profil</strong>
-          (meno alebo stredoveký alias — len v tomto prehliadači) a odkazy na
-          vstupenky a žetóny.
+          <strong>harmonogram</strong>, <strong>mapu areálu</strong> Pod vlekom
+          a jednoduchý <strong>profil</strong> (meno alebo alias — len v tomto
+          prehliadači). <strong>Žetóny</strong> sa predávajú výhradne na mieste,
+          na jednej pokladnici, za hotovosť — bez aplikácie a bez online nákupu
+          žetónov.
         </p>
         <p>
-          Platby: WooCommerce alebo Stripe — nastavenie v <code>js/config.js</code>
-          (<code>platbyRezim</code>). Postup: <code>NASTAVENIE-PLATIEB.txt</code>.
+          Vstupenky a rezervácie aktivít môžete mať online (Stripe / WooCommerce)
+          — nastavenie v <code>js/config.js</code>. Postup: <code>NASTAVENIE-PLATIEB.txt</code>.
         </p>
         <p>
           Fotku v baneri: súbor v <code>images/</code> a <code>bannerObrazok</code> v konfigurácii.
@@ -227,9 +228,10 @@
           <details class="faq-item">
             <summary>Môžem platiť kartou alebo len žetónmi?</summary>
             <p>
-              Na mieste často platia žetóny (rýchlejší predaj). Online si
-              viete dopredu kúpiť vstupenky a žetóny podľa nastavenia v sekcii
-              Vstupenky / Žetóny.
+              <strong>Žetóny</strong> sú len za <strong>hotovosť</strong> na
+              jednej centrálnej pokladnici. Pri stánkoch sa platí žetónmi.
+              Vstupenky alebo rezervácie aktivít môžete mať riešené online — podľa
+              sekcie Vstupenky na tejto stránke.
             </p>
           </details>
           <details class="faq-item">
@@ -353,26 +355,18 @@
       <section id="zetony">
         <h2>Žetóny</h2>
         <p>
-          Na mieste sa na jedlo, nápoje a vybrané aktivity platí žetónmi.
-          Žetóny môžete vopred zakúpiť online — znížite tak čas pri pokladni a
-          podporíte plynulý priebeh festivalu.
+          Na jedlo, nápoje a vybrané aktivity na mieste platíte <strong>žetónmi</strong>.
+          Žetóny sa <strong>nekupujú online</strong> — výhradne <strong>jedna
+          centrálna pokladnica</strong> v areáli, platba <strong>hotovosťou</strong>
+          (žiadna mobilná apka ani digitálna peňaženka).
         </p>
-        <div class="purchase-grid">
-          <div class="card purchase-card">
-            <h3>Balíky žetónov</h3>
-            <p>
-              Ceny a balíky (napr. 5 / 10 / 20 žetónov) zadáte ako varianty
-              produktu vo WooCommerce alebo ako samostatné Stripe Payment Links.
-            </p>
-            <a
-              id="link-zetony"
-              class="stripe-btn"
-              href="#"
-              target="_blank"
-              rel="noopener noreferrer"
-              >Kúpiť žetóny online</a
-            >
-          </div>
+        <div class="card purchase-card zetony-local">
+          <h3>Kde a ako</h3>
+          <ul class="zetony-rules">
+            <li>Jedno miesto výmeny peňazí za žetóny (označí organizátor na mape / ceduľou).</li>
+            <li>Typické balíky (napr. 5 / 10 / 20 žetónov) a ceny doplníte do letáku alebo na tabuľu pri pokladnici.</li>
+            <li>Stánky žetóny berú, hotovosť priamo za pultom nepoužívate — zjednoduší sa výdavok.</li>
+          </ul>
         </div>
       </section>
     </main>

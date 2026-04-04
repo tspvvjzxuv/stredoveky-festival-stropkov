@@ -63,7 +63,9 @@
     }
   }
 
-  var payLinks = document.querySelectorAll("a.stripe-btn");
+  var payLinks = document.querySelectorAll(
+    "#vstupenky-rezervacie a.stripe-btn"
+  );
   if (wcMode) {
     for (var i = 0; i < payLinks.length; i++) {
       payLinks[i].classList.add("woo-pay-btn");
@@ -79,11 +81,6 @@
       document.getElementById("link-vstupenky"),
       resolveShopUrl(prod.vstupenky, base),
       "WooCommerce: doplňte woocommerceZakladnaUrl a woocommerceProdukty.vstupenky v js/config.js."
-    );
-    bindPaymentLink(
-      document.getElementById("link-zetony"),
-      resolveShopUrl(prod.zetony, base),
-      "WooCommerce: doplňte woocommerceProdukty.zetony v js/config.js."
     );
     bindPaymentLink(
       document.getElementById("link-rez-lukostrelba"),
@@ -110,11 +107,6 @@
       document.getElementById("link-vstupenky"),
       cfg.stripeVstupenky,
       "Nastavte platobný odkaz v js/config.js (stripeVstupenky) alebo zapnite platbyRezim: \"woocommerce\"."
-    );
-    bindPaymentLink(
-      document.getElementById("link-zetony"),
-      cfg.stripeZetony,
-      "Nastavte stripeZetony v js/config.js alebo použite WooCommerce."
     );
     bindPaymentLink(
       document.getElementById("link-rez-lukostrelba"),

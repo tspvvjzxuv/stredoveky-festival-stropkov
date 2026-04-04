@@ -2,6 +2,9 @@
 Platobný systém: WooCommerce + Stripe + bankový účet (napr. Fio banka)
 Projekt: Stredoveký festival — Stropkov (GitHub Pages + vlastný obchod)
 ================================================================================
+Poznámka: žetóny sa predávajú len FYZICKY na jednej pokladnici za hotovosť —
+nie cez Stripe/Woo. Online môžu ostať vstupenky a rezervácie aktivít.
+================================================================================
 
 1) ČO KDE BEŽÍ
 --------------
@@ -43,7 +46,8 @@ b) Vo WordPress nainštalujte WooCommerce, dokončite sprievodcu obchodom.
 c) Nainštalujte a zapnite Stripe platobný plugin, vložte Live / Test API kľúče
    zo Stripe Dashboard (Developers → API keys).
 
-d) Vytvorte produkty: vstupenky (varianty dospelý / dieťa), žetóny, aktivity.
+d) Vytvorte produkty: vstupenky (varianty dospelý / dieťa), aktivity s
+   rezerváciou. Žetóny v tomto modeli nepredávate online.
    Pre obmedzenú kapacitu použite „zásoba“ alebo doplnky (napr. rezervačné).
 
 e) Skopírujte verejné URL produktov a vložte ich do js/config.js:

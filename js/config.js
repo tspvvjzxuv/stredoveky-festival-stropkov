@@ -27,7 +27,6 @@ window.FESTIVAL_CONFIG = {
    */
   woocommerceProdukty: {
     vstupenky: "",
-    zetony: "",
     lukostrelba: "",
     serm: "",
     deti: "",
@@ -36,7 +35,7 @@ window.FESTIVAL_CONFIG = {
 
   /** Priame Stripe Payment Links (keď platbyRezim === "stripe_links") */
   stripeVstupenky: "https://buy.stripe.com/test_REPLACE_ME",
-  stripeZetony: "https://buy.stripe.com/test_REPLACE_ME",
+  /** Žetóny sa v tomto ročníku predávajú len fyzicky na pokladnici (žiadny online odkaz). */
   stripeRezervacia: {
     lukostrelba: "https://buy.stripe.com/test_REPLACE_ME",
     serm: "https://buy.stripe.com/test_REPLACE_ME",

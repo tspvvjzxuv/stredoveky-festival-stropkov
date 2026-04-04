@@ -38,4 +38,7 @@ Poznámky
 • Lokálny test: v koreni projektu spustite  npm install  a  npm start
   → http://localhost:3000
 
+• Stránka je informačná; žetóny v prevádzke riešite hotovosťou na pokladnici,
+  nie cez tento server.
+
 ================================================================================

@@ -585,6 +585,19 @@ a.stripe-btn.woo-pay-btn:hover {
   margin-bottom: 0.65rem;
 }
 
+.zetony-local h3 {
+  margin-top: 0;
+}
+
+.zetony-rules {
+  margin: 0;
+  padding-left: 1.35rem;
+}
+
+.zetony-rules li {
+  margin-bottom: 0.5rem;
+}
+
 .faq-intro {
   margin-top: 0;
   max-width: 42rem;
