@@ -296,3 +296,86 @@ section h2 {
 .site-footer p {
   margin: 0.35rem 0;
 }
+
+.verify-form label {
+  display: block;
+  font-family: "Cinzel", serif;
+  font-size: 0.95rem;
+  color: var(--burgundy);
+  margin-bottom: 0.35rem;
+  letter-spacing: 0.04em;
+}
+
+.verify-form input[type="text"],
+.verify-form input[type="password"],
+.verify-form input[type="url"] {
+  width: 100%;
+  max-width: 28rem;
+  padding: 0.55rem 0.75rem;
+  font-size: 1.1rem;
+  font-family: inherit;
+  border: 1px solid rgba(92, 26, 26, 0.35);
+  border-radius: 4px;
+  background: #fffef8;
+  margin-bottom: 1rem;
+}
+
+.verify-form .field-group {
+  margin-bottom: 0.25rem;
+}
+
+.verify-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  align-items: center;
+  margin-top: 0.5rem;
+}
+
+.verify-actions .btn {
+  cursor: pointer;
+  border: none;
+}
+
+.verify-actions .btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.verify-result {
+  margin-top: 1.5rem;
+  padding: 1rem 1.25rem;
+  border-radius: 4px;
+  font-size: 1.2rem;
+  font-weight: 600;
+  display: none;
+}
+
+.verify-result.is-visible {
+  display: block;
+}
+
+.verify-result.ok {
+  background: rgba(45, 61, 45, 0.15);
+  border: 1px solid var(--forest);
+  color: var(--forest);
+}
+
+.verify-result.warn {
+  background: rgba(201, 162, 39, 0.2);
+  border: 1px solid var(--gold-dim);
+  color: var(--ink);
+}
+
+.verify-result.err {
+  background: rgba(92, 26, 26, 0.12);
+  border: 1px solid var(--burgundy);
+  color: var(--burgundy);
+}
+
+.verify-hint {
+  font-size: 1rem;
+  font-style: italic;
+  color: rgba(26, 18, 9, 0.75);
+  margin-top: 1.25rem;
+}

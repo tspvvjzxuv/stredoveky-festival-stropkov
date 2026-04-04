@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="sk">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex, nofollow" />
+    <meta
+      name="description"
+      content="Overenie vstupeniek na mieste — len pre organizátorov festivalu."
+    />
+    <title>Overenie vstupeniek — Stropkov</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="css/style.css" />
+    <script src="js/config.js"></script>
+    <script src="js/overenie.js" defer></script>
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="header-inner">
+        <a class="logo" href="index.html">Stredoveký festival</a>
+        <nav class="nav" aria-label="Hlavná navigácia">
+          <a href="index.html">Späť na stránku</a>
+        </nav>
+      </div>
+    </header>
+
+    <main style="padding-top: 2rem">
+      <h1 style="font-family: Cinzel, serif; color: var(--burgundy)">
+        Overenie vstupeniek
+      </h1>
+      <p class="lead">
+        Túto stránku používajú ľudia pri vstupe. Kódy musia byť uložené na
+        serveri (napr. Cloudflare Worker + KV) — čisto statická stránka sama o
+        sebe nemôže bezpečne rozhodnúť, či je kupón platný.
+      </p>
+
+      <div class="card">
+        <form id="verify-form" class="verify-form" autocomplete="off">
+          <div class="field-group">
+            <label for="api-base">URL overovacieho API (Worker)</label>
+            <input
+              id="api-base"
+              name="api-base"
+              type="url"
+              inputmode="url"
+              placeholder="https://vas-worker.workers.dev"
+              required
+            />
+          </div>
+          <div class="field-group">
+            <label for="gate-secret">Kľúč pre vstup (tajný, nezdieľajte verejne)</label>
+            <input
+              id="gate-secret"
+              name="gate-secret"
+              type="password"
+              required
+              autocomplete="new-password"
+            />
+          </div>
+          <div class="field-group">
+            <label for="coupon-code">Kód zo vstupenky / e-mailu</label>
+            <input
+              id="coupon-code"
+              name="coupon-code"
+              type="text"
+              autocapitalize="characters"
+              autocomplete="off"
+              required
+            />
+          </div>
+          <div class="verify-actions">
+            <button type="submit" class="btn btn-primary" id="btn-verify">
+              Overiť a označiť ako použité
+            </button>
+            <label style="display: flex; align-items: center; gap: 0.5rem; font-size: 1rem">
+              <input type="checkbox" id="dry-run" name="dry-run" />
+              Len skontrolovať (neznačíť použité)
+            </label>
+          </div>
+        </form>
+
+        <div
+          id="verify-result"
+          class="verify-result"
+          role="status"
+          aria-live="polite"
+        ></div>
+
+        <p class="verify-hint">
+          Kľúč a URL Workeru neukladáme do GitHubu — zadávajú sa tu pri práci.
+          Súbor <code>workers/verify-worker.js</code> obsahuje návod na nasadenie
+          a import kódov.
+        </p>
+      </div>
+    </main>
+
+    <footer class="site-footer">
+      <p><a href="index.html">Späť na festival</a></p>
+    </footer>
+  </body>
+</html>

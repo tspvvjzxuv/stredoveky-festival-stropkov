@@ -7,4 +7,6 @@ window.FESTIVAL_CONFIG = {
   stripeZetony: "https://buy.stripe.com/test_REPLACE_ME",
   rok: 2026,
   miesto: "Stropkov",
+  /** Voliteľné: URL Cloudflare Workeru (bez lomky na konci). Kľúč pre vstup NEDÁVAJTE sem — zadá sa na overenie.html */
+  overenieApiUrl: "",
 };
