@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="sk">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="Stredoveký festival v Stropkove — harmonogram, vstupenky a žetóny."
+    />
+    <title>Stredoveký festival — Stropkov</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="css/style.css" />
+    <script src="js/config.js" defer></script>
+    <script src="js/main.js" defer></script>
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="header-inner">
+        <a class="logo" href="#">Stredoveký festival</a>
+        <nav class="nav" aria-label="Hlavná navigácia">
+          <a href="#o-festivale">O festivale</a>
+          <a href="#harmonogram">Harmonogram</a>
+          <a href="#vstupenky">Vstupenky</a>
+          <a href="#zetony">Žetóny</a>
+        </nav>
+      </div>
+    </header>
+
+    <section class="hero">
+      <div class="hero-inner">
+        <h1>Stredoveký festival<br />Stropkov <span id="hero-year">2026</span></h1>
+        <p class="tagline">
+          Remeslá, hudba, dobová atmosféra a zábava pre celú rodinu v srdci
+          Zemplína.
+        </p>
+        <div class="btn-row">
+          <a class="btn btn-primary" href="#harmonogram">Harmonogram</a>
+          <a class="btn btn-outline" href="#vstupenky">Kúpiť vstupenku</a>
+        </div>
+      </div>
+    </section>
+
+    <main>
+      <section id="o-festivale">
+        <h2>O festivale</h2>
+        <p class="lead">
+          Vitajte na oficiálnej stránke stredovekého festivalu v Stropkove. Tu
+          nájdete aktuálny harmonogram podujatia, odkaz na nákup vstupeniek cez
+          Stripe a samostatný odkaz na nákup žetónov (na jedlo, nápoje a
+          aktivity na mieste).
+        </p>
+        <p>
+          Presný dátum, miesto konania a ďalšie informácie doplní organizátor —
+          texty môžete upraviť priamo v súbore <code>index.html</code>.
+        </p>
+      </section>
+
+      <section id="harmonogram">
+        <h2>Harmonogram</h2>
+        <div class="card">
+          <table class="schedule-table">
+            <thead>
+              <tr>
+                <th>Čas</th>
+                <th>Program</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="time">09:00</td>
+                <td>Otvorenie areálu, remeselné stánky</td>
+              </tr>
+              <tr>
+                <td class="time">10:30</td>
+                <td>Úvodný ceremoniál, privítanie hostí</td>
+              </tr>
+              <tr>
+                <td class="time">11:00 – 13:00</td>
+                <td>Šermiarske ukážky, detské aktivity</td>
+              </tr>
+              <tr>
+                <td class="time">13:00 – 15:00</td>
+                <td>Občerstvenie, živá stredoveká hudba</td>
+              </tr>
+              <tr>
+                <td class="time">15:30</td>
+                <td>Súťaž v lukostreľbe (registrácia na mieste)</td>
+              </tr>
+              <tr>
+                <td class="time">17:00</td>
+                <td>Večerný program, táborák</td>
+              </tr>
+              <tr>
+                <td class="time">20:00</td>
+                <td>Ukončenie festivalu</td>
+              </tr>
+            </tbody>
+          </table>
+          <p class="note">
+            Harmonogram je orientačný — finálne časy môžete zmeniť v
+            <code>index.html</code>.
+          </p>
+        </div>
+      </section>
+
+      <section id="vstupenky">
+        <h2>Vstupenky</h2>
+        <p>
+          Vstupenky zakúpite bezpečne cez platobný odkaz Stripe (Payment Link).
+          Po úspešnej platbe dostanete potvrdenie e-mailom od Stripe.
+        </p>
+        <div class="purchase-grid">
+          <div class="card purchase-card">
+            <h3>Predpredaj / denný vstup</h3>
+            <p>
+              Vyberte typ vstupenky podľa ponuky, ktorú nastavíte vo svojom
+              Stripe účte.
+            </p>
+            <a
+              id="link-vstupenky"
+              class="stripe-btn"
+              href="#"
+              target="_blank"
+              rel="noopener noreferrer"
+              >Kúpiť vstupenku cez Stripe</a
+            >
+          </div>
+        </div>
+      </section>
+
+      <section id="zetony">
+        <h2>Žetóny</h2>
+        <p>
+          Na mieste sa na jedlo, nápoje a vybrané aktivity platí žetónmi.
+          Žetóny môžete vopred zakúpiť online — znížite tak čas pri pokladni a
+          podporíte plynulý priebeh festivalu.
+        </p>
+        <div class="purchase-grid">
+          <div class="card purchase-card">
+            <h3>Balíky žetónov</h3>
+            <p>
+              Ceny a balíky (napr. 5 / 10 / 20 žetónov) nastavíte ako samostatné
+              produkty alebo varianty v Stripe Payment Links.
+            </p>
+            <a
+              id="link-zetony"
+              class="stripe-btn"
+              href="#"
+              target="_blank"
+              rel="noopener noreferrer"
+              >Kúpiť žetóny cez Stripe</a
+            >
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <p><strong>Stredoveký festival — Stropkov</strong></p>
+      <p>
+        Organizátor: doplnite kontakt ·
+        <a href="mailto:info@example.com">info@example.com</a>
+      </p>
+      <p>© <span id="footer-year">2026</span> · GitHub Pages</p>
+    </footer>
+  </body>
+</html>
