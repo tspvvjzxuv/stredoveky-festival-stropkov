@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta
       name="description"
-      content="Stredoveký festival v Stropkove — harmonogram, vstupenky a žetóny."
+      content="Stredoveký festival v Stropkove — harmonogram, vstupenky, rezervácie na aktivity a žetóny."
     />
     <title>Stredoveký festival — Stropkov</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -26,6 +26,7 @@
           <a href="#o-festivale">O festivale</a>
           <a href="#harmonogram">Harmonogram</a>
           <a href="#vstupenky">Vstupenky</a>
+          <a href="#rezervacie-aktivity">Rezervácie</a>
           <a href="#zetony">Žetóny</a>
         </nav>
       </div>
@@ -40,7 +41,8 @@
         </p>
         <div class="btn-row">
           <a class="btn btn-primary" href="#harmonogram">Harmonogram</a>
-          <a class="btn btn-outline" href="#vstupenky">Kúpiť vstupenku</a>
+          <a class="btn btn-outline" href="#vstupenky">Vstupenky</a>
+          <a class="btn btn-outline" href="#rezervacie-aktivity">Rezervácie</a>
         </div>
       </div>
     </section>
@@ -49,14 +51,15 @@
       <section id="o-festivale">
         <h2>O festivale</h2>
         <p class="lead">
-          Vitajte na oficiálnej stránke stredovekého festivalu v Stropkove. Tu
-          nájdete aktuálny harmonogram podujatia, odkaz na nákup vstupeniek cez
-          Stripe a samostatný odkaz na nákup žetónov (na jedlo, nápoje a
-          aktivity na mieste).
+          Vitajte na oficiálnej stránke stredovekého festivalu v Stropkove. Nájdete
+          tu harmonogram, nákup vstupeniek cez Stripe, rezervácie na vybrané
+          aktivity (tiež cez Stripe) a samostatný odkaz na žetóny na mieste.
         </p>
         <p>
-          Presný dátum, miesto konania a ďalšie informácie doplní organizátor —
-          texty môžete upraviť priamo v súbore <code>index.html</code>.
+          Fotku v baneri pridáte do <code>images/</code> (napr.
+          <code>images/banner.jpg</code>) a v <code>js/config.js</code> nastavíte
+          <code>bannerObrazok</code> na tú cestu alebo na URL obrázka. Texty a
+          aktivity upravíte v <code>index.html</code> a v konfigurácii.
         </p>
       </section>
 
@@ -89,7 +92,7 @@
               </tr>
               <tr>
                 <td class="time">15:30</td>
-                <td>Súťaž v lukostreľbe (registrácia na mieste)</td>
+                <td>Súťaž v lukostreľbe (odporúčame rezerváciu)</td>
               </tr>
               <tr>
                 <td class="time">17:00</td>
@@ -108,27 +111,94 @@
         </div>
       </section>
 
-      <section id="vstupenky">
-        <h2>Vstupenky</h2>
-        <p>
-          Vstupenky zakúpite bezpečne cez platobný odkaz Stripe (Payment Link).
-          Po úspešnej platbe dostanete potvrdenie e-mailom od Stripe.
+      <section id="vstupenky-rezervacie" aria-labelledby="heading-vstup-rez">
+        <h2 id="heading-vstup-rez">Vstupenky a rezervácie</h2>
+        <p class="lead">
+          Najprv si zakúpte vstup na festival. Na vybrané aktivity s obmedzenou
+          kapacitou môžete cez Stripe rezervovať miesto alebo zaplatiť
+          workshop — každá aktivita má vlastný platobný odkaz.
         </p>
-        <div class="purchase-grid">
-          <div class="card purchase-card">
-            <h3>Predpredaj / denný vstup</h3>
-            <p>
-              Vyberte typ vstupenky podľa ponuky, ktorú nastavíte vo svojom
-              Stripe účte.
-            </p>
-            <a
-              id="link-vstupenky"
-              class="stripe-btn"
-              href="#"
-              target="_blank"
-              rel="noopener noreferrer"
-              >Kúpiť vstupenku cez Stripe</a
-            >
+
+        <div id="vstupenky" class="section-block">
+          <h3>Vstupenky</h3>
+          <p>
+            Vstupenky zakúpite bezpečne cez Stripe (Payment Link). Po platbe
+            príde potvrdenie e-mailom od Stripe.
+          </p>
+          <div class="purchase-grid">
+            <div class="card purchase-card">
+              <h4>Predpredaj / denný vstup</h4>
+              <p>
+                Typy a ceny vstupeniek nastavíte vo svojom Stripe účte pri
+                vytváraní Payment Linku.
+              </p>
+              <a
+                id="link-vstupenky"
+                class="stripe-btn"
+                href="#"
+                target="_blank"
+                rel="noopener noreferrer"
+                >Kúpiť vstupenku cez Stripe</a
+              >
+            </div>
+          </div>
+        </div>
+
+        <div id="rezervacie-aktivity" class="section-block">
+          <h3>Rezervácie na aktivity</h3>
+          <p>
+            Nižšie si vyberte aktivitu a prejdite na platbu / rezerváciu cez
+            Stripe. Názvy, popisy a počet odkazov zmeňte podľa reálnej ponuky.
+          </p>
+          <div class="purchase-grid">
+            <div class="card purchase-card">
+              <h4>Lukostrelba</h4>
+              <p>Rezervácia termínu alebo platba za súťažný vstup — podľa vášho nastavenia vo Stripe.</p>
+              <a
+                id="link-rez-lukostrelba"
+                class="stripe-btn"
+                href="#"
+                target="_blank"
+                rel="noopener noreferrer"
+                >Rezervovať / zaplatiť — lukostrelba</a
+              >
+            </div>
+            <div class="card purchase-card">
+              <h4>Šerm — workshop</h4>
+              <p>Kratší workshop podľa kapacity; čas a cenu nastavíte v Stripe.</p>
+              <a
+                id="link-rez-serm"
+                class="stripe-btn"
+                href="#"
+                target="_blank"
+                rel="noopener noreferrer"
+                >Rezervovať / zaplatiť — šerm</a
+              >
+            </div>
+            <div class="card purchase-card">
+              <h4>Detský program</h4>
+              <p>Registrácia na program s obmedzeným počtom miest.</p>
+              <a
+                id="link-rez-deti"
+                class="stripe-btn"
+                href="#"
+                target="_blank"
+                rel="noopener noreferrer"
+                >Rezervovať / zaplatiť — detský program</a
+              >
+            </div>
+            <div class="card purchase-card">
+              <h4>Remeselný workshop</h4>
+              <p>Napr. keramika, tkanie alebo iné remeslo — vlastný Payment Link.</p>
+              <a
+                id="link-rez-remeslo"
+                class="stripe-btn"
+                href="#"
+                target="_blank"
+                rel="noopener noreferrer"
+                >Rezervovať / zaplatiť — remeslo</a
+              >
+            </div>
           </div>
         </div>
       </section>

@@ -103,19 +103,51 @@ a:hover {
 
 .hero {
   position: relative;
-  min-height: 42vh;
+  isolation: isolate;
+  overflow: hidden;
+  min-height: min(70vh, 520px);
   display: flex;
   align-items: center;
   justify-content: center;
   text-align: center;
-  padding: 3rem 1.5rem 4rem;
-  background:
-    linear-gradient(135deg, rgba(45, 61, 45, 0.85) 0%, rgba(92, 26, 26, 0.75) 100%),
-    url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 0L60 30L30 60L0 30z' fill='%23c9a227' fill-opacity='0.06'/%3E%3C/svg%3E");
+  padding: 3.5rem 1.5rem 4.25rem;
   color: var(--parchment);
+  background: #1f1410;
+}
+
+/* Fotka festivalu — cesta alebo URL cez premennú --hero-photo (nastaví main.js z config.js) */
+.hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background-color: #2a1810;
+  background-image: var(
+    --hero-photo,
+    linear-gradient(160deg, #3d2818 0%, #1a1209 45%, #2d1a15 100%)
+  );
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.hero::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: linear-gradient(
+    135deg,
+    rgba(26, 18, 9, 0.82) 0%,
+    rgba(92, 26, 26, 0.55) 42%,
+    rgba(45, 61, 45, 0.72) 100%
+  );
+  pointer-events: none;
 }
 
 .hero-inner {
+  position: relative;
+  z-index: 2;
   max-width: 720px;
 }
 
@@ -191,6 +223,21 @@ section h2 {
   margin: 0 0 1.25rem;
 }
 
+.section-block {
+  margin-bottom: 2.25rem;
+}
+
+.section-block:last-child {
+  margin-bottom: 0;
+}
+
+.section-block h3 {
+  font-size: 1.2rem;
+  color: var(--burgundy);
+  margin: 0 0 0.75rem;
+  letter-spacing: 0.06em;
+}
+
 .lead {
   font-size: 1.3rem;
   margin-top: 0;
@@ -246,10 +293,20 @@ section h2 {
   }
 }
 
-.purchase-card h3 {
+.purchase-card h3,
+.purchase-card h4 {
+  font-family: "Cinzel", serif;
   margin-top: 0;
-  font-size: 1.25rem;
   color: var(--burgundy);
+}
+
+.purchase-card h3 {
+  font-size: 1.25rem;
+}
+
+.purchase-card h4 {
+  font-size: 1.1rem;
+  letter-spacing: 0.04em;
 }
 
 .purchase-card p {

@@ -6,33 +6,48 @@
   if (heroYear) heroYear.textContent = String(y);
   if (footerYear) footerYear.textContent = String(y);
 
-  var tickets = document.getElementById("link-vstupenky");
-  var tokens = document.getElementById("link-zetony");
-  var stripeTickets = cfg.stripeVstupenky || "#";
-  var stripeTokens = cfg.stripeZetony || "#";
+  var hero = document.querySelector(".hero");
+  if (hero && cfg.bannerObrazok && String(cfg.bannerObrazok).trim()) {
+    var src = String(cfg.bannerObrazok).trim().replace(/"/g, "");
+    hero.style.setProperty("--hero-photo", 'url("' + src + '")');
+  }
 
-  if (tickets) {
-    tickets.href = stripeTickets;
-    if (stripeTickets === "#" || stripeTickets.indexOf("REPLACE_ME") !== -1) {
-      tickets.setAttribute("aria-disabled", "true");
-      tickets.addEventListener("click", function (e) {
+  function bindStripeLink(el, url, hint) {
+    if (!el) return;
+    var u = url || "#";
+    el.href = u;
+    if (u === "#" || String(u).indexOf("REPLACE_ME") !== -1) {
+      el.addEventListener("click", function (e) {
         e.preventDefault();
-        alert(
-          "Nastavte platobný odkaz Stripe v súbore js/config.js (stripeVstupenky)."
-        );
+        alert(hint);
       });
     }
   }
-  if (tokens) {
-    tokens.href = stripeTokens;
-    if (stripeTokens === "#" || stripeTokens.indexOf("REPLACE_ME") !== -1) {
-      tokens.setAttribute("aria-disabled", "true");
-      tokens.addEventListener("click", function (e) {
-        e.preventDefault();
-        alert(
-          "Nastavte platobný odkaz Stripe v súbore js/config.js (stripeZetony)."
-        );
-      });
-    }
+
+  bindStripeLink(
+    document.getElementById("link-vstupenky"),
+    cfg.stripeVstupenky,
+    "Nastavte platobný odkaz Stripe v js/config.js (stripeVstupenky)."
+  );
+  bindStripeLink(
+    document.getElementById("link-zetony"),
+    cfg.stripeZetony,
+    "Nastavte platobný odkaz Stripe v js/config.js (stripeZetony)."
+  );
+
+  var rez = cfg.stripeRezervacia || {};
+  var rezBindings = [
+    { id: "link-rez-lukostrelba", key: "lukostrelba" },
+    { id: "link-rez-serm", key: "serm" },
+    { id: "link-rez-deti", key: "deti" },
+    { id: "link-rez-remeslo", key: "remeslo" },
+  ];
+  for (var i = 0; i < rezBindings.length; i++) {
+    var b = rezBindings[i];
+    bindStripeLink(
+      document.getElementById(b.id),
+      rez[b.key],
+      "Nastavte Stripe odkaz v js/config.js → stripeRezervacia." + b.key
+    );
   }
 })();

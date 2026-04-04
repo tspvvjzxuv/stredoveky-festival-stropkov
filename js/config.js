@@ -7,6 +7,20 @@ window.FESTIVAL_CONFIG = {
   stripeZetony: "https://buy.stripe.com/test_REPLACE_ME",
   rok: 2026,
   miesto: "Stropkov",
-  /** Voliteľné: URL Cloudflare Workeru (bez lomky na konci). Kľúč pre vstup NEDÁVAJTE sem — zadá sa na overenie.html */
+  /**
+   * Banner: fotka za textom v hornom banneri. Pridajte súbor do images/ alebo URL.
+   * Príklad: "images/banner.jpg" — kým je prázdne, zobrazí sa len gradient.
+   */
+  bannerObrazok: "",
+  /** Voliteľné: URL Cloudflare Workeru (bez lomky na konci). */
   overenieApiUrl: "",
+  /**
+   * Stripe odkazy na rezervácie / platby za jednotlivé aktivity (Payment Links).
+   */
+  stripeRezervacia: {
+    lukostrelba: "https://buy.stripe.com/test_REPLACE_ME",
+    serm: "https://buy.stripe.com/test_REPLACE_ME",
+    deti: "https://buy.stripe.com/test_REPLACE_ME",
+    remeslo: "https://buy.stripe.com/test_REPLACE_ME",
+  },
 };
