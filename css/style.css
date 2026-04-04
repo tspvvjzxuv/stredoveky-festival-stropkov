@@ -598,6 +598,62 @@ a.stripe-btn.woo-pay-btn:hover {
   margin-bottom: 0.5rem;
 }
 
+.medieval-map-figure {
+  margin: 1.5rem 0;
+}
+
+.medieval-map-frame {
+  position: relative;
+  border: 4px solid var(--burgundy);
+  outline: 2px solid var(--gold);
+  outline-offset: 4px;
+  border-radius: 4px;
+  background: linear-gradient(145deg, #e8d5b8 0%, #d4c4a8 100%);
+  box-shadow: 0 12px 40px var(--shadow);
+  overflow: hidden;
+}
+
+.medieval-map-frame img {
+  display: block;
+  width: 100%;
+  height: auto;
+  vertical-align: top;
+}
+
+.medieval-map-caption {
+  font-size: 1rem;
+  font-style: italic;
+  color: rgba(26, 18, 9, 0.78);
+  margin-top: 0.85rem;
+  max-width: 48rem;
+}
+
+.quest-legend-card h3 {
+  margin-top: 0;
+  font-size: 1.2rem;
+  color: var(--burgundy);
+}
+
+.quest-legend-intro {
+  margin-top: 0;
+  font-size: 1.05rem;
+}
+
+.quest-legend {
+  margin: 0;
+  padding-left: 1.5rem;
+  max-width: 42rem;
+}
+
+.quest-legend li {
+  margin-bottom: 0.55rem;
+  padding-left: 0.25rem;
+}
+
+.quest-legend em {
+  color: rgba(26, 18, 9, 0.72);
+}
+
 .faq-intro {
   margin-top: 0;
   max-width: 42rem;
