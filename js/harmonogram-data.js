@@ -45,6 +45,16 @@ window.HARMONOGRAM_DATA = {
       ],
     },
     {
+      start: "15:00",
+      end: "15:30",
+      title: "Prestávka, presun na lukostrelbu",
+      activities: [
+        "Oddych po obede, nápoje v stánkoch",
+        "Presun na miesto súťaže v lukostreľbe",
+        "Registrácia účastníkov, ak ste sa ešte neprihlásili",
+      ],
+    },
+    {
       start: "15:30",
       end: "17:00",
       title: "Súťaž v lukostreľbe",

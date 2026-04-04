@@ -32,6 +32,7 @@
           <a href="#vstupenky">Vstupenky</a>
           <a href="#rezervacie-aktivity">Rezervácie</a>
           <a href="#zetony">Žetóny</a>
+          <a href="#faq">FAQ</a>
           <a id="nav-obchod" href="#vstupenky-rezervacie">Obchod</a>
         </nav>
         <span id="nav-profile-pill" class="nav-profile-pill" hidden></span>
@@ -50,6 +51,7 @@
           <a class="btn btn-primary" href="#harmonogram">Harmonogram</a>
           <a class="btn btn-outline" href="#miesto">Mapa areálu</a>
           <a class="btn btn-outline" href="#vstupenky">Vstupenky</a>
+          <a class="btn btn-outline" href="#faq">Otázky</a>
         </div>
       </div>
     </section>
@@ -97,7 +99,7 @@
           </table>
           <p class="note">
             Časy a bloky upravíte v <code>js/harmonogram-data.js</code> (vrátane
-            dátumu <code>festivalDate</code> pre zelené zvýraznenie „práve teraz“).
+            dátumu <code>festivalDate</code> pre zvýraznenie aktuálneho bloku).
           </p>
         </div>
       </section>
@@ -124,6 +126,23 @@
             loading="lazy"
           ></iframe>
         </div>
+        <p>
+          <strong>Počasie:</strong>
+          <a
+            href="https://www.shmu.sk/sk/?page=989"
+            target="_blank"
+            rel="noopener noreferrer"
+            >SHMÚ — predpoveď (Slovensko)</a
+          >
+          ·
+          <a
+            href="https://www.yr.no/en/forecast/daily-table/2-723084/Slovakia/Pre%C5%A1ov%20Region/Stropkov/Stropkov"
+            target="_blank"
+            rel="noopener noreferrer"
+            >yr.no — Stropkov</a
+          >
+          (vonku v prírode počítajte s vetrom a dažďom — plášť, voda).
+        </p>
         <p class="note">
           Mapa je orientačná (OpenStreetMap). Špendlík po overení na mieste
           upravte v odkaze alebo vložte vlastný obrázok mapy do <code>images/</code>.
@@ -189,6 +208,53 @@
             <strong>Sociálne siete</strong> — hashtag festivalu, kde hľadať aktualizácie.
           </li>
         </ul>
+      </section>
+
+      <section id="faq" aria-labelledby="faq-heading">
+        <h2 id="faq-heading">Často kladené otázky</h2>
+        <p class="faq-intro">
+          Stručné odpovede — doplníte podľa pravidiel vášho ročníka.
+        </p>
+        <div class="faq-list">
+          <details class="faq-item">
+            <summary>Kde presne je vstup a kde parkujem?</summary>
+            <p>
+              Orientačná adresa je Pod vlekom 1734. Presný vchod, parkovanie a
+              prípadné parkovné zverejní organizátor pred akciou (tu na stránke
+              alebo na sociálnych sieťach).
+            </p>
+          </details>
+          <details class="faq-item">
+            <summary>Môžem platiť kartou alebo len žetónmi?</summary>
+            <p>
+              Na mieste často platia žetóny (rýchlejší predaj). Online si
+              viete dopredu kúpiť vstupenky a žetóny podľa nastavenia v sekcii
+              Vstupenky / Žetóny.
+            </p>
+          </details>
+          <details class="faq-item">
+            <summary>Sú psy alebo iné zvieratá vítané?</summary>
+            <p>
+              Závisí od pravidiel areálu a organizátora — doplnite jednoznačné
+              pravidlo (áno/nie, vodítko, muzzle kde treba).
+            </p>
+          </details>
+          <details class="faq-item">
+            <summary>Čo keď príde zlá počasie?</summary>
+            <p>
+              Festival je väčšinou vonku — sledujte predpoveď (odkazy pri mape).
+              Drobný dážď nemusí znamenať zrušenie; pri nepriazni organizátor
+              oznámi zmeny.
+            </p>
+          </details>
+          <details class="faq-item">
+            <summary>Je areál vhodný pre kočík alebo invalidný vozík?</summary>
+            <p>
+              Terén pod vlekom môže byť nerovný alebo spevnený čiastočne —
+              doplníte po obhliadke miesta (bezbariérový prístup, WC).
+            </p>
+          </details>
+        </div>
       </section>
 
       <section id="vstupenky-rezervacie" aria-labelledby="heading-vstup-rez">

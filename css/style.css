@@ -541,7 +541,8 @@ a.stripe-btn.woo-pay-btn:hover {
 .map-embed iframe {
   display: block;
   width: 100%;
-  height: min(55vw, 340px);
+  min-height: 280px;
+  height: clamp(280px, 52vw, 380px);
   border: 0;
 }
 
@@ -582,4 +583,40 @@ a.stripe-btn.woo-pay-btn:hover {
 
 .ideas-list li {
   margin-bottom: 0.65rem;
+}
+
+.faq-intro {
+  margin-top: 0;
+  max-width: 42rem;
+}
+
+.faq-list {
+  max-width: 40rem;
+}
+
+.faq-item {
+  border: 1px solid rgba(92, 26, 26, 0.2);
+  border-radius: 4px;
+  padding: 0.5rem 1rem;
+  margin-bottom: 0.65rem;
+  background: rgba(255, 254, 248, 0.6);
+}
+
+.faq-item summary {
+  font-family: "Cinzel", serif;
+  font-weight: 600;
+  color: var(--burgundy);
+  cursor: pointer;
+  letter-spacing: 0.03em;
+  padding: 0.35rem 0;
+}
+
+.faq-item summary:hover {
+  color: var(--burgundy-light);
+}
+
+.faq-item p {
+  margin: 0.5rem 0 0.75rem;
+  padding-left: 0.15rem;
+  font-size: 1.1rem;
 }
