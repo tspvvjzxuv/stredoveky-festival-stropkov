@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta
       name="description"
-      content="Stredoveký festival v Stropkove — harmonogram, vstupenky, rezervácie na aktivity a žetóny."
+      content="Stredoveký festival v Stropkove — areál Pod vlekom, harmonogram, mapa, profil, vstupenky."
     />
     <title>Stredoveký festival — Stropkov</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -16,6 +16,8 @@
     />
     <link rel="stylesheet" href="css/style.css" />
     <script src="js/config.js" defer></script>
+    <script src="js/harmonogram-data.js" defer></script>
+    <script src="js/harmonogram-live.js" defer></script>
     <script src="js/main.js" defer></script>
   </head>
   <body>
@@ -25,25 +27,29 @@
         <nav class="nav" aria-label="Hlavná navigácia">
           <a href="#o-festivale">O festivale</a>
           <a href="#harmonogram">Harmonogram</a>
+          <a href="#miesto">Areál</a>
+          <a href="#profil">Profil</a>
           <a href="#vstupenky">Vstupenky</a>
           <a href="#rezervacie-aktivity">Rezervácie</a>
           <a href="#zetony">Žetóny</a>
           <a id="nav-obchod" href="#vstupenky-rezervacie">Obchod</a>
         </nav>
+        <span id="nav-profile-pill" class="nav-profile-pill" hidden></span>
       </div>
     </header>
 
     <section class="hero">
       <div class="hero-inner">
         <h1>Stredoveký festival<br />Stropkov <span id="hero-year">2026</span></h1>
+        <p id="profile-greeting" class="profile-greeting" hidden></p>
         <p class="tagline">
-          Remeslá, hudba, dobová atmosféra a zábava pre celú rodinu v srdci
-          Zemplína.
+          Remeslá, hudba, dobová atmosféra a zábava pre celú rodinu — rekreačné
+          stredisko <strong>Pod vlekom</strong>.
         </p>
         <div class="btn-row">
           <a class="btn btn-primary" href="#harmonogram">Harmonogram</a>
+          <a class="btn btn-outline" href="#miesto">Mapa areálu</a>
           <a class="btn btn-outline" href="#vstupenky">Vstupenky</a>
-          <a class="btn btn-outline" href="#rezervacie-aktivity">Rezervácie</a>
         </div>
       </div>
     </section>
@@ -52,26 +58,33 @@
       <section id="o-festivale">
         <h2>O festivale</h2>
         <p class="lead">
-          Vitajte na oficiálnej stránke stredovekého festivalu v Stropkove.
-          Harmonogram, vstupenky, rezervácie na aktivity a žetóny môžete riešiť
-          cez vlastný <strong>WooCommerce</strong> obchod na WordPresse (platba
-          cez plugin <strong>Stripe</strong>) alebo dočasne cez priame Stripe
-          Payment Links — prepínač je v <code>js/config.js</code> (<code>platbyRezim</code>).
+          Vitajte na stránke stredovekého festivalu v Stropkove. Nájdete tu
+          <strong>harmonogram</strong> s návrhmi, čo robiť v danom čase,
+          <strong>mapu areálu</strong> Pod vlekom, jednoduchý <strong>profil</strong>
+          (meno alebo stredoveký alias — len v tomto prehliadači) a odkazy na
+          vstupenky a žetóny.
         </p>
         <p>
-          Táto stránka na GitHub Pages je len prezentácia a odkazy na platby.
-          WooCommerce vyžaduje <strong>hosting s WordPressom</strong> (PHP, SSL,
-          databáza). Postup a Fio banka: súbor <code>NASTAVENIE-PLATIEB.txt</code>
-          v koreni projektu.
+          Platby: WooCommerce alebo Stripe — nastavenie v <code>js/config.js</code>
+          (<code>platbyRezim</code>). Postup: <code>NASTAVENIE-PLATIEB.txt</code>.
         </p>
         <p>
-          Fotku v baneri pridáte do <code>images/</code> a v konfigurácii
-          <code>bannerObrazok</code>.
+          Fotku v baneri: súbor v <code>images/</code> a <code>bannerObrazok</code> v konfigurácii.
         </p>
       </section>
 
       <section id="harmonogram">
         <h2>Harmonogram</h2>
+
+        <div id="harmonogram-live" class="card live-schedule">
+          <h3 class="live-schedule-heading">Živý prehľad</h3>
+          <p class="live-schedule-title live-schedule-strong">Načítavam…</p>
+          <p class="live-schedule-body"></p>
+          <p class="live-schedule-sub live-schedule-strong"></p>
+          <ul class="live-schedule-activities"></ul>
+          <p class="live-schedule-next" style="display: none"></p>
+        </div>
+
         <div class="card">
           <table class="schedule-table">
             <thead>
@@ -80,50 +93,109 @@
                 <th>Program</th>
               </tr>
             </thead>
-            <tbody>
-              <tr>
-                <td class="time">09:00</td>
-                <td>Otvorenie areálu, remeselné stánky</td>
-              </tr>
-              <tr>
-                <td class="time">10:30</td>
-                <td>Úvodný ceremoniál, privítanie hostí</td>
-              </tr>
-              <tr>
-                <td class="time">11:00 – 13:00</td>
-                <td>Šermiarske ukážky, detské aktivity</td>
-              </tr>
-              <tr>
-                <td class="time">13:00 – 15:00</td>
-                <td>Občerstvenie, živá stredoveká hudba</td>
-              </tr>
-              <tr>
-                <td class="time">15:30</td>
-                <td>Súťaž v lukostreľbe (odporúčame rezerváciu)</td>
-              </tr>
-              <tr>
-                <td class="time">17:00</td>
-                <td>Večerný program, táborák</td>
-              </tr>
-              <tr>
-                <td class="time">20:00</td>
-                <td>Ukončenie festivalu</td>
-              </tr>
-            </tbody>
+            <tbody id="schedule-tbody"></tbody>
           </table>
           <p class="note">
-            Harmonogram je orientačný — finálne časy môžete zmeniť v
-            <code>index.html</code>.
+            Časy a bloky upravíte v <code>js/harmonogram-data.js</code> (vrátane
+            dátumu <code>festivalDate</code> pre zelené zvýraznenie „práve teraz“).
           </p>
         </div>
+      </section>
+
+      <section id="miesto">
+        <h2>Areál — Pod vlekom</h2>
+        <p class="lead">
+          Festival sa koná v rekreačnom areáli <strong>Pod vlekom</strong> pri
+          Stropkove. Presné miesto vstupu, parkovanie a značenie doplní organizátor.
+        </p>
+        <p>
+          <strong>Adresa:</strong> Pod vlekom 1734, 091 01 Stropkov ·
+          <a
+            href="https://www.google.com/maps/search/?api=1&amp;query=Pod+vlekom+1734+Stropkov"
+            target="_blank"
+            rel="noopener noreferrer"
+            >Otvoriť v Google Maps</a
+          >
+        </p>
+        <div class="map-embed">
+          <iframe
+            title="Mapa okolia areálu Pod vlekom, Stropkov"
+            src="https://www.openstreetmap.org/export/embed.html?bbox=21.615%2C49.192%2C21.678%2C49.225&amp;layer=mapnik"
+            loading="lazy"
+          ></iframe>
+        </div>
+        <p class="note">
+          Mapa je orientačná (OpenStreetMap). Špendlík po overení na mieste
+          upravte v odkaze alebo vložte vlastný obrázok mapy do <code>images/</code>.
+        </p>
+      </section>
+
+      <section id="profil">
+        <h2>Váš profil</h2>
+        <p>
+          Zadajte svoje meno alebo <strong>stredoveký alias</strong> — zobrazí sa
+          pozdrav v baneri a skratka v hlavičke. Údaje sa ukladajú len lokálne v
+          prehliadači (nie na serveri).
+        </p>
+        <div class="card profile-card">
+          <form id="profile-form" class="profile-form">
+            <label for="profile-display-name">Meno alebo alias</label>
+            <input
+              id="profile-display-name"
+              name="display-name"
+              type="text"
+              maxlength="80"
+              placeholder="napr. Tomáš alebo Sir Roland z Východu"
+              autocomplete="nickname"
+            />
+            <button type="submit" class="btn btn-primary profile-save">
+              Uložiť
+            </button>
+          </form>
+        </div>
+      </section>
+
+      <section id="napady" aria-labelledby="napady-heading">
+        <h2 id="napady-heading">Čo ešte odporúčame doplniť</h2>
+        <p>
+          Krátky zoznam vecí, ktoré návštevníkom často chýbajú — môžete ich
+          postupne pridať na stránku alebo do letáku.
+        </p>
+        <ul class="ideas-list">
+          <li>
+            <strong>Parkovanie a príchod</strong> — kde nechať auto, či MHD,
+            orientačný čas pešo z centra.
+          </li>
+          <li>
+            <strong>Bezbariérový prístup</strong> — ktoré časti areálu sú vhodné
+            pre kočíky a vozíky.
+          </li>
+          <li>
+            <strong>Strava</strong> — vegetariánske / bezlepkové možnosti, pitný režim.
+          </li>
+          <li>
+            <strong>Počasie</strong> — odkaz na predpoveď (SHMÚ) a čo si zbaliť.
+          </li>
+          <li>
+            <strong>Deti</strong> — stratené dieťa, náramok s telefónom rodiča.
+          </li>
+          <li>
+            <strong>Núdzové kontakty</strong> — organizátor, prvá pomoc, číslo na ochranu.
+          </li>
+          <li>
+            <strong>Pravidlá</strong> — zvieratá, fajčenie, fotenie, zodpovedné správanie.
+          </li>
+          <li>
+            <strong>Sociálne siete</strong> — hashtag festivalu, kde hľadať aktualizácie.
+          </li>
+        </ul>
       </section>
 
       <section id="vstupenky-rezervacie" aria-labelledby="heading-vstup-rez">
         <h2 id="heading-vstup-rez">Vstupenky a rezervácie</h2>
         <p class="lead">
           Najprv si zakúpte vstup na festival. Na aktivity s obmedzenou kapacitou
-          si vyberte samostatný produkt alebo variant vo vašom obchode — v
-          WooCommerce má každá položka vlastnú stránku produktu.
+          si vyberte samostatný produkt alebo variant vo vašom obchode.
         </p>
 
         <div id="vstupenky" class="section-block">

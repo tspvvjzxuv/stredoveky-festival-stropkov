@@ -446,3 +446,140 @@ a.stripe-btn.woo-pay-btn:hover {
   color: rgba(26, 18, 9, 0.75);
   margin-top: 1.25rem;
 }
+
+.profile-greeting {
+  font-family: "Cinzel", serif;
+  font-size: clamp(1rem, 2.5vw, 1.25rem);
+  color: var(--gold);
+  margin: 0 0 0.5rem;
+  letter-spacing: 0.06em;
+}
+
+.nav-profile-pill {
+  flex-basis: 100%;
+  text-align: right;
+  font-family: "Cinzel", serif;
+  font-size: 0.85rem;
+  color: var(--gold);
+  letter-spacing: 0.04em;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+@media (min-width: 720px) {
+  .nav-profile-pill {
+    flex-basis: auto;
+    text-align: left;
+    margin-left: auto;
+    max-width: 12rem;
+  }
+}
+
+.live-schedule {
+  margin-bottom: 1.5rem;
+  border: 2px solid rgba(201, 162, 39, 0.45);
+}
+
+.live-schedule-heading {
+  font-size: 1.15rem;
+  margin: 0 0 0.75rem;
+  color: var(--burgundy);
+}
+
+.live-schedule-title {
+  font-weight: 600;
+  margin: 0 0 0.35rem;
+}
+
+.live-schedule-body {
+  margin: 0 0 0.75rem;
+}
+
+.live-schedule-sub {
+  margin: 0 0 0.35rem;
+  font-size: 1.05rem;
+  color: var(--burgundy);
+}
+
+.live-schedule-activities {
+  margin: 0 0 0.75rem;
+  padding-left: 1.35rem;
+}
+
+.live-schedule-activities li {
+  margin-bottom: 0.35rem;
+}
+
+.live-schedule-next {
+  margin: 0;
+  font-size: 1.05rem;
+  padding-top: 0.5rem;
+  border-top: 1px solid rgba(92, 26, 26, 0.15);
+}
+
+.schedule-row-active {
+  background: rgba(201, 162, 39, 0.22) !important;
+}
+
+.schedule-row-active .time {
+  color: var(--burgundy);
+}
+
+.map-embed {
+  position: relative;
+  width: 100%;
+  max-width: 100%;
+  border-radius: 4px;
+  overflow: hidden;
+  border: 1px solid rgba(92, 26, 26, 0.25);
+  box-shadow: 0 6px 20px var(--shadow);
+  margin: 1rem 0;
+}
+
+.map-embed iframe {
+  display: block;
+  width: 100%;
+  height: min(55vw, 340px);
+  border: 0;
+}
+
+.profile-card {
+  max-width: 32rem;
+}
+
+.profile-form label {
+  display: block;
+  font-family: "Cinzel", serif;
+  font-size: 0.95rem;
+  color: var(--burgundy);
+  margin-bottom: 0.35rem;
+  letter-spacing: 0.04em;
+}
+
+.profile-form input[type="text"] {
+  width: 100%;
+  max-width: 100%;
+  padding: 0.55rem 0.75rem;
+  font-size: 1.1rem;
+  font-family: inherit;
+  border: 1px solid rgba(92, 26, 26, 0.35);
+  border-radius: 4px;
+  background: #fffef8;
+  margin-bottom: 1rem;
+}
+
+.profile-save {
+  cursor: pointer;
+  border: none;
+}
+
+.ideas-list {
+  padding-left: 1.35rem;
+  max-width: 42rem;
+}
+
+.ideas-list li {
+  margin-bottom: 0.65rem;
+}
