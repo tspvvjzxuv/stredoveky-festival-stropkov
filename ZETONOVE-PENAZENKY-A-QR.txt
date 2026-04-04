@@ -2,6 +2,18 @@
 Virtuálna peňaženka + platba žetónmi cez QR pri stánku
 ================================================================================
 
+Rozhodnutie projektu: bez náramkov, overenie cez QR v mobile
+------------------------------------------------------------
+• NFC náramky ani špeciálne čipy sa nepoužívajú.
+• Zákazník má na telefóne stránku „moja peňaženka“ (ideálne PWA / záložka),
+  kde sa zobrazí **QR kód** (napr. krátko platný token z servera).
+• Predavač pri stánku **naskenuje QR** kamerou v jednoduchej webovej pokladni
+  (tablet/telefón) → odošle sumu v žetónoch na server → server odpíše kredit.
+
+Výhody: žiadny výdaj hardvéru náramkov, nižšia zložitosť, stačí bežný smartfón
+a internet (pre slabé signály treba zvážiť offline fallback neskôr).
+
+
 Odpoveď na „dalo by sa?“
 ------------------------
 ÁNO — ale nie len HTML na GitHub Pages. Potrebujete aspoň jeden dôveryhodný
