@@ -132,6 +132,10 @@
 
           var payload = formDataToObject(fd);
           payload.access_key = accessKey;
+          if (payload._subject && !payload.subject) {
+            payload.subject = payload._subject;
+            delete payload._subject;
+          }
           if (payload.meno && !payload.from_name) {
             payload.from_name = payload.meno;
           }
@@ -201,7 +205,7 @@
       forms[k].addEventListener("submit", function (e) {
         e.preventDefault();
         alert(
-          "Formulár nie je pripojený. V js/config.js doplňte formularPrihlaskyFormspreeFormId (Formspree Project ID) alebo formularPrihlaskyUrl."
+          "Formulár nie je pripojený. V js/config.js doplňte formularPrihlaskyWeb3AccessKey (web3forms.com) alebo záložne Formspree / Formspark — pozri žltý návod na stránke."
         );
       });
     }
@@ -216,6 +220,11 @@
     var banner = document.getElementById("prihlasky-config-banner");
     var forms = document.querySelectorAll("form[data-prihlaska-form]");
 
+    if (web3) {
+      bindWeb3(forms, web3, banner);
+      return;
+    }
+
     if (formspreeId) {
       bindFormspree(forms, FORMSPREE_BASE + encodeURIComponent(formspreeId), banner);
       return;
@@ -223,11 +232,6 @@
 
     if (formspreeUrl && /^https?:\/\//i.test(formspreeUrl)) {
       bindFormspree(forms, formspreeUrl, banner);
-      return;
-    }
-
-    if (web3) {
-      bindWeb3(forms, web3, banner);
       return;
     }
 

@@ -66,23 +66,20 @@ window.FESTIVAL_CONFIG = {
   overenieApiUrl: "",
 
   /**
-   * Prihlášky (prihlasky.js): 1 = Formspree (ID alebo URL), 2 = Web3Forms, 3 = Formspark.
+   * Prihlášky (prihlasky.js): 1 = Web3Forms, 2 = Formspree, 3 = Formspark.
    */
   /**
-   * Formspree — ID pre https://formspree.io/f/…
-   * Zvyčajne je to isté číslo ako Project ID v URL nastavení; ak odoslanie zlyhá,
-   * otvorte v dashboarde konkrétny formulár → Integration a vložte sem presný úsek z „/f/…“
-   * (môže byť aj kratší hash). Alternatíva: celá URL do formularPrihlaskyUrl nižšie.
-   * Deploy Key v projekte je len pre CLI, nie pre túto HTML stránku.
+   * Web3Forms — odporúčané pre GitHub Pages (web3forms.com).
+   * Zadajte svoj e-mail na webe, príde vám Access Key; vložte ho sem (jedna hodnota stačí na všetky formuláre).
    */
-  formularPrihlaskyFormspreeFormId: "2973068715488181717",
+  formularPrihlaskyWeb3AccessKey: "cf9cb7de-1c3e-4f9d-a8a6-53c19cb1e8b6",
 
-  /** Prázdne = použiť ID vyššie. Inak celá adresa napr. https://formspree.io/f/abcdefgh */
+  /** Formspree — voliteľná záloha: číslo/hash pre https://formspree.io/f/… alebo prázdne. */
+  formularPrihlaskyFormspreeFormId: "",
+
+  /** Formspree — celá URL formulára, ak nepoužívate ID vyššie. */
   formularPrihlaskyUrl: "",
 
-  /** Web3Forms access key — len ak Formspree nepoužívate (nechajte prázdne). */
-  formularPrihlaskyWeb3AccessKey: "",
-
-  /** Formspark submit-form.com/ID — voliteľná záloha. */
+  /** Formspark — ID z submit-form.com/… (záloha). */
   formularPrihlaskyFormsparkId: "",
 };
