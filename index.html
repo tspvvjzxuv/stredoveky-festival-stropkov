@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta
       name="description"
-      content="Stredoveký festival Stropkov — divadlo, lukostrelecký turnaj, strelnica, šermiári, rytierska cesta, guláš, Pod vlekom."
+      content="Stredoveký festival Stropkov (O.Z. Sparta) — divadlo, lukostrelecký turnaj, strelnica, šermiári, rytierska cesta, guláš, Pod vlekom."
     />
     <title>Stredoveký festival — Stropkov</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -23,31 +23,30 @@
   <body>
     <header class="site-header">
       <div class="header-inner">
-        <a class="logo" href="index.html" aria-label="ARTA — Stredoveký festival, domov">
+        <a class="logo" href="index.html" aria-label="Stredoveký festival — O.Z. Sparta, domov">
           <img
             class="logo__mark"
-            src="images/logo-arta.svg"
+            src="images/logo-sparta-helmet.svg"
             alt=""
             width="40"
             height="40"
           />
           <span class="logo__text">
-            <span class="logo__brand">ARTA</span>
+            <span class="logo__brand">SPARTA</span>
             <span class="logo__event">Stredoveký festival</span>
-            <span class="logo__moment">the moment is now</span>
+            <span class="logo__moment">Občianske združenie Sparta</span>
           </span>
         </a>
         <nav class="nav" aria-label="Hlavná navigácia">
           <a href="#o-festivale">O festivale</a>
-          <a href="#harmonogram">Harmonogram</a>
+          <a href="#harmonogram">Program</a>
           <a href="#miesto">Areál</a>
-          <a href="#mapa-uloh">Mapa úloh</a>
-          <a href="#profil">Profil</a>
-          <a href="#vstupenky-rezervacie">Vstupenky</a>
+          <a href="#mapa-uloh">Mapa</a>
+          <a href="#vstupenky-rezervacie" id="nav-obchod">Vstupenky</a>
           <a href="#zetony">Žetóny</a>
           <a href="prihlasky.html">Prihlášky</a>
           <a href="#faq">FAQ</a>
-          <a id="nav-obchod" href="#vstupenky-rezervacie">Obchod</a>
+          <a href="#profil">Profil</a>
         </nav>
         <span id="nav-profile-pill" class="nav-profile-pill" hidden></span>
       </div>
@@ -73,17 +72,14 @@
         <h1>Stredoveký festival<br />Stropkov <span id="hero-year">2026</span></h1>
         <p id="profile-greeting" class="profile-greeting" hidden></p>
         <p class="tagline">
-          Divadlo, lukostrelecký turnaj, strelnica pre deti, šermiári, rytierska
-          cesta, šach, táborák, guláš a nápoje — rekreačné stredisko
-          <strong>Pod vlekom</strong>.
+          Jednodňový program v areáli <strong>Pod vlekom</strong> — divadlo, luk,
+          šerm, rytierska cesta, strelnica, šach, občerstvenie.
         </p>
         <div class="btn-row">
-          <a class="btn btn-primary" href="#harmonogram">Harmonogram</a>
-          <a class="btn btn-outline" href="#miesto">Mapa areálu</a>
-          <a class="btn btn-outline" href="#mapa-uloh">Úlohy</a>
-          <a class="btn btn-outline" href="#vstupenky">Vstupenky</a>
+          <a class="btn btn-primary" href="#harmonogram">Program</a>
+          <a class="btn btn-outline" href="#miesto">Areál</a>
+          <a class="btn btn-outline" href="#vstupenky-rezervacie">Vstupenky</a>
           <a class="btn btn-outline" href="prihlasky.html">Prihlášky</a>
-          <a class="btn btn-outline" href="#faq">Otázky</a>
         </div>
       </div>
       <div class="hero-scroll-cue" aria-hidden="true">
@@ -96,24 +92,20 @@
       <section id="o-festivale">
         <h2>O festivale</h2>
         <p class="lead">
-          Vitajte na stránke stredovekého festivalu v Stropkove. Čaká vás
-          <strong>divadlo</strong>, <strong>lukostrelecký turnaj</strong>,
-          <strong>strelnica</strong> (aj pre deti), <strong>šermiári</strong>,
-          <strong>rytierska cesta</strong>, <strong>festivalový šach</strong>,
-          <strong>táborák</strong>, <strong>guláš</strong> a <strong>jedlo s nápojmi</strong>
-          počas dňa. Tu nájdete <strong>harmonogram</strong>, <strong>mapu úloh</strong>
-          a <strong>mapu areálu</strong> v rekreačnom stredisku <strong>Pod vlekom</strong>.
-          Môžete si nastaviť <strong>meno alebo alias</strong> v profile (uložené len v
-          tomto prehliadači).           Na mieste sa za občerstvenie a vybrané služby platí
-          <strong>žetónmi</strong> z jednej centrálnej pokladnice, výhradne
-          <strong>hotovosťou</strong>.
-          Verejná stránka <a href="prihlasky.html"><strong>Prihlášky a súťaže</strong></a>
-          — záujem o workshopy a súťažné kolá; vstupenky a platby sú zvlášť v sekcii nižšie.
+          Organizuje <strong>občianske združenie Sparta</strong>. Jednodňové podujatie
+          v <strong>Pod vlekom</strong> — divadlo, lukostrelba, šerm, rytierska cesta,
+          strelnica (aj pre deti), šach, táborák a občerstvenie.
+        </p>
+        <p>
+          <strong>Platby na mieste:</strong> žetóny z jednej pokladnice, len hotovosť.
+          <strong>Vstup a rezervácie:</strong> nižšie. Záujem o workshopy alebo súťaž —
+          <a href="prihlasky.html">Prihlášky</a>. Meno v hlavičke si môžete uložiť v
+          sekcii <a href="#profil">Profil</a> (len v tomto prehliadači).
         </p>
       </section>
 
       <section id="harmonogram">
-        <h2>Harmonogram</h2>
+        <h2>Program / harmonogram</h2>
 
         <div id="harmonogram-live" class="card live-schedule">
           <h3 class="live-schedule-heading">Živý prehľad</h3>
@@ -140,17 +132,14 @@
       <section id="miesto">
         <h2>Areál — Pod vlekom</h2>
         <p class="lead">
-          Festival sa koná v rekreačnom areáli <strong>Pod vlekom</strong> pri
-          Stropkove. Presné miesto vstupu, parkovanie a značenie doplní organizátor.
-        </p>
-        <p>
-          <strong>Adresa:</strong> Pod vlekom 1734, 091 01 Stropkov ·
+          <strong>Pod vlekom 1734, 091 01 Stropkov</strong> —
           <a
             href="https://www.google.com/maps/search/?api=1&amp;query=Pod+vlekom+1734+Stropkov"
             target="_blank"
             rel="noopener noreferrer"
-            >Otvoriť v Google Maps</a
-          >
+            >Google Maps</a
+          >.
+          Vstup, parkovanie a značenie upresní organizátor pred akciou.
         </p>
         <div class="map-embed">
           <iframe
@@ -159,37 +148,25 @@
             loading="lazy"
           ></iframe>
         </div>
-        <p>
+        <p class="note">
           <strong>Počasie:</strong>
-          <a
-            href="https://www.shmu.sk/sk/?page=989"
-            target="_blank"
-            rel="noopener noreferrer"
-            >SHMÚ — predpoveď (Slovensko)</a
-          >
+          <a href="https://www.shmu.sk/sk/?page=989" target="_blank" rel="noopener noreferrer">SHMÚ</a>
           ·
           <a
             href="https://www.yr.no/en/forecast/daily-table/2-723084/Slovakia/Pre%C5%A1ov%20Region/Stropkov/Stropkov"
             target="_blank"
             rel="noopener noreferrer"
-            >yr.no — Stropkov</a
+            >yr.no (Stropkov)</a
           >
-          (vonku v prírode počítajte s vetrom a dažďom — plášť, voda).
-        </p>
-        <p class="note">
-          Mapa je orientačná. Presné miesto vstupu a parkovania oznámi organizátor pred akciou.
+          — počítajte s vetrom a dažďom.
         </p>
       </section>
 
       <section id="mapa-uloh" aria-labelledby="mapa-uloh-heading">
-        <h2 id="mapa-uloh-heading">Mapa púte — úlohy v areáli</h2>
+        <h2 id="mapa-uloh-heading">Mapa areálu a úlohy</h2>
         <p class="lead">
-          Program zahŕňa <strong>festivalové divadlo</strong>,
-          <strong>lukostrelecký turnaj</strong>, <strong>strelnicu</strong> (aj
-          detskú), <strong>šermiárov</strong>, <strong>rytiersku cestu</strong>,
-          <strong>festivalový šach</strong>, <strong>táborák</strong> s
-          <strong>gulášom</strong>, <strong>jedlo a nápoje</strong> počas celého
-          dňa. Mapa je ilustrácia areálu; čísla 1–8 označujú stanice púte (úlohy alebo pečiatky).
+          Ilustrácia rozmiestnenia; čísla <strong>1–8</strong> sú stanice púte (úlohy alebo pečiatky).
+          Presné zadania dá organizátor na mieste alebo v letáku.
         </p>
         <figure class="medieval-map-figure">
           <div class="medieval-map-frame">
@@ -202,56 +179,28 @@
             />
           </div>
           <figcaption class="medieval-map-caption">
-            Ilustrácia programu v areáli — presné rozostupy podľa skutočnosti na mieste.
+            Orientačná mapa — rozostupy podľa situácie v deň festivalu.
           </figcaption>
         </figure>
         <div class="card quest-legend-card">
-          <h3>Úlohy podľa mapy (čísla 1–8)</h3>
-          <p class="quest-legend-intro">
-            Zodpovedajú číslam na mape. Presné zadania a pravidlá oznámi organizátor na mieste alebo v letáku.
-          </p>
+          <h3>Stanice 1–8 (legenda)</h3>
           <ol class="quest-legend">
-            <li>
-              <strong>Rytierska cesta</strong> — štart pri bráne; úvodná pečiatka
-              alebo úloha na celú trasu.
-            </li>
-            <li>
-              <strong>Šermiári</strong> — stanica pri ukážkach / škôlke šermu.
-            </li>
-            <li>
-              <strong>Festivalové divadlo</strong> — úloha pri scéne (otázka k
-              predstaveniu, program).
-            </li>
-            <li>
-              <strong>Lukostrelecký turnaj</strong> — súťažné kolá; divácka úloha
-              alebo registrácia.
-            </li>
-            <li>
-              <strong>Strelnica</strong> — aj detské stanovisko; bezpečnostné
-              pravidlá a odmena za zásah.
-            </li>
-            <li>
-              <strong>Táborák a guláš</strong> — večerná zóna; úloha pri ohni alebo
-              pri výdaji gulášu.
-            </li>
-            <li>
-              <strong>Festivalový šach + jedlo a nápoje</strong> — stred areálu;
-              občerstvenie počas celého podujatia.
-            </li>
-            <li>
-              <strong>Pokladnica žetónov</strong> — výmena hotovosti za žetóny;
-              záverečná pečiatka alebo informácia k platbám.
-            </li>
+            <li><strong>Rytierska cesta</strong> — od brány.</li>
+            <li><strong>Šermiári</strong> — ukážky / workshop.</li>
+            <li><strong>Divadlo</strong> — pri scéne.</li>
+            <li><strong>Lukostreľba</strong> — turnaj / divácka úloha.</li>
+            <li><strong>Strelnica</strong> — aj detská.</li>
+            <li><strong>Táborák, guláš</strong>.</li>
+            <li><strong>Šach, občerstvenie</strong>.</li>
+            <li><strong>Pokladnica žetónov</strong>.</li>
           </ol>
         </div>
       </section>
 
       <section id="profil">
-        <h2>Váš profil</h2>
+        <h2>Profil</h2>
         <p>
-          Zadajte svoje meno alebo <strong>stredoveký alias</strong> — zobrazí sa
-          pozdrav v baneri a skratka v hlavičke. Údaje sa ukladajú len lokálne v
-          prehliadači (nie na serveri).
+          Meno alebo alias sa ukáže v hero a v hlavičke. Ukladá sa len v tomto prehliadači.
         </p>
         <div class="card profile-card">
           <form id="profile-form" class="profile-form">
@@ -272,47 +221,35 @@
       </section>
 
       <section id="faq" aria-labelledby="faq-heading">
-        <h2 id="faq-heading">Často kladené otázky</h2>
-        <p class="faq-intro">
-          Stručné odpovede na bežné otázky. Podrobnosti vždy platia podľa oznámenia organizátora.
-        </p>
+        <h2 id="faq-heading">Časté otázky</h2>
+        <p class="faq-intro">Platí to, čo organizátor zverejní pred akciou.</p>
         <div class="faq-list">
           <details class="faq-item">
-            <summary>Kde presne je vstup a kde parkujem?</summary>
+            <summary>Vstup a parkovanie?</summary>
             <p>
-              Orientačná adresa je Pod vlekom 1734. Presný vchod, parkovanie a
-              prípadné parkovné zverejní organizátor pred akciou (tu na stránke
-              alebo na sociálnych sieťach).
+              Adresa: Pod vlekom 1734. Presný vchod a parkovanie oznámi organizátor pred akciou.
             </p>
           </details>
           <details class="faq-item">
-            <summary>Môžem platiť kartou alebo len žetónmi?</summary>
+            <summary>Karta alebo žetóny?</summary>
             <p>
-              <strong>Žetóny</strong> sú len za <strong>hotovosť</strong> na
-              jednej centrálnej pokladnici. Pri stánkoch sa platí žetónmi.
-              Vstupenky alebo rezervácie aktivít môžete mať riešené online — podľa
-              sekcie Vstupenky na tejto stránke.
+              Na mieste pri stánkoch — <strong>žetóny</strong> za hotovosť na jednej pokladnici.
+              Vstup a aktivity online — sekcia <a href="#vstupenky-rezervacie">Vstupenky</a>.
             </p>
           </details>
           <details class="faq-item">
-            <summary>Sú psy alebo iné zvieratá vítané?</summary>
+            <summary>Psy a zvieratá?</summary>
+            <p>Podľa pravidiel areálu — upresní organizátor pred akciou.</p>
+          </details>
+          <details class="faq-item">
+            <summary>Zlé počasie?</summary>
             <p>
-              Závisí od pravidiel areálu a organizátora. Aktuálne pravidlá pre psov a iné zvieratá budú zverejnené pred akciou.
+              Program je vonku. Pri výraznej nepriazni oznámi organizátor zmeny — sledujte predpoveď pri mape areálu.
             </p>
           </details>
           <details class="faq-item">
-            <summary>Čo keď príde zlá počasie?</summary>
-            <p>
-              Festival je väčšinou vonku — sledujte predpoveď (odkazy pri mape).
-              Drobný dážď nemusí znamenať zrušenie; pri nepriazni organizátor
-              oznámi zmeny.
-            </p>
-          </details>
-          <details class="faq-item">
-            <summary>Je areál vhodný pre kočík alebo invalidný vozík?</summary>
-            <p>
-              Terén môže byť nerovný. Informácie o bezbariérovom prístupe a WC zverejní organizátor po obhliadke areálu.
-            </p>
+            <summary>Kočík alebo vozík?</summary>
+            <p>Terén môže byť nerovný — bezbariérový prístup a WC upresní organizátor.</p>
           </details>
         </div>
       </section>
@@ -320,23 +257,16 @@
       <section id="vstupenky-rezervacie" aria-labelledby="heading-vstup-rez">
         <h2 id="heading-vstup-rez">Vstupenky a rezervácie</h2>
         <p class="lead">
-          Vstup na festival a miesto na vybrané aktivity s obmedzenou kapacitou
-          si môžete zabezpečiť online. Platba prebehne na zabezpečenej stránke
-          platobnej služby alebo v obchode organizátora.
+          Online platba cez odkaz organizátora (Stripe alebo obchod na webe).
         </p>
 
         <div id="vstupenky" class="section-block">
           <h3>Vstupenky</h3>
-          <p>
-            Online predaj podľa aktuálnej ponuky organizátora. Po kliknutí dokončíte
-            objednávku na platobnej stránke.
-          </p>
+          <p>Predpredaj alebo denný vstup — podľa ponuky.</p>
           <div class="purchase-grid">
             <div class="card purchase-card">
-              <h4>Predpredaj / denný vstup</h4>
-              <p>
-                Výber vstupu podľa ponuky (predpredaj, dospelý, dieťa a pod.).
-              </p>
+              <h4>Vstup</h4>
+              <p>Dospelý, dieťa, predpredaj — podľa aktuálnej ponuky.</p>
               <a
                 id="link-vstupenky"
                 class="stripe-btn"
@@ -350,16 +280,15 @@
         </div>
 
         <div id="rezervacie-aktivity" class="section-block">
-          <h3>Rezervácie na aktivity</h3>
+          <h3>Rezervácie — aktivity</h3>
           <p>
-            Samostatné odkazy podľa aktivity. Kapacity a ceny určuje organizátor.
-            Verejné prihlášky (formulár na webe) sú na stránke
-            <a href="prihlasky.html">Prihlášky a súťaže</a> — nezávislé od online platby vstupu.
+            Kapacity určuje organizátor. Formulár bez platby —
+            <a href="prihlasky.html">Prihlášky</a>.
           </p>
           <div class="purchase-grid">
             <div class="card purchase-card">
-              <h4>Lukostrelecký turnaj</h4>
-              <p>Rezervácia alebo platba za miesto v turnaji — podľa ponuky.</p>
+              <h4>Lukostreľba</h4>
+              <p>Miesto v turnaji.</p>
               <a
                 id="link-rez-lukostrelba"
                 class="stripe-btn"
@@ -370,8 +299,8 @@
               >
             </div>
             <div class="card purchase-card">
-              <h4>Šerm — workshop</h4>
-              <p>Kratší workshop podľa kapacity a časového harmonogramu.</p>
+              <h4>Šerm</h4>
+              <p>Workshop podľa programu.</p>
               <a
                 id="link-rez-serm"
                 class="stripe-btn"
@@ -382,8 +311,8 @@
               >
             </div>
             <div class="card purchase-card">
-              <h4>Detský program</h4>
-              <p>Registrácia na program s obmedzeným počtom miest.</p>
+              <h4>Deti</h4>
+              <p>Obmedzená kapacita.</p>
               <a
                 id="link-rez-deti"
                 class="stripe-btn"
@@ -394,8 +323,8 @@
               >
             </div>
             <div class="card purchase-card">
-              <h4>Remeselný workshop</h4>
-              <p>Napríklad keramika, tkanie alebo iné remeslo — podľa programu ročníka.</p>
+              <h4>Remeslo</h4>
+              <p>Keramika, tkanie a pod. — podľa ročníka.</p>
               <a
                 id="link-rez-remeslo"
                 class="stripe-btn"
@@ -412,31 +341,32 @@
       <section id="zetony">
         <h2>Žetóny</h2>
         <p>
-          Na jedlo, nápoje a vybrané aktivity na mieste platíte <strong>žetónmi</strong>.
-          Žetóny sa <strong>nekupujú online</strong> — výhradne <strong>jedna
-          centrálna pokladnica</strong> v areáli, platba <strong>hotovosťou</strong>
-          (žiadna mobilná apka ani digitálna peňaženka).
+          Jedlo, nápoje a časť aktivít — <strong>žetóny</strong> len na mieste, za
+          <strong>hotovosť</strong> na jednej pokladnici. Nie online.
         </p>
         <div class="card purchase-card zetony-local">
-          <h3>Kde a ako</h3>
+          <h3>Na mieste</h3>
           <ul class="zetony-rules">
-            <li>Jedno označené miesto výmeny hotovosti za žetóny (na mape a pri vchode).</li>
-            <li>Ceny balíkov žetónov budú vyznačené pri pokladnici a v letáku.</li>
-            <li>Na stánkoch platíte žetónmi — bez priamej hotovosti pri pulte, jednoduchší výdavok.</li>
+            <li>Jedna pokladnica (označená na mape a pri vchode).</li>
+            <li>Ceny balíkov pri pokladnici a v letáku.</li>
+            <li>Stánky — len žetóny.</li>
           </ul>
         </div>
       </section>
     </main>
 
     <footer class="site-footer">
-      <p><strong>Stredoveký festival — Stropkov</strong></p>
-      <p>Kontaktný e-mail a telefón zverejní organizátor pred podujatím.</p>
       <p>
-        <a href="prihlasky.html">Prihlášky na workshopy a súťaž</a>
-        ·
-        <a href="overenie.html">Overenie vstupeniek</a> (pre tím pri vstupe)
+        <strong>Stredoveký festival — Stropkov</strong><br />
+        <span>Organizátor: Občianske združenie Sparta</span>
       </p>
-      <p>© <span id="footer-year">2026</span></p>
+      <p>Kontakt zverejníme pred podujatím.</p>
+      <p>
+        <a href="prihlasky.html">Prihlášky</a>
+        ·
+        <a href="overenie.html">Overenie vstupeniek</a>
+      </p>
+      <p>© <span id="footer-year">2026</span> O.Z. Sparta</p>
     </footer>
   </body>
 </html>

@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 56 56" width="56" height="56" aria-hidden="true">
+  <defs>
+    <linearGradient id="spHelmet" x1="0%" y1="100%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#6b0f14"/>
+      <stop offset="45%" stop-color="#c62828"/>
+      <stop offset="100%" stop-color="#f24040"/>
+    </linearGradient>
+    <linearGradient id="spCrest" x1="50%" y1="0%" x2="50%" y2="100%">
+      <stop offset="0%" stop-color="#ff5c5c"/>
+      <stop offset="100%" stop-color="#9a1818"/>
+    </linearGradient>
+  </defs>
+  <!-- Crest -->
+  <path
+    fill="url(#spCrest)"
+    d="M28 2 C22 4 18 9 18 15 L20 17 22 15 24 17 26 15 28 17 30 15 32 17 34 15 36 17 38 15 C38 9 34 4 28 2Z"
+  />
+  <!-- Helmet bowl -->
+  <path
+    fill="url(#spHelmet)"
+    d="M28 13 C12 13 6 24 8 38 L8 40 12 45 15 41 18 45 21 41 24 44 28 45 32 44 35 41 38 45 41 41 44 45 48 40 48 38 C50 24 44 13 28 13Z"
+  />
+  <!-- Face opening -->
+  <path
+    fill="#1a0608"
+    d="M28 22 C19 22 14 28 15 37 L41 37 C42 28 37 22 28 22Z"
+  />
+  <!-- Highlight -->
+  <ellipse cx="22" cy="20" rx="5" ry="3" fill="rgba(255,255,255,0.15)" transform="rotate(-25 22 20)"/>
+</svg>
