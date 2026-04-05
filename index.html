@@ -30,9 +30,9 @@
           <a href="#miesto">Areál</a>
           <a href="#mapa-uloh">Mapa úloh</a>
           <a href="#profil">Profil</a>
-          <a href="#vstupenky">Vstupenky</a>
-          <a href="#rezervacie-aktivity">Rezervácie</a>
+          <a href="#vstupenky-rezervacie">Vstupenky</a>
           <a href="#zetony">Žetóny</a>
+          <a href="prihlasky.html">Prihlášky</a>
           <a href="#faq">FAQ</a>
           <a id="nav-obchod" href="#vstupenky-rezervacie">Obchod</a>
         </nav>
@@ -51,7 +51,6 @@
         aria-hidden="true"
         poster=""
       >
-        <!-- Zdroj nastaví main.js z FESTIVAL_CONFIG.bannerVideoUrl -->
       </video>
       <div class="hero-fx" aria-hidden="true"></div>
       <div class="hero-letterbox hero-letterbox--top" aria-hidden="true"></div>
@@ -70,6 +69,7 @@
           <a class="btn btn-outline" href="#miesto">Mapa areálu</a>
           <a class="btn btn-outline" href="#mapa-uloh">Úlohy</a>
           <a class="btn btn-outline" href="#vstupenky">Vstupenky</a>
+          <a class="btn btn-outline" href="prihlasky.html">Prihlášky</a>
           <a class="btn btn-outline" href="#faq">Otázky</a>
         </div>
       </div>
@@ -87,18 +87,15 @@
           <strong>divadlo</strong>, <strong>lukostrelecký turnaj</strong>,
           <strong>strelnica</strong> (aj pre deti), <strong>šermiári</strong>,
           <strong>rytierska cesta</strong>, <strong>festivalový šach</strong>,
-          <strong>táborák</strong>, <strong>guláš</strong>, <strong>jedlo a nápoje</strong>
-          počas dňa. Nájdete tu <strong>harmonogram</strong>, <strong>mapu úloh</strong>
-          a <strong>mapu areálu</strong> Pod vlekom, plus <strong>profil</strong>
-          (alias v prehliadači). <strong>Žetóny</strong> len na jednej pokladnici,
-          za hotovosť.
-        </p>
-        <p>
-          Vstupenky a rezervácie aktivít môžete mať online (Stripe / WooCommerce)
-          — nastavenie v <code>js/config.js</code>. Postup: <code>NASTAVENIE-PLATIEB.txt</code>.
-        </p>
-        <p>
-          Fotku v baneri: súbor v <code>images/</code> a <code>bannerObrazok</code> v konfigurácii.
+          <strong>táborák</strong>, <strong>guláš</strong> a <strong>jedlo s nápojmi</strong>
+          počas dňa. Tu nájdete <strong>harmonogram</strong>, <strong>mapu úloh</strong>
+          a <strong>mapu areálu</strong> v rekreačnom stredisku <strong>Pod vlekom</strong>.
+          Môžete si nastaviť <strong>meno alebo alias</strong> v profile (uložené len v
+          tomto prehliadači).           Na mieste sa za občerstvenie a vybrané služby platí
+          <strong>žetónmi</strong> z jednej centrálnej pokladnice, výhradne
+          <strong>hotovosťou</strong>.
+          Verejná stránka <a href="prihlasky.html"><strong>Prihlášky a súťaže</strong></a>
+          — záujem o workshopy a súťažné kolá; vstupenky a platby sú zvlášť v sekcii nižšie.
         </p>
       </section>
 
@@ -107,7 +104,7 @@
 
         <div id="harmonogram-live" class="card live-schedule">
           <h3 class="live-schedule-heading">Živý prehľad</h3>
-          <p class="live-schedule-title live-schedule-strong">Načítavam…</p>
+          <p class="live-schedule-title live-schedule-strong">Pripravujem prehľad…</p>
           <p class="live-schedule-body"></p>
           <p class="live-schedule-sub live-schedule-strong"></p>
           <ul class="live-schedule-activities"></ul>
@@ -124,10 +121,6 @@
             </thead>
             <tbody id="schedule-tbody"></tbody>
           </table>
-          <p class="note">
-            Časy a bloky upravíte v <code>js/harmonogram-data.js</code> (vrátane
-            dátumu <code>festivalDate</code> pre zvýraznenie aktuálneho bloku).
-          </p>
         </div>
       </section>
 
@@ -171,8 +164,7 @@
           (vonku v prírode počítajte s vetrom a dažďom — plášť, voda).
         </p>
         <p class="note">
-          Mapa je orientačná (OpenStreetMap). Špendlík po overení na mieste
-          upravte v odkaze alebo vložte vlastný obrázok mapy do <code>images/</code>.
+          Mapa je orientačná. Presné miesto vstupu a parkovania oznámi organizátor pred akciou.
         </p>
       </section>
 
@@ -184,7 +176,7 @@
           detskú), <strong>šermiárov</strong>, <strong>rytiersku cestu</strong>,
           <strong>festivalový šach</strong>, <strong>táborák</strong> s
           <strong>gulášom</strong>, <strong>jedlo a nápoje</strong> počas celého
-          dňa. Mapa je ilustrácia — čísla 1–8 môžete použiť na úlohy alebo pečiatky.
+          dňa. Mapa je ilustrácia areálu; čísla 1–8 označujú stanice púte (úlohy alebo pečiatky).
         </p>
         <figure class="medieval-map-figure">
           <div class="medieval-map-frame">
@@ -197,16 +189,13 @@
             />
           </div>
           <figcaption class="medieval-map-caption">
-            Úpravy grafiky a polôh čísel: súbor
-            <code>images/festival-map.svg</code> (editor SVG alebo textový
-            editor).
+            Ilustrácia programu v areáli — presné rozostupy podľa skutočnosti na mieste.
           </figcaption>
         </figure>
         <div class="card quest-legend-card">
           <h3>Úlohy podľa mapy (čísla 1–8)</h3>
           <p class="quest-legend-intro">
-            Zodpovedajú číslam na mape — konkrétne zadania (hádanky, súťaže)
-            doplní organizátor.
+            Zodpovedajú číslam na mape. Presné zadania a pravidlá oznámi organizátor na mieste alebo v letáku.
           </p>
           <ol class="quest-legend">
             <li>
@@ -269,46 +258,10 @@
         </div>
       </section>
 
-      <section id="napady" aria-labelledby="napady-heading">
-        <h2 id="napady-heading">Čo ešte odporúčame doplniť</h2>
-        <p>
-          Krátky zoznam vecí, ktoré návštevníkom často chýbajú — môžete ich
-          postupne pridať na stránku alebo do letáku.
-        </p>
-        <ul class="ideas-list">
-          <li>
-            <strong>Parkovanie a príchod</strong> — kde nechať auto, či MHD,
-            orientačný čas pešo z centra.
-          </li>
-          <li>
-            <strong>Bezbariérový prístup</strong> — ktoré časti areálu sú vhodné
-            pre kočíky a vozíky.
-          </li>
-          <li>
-            <strong>Strava</strong> — vegetariánske / bezlepkové možnosti, pitný režim.
-          </li>
-          <li>
-            <strong>Počasie</strong> — odkaz na predpoveď (SHMÚ) a čo si zbaliť.
-          </li>
-          <li>
-            <strong>Deti</strong> — stratené dieťa, náramok s telefónom rodiča.
-          </li>
-          <li>
-            <strong>Núdzové kontakty</strong> — organizátor, prvá pomoc, číslo na ochranu.
-          </li>
-          <li>
-            <strong>Pravidlá</strong> — zvieratá, fajčenie, fotenie, zodpovedné správanie.
-          </li>
-          <li>
-            <strong>Sociálne siete</strong> — hashtag festivalu, kde hľadať aktualizácie.
-          </li>
-        </ul>
-      </section>
-
       <section id="faq" aria-labelledby="faq-heading">
         <h2 id="faq-heading">Často kladené otázky</h2>
         <p class="faq-intro">
-          Stručné odpovede — doplníte podľa pravidiel vášho ročníka.
+          Stručné odpovede na bežné otázky. Podrobnosti vždy platia podľa oznámenia organizátora.
         </p>
         <div class="faq-list">
           <details class="faq-item">
@@ -331,8 +284,7 @@
           <details class="faq-item">
             <summary>Sú psy alebo iné zvieratá vítané?</summary>
             <p>
-              Závisí od pravidiel areálu a organizátora — doplnite jednoznačné
-              pravidlo (áno/nie, vodítko, muzzle kde treba).
+              Závisí od pravidiel areálu a organizátora. Aktuálne pravidlá pre psov a iné zvieratá budú zverejnené pred akciou.
             </p>
           </details>
           <details class="faq-item">
@@ -346,8 +298,7 @@
           <details class="faq-item">
             <summary>Je areál vhodný pre kočík alebo invalidný vozík?</summary>
             <p>
-              Terén pod vlekom môže byť nerovný alebo spevnený čiastočne —
-              doplníte po obhliadke miesta (bezbariérový prístup, WC).
+              Terén môže byť nerovný. Informácie o bezbariérovom prístupe a WC zverejní organizátor po obhliadke areálu.
             </p>
           </details>
         </div>
@@ -356,23 +307,22 @@
       <section id="vstupenky-rezervacie" aria-labelledby="heading-vstup-rez">
         <h2 id="heading-vstup-rez">Vstupenky a rezervácie</h2>
         <p class="lead">
-          Najprv si zakúpte vstup na festival. Na aktivity s obmedzenou kapacitou
-          si vyberte samostatný produkt alebo variant vo vašom obchode.
+          Vstup na festival a miesto na vybrané aktivity s obmedzenou kapacitou
+          si môžete zabezpečiť online. Platba prebehne na zabezpečenej stránke
+          platobnej služby alebo v obchode organizátora.
         </p>
 
         <div id="vstupenky" class="section-block">
           <h3>Vstupenky</h3>
           <p>
-            V režime WooCommerce vás odkaz presmeruje do košíka / na produkt vo
-            WordPresse; platba prebehne cez Stripe podľa nastavenia v WooCommerce.
-            V režime Stripe Payment Links ide o priamy odkaz od Stripe.
+            Online predaj podľa aktuálnej ponuky organizátora. Po kliknutí dokončíte
+            objednávku na platobnej stránke.
           </p>
           <div class="purchase-grid">
             <div class="card purchase-card">
               <h4>Predpredaj / denný vstup</h4>
               <p>
-                Ceny a varianty nastavíte ako produkt vo WooCommerce alebo ako
-                ponuku v Stripe (podľa <code>platbyRezim</code> v konfigurácii).
+                Výber vstupu podľa ponuky (predpredaj, dospelý, dieťa a pod.).
               </p>
               <a
                 id="link-vstupenky"
@@ -389,14 +339,14 @@
         <div id="rezervacie-aktivity" class="section-block">
           <h3>Rezervácie na aktivity</h3>
           <p>
-            Každé tlačidlo smeruje na konkrétny produkt (WooCommerce) alebo
-            Payment Link (Stripe). Názvy a počet kariet upravte v
-            <code>index.html</code> a cesty v <code>js/config.js</code>.
+            Samostatné odkazy podľa aktivity. Kapacity a ceny určuje organizátor.
+            Verejné prihlášky (formulár na webe) sú na stránke
+            <a href="prihlasky.html">Prihlášky a súťaže</a> — nezávislé od online platby vstupu.
           </p>
           <div class="purchase-grid">
             <div class="card purchase-card">
               <h4>Lukostrelecký turnaj</h4>
-              <p>Rezervácia miesta v turnaji alebo platba — kapacitu a pravidlá nastavíte vo WooCommerce / Stripe.</p>
+              <p>Rezervácia alebo platba za miesto v turnaji — podľa ponuky.</p>
               <a
                 id="link-rez-lukostrelba"
                 class="stripe-btn"
@@ -408,7 +358,7 @@
             </div>
             <div class="card purchase-card">
               <h4>Šerm — workshop</h4>
-              <p>Kratší workshop podľa kapacity; čas a cenu nastavíte v produkte / objednávke.</p>
+              <p>Kratší workshop podľa kapacity a časového harmonogramu.</p>
               <a
                 id="link-rez-serm"
                 class="stripe-btn"
@@ -432,7 +382,7 @@
             </div>
             <div class="card purchase-card">
               <h4>Remeselný workshop</h4>
-              <p>Napr. keramika, tkanie alebo iné remeslo — samostatný produkt v obchode.</p>
+              <p>Napríklad keramika, tkanie alebo iné remeslo — podľa programu ročníka.</p>
               <a
                 id="link-rez-remeslo"
                 class="stripe-btn"
@@ -457,9 +407,9 @@
         <div class="card purchase-card zetony-local">
           <h3>Kde a ako</h3>
           <ul class="zetony-rules">
-            <li>Jedno miesto výmeny peňazí za žetóny (označí organizátor na mape / ceduľou).</li>
-            <li>Typické balíky (napr. 5 / 10 / 20 žetónov) a ceny doplníte do letáku alebo na tabuľu pri pokladnici.</li>
-            <li>Stánky žetóny berú, hotovosť priamo za pultom nepoužívate — zjednoduší sa výdavok.</li>
+            <li>Jedno označené miesto výmeny hotovosti za žetóny (na mape a pri vchode).</li>
+            <li>Ceny balíkov žetónov budú vyznačené pri pokladnici a v letáku.</li>
+            <li>Na stánkoch platíte žetónmi — bez priamej hotovosti pri pulte, jednoduchší výdavok.</li>
           </ul>
         </div>
       </section>
@@ -467,14 +417,13 @@
 
     <footer class="site-footer">
       <p><strong>Stredoveký festival — Stropkov</strong></p>
+      <p>Kontaktný e-mail a telefón zverejní organizátor pred podujatím.</p>
       <p>
-        Organizátor: doplnite kontakt ·
-        <a href="mailto:info@example.com">info@example.com</a>
+        <a href="prihlasky.html">Prihlášky na workshopy a súťaž</a>
+        ·
+        <a href="overenie.html">Overenie vstupeniek</a> (pre tím pri vstupe)
       </p>
-      <p>
-        <a href="overenie.html">Overenie vstupeniek</a> (pre organizátorov)
-      </p>
-      <p>© <span id="footer-year">2026</span> · GitHub Pages</p>
+      <p>© <span id="footer-year">2026</span></p>
     </footer>
   </body>
 </html>

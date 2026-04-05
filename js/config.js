@@ -64,4 +64,25 @@ window.FESTIVAL_CONFIG = {
 
   /** Voliteľné: URL Cloudflare Workeru pre overenie kupónov (bez lomky na konci). */
   overenieApiUrl: "",
+
+  /**
+   * Prihlášky (prihlasky.js): 1 = Formspree (ID alebo URL), 2 = Web3Forms, 3 = Formspark.
+   */
+  /**
+   * Formspree — ID pre https://formspree.io/f/…
+   * Zvyčajne je to isté číslo ako Project ID v URL nastavení; ak odoslanie zlyhá,
+   * otvorte v dashboarde konkrétny formulár → Integration a vložte sem presný úsek z „/f/…“
+   * (môže byť aj kratší hash). Alternatíva: celá URL do formularPrihlaskyUrl nižšie.
+   * Deploy Key v projekte je len pre CLI, nie pre túto HTML stránku.
+   */
+  formularPrihlaskyFormspreeFormId: "2973068715488181717",
+
+  /** Prázdne = použiť ID vyššie. Inak celá adresa napr. https://formspree.io/f/abcdefgh */
+  formularPrihlaskyUrl: "",
+
+  /** Web3Forms access key — len ak Formspree nepoužívate (nechajte prázdne). */
+  formularPrihlaskyWeb3AccessKey: "",
+
+  /** Formspark submit-form.com/ID — voliteľná záloha. */
+  formularPrihlaskyFormsparkId: "",
 };

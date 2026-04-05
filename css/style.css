@@ -1059,15 +1059,6 @@ a.stripe-btn.woo-pay-btn:hover {
   border: none;
 }
 
-.ideas-list {
-  padding-left: 1.35rem;
-  max-width: 42rem;
-}
-
-.ideas-list li {
-  margin-bottom: 0.65rem;
-}
-
 .zetony-local h3 {
   margin-top: 0;
 }
@@ -1184,6 +1175,165 @@ a.stripe-btn.woo-pay-btn:hover {
   margin: 0.5rem 0 0.75rem;
   padding-left: 0.15rem;
   font-size: 1.1rem;
+}
+
+/* --- Stránka prihlasky.html --- */
+.prihlasky-page > h1 {
+  font-family: "Cinzel", serif;
+  color: var(--burgundy);
+  letter-spacing: 0.06em;
+  margin-top: 0;
+}
+
+.prihlasky-setup-note {
+  margin-bottom: 2rem;
+  border: 1px solid rgba(92, 26, 26, 0.35);
+  background: rgba(255, 252, 245, 0.95);
+}
+
+.prihlasky-setup-note__title {
+  font-family: "Cinzel", serif;
+  font-size: 1.1rem;
+  margin: 0 0 0.75rem;
+  color: var(--burgundy);
+}
+
+.prihlasky-section {
+  margin-bottom: 2.5rem;
+}
+
+.prihlasky-section > h2 {
+  font-family: "Cinzel", serif;
+  color: var(--burgundy);
+  letter-spacing: 0.05em;
+  margin: 0 0 0.75rem;
+}
+
+.prihlasky-card {
+  margin-bottom: 1.5rem;
+}
+
+.prihlasky-card h3 {
+  font-family: "Cinzel", serif;
+  margin-top: 0;
+  color: var(--burgundy);
+  letter-spacing: 0.04em;
+}
+
+.prihlasky-card__hint {
+  margin: 0 0 1.25rem;
+  font-size: 1.05rem;
+  color: rgba(26, 18, 9, 0.78);
+}
+
+.workshop-form label {
+  display: block;
+  font-family: "Cinzel", serif;
+  font-size: 0.9rem;
+  color: var(--burgundy);
+  margin-bottom: 1rem;
+  letter-spacing: 0.03em;
+}
+
+.workshop-form input[type="text"],
+.workshop-form input[type="email"],
+.workshop-form input[type="tel"],
+.workshop-form input[type="number"],
+.workshop-form textarea {
+  display: block;
+  width: 100%;
+  margin-top: 0.35rem;
+  padding: 0.55rem 0.75rem;
+  font-size: 1.1rem;
+  font-family: inherit;
+  border: 1px solid rgba(92, 26, 26, 0.35);
+  border-radius: 4px;
+  background: #fffef8;
+}
+
+.workshop-form textarea {
+  resize: vertical;
+  min-height: 4rem;
+}
+
+.workshop-form__row {
+  display: grid;
+  gap: 0 1.25rem;
+}
+
+@media (min-width: 560px) {
+  .workshop-form__row {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.workshop-form__check {
+  display: flex;
+  gap: 0.65rem;
+  align-items: flex-start;
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-size: 1.05rem;
+  color: var(--ink);
+  cursor: pointer;
+}
+
+.workshop-form__check input {
+  margin-top: 0.35rem;
+  flex-shrink: 0;
+}
+
+.workshop-form .btn {
+  margin-top: 0.5rem;
+  cursor: pointer;
+  border: none;
+}
+
+.workshop-form__feedback {
+  margin: 0.75rem 0 0;
+  padding: 0.65rem 0.85rem;
+  border-radius: 4px;
+  font-size: 1.05rem;
+}
+
+.workshop-form__feedback--ok {
+  background: rgba(45, 61, 45, 0.12);
+  border: 1px solid var(--forest);
+  color: var(--forest);
+}
+
+.workshop-form__feedback--err {
+  background: rgba(92, 26, 26, 0.1);
+  border: 1px solid var(--burgundy);
+  color: var(--burgundy);
+}
+
+.prihlasky-honeypot {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.prihlasky-riddle {
+  margin: 0 0 1.5rem;
+  padding: 1rem 1.25rem;
+  border-left: 4px solid var(--gold-dim);
+  background: rgba(92, 26, 26, 0.06);
+  font-size: 1.15rem;
+}
+
+.prihlasky-riddle p {
+  margin: 0;
+}
+
+.prihlasky-contest-lead {
+  margin-top: 0;
+  font-size: 1.15rem;
 }
 
 @media (prefers-reduced-motion: reduce) {
