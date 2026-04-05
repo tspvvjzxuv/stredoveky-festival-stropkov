@@ -257,7 +257,7 @@ a:hover {
   }
 }
 
-/* Farebný grading: SPARTA — čierna + červený nádych + olivové tiene */
+/* Hero: pôvodný „zlato + mesačný opar + víno + smaragd“ (nie červený ARTA overlay) */
 .hero-fx {
   position: absolute;
   inset: 0;
@@ -266,12 +266,12 @@ a:hover {
   background:
     radial-gradient(
       ellipse 48% 38% at 50% 18%,
-      rgba(242, 64, 64, 0.12) 0%,
+      rgba(188, 208, 202, 0.14) 0%,
       transparent 65%
     ),
     radial-gradient(
       ellipse 72% 58% at 50% 42%,
-      rgba(255, 238, 210, 0.06) 0%,
+      rgba(255, 230, 200, 0.05) 0%,
       transparent 52%
     ),
     radial-gradient(
@@ -281,10 +281,10 @@ a:hover {
     ),
     linear-gradient(
       125deg,
-      rgba(6, 6, 8, 0.92) 0%,
-      rgba(80, 18, 22, 0.55) 38%,
-      rgba(10, 14, 10, 0.78) 72%,
-      rgba(0, 0, 0, 0.9) 100%
+      rgba(8, 10, 12, 0.9) 0%,
+      rgba(42, 14, 18, 0.68) 36%,
+      rgba(6, 22, 18, 0.82) 72%,
+      rgba(4, 8, 10, 0.88) 100%
     );
 }
 
@@ -292,12 +292,12 @@ a:hover {
   background:
     radial-gradient(
       ellipse 42% 36% at 50% 14%,
-      rgba(242, 64, 64, 0.14) 0%,
+      rgba(120, 160, 150, 0.12) 0%,
       transparent 60%
     ),
     radial-gradient(
       ellipse 65% 52% at 50% 38%,
-      rgba(255, 230, 200, 0.05) 0%,
+      rgba(255, 210, 160, 0.06) 0%,
       transparent 48%
     ),
     radial-gradient(
@@ -307,9 +307,9 @@ a:hover {
     ),
     linear-gradient(
       118deg,
-      rgba(2, 2, 4, 0.75) 0%,
-      rgba(90, 12, 18, 0.52) 40%,
-      rgba(4, 8, 6, 0.8) 100%
+      rgba(2, 4, 6, 0.72) 0%,
+      rgba(32, 8, 12, 0.58) 40%,
+      rgba(2, 18, 14, 0.78) 100%
     );
 }
 
@@ -348,15 +348,15 @@ a:hover {
   height: clamp(10px, 2.2vh, 22px);
   background: linear-gradient(
     180deg,
-    #000 0%,
-    #0a0a0a 45%,
-    rgba(8, 8, 8, 0.96) 100%
+    #020304 0%,
+    #0a0e0c 45%,
+    rgba(12, 16, 15, 0.94) 100%
   );
-  border: solid rgba(142, 152, 112, 0.2);
+  border: solid rgba(100, 130, 118, 0.25);
   border-width: 0;
   box-shadow:
     0 0 20px rgba(0, 0, 0, 0.75),
-    inset 0 -1px 0 rgba(242, 64, 64, 0.15);
+    inset 0 -1px 0 rgba(184, 154, 62, 0.12);
 }
 
 .hero-letterbox--top {
@@ -369,13 +369,13 @@ a:hover {
   border-top-width: 1px;
   background: linear-gradient(
     0deg,
-    #000 0%,
-    #0a0a0a 45%,
-    rgba(8, 8, 8, 0.96) 100%
+    #020304 0%,
+    #0a0e0c 45%,
+    rgba(12, 16, 15, 0.94) 100%
   );
   box-shadow:
     0 0 20px rgba(0, 0, 0, 0.75),
-    inset 0 1px 0 rgba(242, 64, 64, 0.15);
+    inset 0 1px 0 rgba(184, 154, 62, 0.12);
 }
 
 .hero-inner {
@@ -397,16 +397,16 @@ a:hover {
   background: linear-gradient(
     90deg,
     transparent 0%,
-    var(--steel) 12%,
-    var(--gold-dim) 42%,
-    var(--gold-bright) 50%,
-    var(--gold-dim) 58%,
-    var(--steel) 88%,
+    rgba(130, 152, 148, 0.45) 12%,
+    #8a7028 42%,
+    #dcc896 50%,
+    #8a7028 58%,
+    rgba(130, 152, 148, 0.45) 88%,
     transparent 100%
   );
   box-shadow:
-    0 0 14px rgba(142, 152, 112, 0.3),
-    0 0 24px rgba(242, 64, 64, 0.22);
+    0 0 14px rgba(100, 140, 128, 0.35),
+    0 0 24px rgba(184, 154, 62, 0.2);
 }
 
 .hero-inner::after {
@@ -416,14 +416,14 @@ a:hover {
   height: 10px;
   margin: 2.25rem auto 0;
   transform: rotate(45deg);
-  border: 1px solid rgba(242, 64, 64, 0.4);
+  border: 1px solid rgba(184, 154, 62, 0.45);
   background: linear-gradient(
     135deg,
-    rgba(242, 64, 64, 0.18) 0%,
-    rgba(142, 152, 112, 0.12) 100%
+    rgba(184, 154, 62, 0.2) 0%,
+    rgba(80, 120, 108, 0.12) 100%
   );
   box-shadow:
-    0 0 16px rgba(142, 152, 112, 0.28),
+    0 0 16px rgba(100, 140, 128, 0.35),
     inset 0 0 8px rgba(255, 255, 255, 0.06);
 }
 
@@ -439,17 +439,16 @@ a:hover {
 }
 
 .hero-kicker {
-  font-family: "Montserrat", "Bebas Neue", sans-serif;
-  font-weight: 600;
-  font-size: clamp(1.05rem, 3vw, 1.55rem);
-  letter-spacing: 0.42em;
+  font-family: "Bebas Neue", "Cinzel", serif;
+  font-size: clamp(1.2rem, 3.4vw, 1.75rem);
+  letter-spacing: 0.48em;
   text-transform: uppercase;
   margin: 0 0 0.75rem;
   background: linear-gradient(
     185deg,
-    #fff 0%,
-    var(--gold-bright) 45%,
-    var(--arta-olive) 100%
+    #f4f0e6 0%,
+    #dcc896 42%,
+    #9aa89e 100%
   );
   -webkit-background-clip: text;
   background-clip: text;
@@ -457,15 +456,15 @@ a:hover {
   -webkit-text-fill-color: transparent;
   text-shadow: none;
   filter: drop-shadow(0 2px 14px rgba(0, 0, 0, 0.95))
-    drop-shadow(0 0 18px rgba(242, 64, 64, 0.25));
+    drop-shadow(0 0 20px rgba(100, 140, 128, 0.25));
 }
 
 @supports not (background-clip: text) {
   .hero-kicker {
-    color: var(--gold-bright);
+    color: #dcc896;
     -webkit-text-fill-color: unset;
     text-shadow:
-      0 0 24px rgba(242, 64, 64, 0.35),
+      0 0 24px rgba(100, 140, 128, 0.35),
       0 2px 18px rgba(0, 0, 0, 0.95);
   }
 }
@@ -480,15 +479,15 @@ a:hover {
   text-shadow:
     0 2px 0 rgba(0, 0, 0, 0.5),
     0 6px 40px rgba(0, 0, 0, 0.95),
-    0 0 80px var(--mist),
-    0 0 100px rgba(242, 64, 64, 0.14);
+    0 0 80px rgba(72, 118, 108, 0.22),
+    0 0 100px rgba(184, 154, 62, 0.12);
 }
 
 .hero h1 #hero-year {
-  color: #ffeed2;
+  color: #e0d4b0;
   font-weight: 600;
   text-shadow:
-    0 0 24px rgba(242, 64, 64, 0.35),
+    0 0 24px rgba(184, 154, 62, 0.35),
     0 2px 12px rgba(0, 0, 0, 0.8);
 }
 
@@ -506,9 +505,9 @@ a:hover {
 }
 
 .hero .profile-greeting {
-  color: #c8d4b8;
+  color: #c8ddd4;
   text-shadow:
-    0 0 20px rgba(142, 152, 112, 0.4),
+    0 0 20px rgba(100, 160, 140, 0.35),
     0 2px 12px rgba(0, 0, 0, 0.85);
 }
 
@@ -541,8 +540,8 @@ a:hover {
   background: linear-gradient(
     180deg,
     transparent,
-    rgba(142, 152, 112, 0.75),
-    var(--gold-bright),
+    rgba(140, 170, 155, 0.7),
+    #dcc896,
     transparent
   );
   animation: heroCueBob 2.2s ease-in-out infinite;
@@ -643,6 +642,55 @@ a:hover {
   box-shadow:
     0 0 20px rgba(242, 64, 64, 0.18),
     inset 0 0 0 1px rgba(242, 64, 64, 0.2);
+}
+
+/* Zlaté tlačidlá len v hero (zvyšok stránky môže zostať červený akcent) */
+.hero .btn-primary {
+  background: linear-gradient(
+    168deg,
+    #e8dcc0 0%,
+    #b89a3e 38%,
+    #8a7028 72%,
+    #5a4820 100%
+  );
+  color: #14110c;
+  border-color: rgba(200, 215, 210, 0.25);
+  box-shadow:
+    0 0 0 1px rgba(0, 0, 0, 0.35),
+    inset 0 1px 0 rgba(255, 255, 255, 0.22),
+    0 4px 24px rgba(0, 0, 0, 0.4),
+    0 0 28px rgba(184, 154, 62, 0.25);
+}
+
+.hero .btn-primary:hover {
+  background: linear-gradient(
+    168deg,
+    #f0e8d0 0%,
+    #dcc896 40%,
+    #b89a3e 100%
+  );
+  color: #14110c;
+  box-shadow:
+    0 0 0 1px rgba(100, 130, 120, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.28),
+    0 8px 32px rgba(0, 0, 0, 0.35),
+    0 0 36px rgba(120, 160, 140, 0.2);
+}
+
+.hero .btn-outline {
+  background: rgba(4, 10, 12, 0.45);
+  color: #ebe4d6;
+  border-color: rgba(100, 130, 118, 0.5);
+  box-shadow: inset 0 0 0 1px rgba(184, 154, 62, 0.08);
+}
+
+.hero .btn-outline:hover {
+  background: rgba(20, 32, 30, 0.55);
+  color: #f0ead8;
+  border-color: rgba(184, 154, 62, 0.55);
+  box-shadow:
+    0 0 20px rgba(100, 140, 128, 0.2),
+    inset 0 0 0 1px rgba(184, 154, 62, 0.15);
 }
 
 main:not(.page-main) {
