@@ -1,10 +1,76 @@
 (function () {
+  if (document.body) {
+    document.body.classList.add("js-ready");
+  }
+
   var cfg = window.FESTIVAL_CONFIG || {};
   var y = cfg.rok || new Date().getFullYear();
   var heroYear = document.getElementById("hero-year");
   var footerYear = document.getElementById("footer-year");
   if (heroYear) heroYear.textContent = String(y);
   if (footerYear) footerYear.textContent = String(y);
+
+  function initHeaderDynamics() {
+    if (!document.body) return;
+    var body = document.body;
+
+    function updateCompactState() {
+      body.classList.toggle("header-compact", window.scrollY > 70);
+    }
+
+    updateCompactState();
+    window.addEventListener("scroll", updateCompactState, { passive: true });
+    window.addEventListener("resize", updateCompactState);
+  }
+
+  function initEmblemIntro() {
+    if (!document.body) return;
+    var body = document.body;
+    var intro = document.querySelector(".emblem-intro");
+    body.classList.add("intro-done");
+    if (intro) intro.remove();
+  }
+
+  initHeaderDynamics();
+  initEmblemIntro();
+
+  // Book-intro sound layer removed in unified design pass.
+
+  function initSectionReveal() {
+    var sections = document.querySelectorAll("main section");
+    if (!sections.length) return;
+
+    var reduceMotion =
+      window.matchMedia &&
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    if (reduceMotion || !("IntersectionObserver" in window)) {
+      for (var j = 0; j < sections.length; j++) {
+        sections[j].classList.add("is-visible");
+      }
+      return;
+    }
+
+    var observer = new IntersectionObserver(
+      function (entries) {
+        for (var i = 0; i < entries.length; i++) {
+          if (entries[i].isIntersecting) {
+            entries[i].target.classList.add("is-visible");
+            observer.unobserve(entries[i].target);
+          }
+        }
+      },
+      { threshold: 0.14, rootMargin: "0px 0px -8% 0px" }
+    );
+
+    for (var k = 0; k < sections.length; k++) {
+      observer.observe(sections[k]);
+    }
+  }
+
+  initSectionReveal();
+
+  // Book-style page transition effect removed in unified design pass.
 
   var hero = document.querySelector(".hero");
   var videoUrl = cfg.bannerVideoUrl && String(cfg.bannerVideoUrl).trim();

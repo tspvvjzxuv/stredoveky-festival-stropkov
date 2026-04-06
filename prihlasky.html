@@ -5,9 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta
       name="description"
-      content="Prihlášky na workshopy a súťaže — Stredoveký festival Stropkov (O.Z. Sparta)."
+      content="Prihlášky na workshopy a súťaže — Stredoveký festival Stropkov."
     />
     <title>Prihlášky a súťaže — Stredoveký festival</title>
+    <link rel="icon" type="image/png" href="images/logo-andreasa-shield.png" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -16,27 +17,51 @@
     />
     <link rel="stylesheet" href="css/style.css" />
     <script src="js/config.js"></script>
+    <script src="js/main.js" defer></script>
     <script src="js/prihlasky.js" defer></script>
   </head>
-  <body>
+  <body class="home-page">
+    <div class="emblem-intro" aria-hidden="true">
+      <img class="emblem-intro__icon" src="images/logo-andreasa-shield.png" alt="" width="720" height="720" decoding="async" />
+    </div>
     <header class="site-header">
       <div class="header-inner">
-        <a class="logo" href="index.html" aria-label="Stredoveký festival — O.Z. Sparta, domov">
+        <a class="logo" href="index.html" aria-label="Stredoveký festival Stropkov, domov">
           <img
             class="logo__mark"
-            src="images/logo-sparta-helmet.png"
-            alt="Logo O.Z. Sparta — prilba"
-            width="48"
-            height="48"
+            src="images/logo-drak.svg"
+            alt="Logo festivalu — drak"
+            width="44"
+            height="44"
             decoding="async"
           />
           <span class="logo__text">
-            <span class="logo__brand">SPARTA</span>
-            <span class="logo__event">Stredoveký festival</span>
-            <span class="logo__moment">Občianske združenie Sparta</span>
+            <span class="logo__brand">Stredoveký festival</span>
+            <span class="logo__event">Festival Stropkov</span>
+            <span class="logo__moment">Prihlášky a súťaže</span>
           </span>
         </a>
+        <div class="header-utility">
+          <a href="https://www.instagram.com/o.z.sparta/" target="_blank" rel="noopener noreferrer"
+            >Instagram</a
+          >
+          <span aria-hidden="true">|</span>
+          <a href="https://www.facebook.com/ozsparta/" target="_blank" rel="noopener noreferrer"
+            >Facebook</a
+          >
+        </div>
+        <div class="header-brand-slot" aria-label="Priestor pre logo festivalu">
+          <img
+            class="header-brand-slot__icon"
+            src="images/logo-andreasa-shield.png"
+            alt="Logo festivalu PTRA"
+            width="140"
+            height="140"
+            decoding="async"
+          />
+        </div>
         <nav class="nav" aria-label="Hlavná navigácia">
+          <span class="nav-crest-wings" aria-hidden="true"></span>
           <a href="index.html">Domov</a>
           <a href="index.html#harmonogram">Harmonogram</a>
           <a href="index.html#vstupenky-rezervacie">Vstupenky</a>
@@ -51,9 +76,19 @@
         workshop alebo súťaž. Vyplňte údaje pri vybranej aktivite a odošlite tlačidlom nižšie.
         Po odoslaní uvidíte potvrdenie tu; organizátor dostane správu e-mailom (služba
         <strong>Web3Forms</strong> alebo záložne Formspree — podľa nastavenia v
-        <code>js/config.js</code>). Vstupenky a platby riešte na
+        <code>js/config.js</code>). Dobrovoľný dar na podporu akcie a rezervácie riešte na
         <a href="index.html#vstupenky-rezervacie">hlavnej stránke</a>.
       </p>
+      <div class="card prihlasky-quick-pick" aria-label="Rýchly výber registrácie">
+        <h2 class="prihlasky-quick-pick__title">Vyberte aktivitu</h2>
+        <div class="prihlasky-quick-pick__grid">
+          <a href="#prihlaska-lukostrelba">Lukostrelecký turnaj</a>
+          <a href="#prihlaska-serm">Šerm</a>
+          <a href="#prihlaska-deti">Detský program</a>
+          <a href="#prihlaska-remeslo">Remeselný workshop</a>
+          <a href="#h-sutaz">Súťažná hádanka</a>
+        </div>
+      </div>
 
       <div id="prihlasky-config-banner" class="card prihlasky-setup-note" hidden>
         <h2 class="prihlasky-setup-note__title">Nastavenie pre organizátora</h2>
@@ -79,7 +114,7 @@
           úhrade vstupenky / rezervácie, ak to tak organizátor stanoví).
         </p>
 
-        <div class="card prihlasky-card">
+        <div class="card prihlasky-card" id="prihlaska-lukostrelba">
           <h3>Lukostrelecký turnaj</h3>
           <p class="prihlasky-card__hint">
             Prihlásenie na súťažné kolo / miesto v turnaji (podľa pravidiel ročníka).
@@ -138,7 +173,7 @@
           </form>
         </div>
 
-        <div class="card prihlasky-card">
+        <div class="card prihlasky-card" id="prihlaska-serm">
           <h3>Šerm — workshop</h3>
           <p class="prihlasky-card__hint">Úvod do šermu alebo krátky workshop podľa programu.</p>
           <form class="workshop-form" method="post" data-prihlaska-form action="#">
@@ -186,7 +221,7 @@
           </form>
         </div>
 
-        <div class="card prihlasky-card">
+        <div class="card prihlasky-card" id="prihlaska-deti">
           <h3>Detský program</h3>
           <p class="prihlasky-card__hint">Aktivity pre deti s obmedzenou kapacitou.</p>
           <form class="workshop-form" method="post" data-prihlaska-form action="#">
@@ -233,7 +268,7 @@
           </form>
         </div>
 
-        <div class="card prihlasky-card">
+        <div class="card prihlasky-card" id="prihlaska-remeslo">
           <h3>Remeselný workshop</h3>
           <p class="prihlasky-card__hint">Keramika, tkanie alebo iné remeslo podľa ponuky.</p>
           <form class="workshop-form" method="post" data-prihlaska-form action="#">
@@ -338,7 +373,7 @@
 
     <footer class="site-footer">
       <p><strong>Stredoveký festival — Stropkov</strong></p>
-      <p>Organizátor: <strong>Občianske združenie Sparta</strong></p>
+      <p>Organizátor: miestne občianske združenie</p>
       <p>
         <a href="https://www.instagram.com/o.z.sparta/" target="_blank" rel="noopener noreferrer"
           >Instagram</a
@@ -348,8 +383,14 @@
           >Facebook</a
         >
       </p>
+      <p>
+        Autor stránky:
+        <a href="https://thedesigns.org/" target="_blank" rel="noopener noreferrer"
+          >thedesigns.org</a
+        >
+      </p>
       <p><a href="index.html">Späť na hlavnú stránku</a></p>
-      <p>© 2026</p>
+      <p>© <span id="footer-year">2026</span></p>
     </footer>
   </body>
 </html>
