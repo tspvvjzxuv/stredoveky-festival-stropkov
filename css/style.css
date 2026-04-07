@@ -1026,7 +1026,7 @@ a:hover {
 .home-page #vstupenky-rezervacie .stripe-btn:hover,
 .home-page #vstupenky-rezervacie .choice-actions .btn:hover {
   background: linear-gradient(180deg, #a12828 0%, #741b1b 52%, #4e1115 100%);
-  border-color: rgba(232, 190, 112, 0.78);
+  border-color: rgba(255, 149, 0, 0.78);
   color: #fff1da !important;
   box-shadow:
     inset 0 1px 0 rgba(255, 232, 184, 0.28),
@@ -1036,7 +1036,7 @@ a:hover {
 
 .home-page #vstupenky-rezervacie .choice-card .btn.btn-outline {
   background: linear-gradient(180deg, rgba(64, 56, 50, 0.86) 0%, rgba(48, 42, 38, 0.9) 100%);
-  border-color: rgba(170, 142, 102, 0.6);
+  border-color: rgba(255, 149, 0, 0.6);
   color: #ead9ba;
 }
 
@@ -3857,6 +3857,13 @@ body.home-page .site-header .nav::before {
   border-radius: 7px !important;
   font-weight: 700 !important;
   letter-spacing: 0.03em !important;
+}
+
+#link-vstupenky {
+  background: radial-gradient(circle at 50% 50%, rgba(170, 9, 9, 1) 12%, rgba(96, 6, 6, 1) 89%);
+  border-color: rgba(255, 149, 0, 0.78);
+  height: 70px;
+  opacity: 1 !important;
 }
 
 #vstupenky-rezervacie .choice-actions {
