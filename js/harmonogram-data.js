@@ -3,7 +3,7 @@
  * Upravte dátum podľa reálneho termínu festivalu.
  */
 window.HARMONOGRAM_DATA = {
-  festivalDate: "2026-06-07",
+  festivalDate: "2026-08-16",
   slots: [
     {
       start: "09:00",
