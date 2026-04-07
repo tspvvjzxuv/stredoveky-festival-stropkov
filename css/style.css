@@ -1866,6 +1866,11 @@ section h2::after {
   font-weight: 600;
   color: var(--burgundy);
   background: rgba(92, 26, 26, 0.06);
+  padding-top: 0;
+  padding-bottom: 0;
+  border-bottom-color: rgba(26, 18, 9, 0.25);
+  border-bottom-width: 0;
+  border-width: 0;
 }
 
 .schedule-table tr:last-child td {
@@ -3860,7 +3865,9 @@ body.home-page .site-header .nav::before {
 }
 
 #link-vstupenky {
-  background: radial-gradient(circle at 50% 50%, rgba(170, 9, 9, 1) 12%, rgba(96, 6, 6, 1) 89%);
+  background: radial-gradient(circle at 50% 50%, rgba(99, 13, 13, 0.8) 0%, rgba(148, 0, 0, 1) 64%, rgba(141, 12, 12, 0.95) 96%, rgba(130, 3, 3, 1) 100%);
+  position: static;
+  margin-top: 29px;
   border-color: rgba(255, 149, 0, 0.78);
   height: 70px;
   opacity: 1 !important;
