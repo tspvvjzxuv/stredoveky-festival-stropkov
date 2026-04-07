@@ -255,4 +255,94 @@
       "Nastavte stripeRezervacia.remeslo v js/config.js."
     );
   }
+
+  var CONSENT_KEY = "festival_cookie_consent_v1";
+  var analyticsLoaded = false;
+
+  function getConsent() {
+    try {
+      return localStorage.getItem(CONSENT_KEY);
+    } catch (e) {
+      return null;
+    }
+  }
+
+  function setConsent(value) {
+    try {
+      localStorage.setItem(CONSENT_KEY, value);
+    } catch (e) {}
+  }
+
+  function loadGaIfAllowed() {
+    var gaId = cfg.ga4MeasurementId && String(cfg.ga4MeasurementId).trim();
+    if (!gaId || analyticsLoaded || getConsent() !== "accepted") return false;
+    analyticsLoaded = true;
+    window.dataLayer = window.dataLayer || [];
+    window.gtag = window.gtag || function () { window.dataLayer.push(arguments); };
+    window.gtag("js", new Date());
+    window.gtag("config", gaId, { anonymize_ip: true });
+    var script = document.createElement("script");
+    script.async = true;
+    script.src = "https://www.googletagmanager.com/gtag/js?id=" + encodeURIComponent(gaId);
+    document.head.appendChild(script);
+    return true;
+  }
+
+  function trackEvent(name, params) {
+    if (typeof window.gtag !== "function") return;
+    window.gtag("event", name, params || {});
+  }
+
+  function initCookieBanner() {
+    if (!document.body) return;
+    if (getConsent()) {
+      loadGaIfAllowed();
+      return;
+    }
+    var banner = document.createElement("aside");
+    banner.className = "cookie-banner";
+    banner.setAttribute("role", "dialog");
+    banner.setAttribute("aria-live", "polite");
+    banner.innerHTML =
+      '<p class="cookie-banner__text">Používame nevyhnutné cookies a (po súhlase) analytiku pre meranie návštevnosti.</p>' +
+      '<div class="cookie-banner__actions">' +
+      '<button type="button" class="btn btn-outline cookie-banner__btn" data-cookie-action="decline">Len nevyhnutné</button>' +
+      '<button type="button" class="btn btn-primary cookie-banner__btn" data-cookie-action="accept">Súhlasím</button>' +
+      '<a class="cookie-banner__link" href="cookies.html">Viac info</a>' +
+      "</div>";
+    document.body.appendChild(banner);
+    banner.addEventListener("click", function (e) {
+      var btn = e.target && e.target.closest ? e.target.closest("[data-cookie-action]") : null;
+      if (!btn) return;
+      var action = btn.getAttribute("data-cookie-action");
+      setConsent(action === "accept" ? "accepted" : "declined");
+      if (action === "accept") loadGaIfAllowed();
+      banner.remove();
+    });
+  }
+
+  function initAnalyticsTracking() {
+    loadGaIfAllowed();
+    document.addEventListener("click", function (e) {
+      var link = e.target && e.target.closest ? e.target.closest("a") : null;
+      if (!link) return;
+      var href = link.getAttribute("href") || "";
+      var txt = (link.textContent || "").trim();
+      if (link.id === "link-vstupenky" || href.indexOf("#vstupenky-rezervacie") !== -1 || txt.indexOf("Vstupenky") !== -1) {
+        trackEvent("select_content", { content_type: "cta", content_id: "vstupenky" });
+      }
+      if (href.indexOf("prihlasky.html") !== -1 || txt.indexOf("Prihlášky") !== -1) {
+        trackEvent("select_content", { content_type: "cta", content_id: "prihlasky" });
+      }
+      if (href.indexOf("instagram.com") !== -1) {
+        trackEvent("click_social", { platform: "instagram" });
+      }
+      if (href.indexOf("facebook.com") !== -1) {
+        trackEvent("click_social", { platform: "facebook" });
+      }
+    });
+  }
+
+  initCookieBanner();
+  initAnalyticsTracking();
 })();

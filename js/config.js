@@ -82,4 +82,12 @@ window.FESTIVAL_CONFIG = {
 
   /** Formspark — ID z submit-form.com/… (záloha). */
   formularPrihlaskyFormsparkId: "",
+
+  /**
+   * Analytics + SEO
+   * GA4 ID z tvaru G-XXXXXXXXXX. Prázdne = analytika sa nenačíta.
+   */
+  ga4MeasurementId: "",
+  /** Verejná URL webu (bez koncovej lomky). Používa sa pri SEO súboroch a odkazoch. */
+  siteUrl: "https://ptra.sk",
 };
