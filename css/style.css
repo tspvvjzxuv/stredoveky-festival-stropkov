@@ -4012,3 +4012,12 @@ body.home-page .site-header .nav:focus-within {
   color: #f1cb7e;
   font-size: 0.9rem;
 }
+
+/* Performance: skip rendering off-screen sections until needed */
+@supports (content-visibility: auto) {
+  .page-main > section,
+  .site-footer {
+    content-visibility: auto;
+    contain-intrinsic-size: 1px 700px;
+  }
+}
