@@ -66,6 +66,12 @@ window.FESTIVAL_CONFIG = {
   overenieApiUrl: "",
 
   /**
+   * Prevádzkové prepínače:
+   * - registracieOtvorene: false = formuláre na prihlášky sa zamknú a zobrazí sa oznam.
+   */
+  registracieOtvorene: true,
+
+  /**
    * Prihlášky (prihlasky.js): 1 = Web3Forms, 2 = Formspree, 3 = Formspark.
    */
   /**

@@ -18,14 +18,22 @@
     <meta property="og:image" content="https://ptra.sk/images/logo-andreasa-shield.png" />
     <meta property="og:url" content="https://ptra.sk/" />
     <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Stredoveký festival — Stropkov" />
+    <meta
+      name="twitter:description"
+      content="PTRA — Poľný tábor rytiera Andreasa, Stropkov 2026."
+    />
+    <meta name="twitter:image" content="https://ptra.sk/images/logo-andreasa-shield.png" />
     <meta name="google-site-verification" content="3cUFvo8CwxNuXBa3CHoiSXGoz7Z-NVl6lBRD26aqaoU" />
     <title>Stredoveký festival — Stropkov</title>
+    <link rel="canonical" href="https://ptra.sk/" />
     <link rel="icon" type="image/png" href="images/logo-andreasa-shield.png" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link rel="preconnect" href="https://assets.mixkit.co" crossorigin />
     <link rel="dns-prefetch" href="//www.instagram.com" />
     <link rel="dns-prefetch" href="//www.facebook.com" />
+    <link rel="preload" as="image" href="images/logo-andreasa-shield.png" fetchpriority="high" />
     <link
       href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Bebas+Neue&family=Montserrat:wght@400;500;600;700;800&display=swap"
       rel="stylesheet"
@@ -74,6 +82,55 @@
             "acceptedAnswer": {
               "@type": "Answer",
               "text": "Bezbariérový prístup a vhodné trasy pre kočíky a vozíky budú označené na mieste."
+            }
+          }
+        ]
+      }
+    </script>
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@graph": [
+          {
+            "@type": "Organization",
+            "@id": "https://ptra.sk/#organization",
+            "name": "Občianske združenie Sparta",
+            "url": "https://ptra.sk/",
+            "email": "mailto:zdruzeniesparta@gmail.com",
+            "sameAs": [
+              "https://ozsparta.wordpress.com/",
+              "https://www.facebook.com/ozsparta",
+              "https://www.instagram.com/o.z.sparta/"
+            ],
+            "address": {
+              "@type": "PostalAddress",
+              "streetAddress": "Vranovská 30/1456",
+              "postalCode": "09101",
+              "addressLocality": "Stropkov",
+              "addressCountry": "SK"
+            }
+          },
+          {
+            "@type": "Event",
+            "@id": "https://ptra.sk/#event",
+            "name": "PTRA - Poľný tábor rytiera Andreasa",
+            "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
+            "eventStatus": "https://schema.org/EventScheduled",
+            "startDate": "2026-06-07T10:00:00+02:00",
+            "endDate": "2026-06-07T22:00:00+02:00",
+            "description": "Stredoveký festival v Stropkove: divadlo, lukostreľba, šermiari, rytierska cesta, šach, táborák a guláš.",
+            "image": ["https://ptra.sk/images/logo-andreasa-shield.png"],
+            "organizer": { "@id": "https://ptra.sk/#organization" },
+            "location": {
+              "@type": "Place",
+              "name": "Pod vlekom",
+              "address": {
+                "@type": "PostalAddress",
+                "streetAddress": "Pod vlekom 1734",
+                "postalCode": "09101",
+                "addressLocality": "Stropkov",
+                "addressCountry": "SK"
+              }
             }
           }
         ]
@@ -146,7 +203,7 @@
         playsinline
         preload="metadata"
         aria-hidden="true"
-        poster=""
+        poster="images/logo-andreasa-shield.png"
       >
       </video>
       <div class="hero-fx" aria-hidden="true"></div>

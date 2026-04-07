@@ -165,9 +165,24 @@
     var u = url || "#";
     el.href = u;
     if (isBadPaymentUrl(u)) {
+      el.setAttribute("aria-disabled", "true");
+      el.classList.add("is-disabled-link");
       el.addEventListener("click", function (e) {
         e.preventDefault();
-        alert(hint);
+        // Non-blocking hint instead of alert popup.
+        if (!document.body) return;
+        var existing = document.querySelector(".site-inline-notice");
+        if (existing) {
+          existing.textContent = hint;
+          return;
+        }
+        var note = document.createElement("div");
+        note.className = "site-inline-notice";
+        note.textContent = hint;
+        document.body.appendChild(note);
+        window.setTimeout(function () {
+          if (note && note.parentNode) note.parentNode.removeChild(note);
+        }, 5200);
       });
     }
   }

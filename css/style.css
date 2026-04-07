@@ -4013,6 +4013,26 @@ body.home-page .site-header .nav:focus-within {
   font-size: 0.9rem;
 }
 
+.is-disabled-link {
+  opacity: 0.58 !important;
+  cursor: not-allowed !important;
+  pointer-events: auto;
+}
+
+.site-inline-notice {
+  position: fixed;
+  left: 50%;
+  bottom: 1rem;
+  transform: translateX(-50%);
+  z-index: 2400;
+  max-width: min(92vw, 760px);
+  padding: 0.72rem 0.95rem;
+  border: 1px solid rgba(214, 178, 108, 0.52);
+  background: rgba(14, 18, 28, 0.95);
+  color: #f0e4c8;
+  font-size: 0.92rem;
+}
+
 /* Performance: skip rendering off-screen sections until needed */
 @supports (content-visibility: auto) {
   .page-main > section,

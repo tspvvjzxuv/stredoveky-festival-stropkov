@@ -213,12 +213,31 @@
 
   ready(function () {
     var cfg = window.FESTIVAL_CONFIG || {};
+    var registracieOtvorene = cfg.registracieOtvorene !== false;
     var formspreeId = (cfg.formularPrihlaskyFormspreeFormId || "").trim();
     var formspreeUrl = (cfg.formularPrihlaskyUrl || "").trim();
     var web3 = (cfg.formularPrihlaskyWeb3AccessKey || "").trim();
     var formsparkId = (cfg.formularPrihlaskyFormsparkId || "").trim();
     var banner = document.getElementById("prihlasky-config-banner");
     var forms = document.querySelectorAll("form[data-prihlaska-form]");
+
+    if (!registracieOtvorene) {
+      if (banner) {
+        banner.hidden = false;
+        banner.innerHTML =
+          "<h2 class='prihlasky-setup-note__title'>Prihlášky sú dočasne zatvorené</h2>" +
+          "<p>Online registrácie sú momentálne pozastavené. Sledujte prosím hlavné kanály organizátora pre termín opätovného otvorenia.</p>";
+      }
+      for (var x = 0; x < forms.length; x++) {
+        var btn = forms[x].querySelector('button[type="submit"]');
+        if (btn) {
+          btn.disabled = true;
+          btn.classList.add("is-disabled-link");
+          btn.textContent = "Prihlášky dočasne zatvorené";
+        }
+      }
+      return;
+    }
 
     if (web3) {
       bindWeb3(forms, web3, banner);
