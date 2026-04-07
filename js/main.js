@@ -13,14 +13,50 @@
   function initHeaderDynamics() {
     if (!document.body) return;
     var body = document.body;
+    var header = document.querySelector(".site-header");
+    var nav = document.querySelector(".site-header .nav");
+    if (!header || !nav) return;
+    var currentShift = 0;
+    var targetShift = 0;
+    var rafId = 0;
 
-    function updateCompactState() {
-      body.classList.toggle("header-compact", window.scrollY > 70);
+    function computeTargetShift() {
+      var y = window.scrollY || 0;
+      var maxShift = Math.max(0, nav.offsetTop || 0);
+      targetShift = Math.min(y, maxShift);
+      body.classList.toggle("header-compact", targetShift >= maxShift && maxShift > 0);
     }
 
-    updateCompactState();
-    window.addEventListener("scroll", updateCompactState, { passive: true });
-    window.addEventListener("resize", updateCompactState);
+    function animateShift() {
+      var delta = targetShift - currentShift;
+      if (Math.abs(delta) < 0.1) {
+        currentShift = targetShift;
+      } else {
+        // Smooth follow (higher factor = snappier).
+        currentShift += delta * 0.2;
+      }
+      body.style.setProperty("--header-shift", currentShift.toFixed(2) + "px");
+      if (Math.abs(targetShift - currentShift) > 0.1) {
+        rafId = window.requestAnimationFrame(animateShift);
+      } else {
+        rafId = 0;
+      }
+    }
+
+    function requestAnimation() {
+      if (rafId) return;
+      rafId = window.requestAnimationFrame(animateShift);
+    }
+
+    function onScrollOrResize() {
+      computeTargetShift();
+      requestAnimation();
+    }
+
+    computeTargetShift();
+    body.style.setProperty("--header-shift", targetShift.toFixed(2) + "px");
+    window.addEventListener("scroll", onScrollOrResize, { passive: true });
+    window.addEventListener("resize", onScrollOrResize);
   }
 
   function initEmblemIntro() {

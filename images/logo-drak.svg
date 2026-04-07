@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64" aria-hidden="true">
+  <defs>
+    <linearGradient id="drkBody" x1="0%" y1="100%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#5f1f14" />
+      <stop offset="55%" stop-color="#9a3f1e" />
+      <stop offset="100%" stop-color="#d6a24a" />
+    </linearGradient>
+    <linearGradient id="drkWing" x1="0%" y1="100%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#3d1d12" />
+      <stop offset="100%" stop-color="#7f4f2e" />
+    </linearGradient>
+  </defs>
+  <path
+    fill="url(#drkWing)"
+    d="M6 43c8-14 16-21 27-24-3 4-4 9-4 13 0 7-4 13-12 16H6v-5z"
+  />
+  <path
+    fill="url(#drkBody)"
+    d="M36 12c6 1 11 6 12 12l8 1-6 6 2 8-7-3c-3 5-8 8-14 8-8 0-14-6-14-14 0-6 3-10 8-13l3-8 8 3z"
+  />
+  <path fill="#26140b" d="M40 23c5 0 9 4 9 9s-4 9-9 9c2-3 3-6 3-9s-1-6-3-9z" />
+  <circle cx="43.5" cy="26.5" r="1.6" fill="#f5d38d" />
+</svg>
