@@ -1,4 +1,18 @@
 :root {
+  /* DESIGN.md token aliases (single source of truth for theme intent) */
+  --ds-primary: #d9241c;
+  --ds-primary-dark: #a11c16;
+  --ds-primary-mid: #e23a33;
+  --ds-secondary: #329932;
+  --ds-tertiary: #ffcb00;
+  --ds-tertiary-dim: #c79d00;
+  --ds-tertiary-bright: #ffe066;
+  --ds-neutral: #ffeed2;
+  --ds-surface-dark: #0e1219;
+  --ds-surface-dark-2: #0a0c12;
+  --ds-text-on-dark: #ebe4d6;
+  --ds-text-muted: #e8e2d6;
+  --ds-ink: #1c1917;
   /* Paleta značky */
   --arta-red: #d9241c;
   --arta-red-dark: #a11c16;
@@ -7,15 +21,15 @@
   --arta-cream: #ffeed2;
   --arta-black: #0a0a0a;
   /* Mapovanie na existujúce tokeny (komponenty ostávajú čitateľné) */
-  --ink: #1c1917;
+  --ink: var(--ds-ink);
   --parchment: #ffeed2;
   --parchment-dark: #f2e4cc;
-  --burgundy: #d9241c;
-  --burgundy-light: #e23a33;
-  --gold: #ffcb00;
-  --gold-dim: #c79d00;
-  --gold-bright: #ffe066;
-  --forest: #329932;
+  --burgundy: var(--ds-primary);
+  --burgundy-light: var(--ds-primary-mid);
+  --gold: var(--ds-tertiary);
+  --gold-dim: var(--ds-tertiary-dim);
+  --gold-bright: var(--ds-tertiary-bright);
+  --forest: var(--ds-secondary);
   --shadow: rgba(26, 18, 9, 0.35);
   --shadow-deep: rgba(4, 8, 10, 0.6);
   --mist: rgba(50, 153, 50, 0.22);
@@ -25,7 +39,7 @@
   --ember: rgba(217, 36, 28, 0.2);
   --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
   /* Jemná obnova: text a odkazy na tmavom pozadí */
-  --text-on-dark: #ebe4d6;
+  --text-on-dark: var(--ds-text-on-dark);
   --text-muted: rgba(232, 226, 214, 0.78);
   --link-accent: #e4c992;
   --link-accent-hover: #f2e4cc;
@@ -2880,7 +2894,7 @@ a.stripe-btn.woo-pay-btn:hover {
 }
 
 .home-page .site-header .nav a:hover {
-  color: #fff2cf;
+  color: var(--ds-neutral);
   text-shadow: 0 0 12px rgba(255, 203, 0, 0.24);
 }
 
@@ -3009,7 +3023,7 @@ body.home-page:not(.intro-done) .site-header .header-brand-slot img {
 
 .home-page .choice-card h4,
 .home-page #vstupenky-rezervacie .choice-card h4 {
-  color: #d9241c;
+  color: var(--ds-primary);
 }
 
 .home-page .schedule-table th {
@@ -3034,7 +3048,12 @@ body.home-page:not(.intro-done) .site-header .header-brand-slot img {
 
 .home-page .btn-primary,
 .home-page .stripe-btn {
-  background: linear-gradient(180deg, #d9241c 0%, #a11c16 56%, #6f120f 100%);
+  background: linear-gradient(
+    180deg,
+    var(--ds-primary) 0%,
+    var(--ds-primary-dark) 56%,
+    #6f120f 100%
+  );
   color: #ffefcc !important;
   box-shadow:
     inset 0 1px 0 rgba(255, 203, 0, 0.28),
@@ -4054,4 +4073,116 @@ body.home-page .site-header .nav:focus-within {
     content-visibility: auto;
     contain-intrinsic-size: 1px 700px;
   }
+}
+
+/* =========================================================
+   DESIGN TOKEN ENFORCEMENT LAYER
+   Align legacy rules to DESIGN.md tokens
+   ========================================================= */
+:root {
+  --ds-radius-sm: 4px;
+  --ds-radius-md: 6px;
+  --ds-radius-lg: 8px;
+  --ds-radius-xl: 10px;
+
+  --ds-space-xs: 4px;
+  --ds-space-sm: 8px;
+  --ds-space-md: 16px;
+  --ds-space-lg: 24px;
+  --ds-space-xl: 32px;
+}
+
+body.home-page {
+  color: var(--ds-text-on-dark);
+}
+
+.home-page .site-header {
+  background: linear-gradient(180deg, var(--ds-surface-dark) 0%, var(--ds-surface-dark-2) 100%) !important;
+}
+
+.home-page .page-main,
+.home-page section,
+.home-page .card,
+.home-page .faq-item,
+.home-page .choice-card,
+.home-page .prihlasky-card,
+.home-page .prihlasky-setup-note,
+.home-page .prihlasky-quick-pick {
+  border-radius: var(--ds-radius-md) !important;
+}
+
+.home-page .page-main {
+  border-color: rgba(186, 146, 84, 0.34);
+  color: var(--ds-text-on-dark);
+}
+
+.home-page section h2,
+.home-page .card h3,
+.home-page .card h4,
+.home-page .faq-item summary {
+  color: var(--ds-tertiary) !important;
+}
+
+.home-page section p,
+.home-page section li,
+.home-page section td,
+.home-page section th,
+.home-page .faq-intro,
+.home-page .note {
+  color: var(--ds-text-on-dark) !important;
+}
+
+.home-page .btn,
+.home-page .stripe-btn {
+  border-radius: var(--ds-radius-md) !important;
+  padding: calc(var(--ds-space-sm) - 1px) calc(var(--ds-space-lg) - 2px) !important;
+  font-family: var(--font-ui) !important;
+}
+
+.home-page .btn-primary,
+.home-page .stripe-btn {
+  background: linear-gradient(
+    180deg,
+    var(--ds-primary) 0%,
+    var(--ds-primary-dark) 56%,
+    #6f120f 100%
+  ) !important;
+  color: #ffefcc !important;
+}
+
+.home-page .btn-outline {
+  border-color: rgba(50, 153, 50, 0.58) !important;
+  color: #eaf3dc !important;
+}
+
+.home-page .choice-card h4,
+.home-page #vstupenky-rezervacie .choice-card h4 {
+  color: var(--ds-primary) !important;
+}
+
+.home-page .schedule-table th {
+  color: var(--ds-tertiary) !important;
+}
+
+.home-page .schedule-table .time {
+  color: #e4d4a8 !important;
+}
+
+.home-page .workshop-form input[type="text"],
+.home-page .workshop-form input[type="email"],
+.home-page .workshop-form input[type="tel"],
+.home-page .workshop-form input[type="number"],
+.home-page .workshop-form textarea {
+  border-radius: var(--ds-radius-sm) !important;
+  border-color: rgba(150, 118, 74, 0.46) !important;
+  color: var(--ds-neutral) !important;
+}
+
+.home-page input:focus,
+.home-page textarea:focus,
+.home-page select:focus,
+.home-page button:focus-visible,
+.home-page a:focus-visible {
+  outline: 2px solid rgba(255, 203, 0, 0.72) !important;
+  box-shadow: 0 0 0 3px rgba(255, 203, 0, 0.18) !important;
 }

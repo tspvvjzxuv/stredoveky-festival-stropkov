@@ -3,7 +3,9 @@
   "private": true,
   "scripts": {
     "dev": "live-server --port=5500 --open=/",
-    "start": "npm run dev"
+    "start": "npm run dev",
+    "generated:normalize": "node normalize-generated-files.mjs",
+    "postspec:gen": "npm run generated:normalize"
   },
   "devDependencies": {
     "live-server": "^1.2.2"
