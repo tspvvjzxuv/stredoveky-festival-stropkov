@@ -1,5 +1,5 @@
-import { Chessground } from "../node_modules/@lichess-org/chessground/dist/chessground.js";
-import { Chess } from "../node_modules/chess.js/dist/esm/chess.js";
+import { Chessground } from "https://cdn.jsdelivr.net/npm/@lichess-org/chessground@10.1.1/dist/chessground.js";
+import { Chess } from "https://cdn.jsdelivr.net/npm/chess.js@1.4.0/+esm";
 import { FESTIVAL_PUZZLES } from "./puzzles-data.js";
 
 var ALL_SQUARES = [
