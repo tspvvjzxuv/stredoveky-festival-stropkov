@@ -4132,6 +4132,115 @@ body.home-page {
   color: var(--ds-text-on-dark) !important;
 }
 
+#sachove-hlavolamy .sach-visual-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.9rem;
+  margin-top: 0.85rem;
+}
+
+#sachove-hlavolamy .sach-visual-item {
+  background: linear-gradient(180deg, rgba(18, 24, 36, 0.86) 0%, rgba(12, 16, 26, 0.92) 100%);
+  border: 1px solid rgba(196, 156, 90, 0.45);
+  border-radius: 8px;
+  padding: 0.75rem;
+}
+
+#sachove-hlavolamy .sach-visual-item h4 {
+  margin: 0 0 0.5rem;
+  font-size: 0.95rem;
+  letter-spacing: 0.04em;
+  color: #f0d39e !important;
+}
+
+#sachove-hlavolamy .sach-visual-item p {
+  margin: 0.55rem 0 0;
+  text-align: center;
+  font-size: 0.92rem;
+  color: rgba(238, 231, 218, 0.92) !important;
+}
+
+#sachove-hlavolamy .sach-reset-btn {
+  width: 100%;
+  margin-top: 0.6rem;
+  min-height: 36px;
+}
+
+#sachove-hlavolamy .sach-visual-item.is-completed {
+  border-color: rgba(92, 201, 122, 0.7);
+  box-shadow:
+    0 0 0 1px rgba(92, 201, 122, 0.35),
+    0 10px 22px rgba(0, 0, 0, 0.28);
+}
+
+#sachove-hlavolamy .sach-success-banner {
+  margin-top: 0.55rem;
+  padding: 0.45rem 0.55rem;
+  border-radius: 6px;
+  border: 1px solid rgba(92, 201, 122, 0.52);
+  background: linear-gradient(180deg, rgba(26, 64, 38, 0.85) 0%, rgba(18, 48, 30, 0.92) 100%);
+  color: #d8ffe4;
+  font-size: 0.86rem;
+  text-align: center;
+}
+
+#sachove-hlavolamy .chessground-host {
+  padding: 0.25rem;
+  border-radius: 7px;
+  background: linear-gradient(180deg, rgba(8, 10, 14, 0.72) 0%, rgba(20, 12, 8, 0.58) 100%);
+  border: 1px solid rgba(255, 212, 140, 0.25);
+}
+
+#sachove-hlavolamy .cg-board {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  border-radius: 6px;
+  border: 1px solid rgba(242, 204, 140, 0.5);
+  overflow: hidden;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.28);
+}
+
+#sachove-hlavolamy .fen-fallback-board {
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  width: 100%;
+  height: 100%;
+}
+
+#sachove-hlavolamy .fen-cell {
+  display: grid;
+  place-items: center;
+  font-size: clamp(1rem, 2.3vw, 1.35rem);
+  background: #d7b57c;
+}
+
+#sachove-hlavolamy .fen-cell:nth-child(16n + 1),
+#sachove-hlavolamy .fen-cell:nth-child(16n + 3),
+#sachove-hlavolamy .fen-cell:nth-child(16n + 5),
+#sachove-hlavolamy .fen-cell:nth-child(16n + 7),
+#sachove-hlavolamy .fen-cell:nth-child(16n + 10),
+#sachove-hlavolamy .fen-cell:nth-child(16n + 12),
+#sachove-hlavolamy .fen-cell:nth-child(16n + 14),
+#sachove-hlavolamy .fen-cell:nth-child(16n + 16) {
+  background: #7b5332;
+}
+
+#sachove-hlavolamy .fen-piece--white {
+  color: #fff8eb;
+  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.65);
+}
+
+#sachove-hlavolamy .fen-piece--black {
+  color: #111;
+}
+
+@media (max-width: 900px) {
+  #sachove-hlavolamy .sach-visual-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
 .home-page .btn,
 .home-page .stripe-btn {
   border-radius: var(--ds-radius-md) !important;
