@@ -106,9 +106,8 @@
         <h2 class="prihlasky-quick-pick__title">Vyberte aktivitu</h2>
         <div class="prihlasky-quick-pick__grid">
           <a href="#prihlaska-lukostrelba">Lukostrelecký turnaj</a>
-          <a href="#prihlaska-serm">Šerm</a>
-          <a href="#prihlaska-deti">Detský program</a>
-          <a href="#prihlaska-remeslo">Remeselný workshop</a>
+          <a href="#prihlaska-sach">Šachový turnaj</a>
+          <a href="#prihlaska-rytierska-cesta">Rytierska cesta</a>
           <a href="#h-sutaz">Súťažná hádanka</a>
         </div>
       </div>
@@ -196,12 +195,14 @@
           </form>
         </div>
 
-        <div class="card prihlasky-card" id="prihlaska-serm">
-          <h3>Šerm — workshop</h3>
-          <p class="prihlasky-card__hint">Úvod do šermu alebo krátky workshop podľa programu.</p>
+        <div class="card prihlasky-card" id="prihlaska-sach">
+          <h3>Šachový turnaj</h3>
+          <p class="prihlasky-card__hint">
+            Prihlásenie na súťažné kolo / miesto v šachovom turnaji (podľa pravidiel ročníka).
+          </p>
           <form class="workshop-form" method="post" data-prihlaska-form action="#">
-            <input type="hidden" name="aktivita" value="Šerm — workshop" />
-            <input type="hidden" name="_subject" value="[Festival Stropkov] Šerm workshop" />
+            <input type="hidden" name="aktivita" value="Šachový turnaj" />
+            <input type="hidden" name="_subject" value="[Festival Stropkov] Šachový turnaj" />
             <input
               type="text"
               name="_gotcha"
@@ -231,7 +232,7 @@
               </label>
             </div>
             <label>
-              Poznámka
+              Poznámka (rating, vek účastníka, skúsenosti…)
               <textarea name="poznamka" rows="3" maxlength="800"></textarea>
             </label>
             <label class="workshop-form__check">
@@ -244,59 +245,14 @@
           </form>
         </div>
 
-        <div class="card prihlasky-card" id="prihlaska-deti">
-          <h3>Detský program</h3>
-          <p class="prihlasky-card__hint">Aktivity pre deti s obmedzenou kapacitou.</p>
+        <div class="card prihlasky-card" id="prihlaska-rytierska-cesta">
+          <h3>Rytierska cesta</h3>
+          <p class="prihlasky-card__hint">
+            Prihlásenie na tematickú festivalovú činnosť pre jednotlivcov aj rodiny.
+          </p>
           <form class="workshop-form" method="post" data-prihlaska-form action="#">
-            <input type="hidden" name="aktivita" value="Detský program" />
-            <input type="hidden" name="_subject" value="[Festival Stropkov] Detský program" />
-            <input
-              type="text"
-              name="_gotcha"
-              class="prihlasky-honeypot"
-              tabindex="-1"
-              autocomplete="off"
-              aria-hidden="true"
-            />
-            <div class="workshop-form__row">
-              <label>
-                Meno zákonného zástupcu *
-                <input type="text" name="meno" required maxlength="120" autocomplete="name" />
-              </label>
-              <label>
-                E-mail *
-                <input type="email" name="email" required autocomplete="email" />
-              </label>
-            </div>
-            <div class="workshop-form__row">
-              <label>
-                Telefón *
-                <input type="tel" name="telefon" required maxlength="40" autocomplete="tel" />
-              </label>
-              <label>
-                Počet detí
-                <input type="number" name="pocet_osob" min="1" max="10" value="1" />
-              </label>
-            </div>
-            <label>
-              Vek detí a poznámka
-              <textarea name="poznamka" rows="3" maxlength="800"></textarea>
-            </label>
-            <label class="workshop-form__check">
-              <input type="checkbox" name="suhrn_ostat" value="áno" required />
-              Súhlasím so spracovaním údajov na účely tejto prihlášky.
-            </label>
-            <p class="workshop-form__feedback" role="status" aria-live="polite" hidden></p>
-            <button type="submit" class="btn btn-primary">Odoslať prihlášku</button>
-          </form>
-        </div>
-
-        <div class="card prihlasky-card" id="prihlaska-remeslo">
-          <h3>Remeselný workshop</h3>
-          <p class="prihlasky-card__hint">Keramika, tkanie alebo iné remeslo podľa ponuky.</p>
-          <form class="workshop-form" method="post" data-prihlaska-form action="#">
-            <input type="hidden" name="aktivita" value="Remeselný workshop" />
-            <input type="hidden" name="_subject" value="[Festival Stropkov] Remeselný workshop" />
+            <input type="hidden" name="aktivita" value="Rytierska cesta" />
+            <input type="hidden" name="_subject" value="[Festival Stropkov] Rytierska cesta" />
             <input
               type="text"
               name="_gotcha"
@@ -326,16 +282,13 @@
               </label>
             </div>
             <label>
-              Ktorý workshop vás zaujíma?
-              <input type="text" name="typ_remesla" maxlength="120" placeholder="napr. keramika" />
-            </label>
-            <label>
-              Poznámka
+              Poznámka (vek detí, preferovaný čas, špeciálne požiadavky)
               <textarea name="poznamka" rows="3" maxlength="800"></textarea>
             </label>
             <label class="workshop-form__check">
               <input type="checkbox" name="suhrn_ostat" value="áno" required />
-              Súhlasím so spracovaním údajov na účely tejto prihlášky.
+              Súhlasím so spracovaním údajov na účely tejto prihlášky a kontaktovania
+              ohľadom aktivity.
             </label>
             <p class="workshop-form__feedback" role="status" aria-live="polite" hidden></p>
             <button type="submit" class="btn btn-primary">Odoslať prihlášku</button>
