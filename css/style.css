@@ -59,6 +59,8 @@
 
 html {
   scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
 }
 
 body {
@@ -3199,6 +3201,12 @@ body.home-page:not(.intro-done) .site-header .header-brand-slot img {
     padding: 0.9rem 0.85rem;
   }
 
+  .home-page .page-main section .lead {
+    font-size: clamp(1rem, 4.1vw, 1.1rem);
+    line-height: 1.52;
+    max-width: none;
+  }
+
   .home-page .btn-row {
     gap: 0.5rem;
   }
@@ -4009,6 +4017,26 @@ body.home-page .site-header .nav:focus-within {
 @media (max-width: 860px) {
   body.home-page .site-header .nav {
     min-height: 50px !important;
+    width: 100% !important;
+    max-width: none !important;
+    justify-content: flex-start !important;
+    gap: 0.55rem !important;
+    padding-inline: 0.65rem 1rem !important;
+    padding-block: 0.35rem 0.45rem !important;
+    flex-wrap: nowrap !important;
+    overflow-x: auto !important;
+    overflow-y: visible !important;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-x: contain;
+    touch-action: pan-x pan-y;
+    scrollbar-width: thin;
+  }
+
+  body.home-page .site-header .nav a {
+    flex: 0 0 auto !important;
+    white-space: nowrap !important;
+    font-size: clamp(0.72rem, 2.9vw, 0.82rem) !important;
+    padding-inline: 0.35rem !important;
   }
 }
 
