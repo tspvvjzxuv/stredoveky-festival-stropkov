@@ -22,20 +22,25 @@
   if (heroYear) heroYear.textContent = String(y);
   if (footerYear) footerYear.textContent = String(y);
 
-  /** Plynulé skrytie erbu pri scrolli (--emblem-hide 0→1, ako na začiatku dňa) */
+  /** Erb + header — plynulý pohyb pri scrolli (stav 20.5. ~18:04, pred dnešnými opravami) */
   function initHeaderDynamics() {
     if (!document.body) return;
     var body = document.body;
-    var emblemHideStart = 0;
-    var emblemHideEnd = 64;
-    var scrollTicking = false;
+    var header = document.querySelector(".site-header");
+    var nav = document.querySelector(".site-header .nav");
+    if (!header || !nav) return;
+    var targetShift = 0;
 
-    function applyEmblemScroll(scrollY) {
+    var emblemHideStart = 0;
+    var emblemHideEnd = 56;
+    var currentShift = 0;
+    var rafId = 0;
+
+    function setEmblemHide(scrollY) {
       if (reducedMotion) {
         var hidden = scrollY > emblemHideEnd;
         body.style.setProperty("--emblem-hide", hidden ? "1" : "0");
         body.classList.toggle("header-hide-emblem", hidden);
-        body.classList.toggle("header-compact", hidden);
         return;
       }
       var range = emblemHideEnd - emblemHideStart;
@@ -45,25 +50,48 @@
           : scrollY > emblemHideEnd
             ? 1
             : 0;
-      body.style.setProperty("--emblem-hide", progress.toFixed(3));
-      var hidden = progress >= 0.995;
-      body.classList.toggle("header-hide-emblem", hidden);
-      body.classList.toggle("header-compact", hidden);
+      body.style.setProperty("--emblem-hide", progress.toFixed(4));
+      body.classList.toggle("header-hide-emblem", progress >= 0.995);
     }
 
-    function onScrollOrResize() {
-      if (!scrollTicking) {
-        scrollTicking = true;
-        window.requestAnimationFrame(function () {
-          scrollTicking = false;
-          applyEmblemScroll(window.scrollY || 0);
-        });
+    function applyShift() {
+      var y = window.scrollY || 0;
+      setEmblemHide(y);
+      var maxShift = Math.max(0, nav.offsetTop || 0);
+      targetShift = Math.min(y, maxShift);
+      body.classList.toggle("header-compact", targetShift >= maxShift && maxShift > 0);
+    }
+
+    function animateShift() {
+      var delta = targetShift - currentShift;
+      if (Math.abs(delta) < 0.15) {
+        currentShift = targetShift;
+      } else {
+        currentShift += delta * 0.18;
+      }
+      body.style.setProperty("--header-shift", currentShift.toFixed(2) + "px");
+      if (Math.abs(targetShift - currentShift) > 0.15) {
+        rafId = window.requestAnimationFrame(animateShift);
+      } else {
+        rafId = 0;
       }
     }
 
-    applyEmblemScroll(window.scrollY || 0);
+    function onScrollOrResize() {
+      applyShift();
+      if (!rafId) {
+        rafId = window.requestAnimationFrame(animateShift);
+      }
+    }
+
+    applyShift();
+    var maxShiftInit = Math.max(0, nav.offsetTop || 0);
+    body.style.setProperty(
+      "--header-shift",
+      Math.min(window.scrollY || 0, maxShiftInit).toFixed(2) + "px"
+    );
     window.addEventListener("scroll", onScrollOrResize, { passive: true });
-    window.addEventListener("resize", onScrollOrResize, { passive: true });
+    window.addEventListener("resize", onScrollOrResize);
   }
 
   initHeaderDynamics();
