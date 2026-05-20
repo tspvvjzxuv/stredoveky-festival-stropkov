@@ -25,17 +25,30 @@
   function initHeaderDynamics() {
     if (!document.body || !document.body.classList.contains("home-page")) return;
     var body = document.body;
-    var emblemHideAt = 56;
+    var emblemHideAt = 72;
+    var emblemShowAt = 20;
     var scrollTicking = false;
-    var lastHidden = null;
+    var emblemHidden = false;
+    var transitionLockUntil = 0;
+
+    function setEmblemHidden(hidden) {
+      if (hidden === emblemHidden) return;
+      emblemHidden = hidden;
+      body.classList.toggle("header-hide-emblem", hidden);
+      body.classList.toggle("header-compact", hidden);
+      transitionLockUntil = Date.now() + 380;
+    }
 
     function updateHeaderOnScroll() {
       scrollTicking = false;
-      var hidden = (window.scrollY || 0) > emblemHideAt;
-      if (hidden === lastHidden) return;
-      lastHidden = hidden;
-      body.classList.toggle("header-hide-emblem", hidden);
-      body.classList.toggle("header-compact", hidden);
+      if (Date.now() < transitionLockUntil) return;
+
+      var y = window.scrollY || 0;
+      if (!emblemHidden && y > emblemHideAt) {
+        setEmblemHidden(true);
+      } else if (emblemHidden && y < emblemShowAt) {
+        setEmblemHidden(false);
+      }
     }
 
     function onScrollOrResize() {
@@ -45,7 +58,8 @@
       }
     }
 
-    updateHeaderOnScroll();
+    var y0 = window.scrollY || 0;
+    setEmblemHidden(y0 > emblemHideAt);
     window.addEventListener("scroll", onScrollOrResize, { passive: true });
     window.addEventListener("resize", onScrollOrResize, { passive: true });
   }

@@ -3546,7 +3546,9 @@ body.home-page.header-compact .site-header {
   flex-direction: column !important;
   align-items: center !important;
   gap: 0 !important;
-  padding: 0 !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+  padding-bottom: 0 !important;
 }
 
 .home-page .site-header::before,
@@ -3556,44 +3558,50 @@ body.home-page.header-compact .site-header {
   display: none !important;
 }
 
-/* Header icon + nav — výkonný skryt erbu (trieda, nie scroll premenná) */
+/* Header icon + nav — erb cez abs. pozíciu (bez kmitania layoutu pri scrolli) */
 .home-page .site-header {
   --header-icon-size: 136px;
+  --header-emblem-gap: 0.12rem;
   transform: none !important;
 }
 
-.home-page .site-header .header-brand-slot {
+.home-page .site-header .header-inner {
   position: relative !important;
+  padding-top: calc(var(--header-icon-size) + var(--header-emblem-gap)) !important;
+  transition: padding-top 0s;
+}
+
+body.home-page.header-hide-emblem .site-header .header-inner {
+  padding-top: 0.45rem !important;
+}
+
+.home-page .site-header .header-brand-slot {
+  position: absolute !important;
+  top: 0.45rem !important;
+  left: 50% !important;
   width: var(--header-icon-size) !important;
   height: var(--header-icon-size) !important;
-  min-height: var(--header-icon-size) !important;
-  max-height: var(--header-icon-size) !important;
-  margin: 0 auto 0.12rem !important;
+  min-height: 0 !important;
+  max-height: none !important;
+  margin: 0 !important;
   padding: 0 !important;
   line-height: 0 !important;
   overflow: hidden !important;
   clip-path: none !important;
   border-radius: 0 !important;
   align-self: center !important;
+  transform: translateX(-50%) !important;
   transform-origin: center top !important;
   opacity: 1 !important;
-  transform: none !important;
+  visibility: visible !important;
   contain: layout style paint;
-  transition:
-    opacity 0.32s ease,
-    transform 0.32s ease,
-    max-height 0.32s ease,
-    min-height 0.32s ease,
-    margin 0.32s ease;
+  transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s ease;
 }
 
 body.home-page.header-hide-emblem .site-header .header-brand-slot {
-  min-height: 0 !important;
-  max-height: 0 !important;
-  height: 0 !important;
-  margin-bottom: 0 !important;
   opacity: 0 !important;
-  transform: translateY(-10px) scale(0.94) !important;
+  visibility: hidden !important;
+  transform: translateX(-50%) translateY(-12px) scale(0.92) !important;
   pointer-events: none !important;
 }
 
@@ -3611,7 +3619,7 @@ body.home-page.header-hide-emblem .site-header .header-brand-slot {
   z-index: 1 !important;
   width: 100% !important;
   height: 100% !important;
-  max-height: var(--header-icon-size) !important;
+  max-height: none !important;
   object-fit: contain !important;
   animation: none !important;
   filter: none !important;
@@ -3673,13 +3681,8 @@ body.home-page.header-hide-emblem .site-header .header-brand-slot {
 }
 
 .home-page .site-header .header-brand-slot__icon {
-  /* Must override older "ABSOLUTE FINAL SHIELD FIX" left/top */
-  position: static !important;
+  position: relative !important;
   inset: auto !important;
-  left: auto !important;
-  top: auto !important;
-  right: auto !important;
-  bottom: auto !important;
   margin-inline: auto !important;
   object-position: center center !important;
 }
@@ -3970,7 +3973,6 @@ body.home-page .site-header .header-inner {
   width: min(1160px, 100%) !important;
   margin-inline: auto !important;
   padding-inline: 1rem !important;
-  padding-top: 0.5rem !important;
   padding-bottom: 0.25rem !important;
   display: flex !important;
   flex-direction: column !important;
@@ -4719,7 +4721,30 @@ body.home-page .site-header .nav a:hover,
   border-color: rgba(255, 203, 0, 0.16) !important;
 }
 
-/* Erb — skrytie pri scrolli cez .header-hide-emblem (main.js), jedna CSS transition */
+/* Erb — skrytie pri scrolli (hysteréza v main.js, bez kmitania) */
+body.home-page .site-header .header-inner {
+  position: relative !important;
+  padding-top: calc(var(--header-icon-size) + var(--header-emblem-gap)) !important;
+}
+
+body.home-page.header-hide-emblem .site-header .header-inner {
+  padding-top: 0.45rem !important;
+}
+
+body.home-page .site-header .header-brand-slot {
+  position: absolute !important;
+  top: 0.45rem !important;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s ease !important;
+}
+
+body.home-page.header-hide-emblem .site-header .header-brand-slot {
+  opacity: 0 !important;
+  visibility: hidden !important;
+  transform: translateX(-50%) translateY(-12px) scale(0.92) !important;
+  pointer-events: none !important;
+}
 
 /* ===============================
    Program (harmonogram + sprievodné) — DESIGN.md tokeny
