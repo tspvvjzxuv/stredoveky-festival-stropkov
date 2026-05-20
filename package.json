@@ -4,6 +4,7 @@
   "scripts": {
     "dev": "live-server --port=5500 --open=/",
     "start": "npm run dev",
+    "build": "node scripts/build.mjs",
     "generated:normalize": "node normalize-generated-files.mjs",
     "postspec:gen": "npm run generated:normalize"
   },
