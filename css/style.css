@@ -2257,61 +2257,138 @@ a.stripe-btn.woo-pay-btn:hover {
   margin-bottom: 0.5rem;
 }
 
+.mapa-arealu-section .lead {
+  max-width: 52rem;
+}
+
 .medieval-map-figure {
-  margin: 1.5rem 0;
+  margin: 1.25rem 0 0;
 }
 
 .medieval-map-frame {
   position: relative;
-  border: 3px solid var(--burgundy);
-  outline: 2px solid rgba(142, 152, 112, 0.55);
-  outline-offset: 6px;
-  border-radius: 8px;
-  background: linear-gradient(145deg, #fff4e4 0%, var(--parchment-dark) 100%);
+  border: 2px solid rgba(255, 203, 0, 0.38);
+  outline: 1px solid rgba(255, 203, 0, 0.14);
+  outline-offset: 4px;
+  border-radius: var(--ds-radius-md, 6px);
+  background: linear-gradient(145deg, #1a1510 0%, #0e1219 100%);
   box-shadow:
-    0 0 0 1px rgba(0, 0, 0, 0.06),
-    0 20px 56px rgba(26, 18, 9, 0.18);
+    inset 0 0 0 1px rgba(255, 203, 0, 0.08),
+    0 18px 48px rgba(0, 0, 0, 0.42);
   overflow: hidden;
 }
 
-.medieval-map-frame img {
+.medieval-map-frame picture,
+.medieval-map-image {
   display: block;
   width: 100%;
   height: auto;
 }
 
+.medieval-map-zoom-btn {
+  position: absolute;
+  right: 0.75rem;
+  bottom: 0.75rem;
+  z-index: 2;
+  padding: 0.45rem 0.85rem;
+  border: 1px solid rgba(255, 203, 0, 0.55);
+  border-radius: var(--ds-radius-sm, 4px);
+  background: rgba(14, 18, 26, 0.88);
+  color: var(--ds-neutral, #ffeed2);
+  font-family: var(--font-ui, "Source Sans 3", sans-serif);
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  cursor: pointer;
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  transition:
+    background-color var(--fx-time-mid, 260ms) var(--fx-ease, ease),
+    transform var(--fx-time-mid, 260ms) var(--fx-ease, ease);
+}
+
+.medieval-map-zoom-btn:hover,
+.medieval-map-zoom-btn:focus-visible {
+  background: rgba(26, 32, 46, 0.95);
+  transform: translateY(-1px);
+  outline: 2px solid var(--ds-tertiary-bright, #ffe066);
+  outline-offset: 2px;
+}
+
 .medieval-map-caption {
-  font-size: 1rem;
+  font-size: 0.95rem;
   font-style: italic;
-  color: rgba(26, 18, 9, 0.78);
-  margin-top: 0.85rem;
-  max-width: 48rem;
+  color: var(--text-muted, rgba(235, 228, 214, 0.82));
+  margin-top: 0.75rem;
+  max-width: 52rem;
 }
 
-.quest-legend-card h3 {
-  margin-top: 0;
-  font-size: 1.2rem;
-  color: var(--burgundy);
+.medieval-map-dialog {
+  width: min(96vw, 1200px);
+  max-width: none;
+  padding: 0;
+  border: none;
+  background: transparent;
 }
 
-.quest-legend-intro {
-  margin-top: 0;
-  font-size: 1.05rem;
+.medieval-map-dialog::backdrop {
+  background: rgba(6, 8, 12, 0.82);
 }
 
-.quest-legend {
+.medieval-map-dialog__panel {
+  border: 2px solid rgba(255, 203, 0, 0.42);
+  border-radius: var(--ds-radius-md, 6px);
+  background: #0e1219;
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.55);
+  overflow: hidden;
+}
+
+.medieval-map-dialog__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.65rem 1rem;
+  border-bottom: 1px solid rgba(255, 203, 0, 0.2);
+}
+
+.medieval-map-dialog__head h3 {
   margin: 0;
-  padding-left: 1.5rem;
-  max-width: 42rem;
+  font-size: 1rem;
+  color: var(--ds-neutral, #ffeed2);
 }
 
-.quest-legend li {
-  margin-bottom: 0.55rem;
-  padding-left: 0.25rem;
+.medieval-map-dialog__close {
+  padding: 0.35rem 0.75rem;
+  border: 1px solid rgba(255, 203, 0, 0.45);
+  border-radius: var(--ds-radius-sm, 4px);
+  background: transparent;
+  color: var(--ds-neutral, #ffeed2);
+  font-size: 0.85rem;
+  cursor: pointer;
 }
 
-.quest-legend em {
-  color: rgba(26, 18, 9, 0.72);
+.medieval-map-dialog__body {
+  max-height: min(78vh, 820px);
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.medieval-map-dialog__body img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.home-page .mapa-arealu-section .medieval-map-frame {
+  margin-inline: calc(-1 * clamp(0px, 2vw, 0.35rem));
+}
+
+@media (min-width: 900px) {
+  .home-page .mapa-arealu-section .medieval-map-figure {
+    margin-inline: -0.5rem;
+  }
 }
 
 .faq-intro {
