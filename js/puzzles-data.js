@@ -35,6 +35,6 @@ export const FESTIVAL_PUZZLES = [
       { from: "f4", to: "f8" },
       { from: "c8", to: "f8" },
     ],
-    engineDepth: 6,
+    engineDepth: 4,
   },
 ];
