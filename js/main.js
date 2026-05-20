@@ -22,49 +22,52 @@
   if (heroYear) heroYear.textContent = String(y);
   if (footerYear) footerYear.textContent = String(y);
 
-  function initHeaderDynamics() {
+  /** Erb pri scrolli — Headroom.js (https://wicky.nillia.ms/headroom.js) */
+  function initHeadroomEmblem() {
     if (!document.body || !document.body.classList.contains("home-page")) return;
     var body = document.body;
-    var emblemHideAt = 72;
-    var emblemShowAt = 20;
-    var scrollTicking = false;
-    var emblemHidden = false;
-    var transitionLockUntil = 0;
+    var el = document.getElementById("emblem-headroom");
+    if (!el) return;
 
-    function setEmblemHidden(hidden) {
-      if (hidden === emblemHidden) return;
-      emblemHidden = hidden;
-      body.classList.toggle("header-hide-emblem", hidden);
-      body.classList.toggle("header-compact", hidden);
-      transitionLockUntil = Date.now() + 380;
+    function setEmblemCompact(compact) {
+      body.classList.toggle("header-hide-emblem", compact);
+      body.classList.toggle("header-compact", compact);
     }
 
-    function updateHeaderOnScroll() {
-      scrollTicking = false;
-      if (Date.now() < transitionLockUntil) return;
-
-      var y = window.scrollY || 0;
-      if (!emblemHidden && y > emblemHideAt) {
-        setEmblemHidden(true);
-      } else if (emblemHidden && y < emblemShowAt) {
-        setEmblemHidden(false);
-      }
+    if (typeof Headroom === "undefined") {
+      setEmblemCompact(false);
+      return;
     }
 
-    function onScrollOrResize() {
-      if (!scrollTicking) {
-        scrollTicking = true;
-        window.requestAnimationFrame(updateHeaderOnScroll);
-      }
-    }
+    var headroom = new Headroom(el, {
+      tolerance: { up: 16, down: 16 },
+      offset: 88,
+      classes: {
+        initial: "emblem-headroom",
+        pinned: "emblem-headroom--pinned",
+        unpinned: "emblem-headroom--unpinned",
+        top: "emblem-headroom--top",
+        notTop: "emblem-headroom--not-top",
+      },
+      onPin: function () {
+        setEmblemCompact(false);
+      },
+      onUnpin: function () {
+        setEmblemCompact(true);
+      },
+      onTop: function () {
+        setEmblemCompact(false);
+      },
+    });
 
-    var y0 = window.scrollY || 0;
-    setEmblemHidden(y0 > emblemHideAt);
-    window.addEventListener("scroll", onScrollOrResize, { passive: true });
-    window.addEventListener("resize", onScrollOrResize, { passive: true });
+    headroom.init();
   }
 
-  initHeaderDynamics();
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initHeadroomEmblem);
+  } else {
+    initHeadroomEmblem();
+  }
 
   function initNavTrackScroll() {
     var track = document.querySelector(".site-header .nav-track");
