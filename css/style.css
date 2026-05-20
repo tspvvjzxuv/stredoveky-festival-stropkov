@@ -4185,43 +4185,123 @@ body.home-page {
 }
 
 /* ===============================
-   Nav menu — pozadie cez celú šírku menu
+   Header + menu — jeden scroll pruh, súlad s obsahom (DESIGN.md)
    =============================== */
-body.home-page .site-header .nav {
-  width: 100% !important;
-  max-width: none !important;
-  min-height: 62px !important;
-  padding-block: 0.45rem 0.5rem !important;
-  padding-inline: 1.15rem !important;
-  background-color: #0a0d12 !important;
-  background-image:
-    linear-gradient(180deg, rgba(14, 18, 26, 0.22) 0%, rgba(8, 10, 16, 0.45) 100%),
-    url("../images/poe2-navbar-bg.webp"),
-    linear-gradient(180deg, #12161f 0%, #080b10 100%) !important;
-  background-size: 100% 100%, 100% 100%, 100% 100% !important;
-  background-position: center, center center, center !important;
-  background-repeat: no-repeat !important;
-  background-attachment: local, local, local !important;
-  overflow-x: auto !important;
-  overflow-y: hidden !important;
-  -webkit-overflow-scrolling: touch;
+.home-page .site-header {
+  background: var(--ds-surface-dark-2) !important;
+  border-bottom: 1px solid rgba(255, 203, 0, 0.2) !important;
+  box-shadow: none !important;
 }
 
-body.home-page .site-header .nav::after {
+.home-page .site-header .header-inner {
+  background: transparent !important;
+}
+
+body.home-page .site-header .nav,
+.home-page .site-header .nav {
+  width: 100% !important;
+  max-width: none !important;
+  min-height: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: none !important;
+  border-radius: 0 !important;
+  background: none !important;
+  box-shadow: none !important;
+  overflow: hidden !important;
+  isolation: auto !important;
+}
+
+body.home-page .site-header .nav::before,
+body.home-page .site-header .nav::after,
+.home-page .site-header .nav::after,
+.home-page .nav::after {
   content: none !important;
   display: none !important;
 }
 
-body.home-page .site-header .nav a {
-  z-index: 2 !important;
-  padding: 0.35rem 0.15rem !important;
+.home-page .site-header .nav-track {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: nowrap;
+  gap: 1.1rem;
+  box-sizing: border-box;
+  min-width: 100%;
+  width: max-content;
+  min-height: 58px;
+  padding: 0.45rem 1.15rem;
+  background-color: var(--ds-surface-dark);
+  background-image:
+    linear-gradient(180deg, rgba(14, 18, 26, 0.2) 0%, rgba(9, 12, 18, 0.38) 100%),
+    url("../images/poe2-navbar-bg.webp"),
+    linear-gradient(180deg, var(--ds-surface-dark) 0%, var(--ds-surface-dark-2) 100%);
+  background-size: 100% 100%, 108% 100%, 100% 100%;
+  background-position: center, center center, center;
+  background-repeat: no-repeat;
+  border-top: 1px solid rgba(255, 203, 0, 0.14);
+}
+
+.home-page .site-header .nav-track .nav-crest-wings {
+  display: none;
+}
+
+body.home-page .site-header .nav a,
+.home-page .site-header .nav-track a {
+  flex: 0 0 auto;
+  position: relative;
+  z-index: 1;
+  padding: 0.35rem 0.15rem;
+  color: var(--ds-tertiary-bright) !important;
   text-shadow: 0 1px 3px rgba(0, 0, 0, 0.85);
 }
 
-@media (min-width: 861px) {
-  body.home-page .site-header .nav {
-    background-size: 100% 100%, 108% 100%, 100% 100% !important;
+body.home-page .site-header .nav a:hover,
+.home-page .site-header .nav-track a:hover {
+  color: var(--ds-neutral) !important;
+}
+
+@media (max-width: 860px) {
+  .home-page .site-header .nav-track {
+    justify-content: flex-start;
+    gap: 0.55rem;
+    min-height: 50px;
+    padding: 0.4rem 0.85rem;
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-x: contain;
+    touch-action: pan-x;
+    scrollbar-width: thin;
+    background-size: 100% 100%, auto 100%, 100% 100%;
   }
+}
+
+/* Plynulý prechod header → hero / obsah */
+.home-page .hero {
+  border-top: none;
+}
+
+.home-page .page-main {
+  background: linear-gradient(
+    180deg,
+    var(--ds-surface-dark-2) 0%,
+    rgba(12, 16, 24, 0.98) 100%
+  ) !important;
+  border-color: rgba(255, 203, 0, 0.22) !important;
+}
+
+.home-page main section {
+  background: linear-gradient(
+    180deg,
+    rgba(18, 24, 36, 0.72) 0%,
+    rgba(12, 16, 24, 0.82) 100%
+  ) !important;
+  border-color: rgba(255, 203, 0, 0.16) !important;
+}
+
+body.low-perf.home-page .site-header {
+  transform: none !important;
 }
 
 /* ===============================
