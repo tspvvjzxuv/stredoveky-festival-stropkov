@@ -14,6 +14,7 @@ var required = [
   "js/config.js",
   "images/festival-map.webp",
   "images/logo-andreasa-shield.png",
+  "images/hero-poster.webp",
   "videos/hero.mp4",
 ];
 

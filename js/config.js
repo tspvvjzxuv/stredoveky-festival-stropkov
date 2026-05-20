@@ -58,8 +58,8 @@ window.FESTIVAL_CONFIG = {
   /** Dynamickejší záber (rytieri v súboji); tichší variant: …/34697/34697-720.mp4 (meče v tráve). */
   bannerVideoUrl: "videos/hero.mp4",
 
-  /** Voliteľný náhľad pred spustením videa (cesta alebo URL obrázka). */
-  bannerVideoPoster: "",
+  /** Náhľad pred načítaním videa (viditeľný aj keď autoplay zlyhá). */
+  bannerVideoPoster: "images/hero-poster.webp",
 
   /** Voliteľné: URL Cloudflare Workeru pre overenie kupónov (bez lomky na konci). */
   overenieApiUrl: "",

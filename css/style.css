@@ -1080,17 +1080,13 @@ a:hover {
   z-index: 0;
   pointer-events: none;
   opacity: 1;
-  transform: scale(1.04);
+  transform: none;
   background: #0d1210;
 }
 
 .hero--has-video .hero-video {
   display: block;
   visibility: visible;
-}
-
-.hero--has-video.is-video-playing .hero-video {
-  transform: scale(1.04);
 }
 
 .hero:not(.hero--has-video) .hero-video {
@@ -1189,60 +1185,29 @@ a:hover {
     );
 }
 
+/* Pri videu: len jemný spodný tieň kvôli čitateľnosti textu — žiadna animácia */
 .hero--has-video .hero-fx {
-  background:
-    radial-gradient(
-      ellipse 50% 40% at 50% 20%,
-      rgba(120, 160, 150, 0.1) 0%,
-      transparent 62%
-    ),
-    radial-gradient(
-      ellipse 90% 70% at 50% 50%,
-      transparent 40%,
-      rgba(0, 0, 0, 0.42) 100%
-    ),
-    linear-gradient(
-      118deg,
-      rgba(2, 4, 6, 0.38) 0%,
-      rgba(32, 8, 12, 0.28) 40%,
-      rgba(2, 18, 14, 0.42) 100%
-    );
+  z-index: 1;
+  background: linear-gradient(
+    180deg,
+    rgba(3, 5, 4, 0.12) 0%,
+    rgba(3, 5, 4, 0.08) 45%,
+    rgba(3, 5, 4, 0.55) 100%
+  );
 }
 
-@media (min-width: 861px) and (hover: hover) and (pointer: fine) {
-  .hero--has-video .hero-fx {
-    background:
-      radial-gradient(
-        ellipse 55% 42% at 50% 18%,
-        rgba(120, 160, 150, 0.08) 0%,
-        transparent 65%
-      ),
-      radial-gradient(
-        ellipse 95% 75% at 50% 50%,
-        transparent 42%,
-        rgba(0, 0, 0, 0.32) 100%
-      ),
-      linear-gradient(
-        118deg,
-        rgba(2, 4, 6, 0.28) 0%,
-        rgba(32, 8, 12, 0.2) 40%,
-        rgba(2, 18, 14, 0.32) 100%
-      );
-  }
-
-  .hero--has-video::after {
-    opacity: 0.08;
-  }
-}
-
-.hero--has-video::after {
-  animation: none;
-  opacity: 0.14;
-}
-
+.hero--has-video::after,
 .hero--has-video .hero-fx::after {
+  display: none;
   animation: none;
-  opacity: 0.035;
+}
+
+.hero--has-video .hero-letterbox {
+  display: none;
+}
+
+.hero--has-video .hero-inner::before {
+  animation: none;
 }
 
 .hero-fx::after {
@@ -3328,38 +3293,8 @@ body.home-page::after {
   border-bottom: 1px solid rgba(255, 203, 0, 0.2);
 }
 
-.home-page .hero::after {
+.home-page .hero:not(.hero--has-video)::after {
   opacity: 0.16;
-}
-
-.home-page .hero--has-video::after {
-  opacity: 0.12;
-}
-
-@media (min-width: 861px) and (hover: hover) and (pointer: fine) {
-  .home-page .hero--has-video::after {
-    opacity: 0.06;
-  }
-
-  .home-page .hero--has-video .hero-fx {
-    background:
-      radial-gradient(
-        ellipse 55% 42% at 50% 18%,
-        rgba(120, 160, 150, 0.06) 0%,
-        transparent 68%
-      ),
-      radial-gradient(
-        ellipse 95% 75% at 50% 50%,
-        transparent 48%,
-        rgba(0, 0, 0, 0.22) 100%
-      ),
-      linear-gradient(
-        118deg,
-        rgba(2, 4, 6, 0.18) 0%,
-        rgba(32, 8, 12, 0.12) 40%,
-        rgba(2, 18, 14, 0.22) 100%
-      );
-  }
 }
 
 .home-page .hero .tagline,

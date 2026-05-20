@@ -189,6 +189,9 @@
   var videoUrl = cfg.bannerVideoUrl && String(cfg.bannerVideoUrl).trim();
   var heroVideo = document.getElementById("hero-video");
 
+  var heroVideoFallback =
+    "https://assets.mixkit.co/videos/13029/13029-720.mp4";
+
   function tryPlayHeroVideo() {
     if (!heroVideo) return;
     var playTry = heroVideo.play();
@@ -197,86 +200,66 @@
     }
   }
 
-  function markHeroVideoPlaying() {
-    if (!hero) return;
-    hero.classList.add("is-video-ready", "is-video-playing");
-    if (heroVideo) {
-      heroVideo.style.opacity = "1";
-    }
-    tryPlayHeroVideo();
-  }
+  var heroVideoReady = false;
 
-  function ensureHeroVideoVisible() {
+  function markHeroVideoReady() {
     if (!hero || !heroVideo) return;
-    hero.classList.add("is-video-ready");
+    hero.classList.add("hero--has-video", "is-video-ready", "is-video-playing");
     heroVideo.style.opacity = "1";
-    tryPlayHeroVideo();
-  }
-
-  function initHeroVideoVisibility() {
-    if (!hero || !heroVideo) return;
-    if (!("IntersectionObserver" in window)) {
+    if (!heroVideoReady) {
+      heroVideoReady = true;
       tryPlayHeroVideo();
-      return;
     }
-    var observer = new IntersectionObserver(
-      function (entries) {
-        var visible = entries[0] && entries[0].isIntersecting;
-        if (visible) {
-          tryPlayHeroVideo();
-        } else {
-          heroVideo.pause();
-        }
-      },
-      { threshold: 0.12, rootMargin: "0px" }
-    );
-    observer.observe(hero);
   }
 
-  function fallbackHeroBackground() {
-    if (!hero) return;
-    hero.classList.remove("hero--has-video", "is-video-ready", "is-video-playing");
-    if (cfg.bannerObrazok && String(cfg.bannerObrazok).trim()) {
-      var src = String(cfg.bannerObrazok).trim().replace(/"/g, "");
-      hero.style.setProperty("--hero-photo", 'url("' + src + '")');
+  function setHeroVideoSrc(url) {
+    if (!heroVideo || !url) return;
+    var clean = String(url).trim().replace(/"/g, "");
+    if (heroVideo.getAttribute("src") !== clean) {
+      heroVideo.src = clean;
     }
   }
 
   if (hero && videoUrl && heroVideo) {
     var videoSrc = videoUrl.replace(/"/g, "");
+    var posterSrc =
+      cfg.bannerVideoPoster && String(cfg.bannerVideoPoster).trim()
+        ? String(cfg.bannerVideoPoster).trim().replace(/"/g, "")
+        : "images/hero-poster.webp";
+    var triedFallback = false;
+
     hero.classList.add("hero--has-video", "is-video-ready");
     heroVideo.style.opacity = "1";
-    if (heroVideo.getAttribute("src") !== videoSrc) {
-      heroVideo.src = videoSrc;
-    }
     heroVideo.setAttribute("playsinline", "");
     heroVideo.setAttribute("webkit-playsinline", "");
     heroVideo.muted = true;
     heroVideo.defaultMuted = true;
-    if (cfg.bannerVideoPoster && String(cfg.bannerVideoPoster).trim()) {
-      heroVideo.poster = String(cfg.bannerVideoPoster).trim().replace(/"/g, "");
-    } else {
-      heroVideo.removeAttribute("poster");
-    }
-    heroVideo.addEventListener("loadeddata", markHeroVideoPlaying, { once: true });
-    heroVideo.addEventListener("canplay", markHeroVideoPlaying);
-    heroVideo.addEventListener("playing", function () {
-      hero.classList.add("is-video-playing");
-    });
+    heroVideo.setAttribute("autoplay", "");
+    heroVideo.poster = posterSrc;
+    setHeroVideoSrc(videoSrc);
+
+    heroVideo.addEventListener("loadeddata", markHeroVideoReady);
+    heroVideo.addEventListener("canplay", markHeroVideoReady);
+    heroVideo.addEventListener("playing", markHeroVideoReady);
     heroVideo.addEventListener("error", function () {
-      if (videoSrc.indexOf("videos/") === 0) {
-        heroVideo.src = "https://assets.mixkit.co/videos/13029/13029-720.mp4";
+      if (!triedFallback) {
+        triedFallback = true;
+        setHeroVideoSrc(heroVideoFallback);
         heroVideo.load();
         tryPlayHeroVideo();
         return;
       }
-      fallbackHeroBackground();
+      markHeroVideoReady();
     });
+
     heroVideo.load();
-    tryPlayHeroVideo();
-    initHeroVideoVisibility();
-    window.setTimeout(ensureHeroVideoVisible, 800);
-    window.setTimeout(tryPlayHeroVideo, 2000);
+    markHeroVideoReady();
+    document.addEventListener("visibilitychange", function () {
+      if (!document.hidden) {
+        tryPlayHeroVideo();
+      }
+    });
+    window.addEventListener("pageshow", tryPlayHeroVideo);
   } else if (hero && cfg.bannerObrazok && String(cfg.bannerObrazok).trim()) {
     var src = String(cfg.bannerObrazok).trim().replace(/"/g, "");
     hero.style.setProperty("--hero-photo", 'url("' + src + '")');
