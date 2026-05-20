@@ -3954,12 +3954,14 @@ body.home-page .site-header .nav:focus-within {
   font-size: 0.92rem;
 }
 
-/* Performance: skip rendering off-screen sections until needed */
+/* Performance: content-visibility len na výkonných desktopoch (na mobile spôsobuje „postupné maľovanie“) */
 @supports (content-visibility: auto) {
-  .page-main > section,
-  .site-footer {
-    content-visibility: auto;
-    contain-intrinsic-size: 1px 700px;
+  @media (min-width: 769px) and (hover: hover) and (pointer: fine) {
+    body:not(.low-perf) .page-main > section,
+    body:not(.low-perf) .site-footer {
+      content-visibility: auto;
+      contain-intrinsic-size: 1px 700px;
+    }
   }
 }
 
@@ -4462,6 +4464,52 @@ body.home-page .site-header .nav a {
     text-transform: uppercase;
     color: var(--ds-tertiary-dim);
   }
+}
+
+/* ===============================
+   Výkon — staršie mobily a dotyk (menej trhania pri scrolli)
+   =============================== */
+@media (prefers-reduced-motion: reduce), (max-width: 768px), (hover: none) and (pointer: coarse) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+body.low-perf main section,
+body.low-perf.js-ready main section {
+  opacity: 1 !important;
+  transform: none !important;
+  transition: none !important;
+}
+
+body.low-perf .page-main > section,
+body.low-perf .site-footer {
+  content-visibility: visible !important;
+}
+
+body.low-perf .site-header,
+body.low-perf.home-page .site-header {
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  will-change: auto !important;
+}
+
+body.low-perf .hero-fx::after {
+  animation: none !important;
+  opacity: 0 !important;
+}
+
+body.low-perf .hero-video,
+body.low-perf .hero:not(.hero--has-video) .hero-video {
+  animation: none !important;
+}
+
+body.low-perf .hero-scroll-cue {
+  animation: none !important;
+}
+
+body.low-perf .home-page main section:hover {
+  transform: none !important;
 }
 
 /* Print styles */

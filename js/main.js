@@ -3,6 +3,20 @@
     document.body.classList.add("js-ready");
   }
 
+  function prefersLowPerf() {
+    if (!window.matchMedia) return false;
+    return (
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches ||
+      window.matchMedia("(hover: none) and (pointer: coarse)").matches ||
+      window.matchMedia("(max-width: 768px)").matches
+    );
+  }
+
+  var lowPerf = prefersLowPerf();
+  if (lowPerf && document.body) {
+    document.body.classList.add("low-perf");
+  }
+
   var cfg = window.FESTIVAL_CONFIG || {};
   var y = cfg.rok || new Date().getFullYear();
   var heroYear = document.getElementById("hero-year");
@@ -16,23 +30,31 @@
     var header = document.querySelector(".site-header");
     var nav = document.querySelector(".site-header .nav");
     if (!header || !nav) return;
-    var currentShift = 0;
     var targetShift = 0;
-    var rafId = 0;
 
-    function computeTargetShift() {
+    function applyShift() {
       var y = window.scrollY || 0;
       var maxShift = Math.max(0, nav.offsetTop || 0);
       targetShift = Math.min(y, maxShift);
       body.classList.toggle("header-compact", targetShift >= maxShift && maxShift > 0);
+      body.style.setProperty("--header-shift", targetShift.toFixed(2) + "px");
     }
+
+    if (lowPerf) {
+      applyShift();
+      window.addEventListener("scroll", applyShift, { passive: true });
+      window.addEventListener("resize", applyShift);
+      return;
+    }
+
+    var currentShift = 0;
+    var rafId = 0;
 
     function animateShift() {
       var delta = targetShift - currentShift;
       if (Math.abs(delta) < 0.1) {
         currentShift = targetShift;
       } else {
-        // Smooth follow (higher factor = snappier).
         currentShift += delta * 0.2;
       }
       body.style.setProperty("--header-shift", currentShift.toFixed(2) + "px");
@@ -43,18 +65,14 @@
       }
     }
 
-    function requestAnimation() {
-      if (rafId) return;
-      rafId = window.requestAnimationFrame(animateShift);
-    }
-
     function onScrollOrResize() {
-      computeTargetShift();
-      requestAnimation();
+      applyShift();
+      if (!rafId) {
+        rafId = window.requestAnimationFrame(animateShift);
+      }
     }
 
-    computeTargetShift();
-    body.style.setProperty("--header-shift", targetShift.toFixed(2) + "px");
+    applyShift();
     window.addEventListener("scroll", onScrollOrResize, { passive: true });
     window.addEventListener("resize", onScrollOrResize);
   }
@@ -71,7 +89,7 @@
       window.matchMedia &&
       window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-    if (reduceMotion || !("IntersectionObserver" in window)) {
+    if (lowPerf || reduceMotion || !("IntersectionObserver" in window)) {
       for (var j = 0; j < sections.length; j++) {
         sections[j].classList.add("is-visible");
       }
@@ -107,6 +125,25 @@
     window.matchMedia &&
     window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
+  function initHeroVideoVisibility() {
+    if (!heroVideo || !("IntersectionObserver" in window)) return;
+    var observer = new IntersectionObserver(
+      function (entries) {
+        var visible = entries[0] && entries[0].isIntersecting;
+        if (visible) {
+          var playTry = heroVideo.play();
+          if (playTry && typeof playTry.catch === "function") {
+            playTry.catch(function () {});
+          }
+        } else {
+          heroVideo.pause();
+        }
+      },
+      { threshold: 0.08 }
+    );
+    observer.observe(heroVideo);
+  }
+
   if (hero && videoUrl && heroVideo && !reduceMotion) {
     hero.classList.add("hero--has-video");
     while (heroVideo.firstChild) {
@@ -124,6 +161,7 @@
     if (playTry && typeof playTry.catch === "function") {
       playTry.catch(function () {});
     }
+    initHeroVideoVisibility();
   } else if (hero && cfg.bannerObrazok && String(cfg.bannerObrazok).trim()) {
     var src = String(cfg.bannerObrazok).trim().replace(/"/g, "");
     hero.style.setProperty("--hero-photo", 'url("' + src + '")');
