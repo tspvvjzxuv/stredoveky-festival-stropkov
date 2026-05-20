@@ -331,6 +331,9 @@
 
       <section id="sprievodne-aktivity" aria-labelledby="sprievodne-aktivity-heading">
         <h2 id="sprievodne-aktivity-heading">Sprievodné aktivity</h2>
+        <p class="lead">
+          Podrobné umiestnenie zón nájdete na <a href="#mapa-uloh">mape areálu</a> nižšie.
+        </p>
         <div class="card program-panel companion-activities-card">
           <ul class="companion-activities">
             <li>Stredoveký vojenský tábor s autogramiádou autora povesti o rytierovi Andreasovi</li>
@@ -364,35 +367,64 @@
         <p class="note">Krátky prístup autom aj pešo, parkovanie je pri areáli.</p>
       </section>
 
-      <section id="mapa-uloh" aria-labelledby="mapa-uloh-heading">
-        <h2 id="mapa-uloh-heading">Mapa</h2>
-        <p class="lead">Hľadáte kávu alebo parkovanie? S našou mapkou ich nájdete raz-dva!</p>
+      <section id="mapa-uloh" class="mapa-arealu-section" aria-labelledby="mapa-uloh-heading">
+        <h2 id="mapa-uloh-heading">Mapa areálu</h2>
+        <p class="lead">
+          Všetky zóny festivalu nájdete priamo na mape — registrácia, jedlo a nápoje, rytierska
+          cesta, divadlo, šachy, strelnica, vojenský tábor, zbrojnica, remeselníci a ďalšie.
+        </p>
         <figure class="medieval-map-figure">
           <div class="medieval-map-frame">
-            <img
-              src="images/festival-map.svg"
-              width="900"
-              height="580"
-              alt="Mapa areálu: brána, rytierska cesta, lukostrelecký turnaj, šachový turnaj, piknik park, kreatívna dielnička, táborová opekačka, tombola, pokladnica."
-              loading="lazy"
-            />
+            <picture>
+              <source
+                type="image/webp"
+                srcset="images/festival-map.webp"
+                sizes="(max-width: 860px) 100vw, min(1100px, 96vw)"
+              />
+              <img
+                class="medieval-map-image"
+                src="images/festival-map.webp"
+                width="1600"
+                height="900"
+                alt="Ilustrovaná mapa festivalu Pod vlekom: brána, registrácia, jedlo a nápoje, rytierska cesta, rytierske divadlo a šachový svet, šachy, táborák, strelnica, vojenský tábor, zbrojnica so šermom a remeselníci."
+                loading="lazy"
+                decoding="async"
+                fetchpriority="low"
+              />
+            </picture>
+            <button
+              type="button"
+              class="medieval-map-zoom-btn"
+              data-map-zoom-open
+              aria-haspopup="dialog"
+            >
+              Zväčšiť mapu
+            </button>
           </div>
           <figcaption class="medieval-map-caption">
-            Orientačná mapa — rozostupy podľa situácie v deň festivalu.
+            Orientačná mapa areálu Pod vlekom — presné umiestnenie stánkov a aktivít môže v deň
+            festivalu mierne upraviť organizátor.
           </figcaption>
         </figure>
-        <div class="card quest-legend-card">
-          <h3>Mapa a body programu</h3>
-          <ol class="quest-legend">
-            <li><strong>Rytierska cesta</strong> — nazbierajte všetky pečiatky (deti aj dospelí).</li>
-            <li><strong>Lukostrelecký turnaj</strong> — rezervujte si miesto včas.</li>
-            <li><strong><a href="sach.html">Šachový turnaj</a></strong> — vrátane šachovej bitky kráľov so živými figúrkami.</li>
-            <li><strong>Piknik park</strong> — oddychová zóna pri otvorení areálu.</li>
-            <li><strong>Kreatívna dielnička</strong> — tvorivé aktivity pre malých aj veľkých.</li>
-            <li><strong>Interaktívna rozprávka</strong> — zábava pre celú rodinu.</li>
-            <li><strong>Táborová opekačka</strong> — z vlastných zásob na záver dňa.</li>
-          </ol>
-        </div>
+        <dialog class="medieval-map-dialog" id="mapa-zoom-dialog" aria-labelledby="mapa-zoom-title">
+          <div class="medieval-map-dialog__panel">
+            <header class="medieval-map-dialog__head">
+              <h3 id="mapa-zoom-title">Mapa areálu</h3>
+              <button type="button" class="medieval-map-dialog__close" data-map-zoom-close>
+                Zavrieť
+              </button>
+            </header>
+            <div class="medieval-map-dialog__body">
+              <img
+                src="images/festival-map.webp"
+                width="1600"
+                height="900"
+                alt=""
+                decoding="async"
+              />
+            </div>
+          </div>
+        </dialog>
       </section>
 
       <section id="faq" aria-labelledby="faq-heading">

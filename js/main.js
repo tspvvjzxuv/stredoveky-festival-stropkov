@@ -97,6 +97,45 @@
 
   initNavTrackScroll();
 
+  function initMapZoom() {
+    var dialog = document.getElementById("mapa-zoom-dialog");
+    var openBtn = document.querySelector("[data-map-zoom-open]");
+    var closeBtn = document.querySelector("[data-map-zoom-close]");
+    if (!dialog || !openBtn) return;
+
+    function openDialog() {
+      if (typeof dialog.showModal === "function") {
+        dialog.showModal();
+      } else {
+        dialog.setAttribute("open", "");
+      }
+    }
+
+    function closeDialog() {
+      if (dialog.open) {
+        dialog.close();
+      } else {
+        dialog.removeAttribute("open");
+      }
+    }
+
+    openBtn.addEventListener("click", openDialog);
+    if (closeBtn) {
+      closeBtn.addEventListener("click", closeDialog);
+    }
+    dialog.addEventListener("click", function (event) {
+      if (event.target === dialog) {
+        closeDialog();
+      }
+    });
+    dialog.addEventListener("cancel", function (event) {
+      event.preventDefault();
+      closeDialog();
+    });
+  }
+
+  initMapZoom();
+
   // Book-intro sound layer removed in unified design pass.
 
   function initSectionReveal() {
