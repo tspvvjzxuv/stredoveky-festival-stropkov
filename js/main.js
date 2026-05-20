@@ -3,18 +3,16 @@
     document.body.classList.add("js-ready");
   }
 
-  function prefersLowPerf() {
-    if (!window.matchMedia) return false;
+  function prefersReducedMotion() {
     return (
-      window.matchMedia("(prefers-reduced-motion: reduce)").matches ||
-      window.matchMedia("(hover: none) and (pointer: coarse)").matches ||
-      window.matchMedia("(max-width: 768px)").matches
+      window.matchMedia &&
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches
     );
   }
 
-  var lowPerf = prefersLowPerf();
-  if (lowPerf && document.body) {
-    document.body.classList.add("low-perf");
+  var reducedMotion = prefersReducedMotion();
+  if (reducedMotion && document.body) {
+    document.body.classList.add("reduced-motion");
   }
 
   var cfg = window.FESTIVAL_CONFIG || {};
@@ -32,34 +30,46 @@
     if (!header || !nav) return;
     var targetShift = 0;
 
-    function applyShift() {
-      var y = window.scrollY || 0;
-      body.classList.toggle("header-hide-emblem", y > 40);
-      var maxShift = Math.max(0, nav.offsetTop || 0);
-      targetShift = Math.min(y, maxShift);
-      body.classList.toggle("header-compact", targetShift >= maxShift && maxShift > 0);
-      body.style.setProperty("--header-shift", targetShift.toFixed(2) + "px");
-    }
-
-    if (lowPerf) {
-      applyShift();
-      window.addEventListener("scroll", applyShift, { passive: true });
-      window.addEventListener("resize", applyShift);
-      return;
-    }
-
+    var emblemHideStart = 0;
+    var emblemHideEnd = 56;
     var currentShift = 0;
     var rafId = 0;
 
+    function setEmblemHide(scrollY) {
+      if (reducedMotion) {
+        var hidden = scrollY > emblemHideEnd;
+        body.style.setProperty("--emblem-hide", hidden ? "1" : "0");
+        body.classList.toggle("header-hide-emblem", hidden);
+        return;
+      }
+      var range = emblemHideEnd - emblemHideStart;
+      var progress =
+        range > 0
+          ? Math.min(1, Math.max(0, (scrollY - emblemHideStart) / range))
+          : scrollY > emblemHideEnd
+            ? 1
+            : 0;
+      body.style.setProperty("--emblem-hide", progress.toFixed(4));
+      body.classList.toggle("header-hide-emblem", progress >= 0.995);
+    }
+
+    function applyShift() {
+      var y = window.scrollY || 0;
+      setEmblemHide(y);
+      var maxShift = Math.max(0, nav.offsetTop || 0);
+      targetShift = Math.min(y, maxShift);
+      body.classList.toggle("header-compact", targetShift >= maxShift && maxShift > 0);
+    }
+
     function animateShift() {
       var delta = targetShift - currentShift;
-      if (Math.abs(delta) < 0.1) {
+      if (Math.abs(delta) < 0.15) {
         currentShift = targetShift;
       } else {
-        currentShift += delta * 0.2;
+        currentShift += delta * 0.18;
       }
       body.style.setProperty("--header-shift", currentShift.toFixed(2) + "px");
-      if (Math.abs(targetShift - currentShift) > 0.1) {
+      if (Math.abs(targetShift - currentShift) > 0.15) {
         rafId = window.requestAnimationFrame(animateShift);
       } else {
         rafId = 0;
@@ -74,6 +84,7 @@
     }
 
     applyShift();
+    body.style.setProperty("--header-shift", targetShift.toFixed(2) + "px");
     window.addEventListener("scroll", onScrollOrResize, { passive: true });
     window.addEventListener("resize", onScrollOrResize);
   }
@@ -107,7 +118,7 @@
       window.matchMedia &&
       window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-    if (lowPerf || reduceMotion || !("IntersectionObserver" in window)) {
+    if (reducedMotion || !("IntersectionObserver" in window)) {
       for (var j = 0; j < sections.length; j++) {
         sections[j].classList.add("is-visible");
       }

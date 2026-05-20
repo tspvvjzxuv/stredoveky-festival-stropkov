@@ -2797,13 +2797,14 @@ body.home-page.header-compact .site-header {
 }
 
 body.home-page.header-compact .site-header .header-brand-slot {
-  min-height: 112px;
-  height: min(128px, 26vw);
-  margin-bottom: 0.16rem;
+  min-height: calc(112px * (1 - var(--emblem-hide, 0)));
+  height: auto;
+  max-height: calc(min(128px, 26vw) * (1 - var(--emblem-hide, 0)));
+  margin-bottom: calc(0.16rem * (1 - var(--emblem-hide, 0)));
 }
 
 body.home-page.header-compact .site-header .header-brand-slot img {
-  transform: scale(0.92);
+  transform: scale(calc(1 - 0.08 * var(--emblem-hide, 0)));
 }
 
 body.home-page.header-compact .site-header .nav {
@@ -2982,10 +2983,11 @@ body.home-page.header-compact .site-header .nav {
   }
 
   .home-page .site-header .header-brand-slot {
-    min-height: 104px;
-    margin-bottom: 0.55rem;
+    min-height: calc(104px * (1 - var(--emblem-hide, 0)));
+    margin-bottom: calc(0.55rem * (1 - var(--emblem-hide, 0)));
     width: min(118px, 56vw);
-    height: min(132px, 62vw);
+    height: auto;
+    max-height: calc(min(132px, 62vw) * (1 - var(--emblem-hide, 0)));
     padding: 0.3rem;
     border-radius: 46% 46% 40% 40% / 16% 16% 58% 58%;
   }
@@ -3017,8 +3019,9 @@ body.home-page.header-compact .site-header .nav {
   }
 
   body.home-page.header-compact .site-header .header-brand-slot {
-    min-height: 90px;
-    height: min(108px, 54vw);
+    min-height: calc(90px * (1 - var(--emblem-hide, 0)));
+    max-height: calc(min(108px, 54vw) * (1 - var(--emblem-hide, 0)));
+    height: auto;
   }
 }
 
@@ -3385,18 +3388,25 @@ body.home-page.header-compact .site-header {
 .home-page .site-header .header-brand-slot {
   position: relative !important;
   width: var(--header-icon-size) !important;
-  height: var(--header-icon-size) !important;
-  margin: 0 auto 0.12rem !important;
+  height: auto !important;
+  min-height: calc(var(--header-icon-size) * (1 - var(--emblem-hide, 0))) !important;
+  max-height: calc(var(--header-icon-size) * (1 - var(--emblem-hide, 0))) !important;
+  margin: 0 auto calc(0.12rem * (1 - var(--emblem-hide, 0))) !important;
   padding: 0 !important;
   line-height: 0 !important;
-  overflow: clip !important;
+  overflow: hidden !important;
   clip-path: none !important;
   border-radius: 0 !important;
   align-self: center !important;
   transform-origin: center top !important;
-  opacity: 1 !important;
-  transform: none !important;
-  transition: none !important;
+  opacity: calc(1 - var(--emblem-hide, 0)) !important;
+  transform: translateY(calc(-12px * var(--emblem-hide, 0)))
+    scale(calc(1 - 0.1 * var(--emblem-hide, 0))) !important;
+  will-change: max-height, opacity, transform;
+}
+
+body.home-page.header-hide-emblem .site-header .header-brand-slot {
+  pointer-events: none !important;
 }
 
 .home-page .site-header .header-brand-slot::before,
@@ -3412,6 +3422,7 @@ body.home-page.header-compact .site-header {
   inset: 16% !important;
   border-radius: 50% !important;
   pointer-events: none !important;
+  opacity: calc(1 - var(--emblem-hide, 0)) !important;
   background: radial-gradient(
     circle,
     rgba(255, 243, 212, 0.34) 0%,
@@ -3427,9 +3438,10 @@ body.home-page.header-compact .site-header {
   position: relative !important;
   z-index: 1 !important;
   width: 100% !important;
-  height: 100% !important;
+  height: auto !important;
+  aspect-ratio: 1 !important;
+  max-height: calc(var(--header-icon-size) * (1 - var(--emblem-hide, 0)));
   object-fit: contain !important;
-  transform: none !important;
   animation: none !important;
   filter: none !important;
   clip-path: none !important;
@@ -3484,14 +3496,13 @@ body.home-page.header-compact .site-header {
 }
 
 .home-page .site-header .header-brand-slot__icon {
-  /* Must override older "ABSOLUTE FINAL SHIELD FIX" left/top + killed transform */
+  /* Must override older "ABSOLUTE FINAL SHIELD FIX" left/top */
   position: static !important;
   inset: auto !important;
   left: auto !important;
   top: auto !important;
   right: auto !important;
   bottom: auto !important;
-  transform: none !important;
   margin-inline: auto !important;
   object-position: center center !important;
 }
@@ -3793,9 +3804,9 @@ body.home-page .site-header .header-inner {
 
 body.home-page .site-header .header-brand-slot {
   width: min(172px, 34vw) !important;
-  height: min(186px, 38vw) !important;
-  min-height: 156px !important;
-  margin: 0 auto 0.5rem !important;
+  height: auto !important;
+  min-height: calc(156px * (1 - var(--emblem-hide, 0))) !important;
+  margin: 0 auto calc(0.5rem * (1 - var(--emblem-hide, 0))) !important;
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
@@ -3957,8 +3968,8 @@ body.home-page .site-header .nav:focus-within {
 /* Performance: content-visibility len na výkonných desktopoch (na mobile spôsobuje „postupné maľovanie“) */
 @supports (content-visibility: auto) {
   @media (min-width: 769px) and (hover: hover) and (pointer: fine) {
-    body:not(.low-perf) .page-main > section,
-    body:not(.low-perf) .site-footer {
+    .page-main > section,
+    .site-footer {
       content-visibility: auto;
       contain-intrinsic-size: 1px 700px;
     }
@@ -4357,52 +4368,15 @@ body.home-page .site-header .nav a:hover,
   border-color: rgba(255, 203, 0, 0.16) !important;
 }
 
-body.low-perf.home-page .site-header {
-  transform: none !important;
-}
-
-/* Erb (štít) sa pri scrolli schová — viac miesta pre menu */
-.home-page .site-header .header-brand-slot {
-  transition:
-    max-height 0.42s var(--fx-ease),
-    opacity 0.36s ease,
-    transform 0.42s var(--fx-ease),
-    margin 0.42s var(--fx-ease),
-    visibility 0.36s ease !important;
-}
-
-.home-page .site-header .header-brand-slot__icon {
-  transition: transform 0.42s var(--fx-ease), filter 0.42s ease !important;
-}
-
-body.home-page.header-hide-emblem .site-header .header-brand-slot {
-  max-height: 0 !important;
-  min-height: 0 !important;
-  height: 0 !important;
-  width: 0 !important;
-  margin: 0 !important;
-  padding: 0 !important;
-  opacity: 0 !important;
-  overflow: hidden !important;
-  pointer-events: none !important;
-  visibility: hidden !important;
-  transform: scale(0.82) translateY(-10px) !important;
-}
-
+/* Erb — jedna scroll-driven animácia na všetkých zariadeniach (--emblem-hide z main.js) */
 body.home-page.header-hide-emblem .site-header .header-brand-slot::after {
   opacity: 0 !important;
 }
 
+body.home-page.header-hide-emblem .site-header .header-brand-slot,
 body.home-page.header-hide-emblem.header-compact .site-header .header-brand-slot,
 body.home-page.header-compact .site-header .header-brand-slot {
   min-height: 0 !important;
-  height: 0 !important;
-  margin-bottom: 0 !important;
-}
-
-body.home-page.header-hide-emblem .site-header .header-brand-slot__icon {
-  transform: scale(0.88) rotate(-2deg) !important;
-  filter: blur(1px) brightness(0.92) !important;
 }
 
 /* ===============================
@@ -4648,7 +4622,7 @@ body.home-page.header-hide-emblem .site-header .header-brand-slot__icon {
 }
 
 /* ===============================
-   Cool motion — jemné efekty (šetrí reduced-motion / low-perf)
+   Cool motion — jemné efekty (šetrí reduced-motion)
    =============================== */
 @keyframes fxFadeUp {
   from {
@@ -4737,24 +4711,19 @@ body.home-page.header-hide-emblem .site-header .header-brand-slot__icon {
     transform: scaleX(1);
   }
 
-  body.js-ready:not(.low-perf) main section.is-visible > h2 {
+  body.js-ready:not(.reduced-motion) main section.is-visible > h2 {
     animation: fxFadeUp 0.55s var(--fx-ease) 0.04s both;
   }
 
-  body.js-ready:not(.low-perf) main section.is-visible > .lead,
-  body.js-ready:not(.low-perf) main section.is-visible > p.lead {
+  body.js-ready:not(.reduced-motion) main section.is-visible > .lead,
+  body.js-ready:not(.reduced-motion) main section.is-visible > p.lead {
     animation: fxFadeUp 0.55s var(--fx-ease) 0.1s both;
   }
 
-  body.js-ready:not(.low-perf) main section.is-visible > .card,
-  body.js-ready:not(.low-perf) main section.is-visible > .program-panel,
-  body.js-ready:not(.low-perf) main section.is-visible > .medieval-map-figure {
+  body.js-ready:not(.reduced-motion) main section.is-visible > .card,
+  body.js-ready:not(.reduced-motion) main section.is-visible > .program-panel,
+  body.js-ready:not(.reduced-motion) main section.is-visible > .medieval-map-figure {
     animation: fxFadeUp 0.6s var(--fx-ease) 0.14s both;
-  }
-
-  body.js-ready.low-perf main section.is-visible > .card,
-  body.js-ready.low-perf main section.is-visible > .program-panel {
-    animation: fxFadeUp 0.42s var(--fx-ease) both;
   }
 
   body.js-ready main section.is-visible .companion-activities li {
@@ -4885,47 +4854,6 @@ body.home-page.header-hide-emblem .site-header .header-brand-slot__icon {
   }
 }
 
-body.low-perf main section,
-body.low-perf.js-ready main section {
-  opacity: 1 !important;
-  transform: none !important;
-  transition: none !important;
-}
-
-body.low-perf .page-main > section,
-body.low-perf .site-footer {
-  content-visibility: visible !important;
-}
-
-body.low-perf .site-header,
-body.low-perf.home-page .site-header {
-  backdrop-filter: none !important;
-  -webkit-backdrop-filter: none !important;
-  will-change: auto !important;
-}
-
-body.low-perf .hero-fx::after {
-  animation: none !important;
-  opacity: 0 !important;
-}
-
-body.low-perf .hero-video,
-body.low-perf .hero:not(.hero--has-video) .hero-video {
-  animation: none !important;
-}
-
-body.low-perf .hero-scroll-cue {
-  animation: none !important;
-}
-
-body.low-perf .home-page .site-header .nav-deco-bg {
-  animation: fxGoldPulse 6s ease-in-out infinite !important;
-}
-
-body.low-perf .home-page main section:hover {
-  transform: none !important;
-}
-
 @media (prefers-reduced-motion: reduce) {
   .home-page .site-header .nav-deco-bg,
   .home-page #harmonogram .schedule-table tr.schedule-row-active {
@@ -4937,6 +4865,16 @@ body.low-perf .home-page main section:hover {
   body.js-ready main section.is-visible .companion-activities li {
     animation: none !important;
   }
+
+  .home-page .site-header .header-brand-slot {
+    transition: none !important;
+  }
+}
+
+body.reduced-motion.js-ready main section {
+  opacity: 1 !important;
+  transform: none !important;
+  transition: none !important;
 }
 
 /* Print styles */
