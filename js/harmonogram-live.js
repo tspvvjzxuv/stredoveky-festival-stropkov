@@ -48,7 +48,18 @@
       tdT.textContent =
         s.start + (s.end && s.end !== s.start ? " – " + s.end : "");
       var tdP = document.createElement("td");
-      tdP.textContent = s.title;
+      if (s.activities && s.activities.length) {
+        var ul = document.createElement("ul");
+        ul.className = "schedule-activities";
+        for (var j = 0; j < s.activities.length; j++) {
+          var li = document.createElement("li");
+          li.textContent = s.activities[j];
+          ul.appendChild(li);
+        }
+        tdP.appendChild(ul);
+      } else {
+        tdP.textContent = s.title || "";
+      }
       tr.appendChild(tdT);
       tr.appendChild(tdP);
       tbody.appendChild(tr);
@@ -133,8 +144,11 @@
         formatMinutes(parseMinutes(slot.start)) +
         " – " +
         formatMinutes(parseMinutes(slot.end)) +
-        " · " +
-        slot.title;
+        (slot.activities && slot.activities.length
+          ? " · " + slot.activities.join(" · ")
+          : slot.title
+            ? " · " + slot.title
+            : "");
       if (subEl) subEl.textContent = "Čo môžete teraz robiť";
       renderActivitiesList(listEl, slot.activities);
     } else {
