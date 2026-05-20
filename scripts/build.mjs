@@ -14,6 +14,7 @@ var required = [
   "js/config.js",
   "images/festival-map.webp",
   "images/logo-andreasa-shield.png",
+  "videos/hero.mp4",
 ];
 
 var missing = required.filter(function (path) {

@@ -56,8 +56,7 @@ window.FESTIVAL_CONFIG = {
    * Pozn.: materiál z Netflix Witcher je autorsky chránený — nepoužívajte bez licencie.
    */
   /** Dynamickejší záber (rytieri v súboji); tichší variant: …/34697/34697-720.mp4 (meče v tráve). */
-  bannerVideoUrl:
-    "https://assets.mixkit.co/videos/13029/13029-720.mp4",
+  bannerVideoUrl: "videos/hero.mp4",
 
   /** Voliteľný náhľad pred spustením videa (cesta alebo URL obrázka). */
   bannerVideoPoster: "",
