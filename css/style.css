@@ -2966,15 +2966,8 @@ body.home-page.header-compact .site-header {
   padding-top: 0.95rem;
 }
 
-body.home-page.header-compact .site-header .header-brand-slot {
-  min-height: calc(112px * (1 - var(--emblem-hide, 0)));
-  height: auto;
-  max-height: calc(min(128px, 26vw) * (1 - var(--emblem-hide, 0)));
-  margin-bottom: calc(0.16rem * (1 - var(--emblem-hide, 0)));
-}
-
 body.home-page.header-compact .site-header .header-brand-slot img {
-  transform: scale(calc(1 - 0.08 * var(--emblem-hide, 0)));
+  transform: none;
 }
 
 body.home-page.header-compact .site-header .nav {
@@ -3153,11 +3146,7 @@ body.home-page.header-compact .site-header .nav {
   }
 
   .home-page .site-header .header-brand-slot {
-    min-height: calc(104px * (1 - var(--emblem-hide, 0)));
-    margin-bottom: calc(0.55rem * (1 - var(--emblem-hide, 0)));
     width: min(118px, 56vw);
-    height: auto;
-    max-height: calc(min(132px, 62vw) * (1 - var(--emblem-hide, 0)));
     padding: 0.3rem;
     border-radius: 46% 46% 40% 40% / 16% 16% 58% 58%;
   }
@@ -3188,11 +3177,6 @@ body.home-page.header-compact .site-header .nav {
     padding-top: 0.8rem;
   }
 
-  body.home-page.header-compact .site-header .header-brand-slot {
-    min-height: calc(90px * (1 - var(--emblem-hide, 0)));
-    max-height: calc(min(108px, 54vw) * (1 - var(--emblem-hide, 0)));
-    height: auto;
-  }
 }
 
 /* Final layout unify pass */
@@ -3572,20 +3556,19 @@ body.home-page.header-compact .site-header {
   display: none !important;
 }
 
-/* Header icon + nav (clean rebuild) */
+/* Header icon + nav — výkonný skryt erbu (trieda, nie scroll premenná) */
 .home-page .site-header {
   --header-icon-size: 136px;
-  transform: translateY(calc(-1 * var(--header-shift, 0px))) !important;
-  will-change: transform;
+  transform: none !important;
 }
 
 .home-page .site-header .header-brand-slot {
   position: relative !important;
   width: var(--header-icon-size) !important;
-  height: auto !important;
-  min-height: calc(var(--header-icon-size) * (1 - var(--emblem-hide, 0))) !important;
-  max-height: calc(var(--header-icon-size) * (1 - var(--emblem-hide, 0))) !important;
-  margin: 0 auto calc(0.12rem * (1 - var(--emblem-hide, 0))) !important;
+  height: var(--header-icon-size) !important;
+  min-height: var(--header-icon-size) !important;
+  max-height: var(--header-icon-size) !important;
+  margin: 0 auto 0.12rem !important;
   padding: 0 !important;
   line-height: 0 !important;
   overflow: hidden !important;
@@ -3593,38 +3576,33 @@ body.home-page.header-compact .site-header {
   border-radius: 0 !important;
   align-self: center !important;
   transform-origin: center top !important;
-  opacity: calc(1 - var(--emblem-hide, 0)) !important;
-  transform: translateY(calc(-12px * var(--emblem-hide, 0)))
-    scale(calc(1 - 0.1 * var(--emblem-hide, 0))) !important;
-  will-change: max-height, opacity, transform;
+  opacity: 1 !important;
+  transform: none !important;
+  contain: layout style paint;
+  transition:
+    opacity 0.32s ease,
+    transform 0.32s ease,
+    max-height 0.32s ease,
+    min-height 0.32s ease,
+    margin 0.32s ease;
 }
 
 body.home-page.header-hide-emblem .site-header .header-brand-slot {
+  min-height: 0 !important;
+  max-height: 0 !important;
+  height: 0 !important;
+  margin-bottom: 0 !important;
+  opacity: 0 !important;
+  transform: translateY(-10px) scale(0.94) !important;
   pointer-events: none !important;
 }
 
 .home-page .site-header .header-brand-slot::before,
+.home-page .site-header .header-brand-slot::after,
 .home-page .site-header .header-brand-slot__shield,
 .home-page .site-header .header-brand-slot__frame {
   display: none !important;
   content: none !important;
-}
-
-.home-page .site-header .header-brand-slot::after {
-  content: "" !important;
-  position: absolute !important;
-  inset: 16% !important;
-  border-radius: 50% !important;
-  pointer-events: none !important;
-  opacity: calc(1 - var(--emblem-hide, 0)) !important;
-  background: radial-gradient(
-    circle,
-    rgba(255, 243, 212, 0.34) 0%,
-    rgba(255, 243, 212, 0.12) 42%,
-    rgba(255, 243, 212, 0) 74%
-  ) !important;
-  filter: blur(8px) !important;
-  z-index: 0 !important;
 }
 
 .home-page .site-header .header-brand-slot__icon {
@@ -3632,13 +3610,18 @@ body.home-page.header-hide-emblem .site-header .header-brand-slot {
   position: relative !important;
   z-index: 1 !important;
   width: 100% !important;
-  height: auto !important;
-  aspect-ratio: 1 !important;
-  max-height: calc(var(--header-icon-size) * (1 - var(--emblem-hide, 0)));
+  height: 100% !important;
+  max-height: var(--header-icon-size) !important;
   object-fit: contain !important;
   animation: none !important;
   filter: none !important;
   clip-path: none !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .home-page .site-header .header-brand-slot {
+    transition: none;
+  }
 }
 
 /* Nav: spodok = ten istý gradient ako header, potom PoE, navrch jemný tint (grafika viditeľná, farba sedí) */
@@ -3998,9 +3981,6 @@ body.home-page .site-header .header-inner {
 
 body.home-page .site-header .header-brand-slot {
   width: min(172px, 34vw) !important;
-  height: auto !important;
-  min-height: calc(156px * (1 - var(--emblem-hide, 0))) !important;
-  margin: 0 auto calc(0.5rem * (1 - var(--emblem-hide, 0))) !important;
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
@@ -4739,16 +4719,7 @@ body.home-page .site-header .nav a:hover,
   border-color: rgba(255, 203, 0, 0.16) !important;
 }
 
-/* Erb — jedna scroll-driven animácia na všetkých zariadeniach (--emblem-hide z main.js) */
-body.home-page.header-hide-emblem .site-header .header-brand-slot::after {
-  opacity: 0 !important;
-}
-
-body.home-page.header-hide-emblem .site-header .header-brand-slot,
-body.home-page.header-hide-emblem.header-compact .site-header .header-brand-slot,
-body.home-page.header-compact .site-header .header-brand-slot {
-  min-height: 0 !important;
-}
+/* Erb — skrytie pri scrolli cez .header-hide-emblem (main.js), jedna CSS transition */
 
 /* ===============================
    Program (harmonogram + sprievodné) — DESIGN.md tokeny

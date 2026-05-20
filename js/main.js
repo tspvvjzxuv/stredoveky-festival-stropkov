@@ -23,70 +23,31 @@
   if (footerYear) footerYear.textContent = String(y);
 
   function initHeaderDynamics() {
-    if (!document.body) return;
+    if (!document.body || !document.body.classList.contains("home-page")) return;
     var body = document.body;
-    var header = document.querySelector(".site-header");
-    var nav = document.querySelector(".site-header .nav");
-    if (!header || !nav) return;
-    var targetShift = 0;
+    var emblemHideAt = 56;
+    var scrollTicking = false;
+    var lastHidden = null;
 
-    var emblemHideStart = 0;
-    var emblemHideEnd = 56;
-    var currentShift = 0;
-    var rafId = 0;
-
-    function setEmblemHide(scrollY) {
-      if (reducedMotion) {
-        var hidden = scrollY > emblemHideEnd;
-        body.style.setProperty("--emblem-hide", hidden ? "1" : "0");
-        body.classList.toggle("header-hide-emblem", hidden);
-        return;
-      }
-      var range = emblemHideEnd - emblemHideStart;
-      var progress =
-        range > 0
-          ? Math.min(1, Math.max(0, (scrollY - emblemHideStart) / range))
-          : scrollY > emblemHideEnd
-            ? 1
-            : 0;
-      body.style.setProperty("--emblem-hide", progress.toFixed(4));
-      body.classList.toggle("header-hide-emblem", progress >= 0.995);
-    }
-
-    function applyShift() {
-      var y = window.scrollY || 0;
-      setEmblemHide(y);
-      var maxShift = Math.max(0, nav.offsetTop || 0);
-      targetShift = Math.min(y, maxShift);
-      body.classList.toggle("header-compact", targetShift >= maxShift && maxShift > 0);
-    }
-
-    function animateShift() {
-      var delta = targetShift - currentShift;
-      if (Math.abs(delta) < 0.15) {
-        currentShift = targetShift;
-      } else {
-        currentShift += delta * 0.18;
-      }
-      body.style.setProperty("--header-shift", currentShift.toFixed(2) + "px");
-      if (Math.abs(targetShift - currentShift) > 0.15) {
-        rafId = window.requestAnimationFrame(animateShift);
-      } else {
-        rafId = 0;
-      }
+    function updateHeaderOnScroll() {
+      scrollTicking = false;
+      var hidden = (window.scrollY || 0) > emblemHideAt;
+      if (hidden === lastHidden) return;
+      lastHidden = hidden;
+      body.classList.toggle("header-hide-emblem", hidden);
+      body.classList.toggle("header-compact", hidden);
     }
 
     function onScrollOrResize() {
-      applyShift();
-      if (!rafId) {
-        rafId = window.requestAnimationFrame(animateShift);
+      if (!scrollTicking) {
+        scrollTicking = true;
+        window.requestAnimationFrame(updateHeaderOnScroll);
       }
     }
 
-    applyShift();
-    body.style.setProperty("--header-shift", targetShift.toFixed(2) + "px");
+    updateHeaderOnScroll();
     window.addEventListener("scroll", onScrollOrResize, { passive: true });
-    window.addEventListener("resize", onScrollOrResize);
+    window.addEventListener("resize", onScrollOrResize, { passive: true });
   }
 
   initHeaderDynamics();
