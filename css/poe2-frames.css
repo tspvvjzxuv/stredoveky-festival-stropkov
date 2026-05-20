@@ -188,13 +188,23 @@
   text-shadow: 0 0 18px rgba(255, 240, 160, 0.75) !important;
 }
 
-.home-page .btn-primary {
+.home-page .btn-primary:not(.hero-cta) {
   border: solid transparent;
   border-image-source: url("../images/poe2-frame.webp");
   border-image-slice: 24 fill;
   border-image-width: 14px;
   border-image-outset: 5px 12px 7px;
   box-shadow: 0 0 16px rgba(217, 36, 28, 0.35);
+}
+
+/* Hero — Harmonogram bez PoE2 rámu */
+.home-page .hero .btn-primary.hero-cta {
+  border: 1px solid rgba(212, 170, 94, 0.78) !important;
+  border-image: none !important;
+  border-image-source: none !important;
+  border-image-slice: initial !important;
+  border-image-width: initial !important;
+  border-image-outset: initial !important;
 }
 
 @media (max-width: 860px) {
