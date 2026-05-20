@@ -3,7 +3,6 @@
   if (!data || !Array.isArray(data.slots)) return;
 
   var TZ = "Europe/Bratislava";
-  var LS_KEY = "stropkovFestDisplayName";
 
   function parseMinutes(hm) {
     var p = String(hm).split(":");
@@ -109,7 +108,7 @@
       bodyEl.textContent =
         "V deň festivalu (" +
         data.festivalDate +
-        ") sa tu zobrazí, čo práve prebieha a čo môžete robiť. Dátum upravíte v súbore js/harmonogram-data.js.";
+        ") sa tu zobrazí, čo práve prebieha a čo môžete robiť.";
       if (subEl) subEl.textContent = "";
       listEl.innerHTML = "";
       highlightTableRow(-1);
@@ -168,54 +167,7 @@
     }
   }
 
-  function initProfile() {
-    var form = document.getElementById("profile-form");
-    var input = document.getElementById("profile-display-name");
-    var greet = document.getElementById("profile-greeting");
-    var pill = document.getElementById("nav-profile-pill");
-    if (!form || !input) return;
-
-    try {
-      var saved = localStorage.getItem(LS_KEY);
-      if (saved) input.value = saved;
-    } catch (e) {}
-
-    function applyGreeting() {
-      var name = (input.value || "").trim();
-      if (greet) {
-        if (name) {
-          greet.hidden = false;
-          greet.textContent = "Vitajte, " + name + "!";
-        } else {
-          greet.hidden = true;
-        }
-      }
-      if (pill) {
-        if (name) {
-          pill.hidden = false;
-          pill.textContent =
-            name.length > 14 ? name.slice(0, 12) + "…" : name;
-        } else {
-          pill.hidden = true;
-        }
-      }
-    }
-
-    applyGreeting();
-
-    form.addEventListener("submit", function (e) {
-      e.preventDefault();
-      var v = (input.value || "").trim();
-      try {
-        if (v) localStorage.setItem(LS_KEY, v);
-        else localStorage.removeItem(LS_KEY);
-      } catch (err) {}
-      applyGreeting();
-    });
-  }
-
   renderTable();
   updateLiveBlock();
-  initProfile();
   setInterval(updateLiveBlock, 60000);
 })();
