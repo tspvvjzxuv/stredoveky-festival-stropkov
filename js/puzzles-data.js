@@ -6,6 +6,8 @@ export const FESTIVAL_PUZZLES = [
     ariaLabel: "Úloha 1, biely matuje v jednom",
     fen: "6k1/5ppp/8/8/8/8/6Q1/6RK w - - 0 1",
     solution: "Qg7#",
+    solutionLine: [{ from: "g2", to: "g7" }],
+    engineDepth: 4,
   },
   {
     id: "cg-puzzle-2",
@@ -13,7 +15,13 @@ export const FESTIVAL_PUZZLES = [
     subtitle: "Zadanie: Biely na ťahu dá mat 2. ťahmi.",
     ariaLabel: "Úloha 2, biely matuje v dvoch",
     fen: "6k1/5ppp/8/8/8/5N2/5QPP/6K1 w - - 0 1",
-    solution: "Qe1! a následne mat podľa obrany čierneho",
+    solution: "Qe1+ a po Kh8 mat Qe8#",
+    solutionLine: [
+      { from: "f2", to: "e1" },
+      { from: "g8", to: "h8" },
+      { from: "e1", to: "e8" },
+    ],
+    engineDepth: 5,
   },
   {
     id: "cg-puzzle-3",
@@ -21,7 +29,12 @@ export const FESTIVAL_PUZZLES = [
     subtitle: "Zadanie: Biely na ťahu získa figúru (taktika).",
     ariaLabel: "Úloha 3, biely získa materiál",
     fen: "6k1/8/8/4N3/5q2/8/8/2R3K1 w - - 0 1",
-    solution: "Rc8+ a potom Nxf7 / alebo zisk dámy podľa pokračovania",
+    solution: "Rc8+ a po Qf8 víťazný Rxf8+",
+    solutionLine: [
+      { from: "c1", to: "c8" },
+      { from: "f4", to: "f8" },
+      { from: "c8", to: "f8" },
+    ],
+    engineDepth: 6,
   },
 ];
-

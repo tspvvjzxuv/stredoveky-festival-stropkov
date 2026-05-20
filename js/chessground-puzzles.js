@@ -1,6 +1,7 @@
 import { Chessground } from "https://cdn.jsdelivr.net/npm/@lichess-org/chessground@10.1.1/dist/chessground.js";
 import { Chess } from "https://cdn.jsdelivr.net/npm/chess.js@1.4.0/+esm";
 import { FESTIVAL_PUZZLES } from "./puzzles-data.js";
+import { findStrongMove, movesMatch } from "./puzzle-engine.js";
 
 var ALL_SQUARES = [
   "a1","b1","c1","d1","e1","f1","g1","h1",
@@ -26,7 +27,7 @@ function buildDests(chess) {
   return dests;
 }
 
-function getStatusText(chess, lastMoveOk) {
+function getStatusText(chess, lastMoveOk, extra) {
   if (chess.isCheckmate()) {
     return chess.turn() === "w"
       ? "✅ Úspech! Hlavolam je vyriešený matom (vyhral čierny)."
@@ -36,6 +37,7 @@ function getStatusText(chess, lastMoveOk) {
   if (chess.isDraw()) return "ℹ️ Koniec: remíza.";
   if (chess.isCheck()) return chess.turn() === "w" ? "⚠️ Na ťahu biely (šach)." : "⚠️ Na ťahu čierny (šach).";
   if (lastMoveOk) return "✅ Ťah bol úspešne vykonaný.";
+  if (extra) return extra;
   return chess.turn() === "w" ? "Na ťahu biely." : "Na ťahu čierny.";
 }
 
@@ -59,6 +61,11 @@ function setCompletionUI(puzzleId, completed) {
   }
 }
 
+function formatMoveHint(move) {
+  if (!move) return "";
+  return move.from + " → " + move.to;
+}
+
 function mountPuzzleBoard(puzzle) {
   var el = document.getElementById(puzzle.id);
   if (!el) return;
@@ -71,24 +78,123 @@ function mountPuzzleBoard(puzzle) {
   if (puzzle.ariaLabel) el.setAttribute("aria-label", puzzle.ariaLabel);
 
   var chess = new Chess(puzzle.fen);
+  var solutionLine = puzzle.solutionLine || [];
+  var solutionStep = 0;
+  var startFen = puzzle.fen;
+  var engineDepth = puzzle.engineDepth || 6;
+  var busy = false;
 
-  function applyState(ground, lastMoveOk) {
+  function expectedMove() {
+    return solutionLine[solutionStep] || null;
+  }
+
+  function setSubtitle(status, extra) {
+    if (!subtitle) return;
+    var text = getStatusText(chess, !!status, extra);
+    subtitle.textContent = baseSubtitle ? baseSubtitle + " | " + text : text;
+  }
+
+  function applyState(ground, lastMoveOk, extra) {
     var gameOver = chess.isGameOver();
     ground.set({
       fen: chess.fen(),
       turnColor: chess.turn() === "w" ? "white" : "black",
       movable: {
         free: false,
-        color: gameOver ? null : (chess.turn() === "w" ? "white" : "black"),
+        color: gameOver || busy || chess.turn() !== "w" ? null : "white",
         showDests: true,
-        dests: gameOver ? new Map() : buildDests(chess),
+        dests: gameOver || busy ? new Map() : buildDests(chess),
       },
+      drawable: { enabled: true },
     });
-    if (subtitle) {
-      var status = getStatusText(chess, !!lastMoveOk);
-      subtitle.textContent = baseSubtitle ? baseSubtitle + " | " + status : status;
-    }
+    setSubtitle(lastMoveOk, extra);
     setCompletionUI(puzzle.id, chess.isCheckmate());
+    updateActionButtons();
+  }
+
+  function updateActionButtons() {
+    var gameOver = chess.isGameOver();
+    var hasExpected = !!expectedMove();
+    var hintBtn = document.querySelector('[data-hint-puzzle="' + puzzle.id + '"]');
+    var coachBtn = document.querySelector('[data-coach-puzzle="' + puzzle.id + '"]');
+    var engineBtn = document.querySelector('[data-engine-puzzle="' + puzzle.id + '"]');
+    if (hintBtn) hintBtn.disabled = busy || gameOver || !hasExpected;
+    if (coachBtn) coachBtn.disabled = busy || gameOver || !hasExpected;
+    if (engineBtn) engineBtn.disabled = busy || gameOver;
+  }
+
+  function clearHintShape(ground) {
+    ground.setAutoShapes([]);
+  }
+
+  function showHintShape(ground) {
+    var move = expectedMove();
+    if (!move) return;
+    ground.setAutoShapes([
+      {
+        orig: move.from,
+        dest: move.to,
+        brush: "green",
+      },
+    ]);
+  }
+
+  function playMoveOnBoard(ground, move, extra) {
+    if (!move) return false;
+    var result = chess.move({
+      from: move.from,
+      to: move.to,
+      promotion: move.promotion || "q",
+    });
+    if (!result) return false;
+    solutionStep += 1;
+    applyState(ground, true, extra);
+    return true;
+  }
+
+  function maybePlayOpponentReply(ground) {
+    var next = expectedMove();
+    if (!next) return;
+    var side = chess.turn();
+    var nextIsWhite = side === "w";
+    if (solutionLine.length > solutionStep) {
+      busy = true;
+      updateActionButtons();
+      window.setTimeout(function () {
+        playMoveOnBoard(ground, next, "🤖 Protihráč odpovedá podľa vzorového riešenia.");
+        busy = false;
+        applyState(ground, true);
+      }, 420);
+    }
+  }
+
+  function onUserMove(ground, orig, dest) {
+    if (busy || !orig || !dest) {
+      applyState(ground, false);
+      return;
+    }
+
+    var attempted = { from: orig, to: dest, promotion: "q" };
+    var expected = expectedMove();
+
+    if (expected && !movesMatch(attempted, expected)) {
+      applyState(ground, false, "⚠️ Iný ťah — skúste nápovedu alebo trénera.");
+      return;
+    }
+
+    var move = chess.move({ from: orig, to: dest, promotion: "q" });
+    if (!move) {
+      applyState(ground, false);
+      return;
+    }
+
+    solutionStep += 1;
+    clearHintShape(ground);
+    applyState(ground, true, expected ? "✅ Správny ťah v riešení." : null);
+
+    if (!chess.isGameOver() && expectedMove()) {
+      maybePlayOpponentReply(ground);
+    }
   }
 
   var ground = Chessground(el, {
@@ -100,38 +206,90 @@ function mountPuzzleBoard(puzzle) {
     draggable: { enabled: true, showGhost: true },
     movable: {
       free: false,
-      color: chess.turn() === "w" ? "white" : "black",
+      color: chess.turn() === "w" ? "white" : null,
       showDests: true,
       dests: buildDests(chess),
       events: {
         after: function (orig, dest) {
-          if (!orig || !dest) {
-            applyState(ground, false);
-            return;
-          }
-          var move = chess.move({ from: orig, to: dest, promotion: "q" });
-          if (!move) {
-            applyState(ground, false);
-            return;
-          }
-          applyState(ground, true);
+          onUserMove(ground, orig, dest);
         },
       },
     },
     premovable: { enabled: false },
-    drawable: { enabled: false },
+    drawable: { enabled: true, visible: true },
     highlight: { lastMove: true, check: true },
     animation: { enabled: true },
   });
 
+  function resetBoard() {
+    busy = false;
+    solutionStep = 0;
+    chess.reset();
+    chess.load(startFen);
+    clearHintShape(ground);
+    applyState(ground, false);
+  }
+
   applyState(ground, false);
+  updateActionButtons();
 
   var resetBtn = document.querySelector('[data-reset-puzzle="' + puzzle.id + '"]');
-  if (resetBtn) {
-    resetBtn.addEventListener("click", function () {
-      chess.reset();
-      chess.load(puzzle.fen);
-      applyState(ground, false);
+  if (resetBtn) resetBtn.addEventListener("click", resetBoard);
+
+  var hintBtn = document.querySelector('[data-hint-puzzle="' + puzzle.id + '"]');
+  if (hintBtn) {
+    hintBtn.addEventListener("click", function () {
+      var move = expectedMove();
+      if (!move) return;
+      showHintShape(ground);
+      setSubtitle(false, "💡 Nápoveda: " + formatMoveHint(move));
+    });
+  }
+
+  var coachBtn = document.querySelector('[data-coach-puzzle="' + puzzle.id + '"]');
+  if (coachBtn) {
+    coachBtn.addEventListener("click", function () {
+      if (busy || chess.isGameOver()) return;
+      var move = expectedMove();
+      if (!move) return;
+      clearHintShape(ground);
+      if (playMoveOnBoard(ground, move, "🎓 Tréner zahral vzorový ťah.")) {
+        if (!chess.isGameOver() && expectedMove()) {
+          maybePlayOpponentReply(ground);
+        }
+      }
+    });
+  }
+
+  var engineBtn = document.querySelector('[data-engine-puzzle="' + puzzle.id + '"]');
+  if (engineBtn) {
+    engineBtn.addEventListener("click", function () {
+      if (busy || chess.isGameOver()) return;
+      busy = true;
+      updateActionButtons();
+      engineBtn.disabled = true;
+      if (subtitle) {
+        subtitle.textContent =
+          (baseSubtitle ? baseSubtitle + " | " : "") + "⏳ Silný motor počíta najlepší ťah…";
+      }
+
+      window.setTimeout(function () {
+        var best = findStrongMove(chess, engineDepth);
+        busy = false;
+        if (!best) {
+          applyState(ground, false, "Motor nenašiel ťah.");
+          return;
+        }
+        clearHintShape(ground);
+        var san = best.san;
+        if (
+          playMoveOnBoard(ground, best, "⚙️ Silný ťah (motor): " + san + ". Porovnajte s riešením.")
+        ) {
+          if (!chess.isGameOver() && expectedMove()) {
+            maybePlayOpponentReply(ground);
+          }
+        }
+      }, 40);
     });
   }
 }
@@ -145,4 +303,3 @@ function initChessgroundPuzzles() {
 
 if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", initChessgroundPuzzles);
 else initChessgroundPuzzles();
-

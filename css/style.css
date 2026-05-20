@@ -4138,6 +4138,34 @@ body.home-page {
   color: rgba(238, 231, 218, 0.92) !important;
 }
 
+#sachove-hlavolamy .sach-puzzle-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  margin-top: 0.65rem;
+}
+
+#sachove-hlavolamy .sach-puzzle-actions .btn {
+  flex: 1 1 auto;
+  min-width: 7.2rem;
+  font-size: 0.82rem;
+  padding: 0.4rem 0.65rem;
+}
+
+#sachove-hlavolamy .sach-puzzle-actions .btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+#sachove-hlavolamy .sach-engine-btn {
+  border-color: rgba(255, 203, 0, 0.45);
+  color: var(--ds-tertiary-bright, #ffe066);
+}
+
+#sachove-hlavolamy .sach-coach-btn {
+  border-color: rgba(50, 153, 50, 0.45);
+}
+
 #sachove-hlavolamy .sach-reset-btn {
   width: 100%;
   margin-top: 0.6rem;
