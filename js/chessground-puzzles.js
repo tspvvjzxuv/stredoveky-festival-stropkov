@@ -2,6 +2,12 @@ import { Chessground } from "https://cdn.jsdelivr.net/npm/@lichess-org/chessgrou
 import { Chess } from "https://cdn.jsdelivr.net/npm/chess.js@1.4.0/+esm";
 import { FESTIVAL_PUZZLES } from "./puzzles-data.js";
 import { findStrongMove, movesMatch } from "./puzzle-engine.js";
+import {
+  unlockPuzzleReward,
+  getRewardMeta,
+  isPuzzleRewardUnlocked,
+  initPuzzleRewards,
+} from "./puzzle-rewards.js";
 
 var ALL_SQUARES = [
   "a1","b1","c1","d1","e1","f1","g1","h1",
@@ -41,23 +47,67 @@ function getStatusText(chess, lastMoveOk, extra) {
   return chess.turn() === "w" ? "Na ťahu biely." : "Na ťahu čierny.";
 }
 
-function setCompletionUI(puzzleId, completed) {
+function isPuzzleSolved(chess, solutionLine, solutionStep) {
+  if (solutionLine.length && solutionStep >= solutionLine.length) return true;
+  return chess.isCheckmate();
+}
+
+function setCompletionUI(puzzleId, solvedNow) {
   var boardEl = document.getElementById(puzzleId);
   if (!boardEl) return;
   var item = boardEl.closest(".sach-visual-item");
   if (!item) return;
-  item.classList.toggle("is-completed", completed);
+  var hasReward = isPuzzleRewardUnlocked(puzzleId);
+  item.classList.toggle("is-completed", solvedNow);
+  item.classList.toggle("has-reward", hasReward);
 
   var banner = item.querySelector(".sach-success-banner");
-  if (completed) {
+  if (solvedNow) {
     if (!banner) {
       banner = document.createElement("div");
       banner.className = "sach-success-banner";
       item.appendChild(banner);
     }
-    banner.textContent = "🏆 Výborne! Úloha splnená. Skús ďalšiu šachovú výzvu.";
+    var meta = getRewardMeta(puzzleId);
+    if (hasReward && meta) {
+      banner.textContent =
+        "🏆 Úloha splnená! Máte " + meta.partLabel + " — pozrite investíciu vyššie.";
+    } else {
+      banner.textContent = "🏆 Výborne! Úloha splnená.";
+    }
   } else if (banner) {
     banner.remove();
+  }
+
+  var badge = item.querySelector(".sach-reward-badge");
+  if (hasReward && !solvedNow) {
+    if (!badge) {
+      badge = document.createElement("p");
+      badge.className = "sach-reward-badge";
+      item.appendChild(badge);
+    }
+    badge.textContent = "✓ Pečať už získaná";
+  } else if (badge) {
+    badge.remove();
+  }
+}
+
+function notifyPuzzleSolved(puzzleId) {
+  var wasNew = unlockPuzzleReward(puzzleId);
+  var meta = getRewardMeta(puzzleId);
+  if (wasNew && meta) {
+    var boardEl = document.getElementById(puzzleId);
+    var item = boardEl && boardEl.closest(".sach-visual-item");
+    if (item) {
+      var banner = item.querySelector(".sach-success-banner");
+      if (!banner) {
+        banner = document.createElement("div");
+        banner.className = "sach-success-banner";
+        item.appendChild(banner);
+      }
+      banner.textContent =
+        "🎁 Nová odmena! " + meta.icon + " " + meta.title + " — časť investície je odkrytá.";
+    }
   }
 }
 
@@ -108,7 +158,9 @@ function mountPuzzleBoard(puzzle) {
       drawable: { enabled: true },
     });
     setSubtitle(lastMoveOk, extra);
-    setCompletionUI(puzzle.id, chess.isCheckmate());
+    var solved = isPuzzleSolved(chess, solutionLine, solutionStep);
+    setCompletionUI(puzzle.id, solved);
+    if (solved) notifyPuzzleSolved(puzzle.id);
     updateActionButtons();
   }
 
@@ -295,9 +347,16 @@ function mountPuzzleBoard(puzzle) {
 }
 
 function initChessgroundPuzzles() {
+  initPuzzleRewards();
   for (var i = 0; i < FESTIVAL_PUZZLES.length; i++) {
     var p = FESTIVAL_PUZZLES[i];
     if (p && p.id && p.fen) mountPuzzleBoard(p);
+  }
+  for (var j = 0; j < FESTIVAL_PUZZLES.length; j++) {
+    var pid = FESTIVAL_PUZZLES[j].id;
+    if (isPuzzleRewardUnlocked(pid)) {
+      setCompletionUI(pid, false);
+    }
   }
 }
 
