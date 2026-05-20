@@ -4954,6 +4954,153 @@ body.reduced-motion.js-ready main section {
   transition: none !important;
 }
 
+/* Šachový turnaj — teaser na domovskej stránke */
+.home-page .chess-teaser-section .lead {
+  max-width: 52rem;
+}
+
+.home-page .chess-teaser {
+  padding: var(--ds-space-lg, 1.25rem) var(--ds-space-xl, 1.5rem) !important;
+  border-color: rgba(255, 203, 0, 0.38) !important;
+  background: linear-gradient(
+    135deg,
+    var(--ds-surface-dark) 0%,
+    rgba(22, 28, 40, 0.98) 55%,
+    var(--ds-surface-dark-2) 100%
+  ) !important;
+  overflow: hidden;
+}
+
+.home-page .chess-teaser__grid {
+  display: grid;
+  gap: var(--ds-space-lg, 1.25rem);
+  align-items: center;
+}
+
+@media (min-width: 760px) {
+  .home-page .chess-teaser__grid {
+    grid-template-columns: minmax(0, 1.35fr) minmax(220px, 0.85fr);
+    gap: var(--ds-space-xl, 1.5rem);
+  }
+}
+
+.home-page .chess-teaser__kicker {
+  margin: 0 0 0.75rem;
+  font-family: var(--font-ui, "Montserrat", sans-serif);
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ds-tertiary, #ffcb00);
+}
+
+.home-page .chess-teaser__times {
+  margin: 0 0 1rem;
+  padding: 0;
+  list-style: none;
+}
+
+.home-page .chess-teaser__times li {
+  display: grid;
+  grid-template-columns: 6.5rem minmax(0, 1fr);
+  gap: 0.65rem;
+  align-items: baseline;
+  padding: 0.55rem 0;
+  border-bottom: 1px solid rgba(255, 203, 0, 0.14);
+}
+
+.home-page .chess-teaser__times li:last-child {
+  border-bottom: none;
+}
+
+.home-page .chess-teaser__time {
+  font-family: var(--font-ui, "Montserrat", sans-serif);
+  font-size: 0.875rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: var(--ds-tertiary-bright, #ffe066);
+}
+
+.home-page .chess-teaser__label {
+  color: var(--ds-text-on-dark, #ebe4d6);
+  line-height: 1.45;
+}
+
+.home-page .chess-teaser__copy > p:last-of-type {
+  margin-bottom: 1rem;
+  color: var(--ds-text-muted, #e8e2d6);
+}
+
+.home-page .chess-teaser__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+}
+
+.home-page .chess-teaser__board {
+  position: relative;
+  margin: 0;
+  padding: 1rem;
+  border-radius: var(--ds-radius-md, 6px);
+  border: 1px solid rgba(255, 203, 0, 0.28);
+  background:
+    linear-gradient(90deg, rgba(255, 203, 0, 0.07) 50%, transparent 50%),
+    linear-gradient(rgba(255, 203, 0, 0.07) 50%, transparent 50%),
+    linear-gradient(180deg, rgba(18, 24, 36, 0.95) 0%, rgba(10, 12, 18, 0.98) 100%);
+  background-size: 28px 28px, 28px 28px, 100% 100%;
+  text-align: center;
+}
+
+.home-page .chess-teaser__board-inner {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.35rem 0.5rem;
+  min-height: 5.5rem;
+  align-items: center;
+  padding: 0.5rem 0;
+}
+
+.home-page .chess-teaser__piece {
+  font-size: clamp(1.75rem, 5vw, 2.35rem);
+  line-height: 1;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.45);
+  opacity: 0.92;
+}
+
+.home-page .chess-teaser__piece--k {
+  color: var(--ds-tertiary-bright, #ffe066);
+  font-size: clamp(2.1rem, 6vw, 2.75rem);
+}
+
+.home-page .chess-teaser__piece--q {
+  color: #f0d8a8;
+}
+
+.home-page .chess-teaser__board-caption {
+  margin: 0.35rem 0 0;
+  font-size: 0.82rem;
+  font-style: italic;
+  letter-spacing: 0.04em;
+  color: var(--ds-tertiary-dim, #c79d00);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .home-page .chess-teaser__piece--k {
+    animation: chessTeaserPulse 3.2s ease-in-out infinite;
+  }
+}
+
+@keyframes chessTeaserPulse {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-3px);
+  }
+}
+
 /* Print styles */
 @media print {
   body {
