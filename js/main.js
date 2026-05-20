@@ -22,7 +22,7 @@
   if (heroYear) heroYear.textContent = String(y);
   if (footerYear) footerYear.textContent = String(y);
 
-  /** Erb + header — plynulý pohyb pri scrolli (stav 20.5. ~18:04, pred dnešnými opravami) */
+  /** Erb + header — plynulý scroll bez layout glitchu (maxShift cache, scale namiesto height) */
   function initHeaderDynamics() {
     if (!document.body) return;
     var body = document.body;
@@ -30,16 +30,25 @@
     var nav = document.querySelector(".site-header .nav");
     if (!header || !nav) return;
     var targetShift = 0;
+    var cachedMaxShift = 0;
 
     var emblemHideStart = 0;
-    var emblemHideEnd = 56;
+    var emblemHideEnd = 72;
     var currentShift = 0;
     var rafId = 0;
+
+    function measureLayout() {
+      body.style.setProperty("--emblem-hide", "0");
+      body.style.setProperty("--emblem-scale", "1");
+      body.classList.remove("header-hide-emblem");
+      cachedMaxShift = Math.max(0, nav.offsetTop || 0);
+    }
 
     function setEmblemHide(scrollY) {
       if (reducedMotion) {
         var hidden = scrollY > emblemHideEnd;
         body.style.setProperty("--emblem-hide", hidden ? "1" : "0");
+        body.style.setProperty("--emblem-scale", hidden ? "0.12" : "1");
         body.classList.toggle("header-hide-emblem", hidden);
         return;
       }
@@ -50,16 +59,20 @@
           : scrollY > emblemHideEnd
             ? 1
             : 0;
-      body.style.setProperty("--emblem-hide", progress.toFixed(4));
-      body.classList.toggle("header-hide-emblem", progress >= 0.995);
+      var eased = progress * progress * (3 - 2 * progress);
+      body.style.setProperty("--emblem-hide", eased.toFixed(4));
+      body.style.setProperty("--emblem-scale", (1 - eased * 0.88).toFixed(4));
+      body.classList.toggle("header-hide-emblem", eased >= 0.995);
     }
 
     function applyShift() {
       var y = window.scrollY || 0;
       setEmblemHide(y);
-      var maxShift = Math.max(0, nav.offsetTop || 0);
-      targetShift = Math.min(y, maxShift);
-      body.classList.toggle("header-compact", targetShift >= maxShift && maxShift > 0);
+      targetShift = Math.min(y, cachedMaxShift);
+      body.classList.toggle(
+        "header-compact",
+        cachedMaxShift > 0 && targetShift >= cachedMaxShift - 0.5
+      );
     }
 
     function animateShift() {
@@ -84,14 +97,27 @@
       }
     }
 
+    measureLayout();
     applyShift();
-    var maxShiftInit = Math.max(0, nav.offsetTop || 0);
     body.style.setProperty(
       "--header-shift",
-      Math.min(window.scrollY || 0, maxShiftInit).toFixed(2) + "px"
+      Math.min(window.scrollY || 0, cachedMaxShift).toFixed(2) + "px"
     );
     window.addEventListener("scroll", onScrollOrResize, { passive: true });
-    window.addEventListener("resize", onScrollOrResize);
+    window.addEventListener(
+      "resize",
+      function () {
+        measureLayout();
+        onScrollOrResize();
+      },
+      { passive: true }
+    );
+    if (document.fonts && document.fonts.ready) {
+      document.fonts.ready.then(function () {
+        measureLayout();
+        onScrollOrResize();
+      });
+    }
   }
 
   initHeaderDynamics();

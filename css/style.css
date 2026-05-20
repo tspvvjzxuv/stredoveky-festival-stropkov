@@ -4,9 +4,9 @@
   --ds-primary-dark: #a11c16;
   --ds-primary-mid: #e23a33;
   --ds-secondary: #329932;
-  --ds-tertiary: #ffcb00;
-  --ds-tertiary-dim: #c79d00;
-  --ds-tertiary-bright: #ffe066;
+  --ds-tertiary: #ffd84a;
+  --ds-tertiary-dim: #e8b830;
+  --ds-tertiary-bright: #fff2b0;
   --ds-neutral: #ffeed2;
   --ds-surface-dark: #0e1219;
   --ds-surface-dark-2: #0a0c12;
@@ -2963,8 +2963,7 @@ body.home-page.header-compact .site-header {
 }
 
 body.home-page.header-compact .site-header .header-brand-slot {
-  height: calc(var(--header-icon-height) * (1 - var(--emblem-hide, 0)));
-  margin-bottom: calc(0.16rem * (1 - var(--emblem-hide, 0)));
+  margin-bottom: calc(0.16rem * var(--emblem-scale, 1));
 }
 
 body.home-page.header-compact .site-header .nav {
@@ -3563,6 +3562,7 @@ body.home-page.header-compact .site-header {
   --header-icon-width: 148px;
   --header-icon-height: calc(var(--header-icon-width) * 913 / 689);
   --header-icon-size: var(--header-icon-width);
+  --emblem-scale: 1;
   transform: translateY(calc(-1 * var(--header-shift, 0px))) !important;
   will-change: transform;
 }
@@ -3570,20 +3570,21 @@ body.home-page.header-compact .site-header {
 .home-page .site-header .header-brand-slot {
   position: relative !important;
   width: var(--header-icon-width) !important;
-  height: calc(var(--header-icon-height) * (1 - var(--emblem-hide, 0))) !important;
+  height: var(--header-icon-height) !important;
   min-height: 0 !important;
-  max-height: none !important;
-  margin: 0 auto calc(0.12rem * (1 - var(--emblem-hide, 0))) !important;
+  max-height: var(--header-icon-height) !important;
+  margin: 0 auto calc(0.12rem * var(--emblem-scale, 1)) !important;
   padding: 0 !important;
   line-height: 0 !important;
-  overflow: hidden !important;
+  overflow: visible !important;
   clip-path: none !important;
   border-radius: 0 !important;
   align-self: center !important;
   flex-shrink: 0 !important;
   opacity: calc(1 - var(--emblem-hide, 0)) !important;
-  transform: none !important;
-  will-change: height, opacity;
+  transform: scale(var(--emblem-scale, 1)) !important;
+  transform-origin: center top !important;
+  will-change: transform, opacity;
 }
 
 body.home-page.header-hide-emblem .site-header .header-brand-slot {
@@ -3626,9 +3627,7 @@ body.home-page.header-hide-emblem .site-header .header-brand-slot {
   flex-shrink: 0 !important;
   object-fit: contain !important;
   object-position: center top !important;
-  transform: translateY(calc(-10px * var(--emblem-hide, 0)))
-    scale(calc(1 - 0.08 * var(--emblem-hide, 0))) !important;
-  transform-origin: center top !important;
+  transform: none !important;
   animation: none !important;
   filter: none !important;
   clip-path: none !important;
@@ -4025,13 +4024,14 @@ body.home-page .site-header .nav {
 }
 
 body.home-page .site-header .nav a {
-  color: #f0c66b !important;
+  color: var(--ds-tertiary-bright, #fff2b0) !important;
   position: relative !important;
   z-index: 2 !important;
+  text-shadow: 0 0 12px rgba(255, 228, 120, 0.45), 0 1px 2px rgba(0, 0, 0, 0.75) !important;
 }
 
 body.home-page .site-header .nav a:hover {
-  color: #ffe3a6 !important;
+  color: #fff8dc !important;
 }
 
 body.home-page .site-header .nav::before {
