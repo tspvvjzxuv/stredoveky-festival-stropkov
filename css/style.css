@@ -4304,6 +4304,43 @@ body.low-perf.home-page .site-header {
   transform: none !important;
 }
 
+/* Erb (štít) sa pri scrolli schová — viac miesta pre menu */
+body.home-page.header-hide-emblem .site-header .header-brand-slot {
+  max-height: 0 !important;
+  min-height: 0 !important;
+  height: 0 !important;
+  width: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  opacity: 0 !important;
+  overflow: hidden !important;
+  pointer-events: none !important;
+  visibility: hidden !important;
+  transition:
+    max-height 0.32s var(--ease-out-expo),
+    opacity 0.24s ease,
+    margin 0.32s var(--ease-out-expo);
+}
+
+body.home-page.header-hide-emblem .site-header .header-brand-slot::after {
+  opacity: 0 !important;
+}
+
+body.home-page.header-hide-emblem.header-compact .site-header .header-brand-slot,
+body.home-page.header-compact .site-header .header-brand-slot {
+  min-height: 0 !important;
+  height: 0 !important;
+  margin-bottom: 0 !important;
+}
+
+body.home-page.header-hide-emblem .site-header .header-brand-slot__icon {
+  transform: scale(0.9) !important;
+}
+
+body.low-perf.home-page.header-hide-emblem .site-header .header-brand-slot {
+  transition: none !important;
+}
+
 /* ===============================
    Program (harmonogram + sprievodné) — DESIGN.md tokeny
    card-default, section-title, label-md, spacing scale

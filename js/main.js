@@ -34,6 +34,7 @@
 
     function applyShift() {
       var y = window.scrollY || 0;
+      body.classList.toggle("header-hide-emblem", y > 40);
       var maxShift = Math.max(0, nav.offsetTop || 0);
       targetShift = Math.min(y, maxShift);
       body.classList.toggle("header-compact", targetShift >= maxShift && maxShift > 0);
