@@ -11,6 +11,7 @@ var required = [
   "js/puzzles-data.js",
   "js/harmonogram-data.js",
   "js/harmonogram-live.js",
+  "js/config.js",
   "images/festival-map.webp",
   "images/logo-andreasa-shield.png",
 ];
