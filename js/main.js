@@ -59,16 +59,7 @@
     window.addEventListener("resize", onScrollOrResize);
   }
 
-  function initEmblemIntro() {
-    if (!document.body) return;
-    var body = document.body;
-    var intro = document.querySelector(".emblem-intro");
-    body.classList.add("intro-done");
-    if (intro) intro.remove();
-  }
-
   initHeaderDynamics();
-  initEmblemIntro();
 
   // Book-intro sound layer removed in unified design pass.
 
@@ -223,51 +214,11 @@
       resolveShopUrl(prod.vstupenky, base),
       "WooCommerce: doplňte woocommerceZakladnaUrl a woocommerceProdukty.vstupenky v js/config.js."
     );
-    bindPaymentLink(
-      document.getElementById("link-rez-lukostrelba"),
-      resolveShopUrl(prod.lukostrelba, base),
-      "WooCommerce: doplňte woocommerceProdukty.lukostrelba v js/config.js."
-    );
-    bindPaymentLink(
-      document.getElementById("link-rez-serm"),
-      resolveShopUrl(prod.serm, base),
-      "WooCommerce: doplňte woocommerceProdukty.serm v js/config.js."
-    );
-    bindPaymentLink(
-      document.getElementById("link-rez-deti"),
-      resolveShopUrl(prod.deti, base),
-      "WooCommerce: doplňte woocommerceProdukty.deti v js/config.js."
-    );
-    bindPaymentLink(
-      document.getElementById("link-rez-remeslo"),
-      resolveShopUrl(prod.remeslo, base),
-      "WooCommerce: doplňte woocommerceProdukty.remeslo v js/config.js."
-    );
   } else {
     bindPaymentLink(
       document.getElementById("link-vstupenky"),
       cfg.stripeVstupenky,
       "Nastavte platobný odkaz v js/config.js (stripeVstupenky) alebo zapnite platbyRezim: \"woocommerce\"."
-    );
-    bindPaymentLink(
-      document.getElementById("link-rez-lukostrelba"),
-      rezStripe.lukostrelba,
-      "Nastavte stripeRezervacia.lukostrelba v js/config.js."
-    );
-    bindPaymentLink(
-      document.getElementById("link-rez-serm"),
-      rezStripe.serm,
-      "Nastavte stripeRezervacia.serm v js/config.js."
-    );
-    bindPaymentLink(
-      document.getElementById("link-rez-deti"),
-      rezStripe.deti,
-      "Nastavte stripeRezervacia.deti v js/config.js."
-    );
-    bindPaymentLink(
-      document.getElementById("link-rez-remeslo"),
-      rezStripe.remeslo,
-      "Nastavte stripeRezervacia.remeslo v js/config.js."
     );
   }
 
@@ -317,15 +268,18 @@
     var banner = document.createElement("aside");
     banner.className = "cookie-banner";
     banner.setAttribute("role", "dialog");
-    banner.setAttribute("aria-live", "polite");
+    banner.setAttribute("aria-modal", "false");
+    banner.setAttribute("aria-labelledby", "cookie-banner-label");
     banner.innerHTML =
-      '<p class="cookie-banner__text">Používame nevyhnutné cookies a (po súhlase) analytiku pre meranie návštevnosti.</p>' +
+      '<p id="cookie-banner-label" class="cookie-banner__text">Používame nevyhnutné cookies a (po súhlase) analytiku pre meranie návštevnosti.</p>' +
       '<div class="cookie-banner__actions">' +
       '<button type="button" class="btn btn-outline cookie-banner__btn" data-cookie-action="decline">Len nevyhnutné</button>' +
       '<button type="button" class="btn btn-primary cookie-banner__btn" data-cookie-action="accept">Súhlasím</button>' +
       '<a class="cookie-banner__link" href="cookies.html">Viac info</a>' +
       "</div>";
     document.body.appendChild(banner);
+    var firstBtn = banner.querySelector("button");
+    if (firstBtn) firstBtn.focus();
     banner.addEventListener("click", function (e) {
       var btn = e.target && e.target.closest ? e.target.closest("[data-cookie-action]") : null;
       if (!btn) return;

@@ -31,18 +31,16 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Montserrat:wght@400;500;600;700;800&family=Source+Sans+3:ital,wght@0,400;0,600;0,700;1,400&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Montserrat:wght@400;500;600;700;800&family=Source+Sans+3:ital,wght@0,400;0,600;0,700;1,400&display=swap"
       rel="stylesheet"
     />
     <link rel="stylesheet" href="css/style.css" />
-    <script src="js/config.js"></script>
+    <script src="js/config.js" defer></script>
     <script src="js/main.js" defer></script>
     <script src="js/prihlasky.js" defer></script>
   </head>
   <body class="home-page">
-    <div class="emblem-intro" aria-hidden="true">
-      <img class="emblem-intro__icon" src="images/logo-andreasa-shield.png" alt="" width="720" height="720" decoding="async" />
-    </div>
+    <a class="skip-link" href="#main-content">Preskočiť na obsah</a>
     <header class="site-header">
       <div class="header-inner">
         <a class="logo" href="index.html" aria-label="Stredoveký festival Stropkov, domov">
@@ -86,21 +84,19 @@
           <a href="sach.html">Šach</a>
           <a href="index.html#miesto">Areál</a>
           <a href="index.html#mapa-uloh">Mapa</a>
-          <a href="index.html#vstupenky-rezervacie">Vstupenky</a>
+          <a href="index.html#vstupenky-rezervacie">Podpora</a>
           <a href="prihlasky.html">Prihlášky</a>
           <a href="index.html#faq">FAQ</a>
         </nav>
       </div>
     </header>
 
-    <main class="page-main prihlasky-page">
+    <main class="page-main prihlasky-page" id="main-content">
       <h1>Prihlášky a súťaže</h1>
       <p class="lead">
-        Táto stránka je <strong>verejná</strong> — formulár môže vyplniť ktokoľvek so záujmom o
-        workshop alebo súťaž. Vyplňte údaje pri vybranej aktivite a odošlite tlačidlom nižšie.
-        Po odoslaní uvidíte potvrdenie tu; organizátor dostane správu e-mailom (služba
-        <strong>Web3Forms</strong> alebo záložne Formspree — podľa nastavenia v
-        <code>js/config.js</code>). Dobrovoľný dar na podporu akcie a rezervácie riešte na
+        Vyplňte údaje pri vybranej aktivite a odošlite prihlášku tlačidlom nižšie.
+        Po odoslaní uvidíte potvrdenie a organizátor dostane vašu prihlášku e-mailom.
+        Dobrovoľný dar na podporu akcie riešte na
         <a href="index.html#vstupenky-rezervacie">hlavnej stránke</a>.
       </p>
       <div class="card prihlasky-quick-pick" aria-label="Rýchly výber registrácie">
@@ -187,8 +183,8 @@
               <textarea name="poznamka" rows="3" maxlength="800"></textarea>
             </label>
             <label class="workshop-form__check">
-              <input type="checkbox" name="suhrn_ostat" value="áno" required />
-              Súhlasím so spracovaním údajov na účely tejto prihlášky a kontaktovania
+              <input type="checkbox" name="suhlas_gdpr" value="áno" required />
+              Súhlasím so <a href="gdpr.html" target="_blank" rel="noopener noreferrer">spracovaním údajov</a> na účely tejto prihlášky a kontaktovania
               ohľadom aktivity.
             </label>
             <p class="workshop-form__feedback" role="status" aria-live="polite" hidden></p>
@@ -237,8 +233,8 @@
               <textarea name="poznamka" rows="3" maxlength="800"></textarea>
             </label>
             <label class="workshop-form__check">
-              <input type="checkbox" name="suhrn_ostat" value="áno" required />
-              Súhlasím so spracovaním údajov na účely tejto prihlášky a kontaktovania
+              <input type="checkbox" name="suhlas_gdpr" value="áno" required />
+              Súhlasím so <a href="gdpr.html" target="_blank" rel="noopener noreferrer">spracovaním údajov</a> na účely tejto prihlášky a kontaktovania
               ohľadom aktivity.
             </label>
             <p class="workshop-form__feedback" role="status" aria-live="polite" hidden></p>
@@ -287,8 +283,8 @@
               <textarea name="poznamka" rows="3" maxlength="800"></textarea>
             </label>
             <label class="workshop-form__check">
-              <input type="checkbox" name="suhrn_ostat" value="áno" required />
-              Súhlasím so spracovaním údajov na účely tejto prihlášky a kontaktovania
+              <input type="checkbox" name="suhlas_gdpr" value="áno" required />
+              Súhlasím so <a href="gdpr.html" target="_blank" rel="noopener noreferrer">spracovaním údajov</a> na účely tejto prihlášky a kontaktovania
               ohľadom aktivity.
             </label>
             <p class="workshop-form__feedback" role="status" aria-live="polite" hidden></p>
@@ -337,8 +333,8 @@
               <input type="text" name="odpoved" required maxlength="80" placeholder="napr. meč" />
             </label>
             <label class="workshop-form__check">
-              <input type="checkbox" name="suhlas_sutaz" value="áno" required />
-              Súhlasím so spracovaním údajov na účely súťaže a prípadného kontaktu
+              <input type="checkbox" name="suhlas_gdpr" value="áno" required />
+              Súhlasím so <a href="gdpr.html" target="_blank" rel="noopener noreferrer">spracovaním údajov</a> na účely súťaže a prípadného kontaktu
               výhercu.
             </label>
             <p class="workshop-form__feedback" role="status" aria-live="polite" hidden></p>
@@ -349,33 +345,28 @@
     </main>
 
     <footer class="site-footer">
-      <p><strong>Stredoveký festival — Stropkov</strong></p>
-      <p>Organizátor: občianske združenie Sparta, Vranovská 30/1456, 09101 Stropkov</p>
       <p>
-        <a href="https://www.instagram.com/o.z.sparta/" target="_blank" rel="noopener noreferrer"
-          >Instagram</a
-        >
+        <strong>Stredoveký festival — Stropkov</strong><br />
+        <span>Organizátor: občianske združenie Sparta, Vranovská 30/1456, 09101 Stropkov</span>
+      </p>
+      <p>
+        <a href="https://www.instagram.com/o.z.sparta/" target="_blank" rel="noopener noreferrer">Instagram</a>
         ·
-        <a href="https://www.facebook.com/ozsparta/" target="_blank" rel="noopener noreferrer"
-          >Facebook</a
-        >
+        <a href="https://www.facebook.com/ozsparta/" target="_blank" rel="noopener noreferrer">Facebook</a>
       </p>
       <p>
         Kontakt: <a href="mailto:zdruzeniesparta@gmail.com">zdruzeniesparta@gmail.com</a> ·
         <a href="https://ozsparta.wordpress.com/" target="_blank" rel="noopener noreferrer">ozsparta.wordpress.com</a>
       </p>
       <p>
-        Autor stránky:
-        <a href="https://thedesigns.org/" target="_blank" rel="noopener noreferrer"
-          >thedesigns.org</a
-        >
-      </p>
-      <p>
         <a href="organizator.html">O organizátorovi a kontakt</a> ·
         <a href="gdpr.html">GDPR a podmienky</a> ·
         <a href="cookies.html">Cookies</a>
       </p>
-      <p><a href="index.html">Späť na hlavnú stránku</a></p>
+      <p>
+        Autor stránky:
+        <a href="https://thedesigns.org/" target="_blank" rel="noopener noreferrer">thedesigns.org</a>
+      </p>
       <p>© <span id="footer-year">2026</span></p>
     </footer>
   </body>

@@ -35,7 +35,7 @@
     <link rel="dns-prefetch" href="//www.facebook.com" />
     <link rel="preload" as="image" href="images/logo-andreasa-shield.png" fetchpriority="high" />
     <link
-      href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Bebas+Neue&family=Montserrat:wght@400;500;600;700;800&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Bebas+Neue&family=Montserrat:wght@400;500;600;700;800&family=Source+Sans+3:ital,wght@0,400;0,600;0,700;1,400&display=swap"
       rel="stylesheet"
     />
     <link rel="stylesheet" href="css/style.css" />
@@ -49,7 +49,7 @@
             "name": "Kde presne je vstup a kde parkujem?",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "Parkovanie a príchod — kde nechať auto, orientačný čas pešo z centra."
+              "text": "Festival sa koná v areáli Pod vlekom (Pod vlekom 1734, Stropkov). Parkovanie je priamo pri areáli. Z centra mesta je to cca 10 minút pešo."
             }
           },
           {
@@ -57,7 +57,7 @@
             "name": "Môžem platiť kartou alebo len žetónmi?",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "Strava a stánky na mieste fungujú na žetóny; online tlačidlá nižšie slúžia ako dobrovoľný dar na podporu akcie združenia."
+              "text": "Strava a stánky na mieste fungujú na žetóny, ktoré si zakúpite pri pokladnici. Online môžete prispieť dobrovoľným darom na podporu akcie združenia."
             }
           },
           {
@@ -65,15 +65,15 @@
             "name": "Sú psy alebo iné zvieratá vítané?",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "Pravidlá pre zvieratá, fajčenie, fotenie a správanie doplní organizátor."
+              "text": "Áno, za podmienky, že budú na vôdzke a pod dohľadom majiteľa. Prosíme o ohľaduplnosť voči ostatným návštevníkom a upratanie po zvierati."
             }
           },
           {
             "@type": "Question",
-            "name": "Čo keď príde zlá počasie?",
+            "name": "Čo keď príde zlé počasie?",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "Počasie sledujte cez SHMÚ a yr.no; zbaľte si oblečenie do vetra a dažďa."
+              "text": "Počasie odporúčame sledovať cez SHMÚ alebo yr.no. Zbaľte si oblečenie do vetra a dažďa. V prípade nepriaznivého počasia môže organizátor upraviť program."
             }
           },
           {
@@ -81,7 +81,7 @@
             "name": "Je areál vhodný pre kočík alebo invalidný vozík?",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "Bezbariérový prístup a vhodné trasy pre kočíky a vozíky budú označené na mieste."
+              "text": "Areál je prevažne na rovnom teréne a prístupný pre kočíky. Trasy vhodné pre vozíčkarov budú označené na mieste."
             }
           }
         ]
@@ -96,7 +96,7 @@
             "@id": "https://ptra.sk/#organization",
             "name": "Občianske združenie Sparta",
             "url": "https://ptra.sk/",
-            "email": "mailto:zdruzeniesparta@gmail.com",
+            "email": "zdruzeniesparta@gmail.com",
             "sameAs": [
               "https://ozsparta.wordpress.com/",
               "https://www.facebook.com/ozsparta",
@@ -142,9 +142,7 @@
     <script src="js/main.js" defer></script>
   </head>
   <body class="home-page">
-    <div class="emblem-intro" aria-hidden="true">
-      <img class="emblem-intro__icon" src="images/logo-andreasa-shield.png" alt="" width="720" height="720" decoding="async" />
-    </div>
+    <a class="skip-link" href="#main-content">Preskočiť na obsah</a>
     <header class="site-header">
       <div class="header-inner">
         <a class="logo" href="index.html" aria-label="Stredoveký festival Stropkov, domov">
@@ -188,7 +186,7 @@
           <a href="sach.html">Šach</a>
           <a href="#miesto">Areál</a>
           <a href="#mapa-uloh">Mapa</a>
-          <a href="#vstupenky-rezervacie" id="nav-obchod">Vstupenky</a>
+          <a href="#vstupenky-rezervacie" id="nav-obchod">Podpora</a>
           <a href="prihlasky.html">Prihlášky</a>
           <a href="#faq">FAQ</a>
         </nav>
@@ -213,7 +211,6 @@
       <div class="hero-inner">
         <p class="hero-kicker">Pod vlekom · Stropkov</p>
         <h1>PTRA - Poľný tábor rytiera Andreasa<br />Stropkov <span id="hero-year">2026</span><br />16. augusta</h1>
-        <p id="profile-greeting" class="profile-greeting" hidden></p>
         <p class="tagline">
           Lukostrelecký turnaj, šachový turnaj, rytierska cesta, pasovanie rytierov,
           interaktívna rozprávka, tombola a táborová opekačka — rekreačné stredisko Pod vlekom.
@@ -222,7 +219,7 @@
           <a class="btn btn-primary hero-cta" href="#harmonogram">Harmonogram</a>
           <a class="btn btn-outline" href="#miesto">Mapa areálu</a>
           <a class="btn btn-outline" href="#mapa-uloh">Úlohy</a>
-          <a class="btn btn-outline" href="#vstupenky-rezervacie">Vstupenky</a>
+          <a class="btn btn-outline" href="#vstupenky-rezervacie">Podpora</a>
           <a class="btn btn-outline" href="#faq">Otázky</a>
         </div>
       </div>
@@ -232,7 +229,7 @@
       </div>
     </section>
 
-    <main class="page-main">
+    <main class="page-main" id="main-content">
       <section id="o-festivale">
         <h2>O festivale</h2>
         <p class="lead">
@@ -299,8 +296,7 @@
         <div id="harmonogram-live" class="card live-schedule">
           <h3 class="live-schedule-heading">Živý prehľad</h3>
           <p class="live-schedule-title live-schedule-strong">
-            V deň festivalu (2026-08-16) sa tu zobrazí, čo práve prebieha a čo môžete robiť.
-            Dátum upravíte v súbore js/harmonogram-data.js.
+            V deň festivalu (16. augusta 2026) sa tu zobrazí, čo práve prebieha a čo môžete robiť.
           </p>
           <p class="live-schedule-body"></p>
           <p class="live-schedule-sub live-schedule-strong"></p>
@@ -310,10 +306,11 @@
 
         <div class="card">
           <table class="schedule-table">
+            <caption class="visually-hidden">Program festivalu</caption>
             <thead>
               <tr>
-                <th>Čas</th>
-                <th>Program</th>
+                <th scope="col">Čas</th>
+                <th scope="col">Program</th>
               </tr>
             </thead>
             <tbody id="schedule-tbody"></tbody>
@@ -373,30 +370,42 @@
 
       <section id="faq" aria-labelledby="faq-heading">
         <h2 id="faq-heading">Často kladené otázky</h2>
-        <p class="faq-intro">Stručné odpovede — doplníte podľa pravidiel vášho ročníka.</p>
+        <p class="faq-intro">Odpovede na najčastejšie otázky návštevníkov festivalu.</p>
         <div class="faq-list">
           <details class="faq-item">
             <summary>Kde presne je vstup a kde parkujem?</summary>
-            <p>Parkovanie a príchod — kde nechať auto, orientačný čas pešo z centra.</p>
+            <p>
+              Festival sa koná v areáli Pod vlekom (Pod vlekom 1734, Stropkov).
+              Parkovanie je priamo pri areáli. Z centra mesta je to cca 10 minút pešo.
+            </p>
           </details>
           <details class="faq-item">
             <summary>Môžem platiť kartou alebo len žetónmi?</summary>
             <p>
-              Strava a stánky na mieste fungujú na žetóny; online tlačidlá nižšie slúžia ako
-              dobrovoľný dar na podporu akcie združenia.
+              Strava a stánky na mieste fungujú na žetóny, ktoré si zakúpite pri pokladnici.
+              Online môžete prispieť dobrovoľným darom na podporu akcie združenia.
             </p>
           </details>
           <details class="faq-item">
             <summary>Sú psy alebo iné zvieratá vítané?</summary>
-            <p>Pravidlá pre zvieratá, fajčenie, fotenie a správanie doplní organizátor.</p>
+            <p>
+              Áno, za podmienky, že budú na vôdzke a pod dohľadom majiteľa.
+              Prosíme o ohľaduplnosť voči ostatným návštevníkom a upratanie po zvierati.
+            </p>
           </details>
           <details class="faq-item">
-            <summary>Čo keď príde zlá počasie?</summary>
-            <p>Počasie sledujte cez SHMÚ a yr.no; zbaľte si oblečenie do vetra a dažďa.</p>
+            <summary>Čo keď príde zlé počasie?</summary>
+            <p>
+              Počasie odporúčame sledovať cez SHMÚ alebo yr.no. Zbaľte si oblečenie do vetra
+              a dažďa. V prípade nepriaznivého počasia môže organizátor upraviť program.
+            </p>
           </details>
           <details class="faq-item">
             <summary>Je areál vhodný pre kočík alebo invalidný vozík?</summary>
-            <p>Bezbariérový prístup a vhodné trasy pre kočíky a vozíky budú označené na mieste.</p>
+            <p>
+              Areál je prevažne na rovnom teréne a prístupný pre kočíky.
+              Trasy vhodné pre vozíčkarov budú označené na mieste.
+            </p>
           </details>
         </div>
       </section>
