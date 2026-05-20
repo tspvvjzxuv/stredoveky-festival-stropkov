@@ -5037,28 +5037,47 @@ body.reduced-motion.js-ready main section {
   gap: 0.65rem;
 }
 
-.home-page .chess-teaser__board {
-  position: relative;
+.home-page .chess-teaser__hlavolamy {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
   margin: 0;
-  padding: 1rem;
+  padding: 1rem 1.1rem;
+  min-height: 100%;
   border-radius: var(--ds-radius-md, 6px);
-  border: 1px solid rgba(255, 203, 0, 0.28);
+  border: 1px solid rgba(255, 203, 0, 0.32);
   background:
     linear-gradient(90deg, rgba(255, 203, 0, 0.07) 50%, transparent 50%),
     linear-gradient(rgba(255, 203, 0, 0.07) 50%, transparent 50%),
     linear-gradient(180deg, rgba(18, 24, 36, 0.95) 0%, rgba(10, 12, 18, 0.98) 100%);
   background-size: 28px 28px, 28px 28px, 100% 100%;
+  color: inherit;
   text-align: center;
+  text-decoration: none;
+  transition:
+    transform var(--fx-time-mid, 260ms) var(--fx-ease, ease),
+    border-color var(--fx-time-mid, 260ms) var(--fx-ease, ease),
+    box-shadow var(--fx-time-mid, 260ms) var(--fx-ease, ease);
 }
 
-.home-page .chess-teaser__board-inner {
+.home-page .chess-teaser__hlavolamy:hover,
+.home-page .chess-teaser__hlavolamy:focus-visible {
+  transform: translateY(-2px);
+  border-color: rgba(255, 203, 0, 0.55);
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.35), 0 0 18px rgba(255, 203, 0, 0.12);
+  outline: 2px solid var(--ds-tertiary-bright, #ffe066);
+  outline-offset: 3px;
+}
+
+.home-page .chess-teaser__hlavolamy-pieces {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
   gap: 0.35rem 0.5rem;
-  min-height: 5.5rem;
+  min-height: 4.5rem;
   align-items: center;
-  padding: 0.5rem 0;
 }
 
 .home-page .chess-teaser__piece {
@@ -5077,8 +5096,15 @@ body.reduced-motion.js-ready main section {
   color: #f0d8a8;
 }
 
-.home-page .chess-teaser__board-caption {
-  margin: 0.35rem 0 0;
+.home-page .chess-teaser__hlavolamy-title {
+  font-family: "Cinzel", serif;
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  color: var(--ds-neutral, #ffeed2);
+}
+
+.home-page .chess-teaser__hlavolamy-sub {
   font-size: 0.82rem;
   font-style: italic;
   letter-spacing: 0.04em;
