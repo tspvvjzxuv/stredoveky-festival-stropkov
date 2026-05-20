@@ -2869,12 +2869,13 @@ a.stripe-btn.woo-pay-btn:hover {
   display: flex;
   align-items: center;
   justify-content: center;
-  min-height: 142px;
+  min-height: auto;
   margin: 0 auto 0.36rem;
   width: min(142px, 28vw);
-  height: min(160px, 32vw);
+  height: auto;
+  aspect-ratio: 689 / 913;
   padding: 0;
-  clip-path: polygon(50% 0%, 88% 12%, 88% 58%, 50% 100%, 12% 58%, 12% 12%);
+  clip-path: none;
   border-radius: 0;
   border: none;
   background: transparent;
@@ -2966,9 +2967,9 @@ body.home-page.header-compact .site-header {
 }
 
 body.home-page.header-compact .site-header .header-brand-slot {
-  min-height: calc(112px * (1 - var(--emblem-hide, 0)));
+  min-height: calc(var(--header-icon-height) * (1 - var(--emblem-hide, 0)));
   height: auto;
-  max-height: calc(min(128px, 26vw) * (1 - var(--emblem-hide, 0)));
+  max-height: calc(var(--header-icon-height) * (1 - var(--emblem-hide, 0)));
   margin-bottom: calc(0.16rem * (1 - var(--emblem-hide, 0)));
 }
 
@@ -3162,7 +3163,8 @@ body.home-page.header-compact .site-header .nav {
   .home-page .site-header .header-brand-slot__icon {
     width: 100%;
     height: auto;
-    max-height: var(--header-icon-size);
+    max-height: none;
+    aspect-ratio: 689 / 913;
   }
 
   .home-page .site-header .nav {
@@ -3568,17 +3570,20 @@ body.home-page.header-compact .site-header {
 
 /* Header icon + nav — animácia erbu zo 20.5. (pred dnešnými zásahmi) */
 .home-page .site-header {
-  --header-icon-size: 148px;
+  --header-icon-width: 148px;
+  --header-icon-height: calc(var(--header-icon-width) * 913 / 689);
+  --header-icon-size: var(--header-icon-width);
   transform: translateY(calc(-1 * var(--header-shift, 0px))) !important;
   will-change: transform;
 }
 
 .home-page .site-header .header-brand-slot {
   position: relative !important;
-  width: var(--header-icon-size) !important;
+  width: var(--header-icon-width) !important;
   height: auto !important;
-  min-height: calc(var(--header-icon-size) * (1 - var(--emblem-hide, 0))) !important;
-  max-height: calc(var(--header-icon-size) * (1 - var(--emblem-hide, 0))) !important;
+  aspect-ratio: 689 / 913;
+  min-height: calc(var(--header-icon-height) * (1 - var(--emblem-hide, 0))) !important;
+  max-height: calc(var(--header-icon-height) * (1 - var(--emblem-hide, 0))) !important;
   margin: 0 auto calc(0.12rem * (1 - var(--emblem-hide, 0))) !important;
   padding: 0 !important;
   line-height: 0 !important;
@@ -3628,8 +3633,9 @@ body.home-page.header-hide-emblem .site-header .header-brand-slot {
   z-index: 1 !important;
   width: 100% !important;
   height: auto !important;
-  aspect-ratio: 1 !important;
-  max-height: calc(var(--header-icon-size) * (1 - var(--emblem-hide, 0))) !important;
+  max-width: 100% !important;
+  max-height: none !important;
+  aspect-ratio: 689 / 913;
   object-fit: contain !important;
   object-position: center center !important;
   animation: none !important;
@@ -3659,7 +3665,9 @@ body.home-page.header-hide-emblem .site-header .header-brand-slot {
 
 @media (max-width: 860px) {
   .home-page .site-header {
-    --header-icon-size: 102px;
+    --header-icon-width: 118px;
+    --header-icon-height: calc(var(--header-icon-width) * 913 / 689);
+    --header-icon-size: var(--header-icon-width);
   }
 
   .home-page .site-header .nav {
@@ -3987,7 +3995,8 @@ body.home-page .site-header .header-inner {
 }
 
 body.home-page .site-header .header-brand-slot {
-  width: min(172px, 34vw) !important;
+  width: var(--header-icon-width) !important;
+  max-width: min(172px, 34vw) !important;
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
@@ -3995,7 +4004,8 @@ body.home-page .site-header .header-brand-slot {
 
 body.home-page .site-header .header-brand-slot__icon {
   width: 100% !important;
-  height: 100% !important;
+  height: auto !important;
+  max-height: none !important;
   object-fit: contain !important;
   object-position: center !important;
 }
