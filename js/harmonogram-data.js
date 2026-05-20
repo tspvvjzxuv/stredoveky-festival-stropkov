@@ -11,7 +11,7 @@ window.HARMONOGRAM_DATA = {
       title: "Otvorenie areálu, registrácia, turnaje",
       activities: [
         "Otvorenie areálu – piknik park",
-        "Registrácia – rytierska cesta",
+        "Registrácia – rytierská cesta",
         "Lukostrelecký turnaj",
         "Šachový turnaj",
       ],
@@ -30,9 +30,7 @@ window.HARMONOGRAM_DATA = {
       start: "15:00",
       end: "15:30",
       title: "Šachová bitka kráľov so živými figúrkami",
-      activities: [
-        "Šachová bitka kráľov so živými figúrkami",
-      ],
+      activities: ["Šachová bitka kráľov so živými figúrkami"],
     },
     {
       start: "15:30",
@@ -48,25 +46,19 @@ window.HARMONOGRAM_DATA = {
       start: "17:00",
       end: "17:30",
       title: "Interaktívna rozprávka",
-      activities: [
-        "Interaktívna rozprávka",
-      ],
+      activities: ["Interaktívna rozprávka"],
     },
     {
       start: "17:30",
       end: "18:00",
       title: "Vyhodnotenie turnajov",
-      activities: [
-        "Vyhodnotenie turnajov",
-      ],
+      activities: ["Vyhodnotenie turnajov"],
     },
     {
       start: "18:00",
       end: "18:30",
       title: "Tombola",
-      activities: [
-        "Tombola",
-      ],
+      activities: ["Tombola"],
     },
     {
       start: "18:30",
