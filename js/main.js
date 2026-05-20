@@ -80,6 +80,23 @@
 
   initHeaderDynamics();
 
+  function initNavTrackScroll() {
+    var track = document.querySelector(".site-header .nav-track");
+    if (!track) return;
+    track.scrollLeft = 0;
+    window.addEventListener(
+      "resize",
+      function () {
+        if (window.matchMedia("(max-width: 860px)").matches) {
+          track.scrollLeft = 0;
+        }
+      },
+      { passive: true }
+    );
+  }
+
+  initNavTrackScroll();
+
   // Book-intro sound layer removed in unified design pass.
 
   function initSectionReveal() {
