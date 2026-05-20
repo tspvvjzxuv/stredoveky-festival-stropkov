@@ -15,6 +15,13 @@ var required = [
   "images/festival-map.webp",
   "images/logo-andreasa-shield.png",
   "images/hero-poster.webp",
+  "images/poe2-frame.webp",
+  "images/poe2-frame-top.webp",
+  "images/poe2-frame-bottom.webp",
+  "images/poe2-dialog-bg.webp",
+  "images/poe2-panel-bg.webp",
+  "images/poe-carousel-frame.webp",
+  "images/poe2-navbar-bg.webp",
   "videos/hero.mp4",
 ];
 

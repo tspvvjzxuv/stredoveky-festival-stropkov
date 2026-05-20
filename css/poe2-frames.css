@@ -1,0 +1,186 @@
+/* PoE2 early-access — rámy, orámovanie a panely (inšpirované pathofexile2.com) */
+
+.home-page {
+  --poe-frame-slice: 72;
+  --poe-frame-outset-x: 10px;
+  --poe-frame-outset-y: 14px;
+}
+
+/* Hlavný blok obsahu */
+.home-page .page-main {
+  position: relative;
+  border: solid transparent !important;
+  border-width: 0 !important;
+  border-image-source: url("../images/poe2-panel-bg.webp") !important;
+  border-image-slice: 48 36 44 fill !important;
+  border-image-width: 44px 30px 40px !important;
+  border-image-outset: 10px 8px 12px !important;
+  background: linear-gradient(
+    180deg,
+    rgba(12, 16, 24, 0.94) 0%,
+    rgba(6, 8, 14, 0.97) 100%
+  ) !important;
+  box-shadow:
+    inset 0 0 28px rgba(0, 0, 0, 0.4),
+    0 20px 50px rgba(0, 0, 0, 0.48) !important;
+}
+
+.home-page .page-main::before {
+  content: "" !important;
+  display: block !important;
+  position: absolute !important;
+  left: 50% !important;
+  top: -6px !important;
+  transform: translateX(-50%) !important;
+  width: min(280px, 88%) !important;
+  height: 28px !important;
+  background: url("../images/poe2-frame-top.webp") center / contain no-repeat !important;
+  pointer-events: none !important;
+  z-index: 1 !important;
+}
+
+/* Sekcie — .poe2-frame z early-access */
+.home-page main section {
+  position: relative !important;
+  border: solid transparent !important;
+  border-image-source: url("../images/poe2-frame.webp") !important;
+  border-image-slice: var(--poe-frame-slice) fill !important;
+  border-image-width: calc(var(--poe-frame-slice) * 1px) !important;
+  border-image-outset: var(--poe-frame-outset-y) var(--poe-frame-outset-x) !important;
+  margin-top: 2.75rem !important;
+  margin-bottom: 2.25rem !important;
+  padding: 2rem 1.85rem 1.65rem !important;
+  background: linear-gradient(
+    180deg,
+    rgba(18, 22, 32, 0.9) 0%,
+    rgba(10, 13, 20, 0.94) 100%
+  ) !important;
+  box-shadow:
+    inset 0 0 40px rgba(0, 0, 0, 0.32),
+    0 8px 24px rgba(0, 0, 0, 0.28) !important;
+}
+
+.home-page main section::before,
+.home-page main section::after {
+  content: "" !important;
+  position: absolute !important;
+  left: 50% !important;
+  right: auto !important;
+  transform: translateX(-50%) !important;
+  pointer-events: none !important;
+  font-size: 0 !important;
+  color: transparent !important;
+}
+
+.home-page main section::before {
+  top: auto !important;
+  bottom: calc(100% + 6px) !important;
+  width: min(248px, 94%) !important;
+  height: clamp(36px, 8vw, 62px) !important;
+  background: url("../images/poe2-frame-top.webp") center bottom / contain no-repeat !important;
+}
+
+.home-page main section::after {
+  top: calc(100% + 6px) !important;
+  bottom: auto !important;
+  width: min(168px, 76%) !important;
+  height: clamp(28px, 6vw, 48px) !important;
+  background: url("../images/poe2-frame-bottom.webp") center top / contain no-repeat !important;
+}
+
+.home-page main section h2 {
+  position: relative;
+  z-index: 1;
+  padding-bottom: 0.85rem !important;
+  text-shadow:
+    0 1px 0 rgba(0, 0, 0, 0.8),
+    0 0 18px rgba(255, 203, 0, 0.22) !important;
+}
+
+.home-page main section h2::after {
+  height: 2px !important;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 203, 0, 0.35) 18%,
+    rgba(255, 235, 180, 0.85) 50%,
+    rgba(255, 203, 0, 0.35) 82%,
+    transparent 100%
+  ) !important;
+  box-shadow: 0 0 12px rgba(255, 203, 0, 0.35) !important;
+}
+
+/* Karty / panely */
+.home-page .card,
+.home-page .choice-card,
+.home-page .faq-item {
+  position: relative;
+  border: solid transparent !important;
+  border-image-source: url("../images/poe2-dialog-bg.webp") !important;
+  border-image-slice: 52 30 52 fill !important;
+  border-image-width: 38px 22px 38px !important;
+  border-image-outset: 8px 7px 10px !important;
+  background: linear-gradient(
+    165deg,
+    rgba(20, 26, 38, 0.95) 0%,
+    rgba(11, 14, 22, 0.97) 100%
+  ) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 203, 0, 0.08),
+    inset 0 0 24px rgba(0, 0, 0, 0.35),
+    0 10px 28px rgba(0, 0, 0, 0.32) !important;
+}
+
+.home-page .card::before,
+.home-page .card::after,
+.home-page .choice-card::before,
+.home-page .choice-card::after {
+  display: none !important;
+}
+
+/* Navigácia — dvojitý rám (už má pozadie poe2-navbar) */
+.home-page .site-header .nav {
+  border: solid transparent !important;
+  border-image-source: url("../images/poe-carousel-frame.webp") !important;
+  border-image-slice: 24 fill !important;
+  border-image-width: 18px !important;
+  border-image-outset: 6px 4px 8px !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 203, 0, 0.2),
+    inset 0 -2px 8px rgba(0, 0, 0, 0.45),
+    0 10px 28px rgba(0, 0, 0, 0.42) !important;
+}
+
+.home-page .btn-primary {
+  border: solid transparent;
+  border-image-source: url("../images/poe2-frame.webp");
+  border-image-slice: 24 fill;
+  border-image-width: 14px;
+  border-image-outset: 5px 12px 7px;
+  box-shadow: 0 0 16px rgba(217, 36, 28, 0.35);
+}
+
+@media (max-width: 860px) {
+  .home-page {
+    --poe-frame-slice: 48;
+    --poe-frame-outset-x: 6px;
+    --poe-frame-outset-y: 10px;
+  }
+
+  .home-page main section {
+    padding: 1.35rem 1.1rem 1.2rem !important;
+    margin-top: 2rem !important;
+  }
+
+  .home-page .page-main {
+    border-image-width: 32px 20px 28px !important;
+    border-image-outset: 8px 6px 10px !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .home-page main section,
+  .home-page .card {
+    transition: none;
+  }
+}
