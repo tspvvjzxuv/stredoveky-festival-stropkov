@@ -22,52 +22,51 @@
   if (heroYear) heroYear.textContent = String(y);
   if (footerYear) footerYear.textContent = String(y);
 
-  /** Erb pri scrolli — Headroom.js (https://wicky.nillia.ms/headroom.js) */
-  function initHeadroomEmblem() {
-    if (!document.body || !document.body.classList.contains("home-page")) return;
+  /** Plynulé skrytie erbu pri scrolli (--emblem-hide 0→1, ako na začiatku dňa) */
+  function initHeaderDynamics() {
+    if (!document.body) return;
     var body = document.body;
-    var el = document.getElementById("emblem-headroom");
-    if (!el) return;
+    var emblemHideStart = 0;
+    var emblemHideEnd = 64;
+    var scrollTicking = false;
 
-    function setEmblemCompact(compact) {
-      body.classList.toggle("header-hide-emblem", compact);
-      body.classList.toggle("header-compact", compact);
+    function applyEmblemScroll(scrollY) {
+      if (reducedMotion) {
+        var hidden = scrollY > emblemHideEnd;
+        body.style.setProperty("--emblem-hide", hidden ? "1" : "0");
+        body.classList.toggle("header-hide-emblem", hidden);
+        body.classList.toggle("header-compact", hidden);
+        return;
+      }
+      var range = emblemHideEnd - emblemHideStart;
+      var progress =
+        range > 0
+          ? Math.min(1, Math.max(0, (scrollY - emblemHideStart) / range))
+          : scrollY > emblemHideEnd
+            ? 1
+            : 0;
+      body.style.setProperty("--emblem-hide", progress.toFixed(3));
+      var hidden = progress >= 0.995;
+      body.classList.toggle("header-hide-emblem", hidden);
+      body.classList.toggle("header-compact", hidden);
     }
 
-    if (typeof Headroom === "undefined") {
-      setEmblemCompact(false);
-      return;
+    function onScrollOrResize() {
+      if (!scrollTicking) {
+        scrollTicking = true;
+        window.requestAnimationFrame(function () {
+          scrollTicking = false;
+          applyEmblemScroll(window.scrollY || 0);
+        });
+      }
     }
 
-    var headroom = new Headroom(el, {
-      tolerance: { up: 16, down: 16 },
-      offset: 88,
-      classes: {
-        initial: "emblem-headroom",
-        pinned: "emblem-headroom--pinned",
-        unpinned: "emblem-headroom--unpinned",
-        top: "emblem-headroom--top",
-        notTop: "emblem-headroom--not-top",
-      },
-      onPin: function () {
-        setEmblemCompact(false);
-      },
-      onUnpin: function () {
-        setEmblemCompact(true);
-      },
-      onTop: function () {
-        setEmblemCompact(false);
-      },
-    });
-
-    headroom.init();
+    applyEmblemScroll(window.scrollY || 0);
+    window.addEventListener("scroll", onScrollOrResize, { passive: true });
+    window.addEventListener("resize", onScrollOrResize, { passive: true });
   }
 
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", initHeadroomEmblem);
-  } else {
-    initHeadroomEmblem();
-  }
+  initHeaderDynamics();
 
   function initNavTrackScroll() {
     var track = document.querySelector(".site-header .nav-track");
