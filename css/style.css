@@ -931,7 +931,6 @@ a:hover {
     0 10px 26px rgba(0, 0, 0, 0.4);
 }
 
-.home-page .hero .hero-btn--podpor,
 .home-page .stripe-btn,
 .home-page #link-vstupenky {
   border-color: rgba(220, 72, 52, 0.82) !important;
@@ -943,8 +942,6 @@ a:hover {
     0 8px 22px rgba(0, 0, 0, 0.38) !important;
 }
 
-.home-page .hero .hero-btn--podpor:hover,
-.home-page .hero .hero-btn--podpor:focus-visible,
 .home-page .stripe-btn:hover,
 .home-page #link-vstupenky:hover {
   border-color: rgba(255, 120, 90, 0.95) !important;
@@ -956,41 +953,46 @@ a:hover {
     0 10px 26px rgba(0, 0, 0, 0.42) !important;
 }
 
+/* Hero Prihlásiť — zelené telo, zlatá žiara ako Harmonogram */
 .home-page .hero .hero-btn--register {
-  border-color: rgba(80, 190, 110, 0.75) !important;
+  border-color: rgba(212, 170, 94, 0.78) !important;
   background: linear-gradient(
     180deg,
-    rgba(32, 72, 42, 0.92) 0%,
-    rgba(18, 42, 28, 0.96) 100%
+    #2d6b3a 0%,
+    #1f4d2a 48%,
+    #12301c 100%
   ) !important;
   color: #e8ffe8 !important;
   box-shadow:
-    inset 0 1px 0 rgba(200, 255, 200, 0.2),
-    0 0 0 1px rgba(30, 90, 48, 0.55),
-    0 0 16px rgba(50, 153, 50, 0.65),
-    0 0 32px rgba(50, 153, 50, 0.38),
-    0 8px 22px rgba(0, 0, 0, 0.38) !important;
+    inset 0 1px 0 rgba(200, 255, 200, 0.26),
+    inset 0 -1px 0 rgba(12, 36, 20, 0.58),
+    0 0 0 1px rgba(24, 68, 36, 0.6),
+    0 10px 26px rgba(0, 0, 0, 0.38),
+    0 0 18px rgba(255, 200, 90, 0.5),
+    0 0 32px rgba(200, 120, 50, 0.35) !important;
 }
 
 .home-page .hero .hero-btn--register:hover,
 .home-page .hero .hero-btn--register:focus-visible {
-  border-color: rgba(130, 230, 150, 0.9) !important;
+  border-color: rgba(230, 190, 112, 0.9) !important;
   background: linear-gradient(
     180deg,
-    rgba(42, 92, 52, 0.95) 0%,
-    rgba(24, 52, 34, 0.98) 100%
+    #3a8248 0%,
+    #285c34 48%,
+    #163a22 100%
   ) !important;
   color: #fff !important;
   box-shadow:
-    inset 0 1px 0 rgba(220, 255, 220, 0.28),
-    0 0 0 1px rgba(50, 130, 68, 0.65),
-    0 0 22px rgba(72, 190, 90, 0.8),
-    0 0 42px rgba(50, 153, 50, 0.5),
-    0 10px 26px rgba(0, 0, 0, 0.42) !important;
+    inset 0 1px 0 rgba(220, 255, 220, 0.32),
+    inset 0 -1px 0 rgba(16, 44, 26, 0.6),
+    0 0 0 1px rgba(36, 100, 52, 0.62),
+    0 12px 28px rgba(0, 0, 0, 0.42),
+    0 0 24px rgba(255, 220, 120, 0.65),
+    0 0 40px rgba(200, 100, 40, 0.45) !important;
 }
 
 @media (prefers-reduced-motion: no-preference) {
-  .home-page .hero .btn-outline:not(.hero-btn--podpor):not(.hero-btn--register) {
+  .home-page .hero .btn-outline:not(.hero-btn--register) {
     animation: heroGlowGold 3s ease-in-out infinite;
   }
 
@@ -998,12 +1000,8 @@ a:hover {
     animation: heroGlowCta 3s ease-in-out infinite;
   }
 
-  .home-page .hero .hero-btn--podpor {
-    animation: heroGlowRed 2.8s ease-in-out infinite;
-  }
-
   .home-page .hero .hero-btn--register {
-    animation: heroGlowGreen 2.8s ease-in-out infinite;
+    animation: heroGlowRegister 3s ease-in-out infinite;
   }
 
   .home-page .stripe-btn,
@@ -1072,23 +1070,25 @@ a:hover {
   }
 }
 
-@keyframes heroGlowGreen {
+@keyframes heroGlowRegister {
   0%,
   100% {
     box-shadow:
-      inset 0 1px 0 rgba(200, 255, 200, 0.2),
-      0 0 0 1px rgba(30, 90, 48, 0.55),
-      0 0 14px rgba(50, 153, 50, 0.58),
-      0 0 28px rgba(50, 153, 50, 0.32),
-      0 8px 22px rgba(0, 0, 0, 0.38);
+      inset 0 1px 0 rgba(200, 255, 200, 0.26),
+      inset 0 -1px 0 rgba(12, 36, 20, 0.58),
+      0 0 0 1px rgba(24, 68, 36, 0.6),
+      0 10px 26px rgba(0, 0, 0, 0.38),
+      0 0 16px rgba(255, 200, 90, 0.45),
+      0 0 28px rgba(200, 100, 40, 0.28);
   }
   50% {
     box-shadow:
-      inset 0 1px 0 rgba(220, 255, 220, 0.28),
-      0 0 0 1px rgba(50, 130, 68, 0.65),
-      0 0 22px rgba(72, 190, 90, 0.78),
-      0 0 40px rgba(50, 153, 50, 0.45),
-      0 8px 22px rgba(0, 0, 0, 0.38);
+      inset 0 1px 0 rgba(220, 255, 220, 0.32),
+      inset 0 -1px 0 rgba(16, 44, 26, 0.6),
+      0 0 0 1px rgba(36, 100, 52, 0.62),
+      0 10px 26px rgba(0, 0, 0, 0.38),
+      0 0 22px rgba(255, 220, 120, 0.6),
+      0 0 40px rgba(210, 90, 35, 0.4);
   }
 }
 
