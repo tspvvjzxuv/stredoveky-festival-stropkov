@@ -5489,7 +5489,7 @@ body.reduced-motion.js-ready main section {
   padding: 1rem 1.1rem;
   min-height: 100%;
   border-radius: var(--ds-radius-md, 6px);
-  border: none;
+  border: 1px solid rgba(255, 220, 120, 0.55);
   background:
     linear-gradient(90deg, rgba(255, 203, 0, 0.07) 50%, transparent 50%),
     linear-gradient(rgba(255, 203, 0, 0.07) 50%, transparent 50%),
@@ -5498,6 +5498,12 @@ body.reduced-motion.js-ready main section {
   color: inherit;
   text-align: center;
   text-decoration: none;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 242, 200, 0.18),
+    0 0 0 1px rgba(160, 120, 40, 0.4),
+    0 0 16px rgba(255, 216, 90, 0.55),
+    0 0 32px rgba(255, 200, 80, 0.32),
+    0 8px 22px rgba(0, 0, 0, 0.35);
   transition:
     transform var(--fx-time-mid, 260ms) var(--fx-ease, ease),
     border-color var(--fx-time-mid, 260ms) var(--fx-ease, ease),
@@ -5507,9 +5513,41 @@ body.reduced-motion.js-ready main section {
 .home-page .chess-teaser__hlavolamy:hover,
 .home-page .chess-teaser__hlavolamy:focus-visible {
   transform: translateY(-2px);
-  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.35), 0 0 18px rgba(255, 203, 0, 0.12);
-  outline: 2px solid var(--ds-tertiary-bright, #ffe066);
+  border-color: rgba(255, 240, 160, 0.85);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 248, 220, 0.28),
+    0 0 0 1px rgba(200, 160, 60, 0.55),
+    0 0 22px rgba(255, 228, 120, 0.75),
+    0 0 44px rgba(255, 200, 80, 0.48),
+    0 10px 28px rgba(0, 0, 0, 0.38);
+  outline: 2px solid var(--ds-tertiary-bright, #fff2b0);
   outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .home-page .chess-teaser__hlavolamy {
+    animation: chessHlavolamyGlow 2.8s ease-in-out infinite;
+  }
+}
+
+@keyframes chessHlavolamyGlow {
+  0%,
+  100% {
+    box-shadow:
+      inset 0 1px 0 rgba(255, 242, 200, 0.18),
+      0 0 0 1px rgba(160, 120, 40, 0.4),
+      0 0 14px rgba(255, 216, 90, 0.48),
+      0 0 28px rgba(255, 200, 80, 0.28),
+      0 8px 22px rgba(0, 0, 0, 0.35);
+  }
+  50% {
+    box-shadow:
+      inset 0 1px 0 rgba(255, 248, 220, 0.24),
+      0 0 0 1px rgba(200, 160, 60, 0.52),
+      0 0 20px rgba(255, 235, 140, 0.72),
+      0 0 40px rgba(255, 210, 90, 0.45),
+      0 8px 22px rgba(0, 0, 0, 0.35);
+  }
 }
 
 .home-page .chess-teaser__hlavolamy-pieces {
