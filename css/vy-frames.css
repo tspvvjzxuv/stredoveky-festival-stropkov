@@ -1,9 +1,12 @@
 /* PTRA — vy rámy, patina a zlaté akcenty */
 
 .home-page {
-  --vy-frame-slice: 72;
+  --vy-frame-slice: 144;
   --vy-frame-outset-x: 10px;
   --vy-frame-outset-y: 14px;
+  --vy-dialog-slice: 104;
+  --vy-nav-slice: 30;
+  --vy-btn-slice: 48;
   --vy-gold: #ffd84a;
   --vy-gold-bright: #fff2b0;
   --vy-gold-glow: rgba(255, 228, 120, 0.62);
@@ -43,6 +46,7 @@
   border-image-slice: var(--vy-frame-slice) fill !important;
   border-image-width: calc(var(--vy-frame-slice) * 1px) !important;
   border-image-outset: var(--vy-frame-outset-y) var(--vy-frame-outset-x) !important;
+  image-rendering: -webkit-optimize-contrast;
   margin-top: 2.75rem !important;
   margin-bottom: 2.25rem !important;
   padding: 2rem 1.85rem 1.65rem !important;
@@ -93,8 +97,8 @@
   width: min(248px, 94%) !important;
   height: clamp(36px, 8vw, 62px) !important;
   background: url("../images/vy-frame-top.webp") center bottom / contain no-repeat !important;
-  opacity: 0.88;
-  filter: sepia(0.22) brightness(1.08);
+  opacity: 0.92;
+  filter: contrast(1.06) brightness(1.05) saturate(1.08);
 }
 
 .home-page main section::after {
@@ -103,8 +107,8 @@
   width: min(168px, 76%) !important;
   height: clamp(28px, 6vw, 48px) !important;
   background: url("../images/vy-frame-bottom.webp") center top / contain no-repeat !important;
-  opacity: 0.9;
-  filter: sepia(0.18) brightness(1.06);
+  opacity: 0.94;
+  filter: contrast(1.05) brightness(1.04) saturate(1.06);
 }
 
 .home-page main section h2 {
@@ -136,9 +140,10 @@
   position: relative;
   border: solid transparent !important;
   border-image-source: url("../images/vy-dialog-bg.webp") !important;
-  border-image-slice: 52 30 52 fill !important;
+  border-image-slice: var(--vy-dialog-slice) 60 var(--vy-dialog-slice) fill !important;
   border-image-width: 38px 22px 38px !important;
-  border-image-outset: 8px 7px 10px !important;
+  border-image-outset: 6px 5px 8px !important;
+  image-rendering: -webkit-optimize-contrast;
   background:
     radial-gradient(ellipse 100% 60% at 50% 0%, rgba(255, 228, 150, 0.07) 0%, transparent 55%),
     linear-gradient(
@@ -181,9 +186,10 @@
 .home-page .site-header .nav {
   border: solid transparent !important;
   border-image-source: url("../images/vy-nav-frame.webp") !important;
-  border-image-slice: 20 fill !important;
+  border-image-slice: var(--vy-nav-slice) fill !important;
   border-image-width: 11px !important;
-  border-image-outset: 4px 3px 5px !important;
+  border-image-outset: 3px 2px 4px !important;
+  image-rendering: -webkit-optimize-contrast;
   box-shadow:
     inset 0 1px 0 rgba(255, 230, 150, 0.28),
     inset 0 -2px 8px rgba(0, 0, 0, 0.45),
@@ -203,13 +209,13 @@
 .home-page .btn-primary:not(.hero-cta):not(.chess-teaser__register) {
   border: solid transparent;
   border-image-source: url("../images/vy-frame.webp");
-  border-image-slice: 24 fill;
+  border-image-slice: var(--vy-btn-slice) fill;
   border-image-width: 14px;
-  border-image-outset: 5px 12px 7px;
+  border-image-outset: 4px 10px 6px;
   box-shadow: 0 0 16px rgba(217, 36, 28, 0.35);
 }
 
-/* Hero — Harmonogram bez vy rámu rámu */
+/* Hero — Harmonogram bez vy rámu */
 .home-page .hero .btn-primary.hero-cta {
   border: 1px solid rgba(212, 170, 94, 0.78) !important;
   border-image: none !important;
@@ -221,7 +227,10 @@
 
 @media (max-width: 860px) {
   .home-page {
-    --vy-frame-slice: 48;
+    --vy-frame-slice: 96;
+    --vy-dialog-slice: 72;
+    --vy-nav-slice: 24;
+    --vy-btn-slice: 36;
     --vy-frame-outset-x: 6px;
     --vy-frame-outset-y: 10px;
   }
