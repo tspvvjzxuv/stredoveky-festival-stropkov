@@ -154,11 +154,28 @@
     0 10px 28px rgba(0, 0, 0, 0.32) !important;
 }
 
-.home-page .card::before,
-.home-page .card::after,
-.home-page .choice-card::before,
-.home-page .choice-card::after {
+.home-page .card:not(.choice-hub)::before,
+.home-page .card:not(.choice-hub)::after {
   display: none !important;
+}
+
+/* Podpora / zapojenie — bez PoE2 border-image (ľavý sivý pruh = artefakt outset) */
+.home-page #vstupenky-rezervacie {
+  border-image: none !important;
+  border-image-source: none !important;
+  border-image-outset: 0 !important;
+  overflow: hidden;
+}
+
+.home-page #vstupenky-rezervacie .card.choice-hub,
+.home-page #vstupenky-rezervacie .choice-card {
+  border: 1px solid rgba(206, 166, 96, 0.34) !important;
+  border-image: none !important;
+  border-image-source: none !important;
+  border-image-slice: initial !important;
+  border-image-width: initial !important;
+  border-image-outset: 0 !important;
+  overflow: hidden;
 }
 
 /* Navigácia — menší rám okolo textu */
