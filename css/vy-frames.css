@@ -2,11 +2,13 @@
 
 .home-page {
   --vy-frame-slice: 144;
+  --vy-frame-border: 72px;
   --vy-frame-outset-x: 10px;
   --vy-frame-outset-y: 14px;
-  --vy-dialog-slice: 104;
   --vy-nav-slice: 30;
+  --vy-nav-border: 11px;
   --vy-btn-slice: 48;
+  --vy-btn-border: 14px;
   --vy-gold: #ffd84a;
   --vy-gold-bright: #fff2b0;
   --vy-gold-glow: rgba(255, 228, 120, 0.62);
@@ -43,8 +45,9 @@
   position: relative !important;
   border: solid transparent !important;
   border-image-source: url("../images/vy-frame.webp") !important;
-  border-image-slice: var(--vy-frame-slice) fill !important;
-  border-image-width: calc(var(--vy-frame-slice) * 1px) !important;
+  border-image-slice: var(--vy-frame-slice) !important;
+  border-image-width: var(--vy-frame-border) !important;
+  border-image-repeat: stretch !important;
   border-image-outset: var(--vy-frame-outset-y) var(--vy-frame-outset-x) !important;
   image-rendering: -webkit-optimize-contrast;
   margin-top: 2.75rem !important;
@@ -135,32 +138,42 @@
   box-shadow: 0 0 16px var(--vy-gold-glow) !important;
 }
 
-/* Karty / panely (choice-hub / choice-card bez vy rámu — viz #vstupenky-rezervacie) */
-.home-page .card:not(.choice-hub) {
+/* Vnútorné karty / panely — ostrý CSS rám (bez border-image, fill rozmazával stred) */
+.home-page .card:not(.choice-hub):not(.chess-teaser) {
   position: relative;
-  border: solid transparent !important;
-  border-image-source: url("../images/vy-dialog-bg.webp") !important;
-  border-image-slice: var(--vy-dialog-slice) 60 var(--vy-dialog-slice) fill !important;
-  border-image-width: 38px 22px 38px !important;
-  border-image-outset: 6px 5px 8px !important;
-  image-rendering: -webkit-optimize-contrast;
+  border: 1px solid rgba(210, 175, 95, 0.52) !important;
+  border-radius: 8px !important;
+  border-image: none !important;
   background:
-    radial-gradient(ellipse 100% 60% at 50% 0%, rgba(255, 228, 150, 0.07) 0%, transparent 55%),
+    radial-gradient(ellipse 100% 55% at 50% 0%, rgba(255, 228, 150, 0.08) 0%, transparent 58%),
     linear-gradient(
       165deg,
-      rgba(22, 28, 40, 0.95) 0%,
-      rgba(11, 14, 22, 0.97) 100%
+      rgba(22, 28, 40, 0.96) 0%,
+      rgba(11, 14, 22, 0.98) 100%
     ) !important;
   box-shadow:
-    inset 0 1px 0 rgba(255, 230, 150, 0.14),
-    inset 0 0 28px rgba(255, 200, 100, 0.05),
-    inset 0 0 24px rgba(0, 0, 0, 0.35),
+    inset 0 1px 0 rgba(255, 235, 200, 0.16),
+    inset 0 0 0 1px rgba(0, 0, 0, 0.28),
     0 10px 28px rgba(0, 0, 0, 0.32) !important;
 }
 
-.home-page .card:not(.choice-hub)::before,
-.home-page .card:not(.choice-hub)::after {
+.home-page .card:not(.choice-hub):not(.chess-teaser)::before {
+  display: block !important;
+  content: "" !important;
+  position: absolute !important;
+  inset: 5px !important;
+  pointer-events: none !important;
+  border: 1px solid rgba(255, 220, 130, 0.14) !important;
+  border-radius: 5px !important;
+}
+
+.home-page .card:not(.choice-hub):not(.chess-teaser)::after {
   display: none !important;
+}
+
+.home-page .card.program-panel {
+  border-color: rgba(255, 203, 0, 0.38) !important;
+  border-image: none !important;
 }
 
 /* Podpora / zapojenie — bez vy rámu border-image (ľavý sivý pruh = artefakt outset) */
@@ -186,8 +199,8 @@
 .home-page .site-header .nav {
   border: solid transparent !important;
   border-image-source: url("../images/vy-nav-frame.webp") !important;
-  border-image-slice: var(--vy-nav-slice) fill !important;
-  border-image-width: 11px !important;
+  border-image-slice: var(--vy-nav-slice) !important;
+  border-image-width: var(--vy-nav-border) !important;
   border-image-outset: 3px 2px 4px !important;
   image-rendering: -webkit-optimize-contrast;
   box-shadow:
@@ -209,8 +222,8 @@
 .home-page .btn-primary:not(.hero-cta):not(.chess-teaser__register) {
   border: solid transparent;
   border-image-source: url("../images/vy-frame.webp");
-  border-image-slice: var(--vy-btn-slice) fill;
-  border-image-width: 14px;
+  border-image-slice: var(--vy-btn-slice);
+  border-image-width: var(--vy-btn-border);
   border-image-outset: 4px 10px 6px;
   box-shadow: 0 0 16px rgba(217, 36, 28, 0.35);
 }
@@ -228,9 +241,11 @@
 @media (max-width: 860px) {
   .home-page {
     --vy-frame-slice: 96;
-    --vy-dialog-slice: 72;
+    --vy-frame-border: 48px;
     --vy-nav-slice: 24;
+    --vy-nav-border: 9px;
     --vy-btn-slice: 36;
+    --vy-btn-border: 12px;
     --vy-frame-outset-x: 6px;
     --vy-frame-outset-y: 10px;
   }
@@ -246,7 +261,7 @@
 
 
   .home-page .site-header .nav {
-    border-image-width: 9px !important;
+    border-image-width: var(--vy-nav-border) !important;
     border-image-outset: 3px 2px 4px !important;
   }
 }
