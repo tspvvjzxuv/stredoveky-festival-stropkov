@@ -131,10 +131,9 @@
   box-shadow: 0 0 16px var(--poe-gold-glow) !important;
 }
 
-/* Karty / panely */
+/* Karty / panely (FAQ položky bez PoE2 rámu — nižšie) */
 .home-page .card,
-.home-page .choice-card,
-.home-page .faq-item {
+.home-page .choice-card {
   position: relative;
   border: solid transparent !important;
   border-image-source: url("../images/poe2-dialog-bg.webp") !important;
@@ -185,7 +184,7 @@
   text-shadow: 0 0 18px rgba(255, 240, 160, 0.75) !important;
 }
 
-.home-page .btn-primary:not(.hero-cta) {
+.home-page .btn-primary:not(.hero-cta):not(.chess-teaser__register) {
   border: solid transparent;
   border-image-source: url("../images/poe2-frame.webp");
   border-image-slice: 24 fill;
@@ -255,6 +254,31 @@
   border-image-width: initial !important;
   border-image-outset: initial !important;
   box-shadow: none !important;
+}
+
+/* FAQ — jednoduché riadky bez PoE2 stĺpikov */
+.home-page .faq-item {
+  border: 1px solid rgba(255, 220, 120, 0.14) !important;
+  border-image: none !important;
+  border-image-source: none !important;
+  border-image-slice: initial !important;
+  border-image-width: initial !important;
+  border-image-outset: initial !important;
+  border-radius: 6px !important;
+  padding: 0.5rem 0.95rem !important;
+  margin-bottom: 0.65rem !important;
+  background: linear-gradient(
+    180deg,
+    rgba(22, 28, 40, 0.92) 0%,
+    rgba(14, 18, 28, 0.96) 100%
+  ) !important;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.22) !important;
+}
+
+.home-page .faq-item:hover {
+  border-color: rgba(255, 230, 150, 0.28) !important;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.28) !important;
+  transform: none !important;
 }
 
 @media (prefers-reduced-motion: reduce) {

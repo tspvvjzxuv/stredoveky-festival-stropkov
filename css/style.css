@@ -5386,6 +5386,97 @@ body.reduced-motion.js-ready main section {
   display: flex;
   flex-wrap: wrap;
   gap: 0.65rem;
+  margin-top: 0.35rem;
+}
+
+.home-page .chess-teaser__register::before {
+  display: none !important;
+}
+
+.home-page .chess-teaser__register {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  max-width: 100%;
+  min-height: 3rem;
+  padding: 0.8rem 1.35rem !important;
+  border: 1px solid rgba(96, 210, 120, 0.75) !important;
+  border-image: none !important;
+  border-radius: 6px !important;
+  background: linear-gradient(
+    180deg,
+    #3a9e42 0%,
+    #2b7a34 46%,
+    #1a5222 100%
+  ) !important;
+  color: #eaffea !important;
+  font-family: var(--font-ui, "Montserrat", sans-serif) !important;
+  font-size: 0.82rem !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.07em !important;
+  line-height: 1.25 !important;
+  text-align: center !important;
+  text-transform: uppercase !important;
+  text-decoration: none !important;
+  box-shadow:
+    inset 0 1px 0 rgba(200, 255, 200, 0.28),
+    0 0 0 1px rgba(30, 100, 48, 0.55),
+    0 0 18px rgba(50, 153, 50, 0.72),
+    0 0 36px rgba(50, 153, 50, 0.42),
+    0 8px 22px rgba(0, 0, 0, 0.38) !important;
+}
+
+.home-page .chess-teaser__register:hover,
+.home-page .chess-teaser__register:focus-visible {
+  background: linear-gradient(
+    180deg,
+    #48b852 0%,
+    #338a3c 46%,
+    #226830 100%
+  ) !important;
+  color: #fff !important;
+  border-color: rgba(140, 240, 160, 0.9) !important;
+  transform: translateY(-2px) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(220, 255, 220, 0.35),
+    0 0 0 1px rgba(40, 130, 60, 0.65),
+    0 0 24px rgba(72, 190, 90, 0.88),
+    0 0 48px rgba(50, 153, 50, 0.55),
+    0 10px 26px rgba(0, 0, 0, 0.42) !important;
+}
+
+@media (min-width: 760px) {
+  .home-page .chess-teaser__register {
+    width: auto;
+    min-width: min(100%, 20rem);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .home-page .chess-teaser__register {
+    animation: chessRegisterGlow 2.8s ease-in-out infinite;
+  }
+}
+
+@keyframes chessRegisterGlow {
+  0%,
+  100% {
+    box-shadow:
+      inset 0 1px 0 rgba(200, 255, 200, 0.28),
+      0 0 0 1px rgba(30, 100, 48, 0.55),
+      0 0 14px rgba(50, 153, 50, 0.62),
+      0 0 28px rgba(50, 153, 50, 0.36),
+      0 8px 22px rgba(0, 0, 0, 0.38);
+  }
+  50% {
+    box-shadow:
+      inset 0 1px 0 rgba(220, 255, 220, 0.32),
+      0 0 0 1px rgba(50, 140, 68, 0.65),
+      0 0 22px rgba(72, 190, 90, 0.82),
+      0 0 42px rgba(50, 153, 50, 0.5),
+      0 8px 22px rgba(0, 0, 0, 0.38);
+  }
 }
 
 .home-page .chess-teaser__hlavolamy {
@@ -5416,7 +5507,6 @@ body.reduced-motion.js-ready main section {
 .home-page .chess-teaser__hlavolamy:hover,
 .home-page .chess-teaser__hlavolamy:focus-visible {
   transform: translateY(-2px);
-  border-color: rgba(255, 203, 0, 0.55);
   box-shadow: 0 10px 28px rgba(0, 0, 0, 0.35), 0 0 18px rgba(255, 203, 0, 0.12);
   outline: 2px solid var(--ds-tertiary-bright, #ffe066);
   outline-offset: 3px;
