@@ -11,15 +11,12 @@
   --poe-patina-edge: rgba(180, 150, 90, 0.14);
 }
 
-/* Hlavný blok obsahu */
+/* Hlavný blok obsahu — bez horného ozdobného rámu (prázdny pruh nad O festivale) */
 .home-page .page-main {
   position: relative;
-  border: solid transparent !important;
-  border-width: 0 !important;
-  border-image-source: url("../images/poe2-panel-bg.webp") !important;
-  border-image-slice: 48 36 44 fill !important;
-  border-image-width: 44px 30px 40px !important;
-  border-image-outset: 10px 8px 12px !important;
+  border: 1px solid rgba(255, 220, 120, 0.22) !important;
+  border-image: none !important;
+  border-image-source: none !important;
   background:
     radial-gradient(ellipse 90% 42% at 50% 0%, var(--poe-patina-top) 0%, transparent 58%),
     linear-gradient(
@@ -70,7 +67,7 @@
 }
 
 .home-page #o-festivale {
-  margin-top: 1.35rem !important;
+  margin-top: 0.75rem !important;
 }
 
 .home-page #o-festivale::before {
@@ -223,10 +220,6 @@
     margin-top: 1rem !important;
   }
 
-  .home-page .page-main {
-    border-image-width: 32px 20px 28px !important;
-    border-image-outset: 8px 6px 10px !important;
-  }
 
   .home-page .site-header .nav {
     border-image-width: 9px !important;
