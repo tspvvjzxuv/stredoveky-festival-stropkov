@@ -5479,130 +5479,223 @@ body.reduced-motion.js-ready main section {
   }
 }
 
+/* Šachové hlavolamy — nový CTA panel */
 .home-page .chess-teaser__hlavolamy {
+  display: block;
+  margin: 0;
+  min-height: 100%;
+  padding: 0;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 220, 130, 0.45);
+  background: linear-gradient(
+    145deg,
+    rgba(28, 34, 48, 0.98) 0%,
+    rgba(14, 18, 28, 1) 55%,
+    rgba(22, 18, 12, 0.95) 100%
+  );
+  color: inherit;
+  text-decoration: none;
+  overflow: hidden;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 242, 210, 0.14),
+    0 0 0 1px rgba(0, 0, 0, 0.35),
+    0 0 20px rgba(255, 210, 90, 0.22),
+    0 12px 32px rgba(0, 0, 0, 0.38);
+  transition:
+    transform 0.25s ease,
+    border-color 0.25s ease,
+    box-shadow 0.25s ease;
+}
+
+.home-page .chess-teaser__hlavolamy::before {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 4px;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 240, 180, 0.15) 0%,
+    rgba(255, 216, 90, 0.95) 45%,
+    rgba(230, 170, 50, 0.9) 100%
+  );
+  pointer-events: none;
+}
+
+.home-page .chess-teaser__hlavolamy-inner {
+  position: relative;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.15rem 1.2rem 1.15rem 1.35rem;
+  min-height: 100%;
+  box-sizing: border-box;
+}
+
+.home-page .chess-teaser__hlavolamy-visual {
+  position: relative;
+  flex-shrink: 0;
+  width: clamp(4.5rem, 18vw, 5.75rem);
+  height: clamp(4.5rem, 18vw, 5.75rem);
+}
+
+.home-page .chess-teaser__hlavolamy-board {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: 6px;
+  border: 1px solid rgba(255, 220, 140, 0.35);
+  background-color: #1c2432;
+  background-image:
+    linear-gradient(45deg, #2a3448 25%, transparent 25%),
+    linear-gradient(-45deg, #2a3448 25%, transparent 25%),
+    linear-gradient(45deg, transparent 75%, #2a3448 75%),
+    linear-gradient(-45deg, transparent 75%, #2a3448 75%);
+  background-size: 14px 14px;
+  background-position:
+    0 0,
+    0 7px,
+    7px -7px,
+    -7px 0;
+  box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.45);
+}
+
+.home-page .chess-teaser__hlavolamy-king {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -52%);
+  font-size: clamp(2.4rem, 9vw, 3rem);
+  line-height: 1;
+  color: #fff2b0;
+  text-shadow:
+    0 2px 0 rgba(0, 0, 0, 0.85),
+    0 0 18px rgba(255, 220, 120, 0.65);
+  filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.5));
+}
+
+.home-page .chess-teaser__hlavolamy-text {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
+  align-items: flex-start;
   gap: 0.35rem;
-  margin: 0;
-  padding: 1rem 1.1rem;
-  min-height: 100%;
-  border-radius: var(--ds-radius-md, 6px);
-  border: 1px solid rgba(255, 220, 120, 0.55);
-  background:
-    linear-gradient(90deg, rgba(255, 203, 0, 0.07) 50%, transparent 50%),
-    linear-gradient(rgba(255, 203, 0, 0.07) 50%, transparent 50%),
-    linear-gradient(180deg, rgba(18, 24, 36, 0.95) 0%, rgba(10, 12, 18, 0.98) 100%);
-  background-size: 28px 28px, 28px 28px, 100% 100%;
-  color: inherit;
-  text-align: center;
-  text-decoration: none;
-  box-shadow:
-    inset 0 1px 0 rgba(255, 242, 200, 0.18),
-    0 0 0 1px rgba(160, 120, 40, 0.4),
-    0 0 16px rgba(255, 216, 90, 0.55),
-    0 0 32px rgba(255, 200, 80, 0.32),
-    0 8px 22px rgba(0, 0, 0, 0.35);
-  transition:
-    transform var(--fx-time-mid, 260ms) var(--fx-ease, ease),
-    border-color var(--fx-time-mid, 260ms) var(--fx-ease, ease),
-    box-shadow var(--fx-time-mid, 260ms) var(--fx-ease, ease);
+  min-width: 0;
+  text-align: left;
 }
 
-.home-page .chess-teaser__hlavolamy:hover,
-.home-page .chess-teaser__hlavolamy:focus-visible {
-  transform: translateY(-2px);
-  border-color: rgba(255, 240, 160, 0.85);
-  box-shadow:
-    inset 0 1px 0 rgba(255, 248, 220, 0.28),
-    0 0 0 1px rgba(200, 160, 60, 0.55),
-    0 0 22px rgba(255, 228, 120, 0.75),
-    0 0 44px rgba(255, 200, 80, 0.48),
-    0 10px 28px rgba(0, 0, 0, 0.38);
-  outline: 2px solid var(--ds-tertiary-bright, #fff2b0);
-  outline-offset: 3px;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .home-page .chess-teaser__hlavolamy {
-    animation: chessHlavolamyGlow 2.8s ease-in-out infinite;
-  }
-}
-
-@keyframes chessHlavolamyGlow {
-  0%,
-  100% {
-    box-shadow:
-      inset 0 1px 0 rgba(255, 242, 200, 0.18),
-      0 0 0 1px rgba(160, 120, 40, 0.4),
-      0 0 14px rgba(255, 216, 90, 0.48),
-      0 0 28px rgba(255, 200, 80, 0.28),
-      0 8px 22px rgba(0, 0, 0, 0.35);
-  }
-  50% {
-    box-shadow:
-      inset 0 1px 0 rgba(255, 248, 220, 0.24),
-      0 0 0 1px rgba(200, 160, 60, 0.52),
-      0 0 20px rgba(255, 235, 140, 0.72),
-      0 0 40px rgba(255, 210, 90, 0.45),
-      0 8px 22px rgba(0, 0, 0, 0.35);
-  }
-}
-
-.home-page .chess-teaser__hlavolamy-pieces {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 0.35rem 0.5rem;
-  min-height: 4.5rem;
-  align-items: center;
-}
-
-.home-page .chess-teaser__piece {
-  font-size: clamp(1.75rem, 5vw, 2.35rem);
-  line-height: 1;
-  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.45);
-  opacity: 0.92;
-}
-
-.home-page .chess-teaser__piece--k {
-  color: var(--ds-tertiary-bright, #ffe066);
-  font-size: clamp(2.1rem, 6vw, 2.75rem);
-}
-
-.home-page .chess-teaser__piece--q {
-  color: #f0d8a8;
+.home-page .chess-teaser__hlavolamy-badge {
+  display: inline-block;
+  padding: 0.2rem 0.55rem;
+  border-radius: 3px;
+  font-family: var(--font-ui, "Montserrat", sans-serif);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: #1a1408;
+  background: linear-gradient(180deg, #ffe9a8 0%, #e8b830 100%);
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.25) inset;
 }
 
 .home-page .chess-teaser__hlavolamy-title {
   font-family: "Cinzel", serif;
-  font-size: 1rem;
-  font-weight: 600;
-  letter-spacing: 0.03em;
-  color: var(--ds-neutral, #ffeed2);
+  font-size: clamp(1.05rem, 3.2vw, 1.2rem);
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: 0.02em;
+  color: #fff8e8;
 }
 
-.home-page .chess-teaser__hlavolamy-sub {
-  font-size: 0.82rem;
-  font-style: italic;
-  letter-spacing: 0.04em;
-  color: var(--ds-tertiary-dim, #c79d00);
+.home-page .chess-teaser__hlavolamy-desc {
+  font-family: var(--font-ui, "Montserrat", sans-serif);
+  font-size: 0.8rem;
+  font-weight: 500;
+  line-height: 1.4;
+  color: rgba(232, 220, 198, 0.82);
+}
+
+.home-page .chess-teaser__hlavolamy-arrow {
+  flex-shrink: 0;
+  width: 2.25rem;
+  height: 2.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 220, 130, 0.4);
+  background: rgba(255, 220, 120, 0.08);
+  font-size: 1.65rem;
+  font-weight: 300;
+  line-height: 1;
+  color: #fff2b0;
+  transition: background 0.25s ease, transform 0.25s ease;
+}
+
+.home-page .chess-teaser__hlavolamy:hover,
+.home-page .chess-teaser__hlavolamy:focus-visible {
+  transform: translateY(-3px);
+  border-color: rgba(255, 240, 170, 0.75);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 248, 220, 0.2),
+    0 0 0 1px rgba(200, 160, 60, 0.35),
+    0 0 28px rgba(255, 228, 120, 0.45),
+    0 16px 36px rgba(0, 0, 0, 0.42);
+  outline: 2px solid var(--ds-tertiary-bright, #fff2b0);
+  outline-offset: 3px;
+}
+
+.home-page .chess-teaser__hlavolamy:hover .chess-teaser__hlavolamy-arrow,
+.home-page .chess-teaser__hlavolamy:focus-visible .chess-teaser__hlavolamy-arrow {
+  background: rgba(255, 228, 140, 0.2);
+  transform: translateX(3px);
+}
+
+@media (max-width: 759px) {
+  .home-page .chess-teaser__hlavolamy {
+    min-height: auto;
+  }
+
+  .home-page .chess-teaser__hlavolamy-inner {
+    grid-template-columns: auto 1fr;
+    grid-template-rows: auto auto;
+    gap: 0.85rem 1rem;
+    padding: 1rem 1rem 1rem 1.2rem;
+  }
+
+  .home-page .chess-teaser__hlavolamy-arrow {
+    grid-column: 2;
+    grid-row: 1;
+    justify-self: end;
+    align-self: start;
+    width: 2rem;
+    height: 2rem;
+    font-size: 1.4rem;
+  }
+
+  .home-page .chess-teaser__hlavolamy-visual {
+    grid-row: 1 / span 2;
+  }
+
+  .home-page .chess-teaser__hlavolamy-text {
+    grid-column: 2;
+    grid-row: 1;
+    padding-right: 2.5rem;
+  }
 }
 
 @media (prefers-reduced-motion: no-preference) {
-  .home-page .chess-teaser__piece--k {
-    animation: chessTeaserPulse 3.2s ease-in-out infinite;
+  .home-page .chess-teaser__hlavolamy-king {
+    animation: chessHlavolamyKingFloat 3s ease-in-out infinite;
   }
 }
 
-@keyframes chessTeaserPulse {
+@keyframes chessHlavolamyKingFloat {
   0%,
   100% {
-    transform: translateY(0);
+    transform: translate(-50%, -52%);
   }
   50% {
-    transform: translateY(-3px);
+    transform: translate(-50%, -58%);
   }
 }
 
