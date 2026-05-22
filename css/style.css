@@ -562,45 +562,43 @@ a:hover {
     0 0 40px rgba(200, 100, 40, 0.45);
 }
 
-/* Hero Podpor — medená/bronzová, výrazná teplá žiara */
+/* Hero Podpor — rovnaká červená ako Prispieť na festival, výrazná červená žiara */
 .home-page .hero .btn-primary.hero-cta.hero-btn--podpor {
-  background: linear-gradient(
-    180deg,
-    #b86a28 0%,
-    #8f4a18 46%,
-    #5c2e10 100%
+  background: radial-gradient(
+    circle at 50% 50%,
+    rgba(99, 13, 13, 0.8) 0%,
+    rgba(148, 0, 0, 1) 64%,
+    rgba(141, 12, 12, 0.95) 96%,
+    rgba(130, 3, 3, 1) 100%
   );
-  color: #fff6e8;
-  border-color: rgba(255, 195, 120, 0.92);
+  color: #f7ead0;
+  border-color: rgba(220, 72, 52, 0.82);
   box-shadow:
-    inset 0 1px 0 rgba(255, 230, 190, 0.32),
-    inset 0 -1px 0 rgba(50, 24, 8, 0.62),
-    0 0 0 1px rgba(120, 60, 20, 0.7),
+    inset 0 1px 0 rgba(255, 200, 180, 0.22),
+    0 0 0 1px rgba(140, 28, 22, 0.55),
     0 10px 26px rgba(0, 0, 0, 0.38),
-    0 0 26px rgba(255, 150, 60, 0.82),
-    0 0 50px rgba(255, 110, 40, 0.62),
-    0 0 78px rgba(230, 85, 28, 0.48),
-    0 0 108px rgba(200, 65, 18, 0.32);
+    0 0 24px rgba(217, 36, 28, 0.82),
+    0 0 48px rgba(217, 36, 28, 0.62),
+    0 0 68px rgba(180, 28, 24, 0.42);
 }
 
 .home-page .hero .btn-primary.hero-cta.hero-btn--podpor:hover {
-  background: linear-gradient(
-    180deg,
-    #d47a32 0%,
-    #a85820 46%,
-    #6e3814 100%
+  background: radial-gradient(
+    circle at 50% 50%,
+    rgba(130, 18, 18, 0.85) 0%,
+    rgba(168, 0, 0, 1) 64%,
+    rgba(158, 16, 16, 0.98) 96%,
+    rgba(145, 4, 4, 1) 100%
   );
-  color: #fff;
-  border-color: rgba(255, 220, 150, 0.98);
+  color: #fff1da;
+  border-color: rgba(255, 120, 90, 0.95);
   box-shadow:
-    inset 0 1px 0 rgba(255, 240, 210, 0.38),
-    inset 0 -1px 0 rgba(60, 28, 10, 0.65),
-    0 0 0 1px rgba(160, 80, 28, 0.78),
+    inset 0 1px 0 rgba(255, 220, 200, 0.3),
+    0 0 0 1px rgba(200, 48, 32, 0.7),
     0 12px 28px rgba(0, 0, 0, 0.42),
-    0 0 34px rgba(255, 170, 70, 0.95),
-    0 0 62px rgba(255, 120, 45, 0.78),
-    0 0 94px rgba(230, 90, 30, 0.58),
-    0 0 128px rgba(200, 70, 20, 0.4);
+    0 0 32px rgba(230, 48, 32, 0.95),
+    0 0 56px rgba(217, 36, 28, 0.75),
+    0 0 80px rgba(180, 28, 24, 0.52);
 }
 
 /* Homogénny dark-fantasy shell pre všetky stránky */
@@ -1032,8 +1030,60 @@ a:hover {
     0 0 40px rgba(200, 100, 40, 0.45) !important;
 }
 
+/* Hero Šach — šachovnicový vzor, tmavá fantasy paleta + zlatá žiara */
+.home-page .hero .hero-btn--sach {
+  border-color: rgba(212, 170, 94, 0.78) !important;
+  background-color: #12161e !important;
+  background-image:
+    repeating-conic-gradient(
+      from 0deg at 50% 50%,
+      #1a2030 0deg 90deg,
+      #12161e 90deg 180deg
+    ) !important;
+  background-size: 14px 14px !important;
+  color: #f6e8c7 !important;
+  text-shadow:
+    0 1px 0 rgba(8, 10, 16, 0.85),
+    0 0 10px rgba(0, 0, 0, 0.55);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 232, 184, 0.16),
+    inset 0 -1px 0 rgba(8, 10, 16, 0.62),
+    0 0 0 1px rgba(36, 28, 16, 0.55),
+    0 10px 26px rgba(0, 0, 0, 0.38),
+    0 0 18px rgba(255, 200, 90, 0.5),
+    0 0 32px rgba(200, 120, 50, 0.35) !important;
+}
+
+.home-page .hero .hero-btn--sach::before {
+  background: linear-gradient(130deg, rgba(255, 248, 220, 0.07) 0%, transparent 36%);
+  mix-blend-mode: soft-light;
+}
+
+.home-page .hero .hero-btn--sach:hover,
+.home-page .hero .hero-btn--sach:focus-visible {
+  border-color: rgba(230, 190, 112, 0.9) !important;
+  background-color: #181c28 !important;
+  background-image:
+    repeating-conic-gradient(
+      from 0deg at 50% 50%,
+      #242c3c 0deg 90deg,
+      #181c28 90deg 180deg
+    ) !important;
+  color: #fff2d8 !important;
+  text-shadow:
+    0 1px 0 rgba(8, 10, 16, 0.75),
+    0 0 12px rgba(255, 220, 140, 0.18);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 240, 200, 0.22),
+    inset 0 -1px 0 rgba(10, 12, 18, 0.65),
+    0 0 0 1px rgba(72, 56, 28, 0.58),
+    0 12px 28px rgba(0, 0, 0, 0.42),
+    0 0 24px rgba(255, 220, 120, 0.65),
+    0 0 40px rgba(200, 100, 40, 0.45) !important;
+}
+
 @media (prefers-reduced-motion: no-preference) {
-  .home-page .hero .btn-outline:not(.hero-btn--register) {
+  .home-page .hero .btn-outline:not(.hero-btn--register):not(.hero-btn--sach) {
     animation: heroGlowGold 3s ease-in-out infinite;
   }
 
@@ -1042,15 +1092,20 @@ a:hover {
   }
 
   .home-page .hero .btn-primary.hero-cta.hero-btn--podpor {
-    animation: heroGlowPodpor 2.8s ease-in-out infinite;
+    animation: heroGlowPodpor 2.6s ease-in-out infinite;
   }
 
   .home-page .hero .hero-btn--register {
     animation: heroGlowRegister 3s ease-in-out infinite;
   }
 
+  .home-page .hero .hero-btn--sach {
+    animation: heroGlowSach 3.2s ease-in-out infinite;
+  }
+
   .home-page .stripe-btn,
-  .home-page #link-vstupenky {
+  .home-page #link-vstupenky,
+  .home-page #vstupenky-rezervacie #link-vstupenky.stripe-btn {
     animation: heroGlowRed 2.8s ease-in-out infinite;
   }
 }
@@ -1099,23 +1154,21 @@ a:hover {
   0%,
   100% {
     box-shadow:
-      inset 0 1px 0 rgba(255, 220, 160, 0.28),
-      inset 0 -1px 0 rgba(42, 8, 8, 0.58),
-      0 0 0 1px rgba(140, 28, 22, 0.65),
+      inset 0 1px 0 rgba(255, 200, 180, 0.22),
+      0 0 0 1px rgba(140, 28, 22, 0.55),
       0 10px 26px rgba(0, 0, 0, 0.38),
-      0 0 20px rgba(230, 48, 32, 0.72),
-      0 0 38px rgba(217, 36, 28, 0.52),
-      0 0 58px rgba(180, 28, 24, 0.36);
+      0 0 24px rgba(230, 48, 32, 0.78),
+      0 0 48px rgba(217, 36, 28, 0.55),
+      0 0 68px rgba(180, 28, 24, 0.38);
   }
   50% {
     box-shadow:
-      inset 0 1px 0 rgba(255, 235, 190, 0.34),
-      inset 0 -1px 0 rgba(42, 8, 8, 0.6),
-      0 0 0 1px rgba(200, 48, 32, 0.72),
+      inset 0 1px 0 rgba(255, 220, 200, 0.3),
+      0 0 0 1px rgba(200, 48, 32, 0.7),
       0 10px 26px rgba(0, 0, 0, 0.38),
-      0 0 28px rgba(240, 56, 40, 0.9),
-      0 0 50px rgba(217, 36, 28, 0.68),
-      0 0 72px rgba(180, 28, 24, 0.48);
+      0 0 32px rgba(240, 56, 40, 0.95),
+      0 0 56px rgba(217, 36, 28, 0.72),
+      0 0 80px rgba(180, 28, 24, 0.52);
   }
 }
 
@@ -1161,6 +1214,28 @@ a:hover {
   }
 }
 
+@keyframes heroGlowSach {
+  0%,
+  100% {
+    box-shadow:
+      inset 0 1px 0 rgba(255, 232, 184, 0.16),
+      inset 0 -1px 0 rgba(8, 10, 16, 0.62),
+      0 0 0 1px rgba(36, 28, 16, 0.55),
+      0 10px 26px rgba(0, 0, 0, 0.38),
+      0 0 16px rgba(255, 200, 90, 0.45),
+      0 0 28px rgba(200, 100, 40, 0.28);
+  }
+  50% {
+    box-shadow:
+      inset 0 1px 0 rgba(255, 240, 200, 0.22),
+      inset 0 -1px 0 rgba(10, 12, 18, 0.65),
+      0 0 0 1px rgba(56, 44, 22, 0.58),
+      0 10px 26px rgba(0, 0, 0, 0.38),
+      0 0 22px rgba(255, 220, 120, 0.58),
+      0 0 38px rgba(200, 100, 40, 0.38);
+  }
+}
+
 /* Farebné zjednotenie sekcie Vstupenky a rezervácie */
 .home-page #vstupenky-rezervacie .choice-hub {
   background:
@@ -1201,26 +1276,71 @@ a:hover {
   color: rgba(216, 224, 236, 0.9);
 }
 
-.home-page #vstupenky-rezervacie .stripe-btn {
-  background: linear-gradient(180deg, #8b2020 0%, #621616 52%, #3f0d10 100%) !important;
-  border: 1px solid rgba(206, 164, 92, 0.62) !important;
+.home-page #vstupenky-rezervacie .choice-card:first-child {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  min-height: 100%;
+  text-align: center;
+  padding-top: 0.35rem;
+}
+
+.home-page #vstupenky-rezervacie .choice-card:first-child p:last-of-type {
+  margin-bottom: 0;
+}
+
+.home-page #vstupenky-rezervacie .choice-card:first-child #link-vstupenky.stripe-btn {
+  margin-top: auto;
+  margin-bottom: auto;
+}
+
+.home-page #vstupenky-rezervacie #link-vstupenky.stripe-btn {
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  width: min(100%, 18.75rem);
+  max-width: 100%;
+  margin-inline: auto;
+  border-image: none !important;
+  border-image-outset: 0 !important;
+  background: radial-gradient(
+    circle at 50% 50%,
+    rgba(99, 13, 13, 0.8) 0%,
+    rgba(148, 0, 0, 1) 64%,
+    rgba(141, 12, 12, 0.95) 96%,
+    rgba(130, 3, 3, 1) 100%
+  ) !important;
+  border: 1px solid rgba(220, 72, 52, 0.82) !important;
   color: #f7ead0 !important;
   font-family: "Montserrat", system-ui, sans-serif;
   letter-spacing: 0.08em;
+  opacity: 1 !important;
   box-shadow:
-    inset 0 1px 0 rgba(255, 220, 160, 0.24),
-    0 8px 18px rgba(0, 0, 0, 0.3) !important;
+    inset 0 1px 0 rgba(255, 200, 180, 0.22),
+    0 0 0 1px rgba(140, 28, 22, 0.55),
+    0 0 16px rgba(217, 36, 28, 0.7),
+    0 0 32px rgba(217, 36, 28, 0.45),
+    0 8px 22px rgba(0, 0, 0, 0.38) !important;
 }
 
-.home-page #vstupenky-rezervacie .stripe-btn:hover,
-.home-page #vstupenky-rezervacie .stripe-btn:focus-visible {
-  background: linear-gradient(180deg, #a12828 0%, #741b1b 52%, #4e1115 100%) !important;
-  border-color: rgba(255, 149, 0, 0.78) !important;
+.home-page #vstupenky-rezervacie #link-vstupenky.stripe-btn:hover,
+.home-page #vstupenky-rezervacie #link-vstupenky.stripe-btn:focus-visible {
+  background: radial-gradient(
+    circle at 50% 50%,
+    rgba(130, 18, 18, 0.85) 0%,
+    rgba(168, 0, 0, 1) 64%,
+    rgba(158, 16, 16, 0.98) 96%,
+    rgba(145, 4, 4, 1) 100%
+  ) !important;
+  border-color: rgba(255, 120, 90, 0.95) !important;
   color: #fff1da !important;
   box-shadow:
-    inset 0 1px 0 rgba(255, 232, 184, 0.28),
-    0 10px 22px rgba(0, 0, 0, 0.34),
-    0 0 18px rgba(176, 60, 60, 0.28) !important;
+    inset 0 1px 0 rgba(255, 220, 200, 0.3),
+    0 0 0 1px rgba(200, 48, 32, 0.7),
+    0 0 22px rgba(230, 48, 32, 0.85),
+    0 0 44px rgba(217, 36, 28, 0.6),
+    0 10px 26px rgba(0, 0, 0, 0.42) !important;
 }
 
 .home-page #vstupenky-rezervacie .choice-actions .btn {
@@ -1634,28 +1754,23 @@ a:hover {
   animation: heroReveal 1.15s var(--ease-out-expo) both;
 }
 
-/* Ornament — kovová linka nad titulkom (inšpirácia UI fantasy hier) */
+/* Heraldická linka nad titulkom — jemná, bez digitálneho žiarenia */
 .hero-inner::before {
   content: "";
   display: block;
-  width: min(320px, 78vw);
-  height: 2px;
-  margin: 0 auto 1.35rem;
-  border-radius: 2px;
+  width: min(260px, 68vw);
+  height: 1px;
+  margin: 0 auto 1.15rem;
   background: linear-gradient(
     90deg,
     transparent 0%,
-    rgba(130, 152, 148, 0.45) 12%,
-    #8a7028 42%,
-    #dcc896 50%,
-    #8a7028 58%,
-    rgba(130, 152, 148, 0.45) 88%,
+    rgba(199, 157, 0, 0.28) 18%,
+    rgba(255, 203, 0, 0.55) 50%,
+    rgba(199, 157, 0, 0.28) 82%,
     transparent 100%
   );
-  box-shadow:
-    0 0 14px rgba(100, 140, 128, 0.35),
-    0 0 24px rgba(184, 154, 62, 0.2);
-  animation: runeSweep 4.6s ease-in-out infinite;
+  box-shadow: none;
+  animation: none;
 }
 
 .hero-inner {
@@ -1664,10 +1779,27 @@ a:hover {
 
 .hero-inner .hero-kicker::before,
 .hero-inner .hero-kicker::after {
-  content: "✶";
-  color: rgba(214, 186, 132, 0.7);
-  font-size: 0.75em;
-  margin: 0 0.6rem;
+  content: "";
+  display: inline-block;
+  width: clamp(1.25rem, 4vw, 2rem);
+  height: 1px;
+  vertical-align: middle;
+  margin: 0 0.65rem;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 203, 0, 0.45) 70%,
+    rgba(199, 157, 0, 0.65)
+  );
+}
+
+.hero-inner .hero-kicker::after {
+  background: linear-gradient(
+    90deg,
+    rgba(199, 157, 0, 0.65),
+    rgba(255, 203, 0, 0.45) 30%,
+    transparent
+  );
 }
 
 .hero-inner::after {
@@ -1710,35 +1842,25 @@ a:hover {
 }
 
 .hero-kicker {
-  font-family: "Bebas Neue", "Cinzel", serif;
-  font-size: clamp(1.2rem, 3.4vw, 1.75rem);
-  letter-spacing: 0.48em;
+  font-family: "Cinzel", "Times New Roman", serif;
+  font-weight: 600;
+  font-size: clamp(0.82rem, 2.6vw, 1.05rem);
+  letter-spacing: 0.32em;
   text-transform: uppercase;
   white-space: nowrap;
   margin: 0 0 0.75rem;
-  background: linear-gradient(
-    185deg,
-    #f4f0e6 0%,
-    #dcc896 42%,
-    #9aa89e 100%
-  );
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-  -webkit-text-fill-color: transparent;
-  text-shadow: none;
-  filter: drop-shadow(0 2px 14px rgba(0, 0, 0, 0.95))
-    drop-shadow(0 0 20px rgba(100, 140, 128, 0.25));
+  color: #ffcb00;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.88);
 }
 
-@supports not (background-clip: text) {
-  .hero-kicker {
-    color: #dcc896;
-    -webkit-text-fill-color: unset;
-    text-shadow:
-      0 0 24px rgba(100, 140, 128, 0.35),
-      0 2px 18px rgba(0, 0, 0, 0.95);
-  }
+.hero-kicker__sep {
+  font-family: "Cinzel", serif;
+  font-size: 0.85em;
+  font-weight: 400;
+  letter-spacing: 0;
+  color: rgba(255, 228, 140, 0.72);
+  vertical-align: middle;
+  margin: 0 0.15em;
 }
 
 .hero h1 {
@@ -3320,7 +3442,7 @@ body.home-page.header-compact .site-header .nav {
   letter-spacing: 0.08em;
 }
 
-.home-page .btn-primary:not(.stripe-btn):not(.chess-teaser__register):not(.hero-btn--register) {
+.home-page .btn-primary:not(.stripe-btn):not(.chess-teaser__register):not(.hero-btn--register):not(.hero-cta) {
   background: linear-gradient(
     180deg,
     var(--ds-primary) 0%,
@@ -3677,38 +3799,42 @@ body.home-page::after {
   color: #fff8e8;
 }
 
-/* Hero kicker — vyšší kontrast „Pod vlekom · Stropkov“ */
-.home-page .hero .hero-kicker {
-  background: none;
-  -webkit-background-clip: unset;
-  background-clip: unset;
-  color: #fff9eb;
-  -webkit-text-fill-color: #fff9eb;
-  filter: none;
-  text-shadow:
-    0 0 1px rgba(0, 0, 0, 1),
-    0 1px 2px rgba(0, 0, 0, 1),
-    0 2px 8px rgba(0, 0, 0, 0.95),
-    0 4px 28px rgba(0, 0, 0, 0.9),
-    0 0 32px rgba(255, 228, 140, 0.55);
-}
-
+/* Hero kicker — heraldický rám „Pod vlekom ❦ Stropkov“ */
 .home-page .hero .hero-kicker {
   position: relative;
   display: inline-block;
-  padding: 0.2rem 0.75rem;
-  letter-spacing: 0.38em;
+  padding: 0.45rem 1.15rem;
+  letter-spacing: 0.28em;
   white-space: nowrap;
-  background: rgba(0, 0, 0, 0.48);
-  border-radius: 2px;
-  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.65);
+  color: #ffcb00;
+  background: rgba(14, 18, 25, 0.78);
+  border: 1px solid rgba(199, 157, 0, 0.48);
+  border-top-color: rgba(255, 203, 0, 0.32);
+  border-bottom-color: rgba(199, 157, 0, 0.62);
+  border-radius: 0;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 228, 140, 0.1),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.35),
+    0 3px 18px rgba(0, 0, 0, 0.58);
+  filter: none;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.9);
+}
+
+.home-page .hero .hero-kicker__sep {
+  color: rgba(255, 228, 140, 0.8);
 }
 
 @media (max-width: 420px) {
   .home-page .hero .hero-kicker {
-    font-size: clamp(0.95rem, 4.2vw, 1.2rem);
-    letter-spacing: 0.22em;
-    padding: 0.2rem 0.5rem;
+    font-size: clamp(0.72rem, 3.6vw, 0.92rem);
+    letter-spacing: 0.18em;
+    padding: 0.38rem 0.75rem;
+  }
+
+  .hero-inner .hero-kicker::before,
+  .hero-inner .hero-kicker::after {
+    width: 0.85rem;
+    margin: 0 0.4rem;
   }
 }
 
@@ -3769,7 +3895,7 @@ body.home-page::after {
   border: 1px solid rgba(194, 154, 88, 0.62);
 }
 
-.home-page .btn-primary:not(.stripe-btn):not(.chess-teaser__register):not(.hero-btn--register) {
+.home-page .btn-primary:not(.stripe-btn):not(.chess-teaser__register):not(.hero-btn--register):not(.hero-cta) {
   background: linear-gradient(180deg, #d9241c 0%, #a01b16 56%, #6f120f 100%);
   color: #ffefcc !important;
 }
@@ -3810,6 +3936,7 @@ body.home-page::after {
   display: grid;
   grid-template-columns: repeat(2, minmax(280px, 420px));
   justify-content: center;
+  align-items: stretch;
   gap: 1rem;
 }
 
@@ -3819,21 +3946,19 @@ body.home-page::after {
 
 #vstupenky-rezervacie .choice-actions {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 0.6rem;
+  grid-template-columns: 1fr;
+  gap: 0.65rem;
 }
 
 #vstupenky-rezervacie .choice-actions .btn {
   width: 100%;
+  min-height: 46px;
+  justify-content: center;
 }
 
 @media (max-width: 900px) {
   #vstupenky-rezervacie .choice-grid {
     grid-template-columns: minmax(260px, 1fr);
-  }
-
-  #vstupenky-rezervacie .choice-actions {
-    grid-template-columns: 1fr;
   }
 }
 
@@ -4254,29 +4379,28 @@ body.home-page .site-header .nav::before {
   letter-spacing: 0.03em !important;
 }
 
+#vstupenky-rezervacie #link-vstupenky.stripe-btn {
+  width: min(100%, 18.75rem);
+  margin-top: 0;
+}
+
 #link-vstupenky {
-  background: radial-gradient(
-    circle at 50% 50%,
-    rgba(99, 13, 13, 0.8) 0%,
-    rgba(148, 0, 0, 1) 64%,
-    rgba(141, 12, 12, 0.95) 96%,
-    rgba(130, 3, 3, 1) 100%
-  ) !important;
   position: static;
-  margin-top: 29px;
-  border-color: rgba(255, 149, 0, 0.78) !important;
-  color: #f7ead0 !important;
+  margin-top: 0;
   height: 70px;
   opacity: 1 !important;
 }
 
-#vstupenky-rezervacie .choice-actions {
-  gap: 0.7rem !important;
+#link-vstupenky.is-disabled-link {
+  opacity: 1 !important;
+  cursor: not-allowed !important;
 }
 
 #vstupenky-rezervacie .choice-actions .btn {
   border-radius: 7px !important;
   font-weight: 650 !important;
+  display: inline-flex;
+  align-items: center;
 }
 
 /* ===== FINAL HEADER/NAV SOURCE OF TRUTH ===== */
@@ -4463,16 +4587,7 @@ body.home-page .site-header .nav:focus-within {
   font-size: 0.92rem;
 }
 
-/* Performance: content-visibility len na výkonných desktopoch (na mobile spôsobuje „postupné maľovanie“) */
-@supports (content-visibility: auto) {
-  @media (min-width: 769px) and (hover: hover) and (pointer: fine) {
-    .page-main > section,
-    .site-footer {
-      content-visibility: auto;
-      contain-intrinsic-size: 1px 700px;
-    }
-  }
-}
+/* Performance: content-visibility vypnuté — pri rýchlom scrolli pôsobilo postupné maľovanie. */
 
 /* =========================================================
    DESIGN TOKEN ENFORCEMENT LAYER
@@ -4800,7 +4915,7 @@ body.home-page {
   font-family: var(--font-ui) !important;
 }
 
-.home-page .btn-primary:not(.stripe-btn):not(.chess-teaser__register):not(.hero-btn--register) {
+.home-page .btn-primary:not(.stripe-btn):not(.chess-teaser__register):not(.hero-btn--register):not(.hero-cta) {
   background: linear-gradient(
     180deg,
     var(--ds-primary) 0%,
@@ -5131,100 +5246,146 @@ body.home-page .site-header .nav a:hover,
   overflow: hidden;
 }
 
-.home-page #harmonogram .schedule-table {
+.home-page #harmonogram .schedule-timeline {
   width: 100%;
-  border-collapse: collapse;
-  font-family: var(--font-body);
-  font-size: 1.0625rem;
-  line-height: 1.62;
 }
 
-.home-page #harmonogram .schedule-table thead th {
-  padding: var(--ds-space-md) var(--ds-space-lg) !important;
-  font-family: var(--font-ui) !important;
-  font-size: 0.875rem !important;
-  font-weight: 600 !important;
+.home-page #harmonogram .schedule-timeline__head {
+  display: grid;
+  grid-template-columns: 7.75rem 1fr;
+  gap: var(--ds-space-md);
+  padding: var(--ds-space-md) var(--ds-space-lg);
+  font-family: var(--font-ui);
+  font-size: 0.875rem;
+  font-weight: 600;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--ds-tertiary) !important;
   background: var(--ds-surface-dark-2) !important;
-  border-bottom: 2px solid rgba(255, 203, 0, 0.35) !important;
+  border-bottom: 2px solid rgba(255, 203, 0, 0.35);
 }
 
-.home-page #harmonogram .schedule-table tbody tr {
-  background: transparent;
+.home-page #harmonogram .schedule-timeline__body {
+  display: flex;
+  flex-direction: column;
+}
+
+.home-page #harmonogram .schedule-slot {
+  display: grid;
+  grid-template-columns: 7.75rem 1fr;
+  gap: var(--ds-space-md);
+  align-items: center;
+  padding: 0.85rem var(--ds-space-lg);
+  border-bottom: 1px solid rgba(255, 203, 0, 0.12);
   transition: background 0.2s ease;
 }
 
-.home-page #harmonogram .schedule-table tbody tr:nth-child(even) {
+.home-page #harmonogram .schedule-slot:nth-child(even) {
   background: rgba(255, 238, 210, 0.03);
 }
 
-.home-page #harmonogram .schedule-table tbody tr:hover {
+.home-page #harmonogram .schedule-slot:hover {
   background: rgba(255, 203, 0, 0.06);
 }
 
-.home-page #harmonogram .schedule-table td {
-  padding: var(--ds-space-md) var(--ds-space-lg) !important;
-  vertical-align: top;
-  border-bottom: 1px solid rgba(255, 203, 0, 0.12) !important;
+.home-page #harmonogram .schedule-slot:last-child {
+  border-bottom: none;
+}
+
+.home-page #harmonogram .schedule-slot__time {
+  justify-self: start;
+  padding: 0.45rem 0.6rem;
+  border-radius: var(--ds-radius-sm);
+  border: 1px solid rgba(255, 203, 0, 0.24);
+  background: rgba(255, 203, 0, 0.08);
+  font-family: var(--font-ui) !important;
+  font-size: 0.8125rem !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.04em;
+  line-height: 1.25;
+  color: var(--ds-tertiary-bright) !important;
+  font-variant-numeric: tabular-nums lining-nums;
+  white-space: nowrap;
+}
+
+.home-page #harmonogram .schedule-slot__content {
+  min-width: 0;
+}
+
+.home-page #harmonogram .schedule-slot__lead,
+.home-page #harmonogram .schedule-slot__single {
+  margin: 0;
+  font-family: var(--font-body);
+  font-size: 1.0625rem;
+  line-height: 1.55;
   color: var(--ds-text-on-dark) !important;
 }
 
-.home-page #harmonogram .schedule-table tbody tr:last-child td {
-  border-bottom: none !important;
+.home-page #harmonogram .schedule-slot__lead {
+  margin-bottom: var(--ds-space-sm);
+  font-family: var(--font-ui);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--ds-tertiary-dim) !important;
 }
 
-.home-page #harmonogram .schedule-table .time {
-  width: 9rem;
-  min-width: 9rem;
-  font-family: var(--font-ui) !important;
-  font-size: 0.9375rem !important;
-  font-weight: 700 !important;
-  letter-spacing: 0.04em;
-  line-height: 1.35;
-  color: var(--ds-tertiary-bright) !important;
-  background: rgba(0, 0, 0, 0.2);
-  border-right: 1px solid rgba(255, 203, 0, 0.18) !important;
-  font-variant-numeric: tabular-nums lining-nums;
-}
-
-.home-page #harmonogram .schedule-table .schedule-activities {
+.home-page #harmonogram .schedule-slot .schedule-activities {
   margin: 0;
   padding: 0;
   list-style: none;
 }
 
-.home-page #harmonogram .schedule-table .schedule-activities li {
+.home-page #harmonogram .schedule-slot .schedule-activities li {
   position: relative;
   padding-left: var(--ds-space-md);
   color: var(--ds-text-on-dark) !important;
   font-size: 1.0625rem;
-  line-height: 1.62;
+  line-height: 1.55;
 }
 
-.home-page #harmonogram .schedule-table .schedule-activities li::before {
+.home-page #harmonogram .schedule-slot .schedule-activities li::before {
   content: "";
   position: absolute;
   left: 0;
-  top: 0.65em;
+  top: 0.62em;
   width: 5px;
   height: 5px;
   border-radius: 50%;
   background: var(--ds-secondary);
 }
 
-.home-page #harmonogram .schedule-table .schedule-activities li + li {
-  margin-top: var(--ds-space-sm);
+.home-page #harmonogram .schedule-slot .schedule-activities li + li {
+  margin-top: 0.35rem;
 }
 
-.home-page #harmonogram .schedule-table tr.schedule-row-active {
+.home-page #harmonogram .schedule-slot.schedule-row-active {
   background: rgba(255, 203, 0, 0.08) !important;
   box-shadow: inset 3px 0 0 var(--ds-tertiary);
 }
 
-.home-page #harmonogram .schedule-table tr.schedule-row-active .time {
+.home-page #harmonogram .schedule-slot.schedule-row-active .schedule-slot__time {
   color: var(--ds-neutral) !important;
+  border-color: rgba(255, 203, 0, 0.42);
+  background: rgba(255, 203, 0, 0.14);
+}
+
+@media (max-width: 640px) {
+  .home-page #harmonogram .schedule-timeline__head {
+    display: none;
+  }
+
+  .home-page #harmonogram .schedule-slot {
+    grid-template-columns: 1fr;
+    gap: 0.45rem;
+    align-items: start;
+    padding: 0.85rem var(--ds-space-md);
+  }
+
+  .home-page #harmonogram .schedule-slot__time {
+    font-size: 0.75rem !important;
+  }
 }
 
 /* Sprievodné aktivity */
@@ -5268,42 +5429,6 @@ body.home-page .site-header .nav a:hover,
 .home-page .companion-activities li:last-child {
   padding-bottom: 0;
   border-bottom: none;
-}
-
-@media (max-width: 640px) {
-  .home-page #harmonogram .schedule-table thead {
-    display: none;
-  }
-
-  .home-page #harmonogram .schedule-table tbody tr {
-    display: block;
-    padding: var(--ds-space-sm) 0;
-    border-bottom: 1px solid rgba(255, 203, 0, 0.14);
-  }
-
-  .home-page #harmonogram .schedule-table td {
-    display: block;
-    border: none !important;
-    padding: var(--ds-space-sm) var(--ds-space-md) !important;
-  }
-
-  .home-page #harmonogram .schedule-table .time {
-    width: auto;
-    min-width: 0;
-    background: transparent;
-    border-right: none !important;
-    padding-bottom: var(--ds-space-xs) !important;
-  }
-
-  .home-page #harmonogram .schedule-table .time::before {
-    content: "Čas · ";
-    font-family: var(--font-ui);
-    font-weight: 600;
-    font-size: 0.75rem;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--ds-tertiary-dim);
-  }
 }
 
 /* ===============================
@@ -5440,40 +5565,40 @@ body.home-page .site-header .nav a:hover,
     animation-delay: 0.4s;
   }
 
-  body.js-ready main section.is-visible .schedule-table tbody tr {
+  body.js-ready main section.is-visible .schedule-slot {
     animation: fxFadeUp 0.48s var(--fx-ease) both;
   }
 
-  body.js-ready main section.is-visible .schedule-table tbody tr:nth-child(1) {
+  body.js-ready main section.is-visible .schedule-slot:nth-child(1) {
     animation-delay: 0.06s;
   }
-  body.js-ready main section.is-visible .schedule-table tbody tr:nth-child(2) {
+  body.js-ready main section.is-visible .schedule-slot:nth-child(2) {
     animation-delay: 0.1s;
   }
-  body.js-ready main section.is-visible .schedule-table tbody tr:nth-child(3) {
+  body.js-ready main section.is-visible .schedule-slot:nth-child(3) {
     animation-delay: 0.14s;
   }
-  body.js-ready main section.is-visible .schedule-table tbody tr:nth-child(4) {
+  body.js-ready main section.is-visible .schedule-slot:nth-child(4) {
     animation-delay: 0.18s;
   }
-  body.js-ready main section.is-visible .schedule-table tbody tr:nth-child(5) {
+  body.js-ready main section.is-visible .schedule-slot:nth-child(5) {
     animation-delay: 0.22s;
   }
-  body.js-ready main section.is-visible .schedule-table tbody tr:nth-child(6) {
+  body.js-ready main section.is-visible .schedule-slot:nth-child(6) {
     animation-delay: 0.26s;
   }
-  body.js-ready main section.is-visible .schedule-table tbody tr:nth-child(7) {
+  body.js-ready main section.is-visible .schedule-slot:nth-child(7) {
     animation-delay: 0.3s;
   }
-  body.js-ready main section.is-visible .schedule-table tbody tr:nth-child(8) {
+  body.js-ready main section.is-visible .schedule-slot:nth-child(8) {
     animation-delay: 0.34s;
   }
 
-  .home-page #harmonogram .schedule-table .schedule-activities li::before {
+  .home-page #harmonogram .schedule-slot .schedule-activities li::before {
     animation: fxDotPop 0.35s var(--fx-ease) both;
   }
 
-  .home-page #harmonogram .schedule-table tr.schedule-row-active {
+  .home-page #harmonogram .schedule-slot.schedule-row-active {
     animation: fxScheduleGlow 2.8s ease-in-out infinite;
   }
 
@@ -5537,12 +5662,12 @@ body.home-page .site-header .nav a:hover,
 
 @media (prefers-reduced-motion: reduce) {
   .home-page .site-header .nav-deco-bg,
-  .home-page #harmonogram .schedule-table tr.schedule-row-active {
+  .home-page #harmonogram .schedule-slot.schedule-row-active {
     animation: none !important;
   }
 
   body.js-ready main section.is-visible > *,
-  body.js-ready main section.is-visible .schedule-table tbody tr,
+  body.js-ready main section.is-visible .schedule-slot,
   body.js-ready main section.is-visible .companion-activities li {
     animation: none !important;
   }
@@ -5564,7 +5689,7 @@ body.reduced-motion.js-ready main section {
 }
 
 .home-page .chess-teaser {
-  padding: var(--ds-space-lg, 1.25rem) var(--ds-space-xl, 1.5rem) !important;
+  padding: var(--ds-space-xl, 1.5rem) calc(var(--ds-space-xl, 1.5rem) + var(--ds-space-sm, 0.5rem)) !important;
   border-color: rgba(255, 203, 0, 0.38) !important;
   background: linear-gradient(
     135deg,
@@ -5577,19 +5702,23 @@ body.reduced-motion.js-ready main section {
 
 .home-page .chess-teaser__grid {
   display: grid;
-  gap: var(--ds-space-lg, 1.25rem);
+  gap: var(--ds-space-xl, 1.5rem);
   align-items: center;
 }
 
 @media (min-width: 760px) {
+  .home-page .chess-teaser {
+    min-height: 22rem;
+  }
+
   .home-page .chess-teaser__grid {
     grid-template-columns: minmax(0, 1.35fr) minmax(220px, 0.85fr);
-    gap: var(--ds-space-xl, 1.5rem);
+    gap: calc(var(--ds-space-xl, 1.5rem) + var(--ds-space-sm, 0.5rem));
   }
 }
 
 .home-page .chess-teaser__kicker {
-  margin: 0 0 0.75rem;
+  margin: 0 0 1rem;
   font-family: var(--font-ui, "Montserrat", sans-serif);
   font-size: 0.78rem;
   font-weight: 600;
@@ -5599,7 +5728,7 @@ body.reduced-motion.js-ready main section {
 }
 
 .home-page .chess-teaser__times {
-  margin: 0 0 1rem;
+  margin: 0 0 1.35rem;
   padding: 0;
   list-style: none;
 }
@@ -5609,7 +5738,7 @@ body.reduced-motion.js-ready main section {
   grid-template-columns: 6.5rem minmax(0, 1fr);
   gap: 0.65rem;
   align-items: baseline;
-  padding: 0.55rem 0;
+  padding: 0.7rem 0;
   border-bottom: 1px solid rgba(255, 203, 0, 0.14);
 }
 
@@ -5631,7 +5760,7 @@ body.reduced-motion.js-ready main section {
 }
 
 .home-page .chess-teaser__copy > p:last-of-type {
-  margin-bottom: 1rem;
+  margin-bottom: 1.35rem;
   color: var(--ds-text-muted, #e8e2d6);
 }
 
@@ -5639,7 +5768,7 @@ body.reduced-motion.js-ready main section {
   display: flex;
   flex-wrap: wrap;
   gap: 0.65rem;
-  margin-top: 0.35rem;
+  margin-top: 0.85rem;
 }
 
 .home-page .chess-teaser__register::before {
@@ -5792,11 +5921,11 @@ body.reduced-motion.js-ready main section {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 0.85rem;
+  gap: 1.15rem;
   width: 100%;
   max-width: 16rem;
   margin: 0 auto;
-  padding: 1.35rem 1.15rem 1.25rem 1.3rem;
+  padding: 1.55rem 1.35rem 1.45rem 1.5rem;
   min-height: 100%;
   box-sizing: border-box;
   text-align: center;
@@ -5848,7 +5977,7 @@ body.reduced-motion.js-ready main section {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.4rem;
+  gap: 0.65rem;
   width: 100%;
   min-width: 0;
   text-align: center;
@@ -5856,6 +5985,7 @@ body.reduced-motion.js-ready main section {
 
 .home-page .chess-teaser__hlavolamy-badge {
   display: inline-block;
+  margin-top: 0.15rem;
   padding: 0.2rem 0.55rem;
   border-radius: 3px;
   font-family: var(--font-ui, "Montserrat", sans-serif);
@@ -5879,6 +6009,7 @@ body.reduced-motion.js-ready main section {
 }
 
 .home-page .chess-teaser__hlavolamy-desc {
+  margin-top: 0.25rem;
   font-family: var(--font-ui, "Montserrat", sans-serif);
   font-size: 0.8rem;
   font-weight: 500;
@@ -5931,8 +6062,8 @@ body.reduced-motion.js-ready main section {
 
   .home-page .chess-teaser__hlavolamy-inner {
     max-width: none;
-    padding: 1.15rem 1rem 1.1rem 1.15rem;
-    gap: 0.75rem;
+    padding: 1.35rem 1.15rem 1.25rem 1.3rem;
+    gap: 1rem;
   }
 
   .home-page .chess-teaser__hlavolamy-visual {

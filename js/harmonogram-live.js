@@ -35,34 +35,63 @@
     return bratislavaYmd() === data.festivalDate;
   }
 
+  function formatSlotTime(slot) {
+    return slot.start + (slot.end && slot.end !== slot.start ? " – " + slot.end : "");
+  }
+
   function renderTable() {
-    var tbody = document.getElementById("schedule-tbody");
-    if (!tbody) return;
-    tbody.innerHTML = "";
+    var body = document.getElementById("schedule-timeline-body");
+    if (!body) return;
+    body.innerHTML = "";
+
     for (var i = 0; i < data.slots.length; i++) {
       var s = data.slots[i];
-      var tr = document.createElement("tr");
-      tr.setAttribute("data-slot-index", String(i));
-      var tdT = document.createElement("td");
-      tdT.className = "time";
-      tdT.textContent =
-        s.start + (s.end && s.end !== s.start ? " – " + s.end : "");
-      var tdP = document.createElement("td");
+      var article = document.createElement("article");
+      article.className = "schedule-slot";
+      article.setAttribute("data-slot-index", String(i));
+      article.setAttribute("role", "row");
+
+      var time = document.createElement("div");
+      time.className = "schedule-slot__time";
+      time.setAttribute("role", "rowheader");
+      time.textContent = formatSlotTime(s);
+
+      var content = document.createElement("div");
+      content.className = "schedule-slot__content";
+      content.setAttribute("role", "cell");
+
       if (s.activities && s.activities.length) {
-        var ul = document.createElement("ul");
-        ul.className = "schedule-activities";
-        for (var j = 0; j < s.activities.length; j++) {
-          var li = document.createElement("li");
-          li.textContent = s.activities[j];
-          ul.appendChild(li);
+        if (s.activities.length === 1) {
+          var single = document.createElement("p");
+          single.className = "schedule-slot__single";
+          single.textContent = s.activities[0];
+          content.appendChild(single);
+        } else {
+          if (s.title) {
+            var lead = document.createElement("p");
+            lead.className = "schedule-slot__lead";
+            lead.textContent = s.title;
+            content.appendChild(lead);
+          }
+          var ul = document.createElement("ul");
+          ul.className = "schedule-activities";
+          for (var j = 0; j < s.activities.length; j++) {
+            var li = document.createElement("li");
+            li.textContent = s.activities[j];
+            ul.appendChild(li);
+          }
+          content.appendChild(ul);
         }
-        tdP.appendChild(ul);
-      } else {
-        tdP.textContent = s.title || "";
+      } else if (s.title) {
+        var title = document.createElement("p");
+        title.className = "schedule-slot__single";
+        title.textContent = s.title;
+        content.appendChild(title);
       }
-      tr.appendChild(tdT);
-      tr.appendChild(tdP);
-      tbody.appendChild(tr);
+
+      article.appendChild(time);
+      article.appendChild(content);
+      body.appendChild(article);
     }
   }
 
@@ -94,7 +123,7 @@
   }
 
   function highlightTableRow(activeIndex) {
-    var rows = document.querySelectorAll("#schedule-tbody tr");
+    var rows = document.querySelectorAll(".schedule-slot");
     for (var i = 0; i < rows.length; i++) {
       if (parseInt(rows[i].getAttribute("data-slot-index"), 10) === activeIndex) {
         rows[i].classList.add("schedule-row-active");

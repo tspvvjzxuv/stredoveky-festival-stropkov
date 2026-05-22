@@ -188,13 +188,20 @@
       window.matchMedia &&
       window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-    if (reducedMotion || !("IntersectionObserver" in window)) {
+    var isDesktop =
+      window.matchMedia &&
+      window.matchMedia("(min-width: 769px) and (hover: hover) and (pointer: fine)")
+        .matches;
+
+    // Desktop: celá stránka naraz (bez postupného „domaľovania“ pri scrolli).
+    if (reducedMotion || !("IntersectionObserver" in window) || isDesktop) {
       for (var j = 0; j < sections.length; j++) {
         sections[j].classList.add("is-visible");
       }
       return;
     }
 
+    // Mobile / dotyk: väčšie okno pred renderom, aby pri rýchlom scrolli neostávali sekcie skryté.
     var observer = new IntersectionObserver(
       function (entries) {
         for (var i = 0; i < entries.length; i++) {
@@ -204,7 +211,7 @@
           }
         }
       },
-      { threshold: 0.14, rootMargin: "0px 0px -8% 0px" }
+      { threshold: 0.01, rootMargin: "160px 0px 55% 0px" }
     );
 
     for (var k = 0; k < sections.length; k++) {

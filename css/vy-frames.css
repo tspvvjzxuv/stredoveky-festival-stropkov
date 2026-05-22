@@ -225,7 +225,7 @@
   text-shadow: 0 0 18px rgba(255, 240, 160, 0.75) !important;
 }
 
-.home-page .btn-primary:not(.hero-cta):not(.chess-teaser__register) {
+.home-page .btn-primary:not(.hero-cta):not(.chess-teaser__register):not(.stripe-btn) {
   border: solid transparent;
   border-image-source: url("../images/vy-frame.webp");
   border-image-slice: var(--vy-btn-slice);
@@ -234,8 +234,8 @@
   box-shadow: 0 0 16px rgba(217, 36, 28, 0.35);
 }
 
-/* Hero — Harmonogram bez vy rámu */
-.home-page .hero .btn-primary.hero-cta {
+/* Hero — Harmonogram bez vy rámu; Podpor má červený okraj ako Prispieť */
+.home-page .hero .btn-primary.hero-cta:not(.hero-btn--podpor) {
   border: 1px solid rgba(212, 170, 94, 0.78) !important;
   border-image: none !important;
   border-image-source: none !important;

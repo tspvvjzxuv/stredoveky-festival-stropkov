@@ -230,7 +230,7 @@
       <div class="hero-letterbox hero-letterbox--top" aria-hidden="true"></div>
       <div class="hero-letterbox hero-letterbox--bottom" aria-hidden="true"></div>
       <div class="hero-inner">
-        <p class="hero-kicker">Pod&nbsp;vlekom&nbsp;·&nbsp;Stropkov</p>
+        <p class="hero-kicker">Pod&nbsp;vlekom&nbsp;<span class="hero-kicker__sep" aria-hidden="true">❦</span>&nbsp;Stropkov</p>
         <h1>PTRA - Poľný tábor rytiera Andreasa<br />Stropkov <span id="hero-year">2026</span><br />16. augusta</h1>
         <p class="tagline">
           Lukostrelecký turnaj, šachový turnaj, rytierska cesta, pasovanie rytierov,
@@ -238,10 +238,10 @@
         </p>
         <div class="btn-row">
           <a class="btn btn-outline hero-btn--register" href="prihlasky.html">Prihlásiť</a>
-          <a class="btn btn-primary hero-cta" href="#harmonogram">Harmonogram</a>
+          <a class="btn btn-outline" href="#harmonogram">Harmonogram</a>
           <a class="btn btn-primary hero-cta hero-btn--podpor" href="#vstupenky-rezervacie">Podpor</a>
           <a class="btn btn-outline" href="#mapa-uloh">Mapa areálu</a>
-          <a class="btn btn-outline" href="#sachovy-turnaj">Šach</a>
+          <a class="btn btn-outline hero-btn--sach" href="#sachovy-turnaj">Šach</a>
           <a class="btn btn-outline" href="#faq">Otázky</a>
         </div>
       </div>
@@ -323,16 +323,13 @@
         </div>
 
         <div class="card program-panel schedule-card">
-          <table class="schedule-table">
-            <caption class="visually-hidden">Program festivalu</caption>
-            <thead>
-              <tr>
-                <th scope="col">Čas</th>
-                <th scope="col">Program</th>
-              </tr>
-            </thead>
-            <tbody id="schedule-tbody"></tbody>
-          </table>
+          <div class="schedule-timeline" id="schedule-timeline" role="table" aria-label="Program festivalu">
+            <div class="schedule-timeline__head" aria-hidden="true">
+              <span class="schedule-timeline__head-time">Čas</span>
+              <span class="schedule-timeline__head-program">Program</span>
+            </div>
+            <div class="schedule-timeline__body" id="schedule-timeline-body" role="rowgroup"></div>
+          </div>
         </div>
       </section>
 
