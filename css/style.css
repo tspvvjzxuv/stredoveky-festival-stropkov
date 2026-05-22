@@ -3314,7 +3314,7 @@ body.home-page.header-compact .site-header .nav {
   letter-spacing: 0.08em;
 }
 
-.home-page .btn-primary:not(.stripe-btn) {
+.home-page .btn-primary:not(.stripe-btn):not(.chess-teaser__register):not(.hero-btn--register) {
   background: linear-gradient(
     180deg,
     var(--ds-primary) 0%,
@@ -3759,8 +3759,7 @@ body.home-page::after {
   border: 1px solid rgba(194, 154, 88, 0.62);
 }
 
-.home-page .btn-primary,
-.home-page .stripe-btn {
+.home-page .btn-primary:not(.stripe-btn):not(.chess-teaser__register):not(.hero-btn--register) {
   background: linear-gradient(180deg, #d9241c 0%, #a01b16 56%, #6f120f 100%);
   color: #ffefcc !important;
 }
@@ -4785,7 +4784,7 @@ body.home-page {
   font-family: var(--font-ui) !important;
 }
 
-.home-page .btn-primary:not(.stripe-btn) {
+.home-page .btn-primary:not(.stripe-btn):not(.chess-teaser__register):not(.hero-btn--register) {
   background: linear-gradient(
     180deg,
     var(--ds-primary) 0%,
@@ -5643,6 +5642,7 @@ body.reduced-motion.js-ready main section {
     #2b7a34 46%,
     #1a5222 100%
   ) !important;
+  background-color: #2b7a34 !important;
   color: #eaffea !important;
   font-family: var(--font-ui, "Montserrat", sans-serif) !important;
   font-size: 0.82rem !important;
