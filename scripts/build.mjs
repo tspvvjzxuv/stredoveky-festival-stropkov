@@ -7,6 +7,7 @@ var required = [
   "css/style.css",
   "js/main.js",
   "js/chessground-puzzles.js",
+  "js/puzzle-branching.js",
   "js/puzzle-rewards.js",
   "js/puzzles-data.js",
   "js/harmonogram-data.js",

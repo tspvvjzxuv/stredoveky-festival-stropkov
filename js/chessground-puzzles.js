@@ -2,6 +2,7 @@ import { Chessground } from "https://cdn.jsdelivr.net/npm/@lichess-org/chessgrou
 import { Chess } from "https://cdn.jsdelivr.net/npm/chess.js@1.4.0/+esm";
 import { FESTIVAL_PUZZLES } from "./puzzles-data.js";
 import { findStrongMove, movesMatch } from "./puzzle-engine.js";
+import { mountBranchingPuzzle } from "./puzzle-branching.js";
 import {
   unlockPuzzleReward,
   getRewardMeta,
@@ -92,8 +93,8 @@ function setCompletionUI(puzzleId, solvedNow) {
   }
 }
 
-function notifyPuzzleSolved(puzzleId) {
-  var wasNew = unlockPuzzleReward(puzzleId);
+function notifyPuzzleSolved(puzzleId, options) {
+  var wasNew = unlockPuzzleReward(puzzleId, options);
   var meta = getRewardMeta(puzzleId);
   if (wasNew && meta) {
     var boardEl = document.getElementById(puzzleId);
@@ -105,8 +106,10 @@ function notifyPuzzleSolved(puzzleId) {
         banner.className = "sach-success-banner";
         item.appendChild(banner);
       }
+      var partial =
+        options && options.firstTry === false ? " (čiastočná pečať — boli chyby v riešení)" : "";
       banner.textContent =
-        "🎁 Nová odmena! " + meta.icon + " " + meta.title + " — časť investície je odkrytá.";
+        "🎁 Nová odmena! " + meta.icon + " " + meta.title + " — časť investície je odkrytá." + partial;
     }
   }
 }
@@ -116,7 +119,83 @@ function formatMoveHint(move) {
   return move.from + " → " + move.to;
 }
 
+function clearHintShape(ground) {
+  ground.setAutoShapes([]);
+}
+
+function showHintShape(ground, move) {
+  if (!move) return;
+  ground.setAutoShapes([
+    {
+      orig: move.from,
+      dest: move.to,
+      brush: "green",
+    },
+  ]);
+}
+
+function updateActionButtons(puzzleId, busy, gameOver, hasExpected) {
+  var hintBtn = document.querySelector('[data-hint-puzzle="' + puzzleId + '"]');
+  var coachBtn = document.querySelector('[data-coach-puzzle="' + puzzleId + '"]');
+  var engineBtn = document.querySelector('[data-engine-puzzle="' + puzzleId + '"]');
+  if (hintBtn) hintBtn.disabled = busy || gameOver || !hasExpected;
+  if (coachBtn) coachBtn.disabled = busy || gameOver || !hasExpected;
+  if (engineBtn) engineBtn.disabled = busy || gameOver;
+}
+
+function wirePuzzleControls(puzzle, ctx) {
+  var resetBtn = document.querySelector('[data-reset-puzzle="' + puzzle.id + '"]');
+  if (resetBtn) resetBtn.addEventListener("click", ctx.resetBoard);
+
+  var hintBtn = document.querySelector('[data-hint-puzzle="' + puzzle.id + '"]');
+  if (hintBtn) {
+    hintBtn.addEventListener("click", function () {
+      var move = ctx.expectedMove();
+      if (!move) return;
+      ctx.showHintShape(move);
+      ctx.onHint(move);
+    });
+  }
+
+  var coachBtn = document.querySelector('[data-coach-puzzle="' + puzzle.id + '"]');
+  if (coachBtn) {
+    coachBtn.addEventListener("click", function () {
+      if (ctx.isBusy() || ctx.isGameOver()) return;
+      var move = ctx.expectedMove();
+      if (!move) return;
+      ctx.clearHintShape();
+      ctx.onCoach(move);
+    });
+  }
+
+  var engineBtn = document.querySelector('[data-engine-puzzle="' + puzzle.id + '"]');
+  if (engineBtn) {
+    engineBtn.addEventListener("click", function () {
+      if (ctx.isBusy() || ctx.isGameOver()) return;
+      ctx.onEngine(engineBtn);
+    });
+  }
+}
+
+function createPuzzleHelpers() {
+  return {
+    buildDests: buildDests,
+    setCompletionUI: setCompletionUI,
+    notifyPuzzleSolved: notifyPuzzleSolved,
+    updateActionButtons: updateActionButtons,
+    clearHintShape: clearHintShape,
+    showHintShape: showHintShape,
+    formatMoveHint: formatMoveHint,
+    wireControls: wirePuzzleControls,
+  };
+}
+
 function mountPuzzleBoard(puzzle) {
+  if (puzzle.branching) {
+    mountBranchingPuzzle(puzzle, createPuzzleHelpers());
+    return;
+  }
+
   var el = document.getElementById(puzzle.id);
   if (!el) return;
 
@@ -160,35 +239,8 @@ function mountPuzzleBoard(puzzle) {
     setSubtitle(lastMoveOk, extra);
     var solved = isPuzzleSolved(chess, solutionLine, solutionStep);
     setCompletionUI(puzzle.id, solved);
-    if (solved) notifyPuzzleSolved(puzzle.id);
-    updateActionButtons();
-  }
-
-  function updateActionButtons() {
-    var gameOver = chess.isGameOver();
-    var hasExpected = !!expectedMove();
-    var hintBtn = document.querySelector('[data-hint-puzzle="' + puzzle.id + '"]');
-    var coachBtn = document.querySelector('[data-coach-puzzle="' + puzzle.id + '"]');
-    var engineBtn = document.querySelector('[data-engine-puzzle="' + puzzle.id + '"]');
-    if (hintBtn) hintBtn.disabled = busy || gameOver || !hasExpected;
-    if (coachBtn) coachBtn.disabled = busy || gameOver || !hasExpected;
-    if (engineBtn) engineBtn.disabled = busy || gameOver;
-  }
-
-  function clearHintShape(ground) {
-    ground.setAutoShapes([]);
-  }
-
-  function showHintShape(ground) {
-    var move = expectedMove();
-    if (!move) return;
-    ground.setAutoShapes([
-      {
-        orig: move.from,
-        dest: move.to,
-        brush: "green",
-      },
-    ]);
+    if (solved) notifyPuzzleSolved(puzzle.id, { firstTry: true });
+    updateActionButtons(puzzle.id, busy, gameOver, !!expectedMove());
   }
 
   function playMoveOnBoard(ground, move, extra) {
@@ -211,7 +263,7 @@ function mountPuzzleBoard(puzzle) {
     var nextIsWhite = side === "w";
     if (solutionLine.length > solutionStep) {
       busy = true;
-      updateActionButtons();
+      updateActionButtons(puzzle.id, busy, chess.isGameOver(), !!expectedMove());
       window.setTimeout(function () {
         playMoveOnBoard(ground, next, "🤖 Protihráč odpovedá podľa vzorového riešenia.");
         busy = false;
@@ -283,48 +335,41 @@ function mountPuzzleBoard(puzzle) {
   }
 
   applyState(ground, false);
-  updateActionButtons();
+  updateActionButtons(puzzle.id, busy, chess.isGameOver(), !!expectedMove());
 
-  var resetBtn = document.querySelector('[data-reset-puzzle="' + puzzle.id + '"]');
-  if (resetBtn) resetBtn.addEventListener("click", resetBoard);
-
-  var hintBtn = document.querySelector('[data-hint-puzzle="' + puzzle.id + '"]');
-  if (hintBtn) {
-    hintBtn.addEventListener("click", function () {
-      var move = expectedMove();
-      if (!move) return;
-      showHintShape(ground);
-      setSubtitle(false, "💡 Nápoveda: " + formatMoveHint(move));
-    });
-  }
-
-  var coachBtn = document.querySelector('[data-coach-puzzle="' + puzzle.id + '"]');
-  if (coachBtn) {
-    coachBtn.addEventListener("click", function () {
-      if (busy || chess.isGameOver()) return;
-      var move = expectedMove();
-      if (!move) return;
+  wirePuzzleControls(puzzle, {
+    resetBoard: resetBoard,
+    expectedMove: expectedMove,
+    isBusy: function () {
+      return busy;
+    },
+    isGameOver: function () {
+      return chess.isGameOver();
+    },
+    clearHintShape: function () {
       clearHintShape(ground);
+    },
+    showHintShape: function (move) {
+      showHintShape(ground, move);
+    },
+    onHint: function (move) {
+      setSubtitle(false, "💡 Nápoveda: " + formatMoveHint(move));
+    },
+    onCoach: function (move) {
       if (playMoveOnBoard(ground, move, "🎓 Tréner zahral vzorový ťah.")) {
         if (!chess.isGameOver() && expectedMove()) {
           maybePlayOpponentReply(ground);
         }
       }
-    });
-  }
-
-  var engineBtn = document.querySelector('[data-engine-puzzle="' + puzzle.id + '"]');
-  if (engineBtn) {
-    engineBtn.addEventListener("click", function () {
-      if (busy || chess.isGameOver()) return;
+    },
+    onEngine: function (engineBtn) {
       busy = true;
-      updateActionButtons();
+      updateActionButtons(puzzle.id, busy, chess.isGameOver(), !!expectedMove());
       engineBtn.disabled = true;
       if (subtitle) {
         subtitle.textContent =
           (baseSubtitle ? baseSubtitle + " | " : "") + "⏳ Silný motor počíta najlepší ťah…";
       }
-
       window.setTimeout(function () {
         var best = findStrongMove(chess, engineDepth);
         busy = false;
@@ -342,8 +387,8 @@ function mountPuzzleBoard(puzzle) {
           }
         }
       }, 40);
-    });
-  }
+    },
+  });
 }
 
 function initChessgroundPuzzles() {

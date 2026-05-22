@@ -4537,6 +4537,16 @@ body.home-page {
     background 0.3s ease;
 }
 
+#sachove-hlavolamy .sach-investicia__part.is-partial .sach-investicia__clue strong {
+  color: rgba(232, 210, 160, 0.85);
+}
+
+#sachove-hlavolamy .sach-investicia__partial-note {
+  margin-top: 0.65rem;
+  font-size: 0.82rem;
+  color: rgba(255, 220, 150, 0.88);
+}
+
 #sachove-hlavolamy .sach-investicia__part.is-unlocked {
   border-style: solid;
   border-color: rgba(92, 201, 122, 0.55);
