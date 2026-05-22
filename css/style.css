@@ -562,12 +562,14 @@ a:hover {
     0 0 40px rgba(200, 100, 40, 0.45);
 }
 
-/* Hero Podpor — rovnaké telo ako Harmonogram, kráľovská fialová žiara */
+/* Hero Podpor — kráľovská fialová (rovnako ako Prispieť na festival) */
 .home-page .hero .btn-primary.hero-cta.hero-btn--podpor {
+  background: linear-gradient(180deg, #6b3fa0 0%, #523080 48%, #351e58 100%);
+  color: #f3ecff;
   border-color: rgba(186, 158, 230, 0.82);
   box-shadow:
-    inset 0 1px 0 rgba(255, 220, 160, 0.28),
-    inset 0 -1px 0 rgba(42, 8, 8, 0.58),
+    inset 0 1px 0 rgba(230, 210, 255, 0.28),
+    inset 0 -1px 0 rgba(40, 20, 60, 0.58),
     0 0 0 1px rgba(56, 24, 88, 0.65),
     0 10px 26px rgba(0, 0, 0, 0.38),
     0 0 18px rgba(155, 110, 235, 0.72),
@@ -576,10 +578,12 @@ a:hover {
 }
 
 .home-page .hero .btn-primary.hero-cta.hero-btn--podpor:hover {
+  background: linear-gradient(180deg, #7d4cb8 0%, #5f3890 48%, #3f2468 100%);
+  color: #fff;
   border-color: rgba(220, 195, 255, 0.95);
   box-shadow:
-    inset 0 1px 0 rgba(255, 226, 174, 0.32),
-    inset 0 -1px 0 rgba(42, 8, 8, 0.6),
+    inset 0 1px 0 rgba(245, 235, 255, 0.34),
+    inset 0 -1px 0 rgba(48, 24, 72, 0.6),
     0 0 0 1px rgba(72, 36, 110, 0.7),
     0 12px 28px rgba(0, 0, 0, 0.42),
     0 0 26px rgba(185, 140, 255, 0.88),
@@ -1085,8 +1089,8 @@ a:hover {
   0%,
   100% {
     box-shadow:
-      inset 0 1px 0 rgba(255, 220, 160, 0.28),
-      inset 0 -1px 0 rgba(42, 8, 8, 0.58),
+      inset 0 1px 0 rgba(230, 210, 255, 0.28),
+      inset 0 -1px 0 rgba(40, 20, 60, 0.58),
       0 0 0 1px rgba(56, 24, 88, 0.65),
       0 10px 26px rgba(0, 0, 0, 0.38),
       0 0 16px rgba(155, 110, 235, 0.65),
@@ -1095,8 +1099,8 @@ a:hover {
   }
   50% {
     box-shadow:
-      inset 0 1px 0 rgba(255, 235, 210, 0.34),
-      inset 0 -1px 0 rgba(42, 8, 8, 0.6),
+      inset 0 1px 0 rgba(245, 235, 255, 0.34),
+      inset 0 -1px 0 rgba(48, 24, 72, 0.6),
       0 0 0 1px rgba(72, 36, 110, 0.72),
       0 10px 26px rgba(0, 0, 0, 0.38),
       0 0 24px rgba(195, 155, 255, 0.88),
