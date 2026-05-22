@@ -562,6 +562,31 @@ a:hover {
     0 0 40px rgba(200, 100, 40, 0.45);
 }
 
+/* Hero Podpor — rovnaké telo ako Harmonogram, kráľovská fialová žiara */
+.home-page .hero .btn-primary.hero-cta.hero-btn--podpor {
+  border-color: rgba(186, 158, 230, 0.82);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 220, 160, 0.28),
+    inset 0 -1px 0 rgba(42, 8, 8, 0.58),
+    0 0 0 1px rgba(56, 24, 88, 0.65),
+    0 10px 26px rgba(0, 0, 0, 0.38),
+    0 0 18px rgba(155, 110, 235, 0.72),
+    0 0 34px rgba(120, 81, 169, 0.55),
+    0 0 50px rgba(90, 48, 150, 0.38);
+}
+
+.home-page .hero .btn-primary.hero-cta.hero-btn--podpor:hover {
+  border-color: rgba(220, 195, 255, 0.95);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 226, 174, 0.32),
+    inset 0 -1px 0 rgba(42, 8, 8, 0.6),
+    0 0 0 1px rgba(72, 36, 110, 0.7),
+    0 12px 28px rgba(0, 0, 0, 0.42),
+    0 0 26px rgba(185, 140, 255, 0.88),
+    0 0 46px rgba(120, 81, 169, 0.72),
+    0 0 64px rgba(90, 48, 150, 0.5);
+}
+
 /* Homogénny dark-fantasy shell pre všetky stránky */
 .home-page .page-main {
   background:
@@ -996,8 +1021,12 @@ a:hover {
     animation: heroGlowGold 3s ease-in-out infinite;
   }
 
-  .home-page .hero .btn-primary.hero-cta {
+  .home-page .hero .btn-primary.hero-cta:not(.hero-btn--podpor) {
     animation: heroGlowCta 3s ease-in-out infinite;
+  }
+
+  .home-page .hero .btn-primary.hero-cta.hero-btn--podpor {
+    animation: heroGlowRoyalPurple 3s ease-in-out infinite;
   }
 
   .home-page .hero .hero-btn--register {
@@ -1047,6 +1076,30 @@ a:hover {
       0 0 22px rgba(255, 220, 120, 0.6),
       0 0 40px rgba(210, 90, 35, 0.4),
       0 10px 26px rgba(0, 0, 0, 0.38);
+  }
+}
+
+@keyframes heroGlowRoyalPurple {
+  0%,
+  100% {
+    box-shadow:
+      inset 0 1px 0 rgba(255, 220, 160, 0.28),
+      inset 0 -1px 0 rgba(42, 8, 8, 0.58),
+      0 0 0 1px rgba(56, 24, 88, 0.65),
+      0 10px 26px rgba(0, 0, 0, 0.38),
+      0 0 16px rgba(155, 110, 235, 0.65),
+      0 0 30px rgba(120, 81, 169, 0.48),
+      0 0 46px rgba(90, 48, 150, 0.32);
+  }
+  50% {
+    box-shadow:
+      inset 0 1px 0 rgba(255, 235, 210, 0.34),
+      inset 0 -1px 0 rgba(42, 8, 8, 0.6),
+      0 0 0 1px rgba(72, 36, 110, 0.72),
+      0 10px 26px rgba(0, 0, 0, 0.38),
+      0 0 24px rgba(195, 155, 255, 0.88),
+      0 0 44px rgba(120, 81, 169, 0.75),
+      0 0 62px rgba(100, 60, 180, 0.52);
   }
 }
 
