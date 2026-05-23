@@ -1,10 +1,30 @@
 import { Chessground } from "https://cdn.jsdelivr.net/npm/@lichess-org/chessground@10.1.1/dist/chessground.js";
 import { Chess } from "https://cdn.jsdelivr.net/npm/chess.js@1.4.0/+esm";
-import { findStrongMove, movesMatch } from "./puzzle-engine.js";
+import { movesMatch } from "./puzzle-engine.js";
+import { createWrongMoveOverlay } from "./puzzle-wrong-move-ui.js";
 
-function moveKey(move) {
-  if (!move) return "";
-  return move.from + "-" + move.to;
+function normalizeBranching(raw) {
+  if (!raw) return null;
+  return {
+    opening: raw.white_open || raw.opening,
+    blackResponses: raw.black_replies || raw.blackResponses || [],
+    defaultReply: raw.default_reply || raw.defaultReply || null,
+    allowAnyBlack: raw.allowAnyBlack !== false,
+    unknownBlackMessage: raw.unknownBlackMessage || null,
+    winCheck: raw.winCheck || null,
+  };
+}
+
+function branchWinsOnFinish(branch) {
+  if (!branch) return false;
+  if (branch.winsOnFinish === false) return false;
+  if (branch.correct === false) return false;
+  return branch.winsOnFinish === true || branch.correct === true;
+}
+
+function branchFinish(branch) {
+  if (!branch) return null;
+  return branch.white_finish || branch.whiteFinish || null;
 }
 
 function findBlackResponse(branching, move) {
@@ -39,7 +59,7 @@ export function mountBranchingPuzzle(puzzle, helpers) {
   var el = document.getElementById(puzzle.id);
   if (!el) return;
 
-  var branching = puzzle.branching;
+  var branching = normalizeBranching(puzzle.branching);
   var title = document.getElementById(puzzle.id + "-title");
   var subtitle = document.getElementById(puzzle.id + "-subtitle");
   if (title && puzzle.title) title.textContent = puzzle.title;
@@ -49,12 +69,12 @@ export function mountBranchingPuzzle(puzzle, helpers) {
 
   var chess = new Chess(puzzle.fen);
   var startFen = puzzle.fen;
-  var engineDepth = puzzle.engineDepth || 6;
   var busy = false;
   var phase = "white_open";
   var mistakes = 0;
   var activeBlack = null;
   var activeFinish = null;
+  var wrongMoveUi = createWrongMoveOverlay(el);
 
   function setSubtitle(extra) {
     if (!subtitle) return;
@@ -78,6 +98,10 @@ export function mountBranchingPuzzle(puzzle, helpers) {
     return null;
   }
 
+  function afterMove(orig, dest) {
+    onUserMove(ground, orig, dest);
+  }
+
   function applyState(ground, extra) {
     var color = userMovableColor();
     ground.set({
@@ -88,6 +112,7 @@ export function mountBranchingPuzzle(puzzle, helpers) {
         color: color,
         showDests: true,
         dests: color ? helpers.buildDests(chess) : new Map(),
+        events: { after: afterMove },
       },
       drawable: { enabled: true },
     });
@@ -96,26 +121,66 @@ export function mountBranchingPuzzle(puzzle, helpers) {
     if (solved) phase = "done";
     helpers.setCompletionUI(puzzle.id, solved);
     if (solved) {
+      wrongMoveUi.hide();
       helpers.notifyPuzzleSolved(puzzle.id, { firstTry: mistakes === 0 });
     }
-    helpers.updateActionButtons(puzzle.id, busy, chess.isGameOver(), expectedMove());
-  }
-
-  function expectedMove() {
-    if (phase === "white_open") return branching.opening.move;
-    if (phase === "black_reply") {
-      var list = branching.blackResponses || [];
-      for (var i = 0; i < list.length; i++) {
-        if (list[i].correct) return list[i].move;
-      }
-      return null;
-    }
-    if (phase === "white_finish" && activeFinish) return activeFinish.move;
-    return null;
   }
 
   function registerMistake() {
     mistakes += 1;
+  }
+
+  function clearBlackBranch() {
+    activeBlack = null;
+    activeFinish = null;
+  }
+
+  function retryWrongMove(ground) {
+    if (phase === "white_finish") {
+      if (chess.history().length > 0) chess.undo();
+      wrongMoveUi.hide();
+      applyState(ground);
+      return;
+    }
+    wrongMoveUi.hide();
+    applyState(ground);
+  }
+
+  function stepBackPhase(ground) {
+    wrongMoveUi.hide();
+    if (phase === "white_finish") {
+      if (chess.history().length > 0) chess.undo();
+      clearBlackBranch();
+      phase = "black_reply";
+    } else if (phase === "black_reply") {
+      if (chess.history().length > 0) chess.undo();
+      phase = "white_open";
+      clearBlackBranch();
+    } else {
+      resetBoard();
+      return;
+    }
+    applyState(ground);
+  }
+
+  function showWrongMoveOptions(ground, options) {
+    wrongMoveUi.show({
+      showStepBack: options.showStepBack,
+      onRetry: function () {
+        retryWrongMove(ground);
+      },
+      onStepBack: function () {
+        stepBackPhase(ground);
+      },
+    });
+  }
+
+  function activateBlackBranch(ground, branch, fallbackMessage) {
+    activeBlack = branch;
+    activeFinish = branchFinish(branch);
+    phase = "white_finish";
+    wrongMoveUi.hide();
+    applyState(ground, branch.message || fallbackMessage);
   }
 
   function onUserMove(ground, orig, dest) {
@@ -130,6 +195,7 @@ export function mountBranchingPuzzle(puzzle, helpers) {
       if (!movesMatch(attempted, branching.opening.move)) {
         registerMistake();
         applyState(ground, branching.opening.wrongMessage);
+        showWrongMoveOptions(ground, { showStepBack: false });
         return;
       }
       if (!chess.move(attempted)) {
@@ -137,7 +203,7 @@ export function mountBranchingPuzzle(puzzle, helpers) {
         return;
       }
       phase = "black_reply";
-      helpers.clearHintShape(ground);
+      wrongMoveUi.hide();
       applyState(ground, "✅ Správny úvodný ťah. Teraz zahrajte čiernu obranu.");
       return;
     }
@@ -149,56 +215,65 @@ export function mountBranchingPuzzle(puzzle, helpers) {
       }
 
       var known = findBlackResponse(branching, attempted);
-      if (!known && !branching.allowAnyBlack) {
+      if (known) {
+        activateBlackBranch(ground, known);
+        return;
+      }
+
+      if (!branching.allowAnyBlack) {
         chess.undo();
         registerMistake();
-        applyState(ground, branching.unknownBlackMessage);
+        applyState(
+          ground,
+          branching.unknownBlackMessage || "⚠️ Tento čierny ťah nie je v riešení."
+        );
+        showWrongMoveOptions(ground, { showStepBack: true });
         return;
       }
 
-      if (known && known.correct) {
-        activeBlack = known;
-        activeFinish = known.whiteFinish;
-        phase = "white_finish";
-        applyState(ground, known.message);
-        return;
-      }
-
-      registerMistake();
-      activeBlack = known || null;
-      activeFinish = null;
-      phase = "white_finish";
-      var msg = known
-        ? known.message
-        : branching.unknownBlackMessage || "⚠️ Iná čierna obrana.";
-      applyState(ground, msg);
+      var fallback = branching.defaultReply || {};
+      activateBlackBranch(ground, {
+        move: attempted,
+        winsOnFinish: false,
+        message:
+          fallback.message ||
+          branching.unknownBlackMessage ||
+          "⚠️ Iná čierna obrana. Skúste bielym dokončiť.",
+        white_finish: fallback.white_finish || fallback.whiteFinish || {
+          wrongMessage:
+            branching.unknownBlackMessage ||
+            "⚠️ Táto vetva nezodpovedá vzorovému riešeniu.",
+        },
+      });
       return;
     }
 
     if (phase === "white_finish") {
-      if (!activeFinish || !activeFinish.move) {
-        registerMistake();
-        applyState(
-          ground,
-          "⚠️ Táto vetva nemá jednoznačné dokončenie — resetnite a skúste Qe1+ Kh8 Qe8# (úloha 2) alebo Rc8+ Qf8 Rxf8 (úloha 3)."
-        );
-        return;
-      }
-      if (!movesMatch(attempted, activeFinish.move)) {
-        registerMistake();
-        applyState(ground, activeFinish.wrongMessage);
-        return;
-      }
       if (!chess.move(attempted)) {
         applyState(ground);
         return;
       }
-      phase = "done";
-      helpers.clearHintShape(ground);
-      var winMsg = isBranchingWin(chess, puzzle, phase)
-        ? "✅ Výborne! Hlavolam je vyriešený."
-        : "✅ Ťah bol zahraný — skontrolujte pozíciu.";
-      applyState(ground, winMsg);
+
+      var wins = branchWinsOnFinish(activeBlack);
+      var finish = activeFinish;
+
+      if (wins && finish && finish.move && movesMatch(attempted, finish.move)) {
+        phase = "done";
+        wrongMoveUi.hide();
+        var winMsg = isBranchingWin(chess, puzzle, phase)
+          ? "✅ Výborne! Hlavolam je vyriešený."
+          : "✅ Ťah bol zahraný — skontrolujte pozíciu.";
+        applyState(ground, winMsg);
+        return;
+      }
+
+      registerMistake();
+      var wrongMsg =
+        (finish && finish.wrongMessage) ||
+        (activeBlack && activeBlack.message) ||
+        "⚠️ Týmto ťahom úlohu nedokončíte.";
+      applyState(ground, wrongMsg);
+      showWrongMoveOptions(ground, { showStepBack: true });
       return;
     }
 
@@ -217,11 +292,7 @@ export function mountBranchingPuzzle(puzzle, helpers) {
       color: "white",
       showDests: true,
       dests: helpers.buildDests(chess),
-      events: {
-        after: function (orig, dest) {
-          onUserMove(ground, orig, dest);
-        },
-      },
+      events: { after: afterMove },
     },
     premovable: { enabled: false },
     drawable: { enabled: true, visible: true },
@@ -233,91 +304,13 @@ export function mountBranchingPuzzle(puzzle, helpers) {
     busy = false;
     phase = "white_open";
     mistakes = 0;
-    activeBlack = null;
-    activeFinish = null;
+    clearBlackBranch();
+    wrongMoveUi.hide();
     chess.reset();
     chess.load(startFen);
-    helpers.clearHintShape(ground);
     applyState(ground);
   }
 
   applyState(ground);
-
-  helpers.wireControls(puzzle, {
-    resetBoard: resetBoard,
-    expectedMove: expectedMove,
-    isBusy: function () {
-      return busy;
-    },
-    isGameOver: function () {
-      return chess.isGameOver();
-    },
-    clearHintShape: function () {
-      helpers.clearHintShape(ground);
-    },
-    showHintShape: function (move) {
-      helpers.showHintShape(ground, move);
-    },
-    onHint: function (move) {
-      setSubtitle("💡 Nápoveda: " + helpers.formatMoveHint(move));
-    },
-    onCoach: function (move) {
-      if (busy || chess.isGameOver()) return;
-      helpers.clearHintShape(ground);
-      if (phase === "white_open" && movesMatch(move, branching.opening.move)) {
-        chess.move(move);
-        phase = "black_reply";
-        applyState(ground, "🎓 Tréner: úvodný ťah.");
-        return;
-      }
-      if (phase === "black_reply") {
-        var known = findBlackResponse(branching, move);
-        if (!known || !known.correct) return;
-        chess.move(move);
-        activeBlack = known;
-        activeFinish = known.whiteFinish;
-        phase = "white_finish";
-        applyState(ground, "🎓 Tréner: vzorová čierna obrana.");
-        return;
-      }
-      if (phase === "white_finish" && activeFinish && movesMatch(move, activeFinish.move)) {
-        chess.move(move);
-        phase = "done";
-        applyState(ground, "🎓 Tréner: dokončovací ťah.");
-      }
-    },
-    onEngine: function (engineBtn) {
-      if (busy || chess.isGameOver()) return;
-      busy = true;
-      helpers.updateActionButtons(puzzle.id, busy, chess.isGameOver(), !!expectedMove());
-      engineBtn.disabled = true;
-      setSubtitle("⏳ Silný motor počíta najlepší ťah…");
-      window.setTimeout(function () {
-        var best = findStrongMove(chess, engineDepth);
-        busy = false;
-        if (!best) {
-          applyState(ground, "Motor nenašiel ťah.");
-          return;
-        }
-        helpers.clearHintShape(ground);
-        chess.move(best);
-        if (phase === "white_open") {
-          phase = "black_reply";
-        } else if (phase === "black_reply") {
-          var resp = findBlackResponse(branching, best);
-          if (resp && resp.correct) {
-            activeBlack = resp;
-            activeFinish = resp.whiteFinish;
-            phase = "white_finish";
-          } else {
-            registerMistake();
-            phase = "white_finish";
-          }
-        } else if (phase === "white_finish" && activeFinish && movesMatch(best, activeFinish.move)) {
-          phase = "done";
-        }
-        applyState(ground, "⚙️ Silný ťah (motor): " + best.san);
-      }, 40);
-    },
-  });
+  helpers.wireControls(puzzle, { resetBoard: resetBoard });
 }
