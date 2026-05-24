@@ -3171,7 +3171,7 @@ a.stripe-btn.woo-pay-btn:hover {
   border-bottom: none;
   box-shadow: none;
   background: transparent;
-  transition: padding var(--fx-time-mid) var(--fx-ease), background-color var(--fx-time-mid) var(--fx-ease);
+  transition: none;
 }
 
 .home-page .site-header::before,
@@ -3242,10 +3242,7 @@ a.stripe-btn.woo-pay-btn:hover {
   overflow-y: hidden;
   box-shadow: none !important;
   scrollbar-width: thin;
-  transition:
-    min-height var(--fx-time-mid) var(--fx-ease),
-    margin var(--fx-time-mid) var(--fx-ease),
-    box-shadow var(--fx-time-mid) var(--fx-ease);
+  transition: none;
 }
 
 .home-page .site-header .nav::before {
@@ -3941,8 +3938,12 @@ body.home-page.header-compact .site-header {
   --header-icon-height: calc(var(--header-icon-width) * 913 / 689);
   --header-icon-size: var(--header-icon-width);
   --emblem-scale: 1;
-  transform: translateY(calc(-1 * var(--header-shift, 0px))) !important;
+  --header-progress: 0;
+  transform: translate3d(0, calc(-1 * var(--header-shift, 0px)), 0) !important;
+  transition: none !important;
   will-change: transform;
+  backface-visibility: hidden;
+  contain: layout style;
 }
 
 .home-page .site-header .header-brand-slot {
@@ -3960,9 +3961,11 @@ body.home-page.header-compact .site-header {
   align-self: center !important;
   flex-shrink: 0 !important;
   opacity: calc(1 - var(--emblem-hide, 0)) !important;
-  transform: scale(var(--emblem-scale, 1)) !important;
+  transform: scale3d(var(--emblem-scale, 1), var(--emblem-scale, 1), 1) !important;
   transform-origin: center top !important;
+  transition: none !important;
   will-change: transform, opacity;
+  backface-visibility: hidden;
 }
 
 body.home-page.header-hide-emblem .site-header .header-brand-slot {
@@ -4017,6 +4020,7 @@ body.home-page.header-hide-emblem .site-header .header-brand-slot {
   width: 100% !important;
   min-height: 58px !important;
   margin: 0 !important;
+  transition: none !important;
   padding-top: 0 !important;
   padding-bottom: 0 !important;
   border: none !important;

@@ -22,26 +22,35 @@
   if (heroYear) heroYear.textContent = String(y);
   if (footerYear) footerYear.textContent = String(y);
 
-  /** Erb + header — plynulý scroll bez layout glitchu (maxShift cache, scale namiesto height) */
+  /** Erb + header — RAF synced to display (60/120/144 Hz), frame-rate independent smoothing */
   function initHeaderDynamics() {
     if (!document.body) return;
     var body = document.body;
     var header = document.querySelector(".site-header");
     var nav = document.querySelector(".site-header .nav");
     if (!header || !nav) return;
-    var targetShift = 0;
+    var isHome = body.classList.contains("home-page");
     var cachedMaxShift = 0;
 
     var emblemHideStart = 0;
     var emblemHideEnd = 72;
+    var targetShift = 0;
     var currentShift = 0;
     var rafId = 0;
+    var lastFrameTime = 0;
+    /** 0 = 1:1 so scroll; RAF keeps updates on every display frame (60/120/144 Hz) */
+    var shiftSmoothingSec = 0;
 
     function measureLayout() {
       body.style.setProperty("--emblem-hide", "0");
       body.style.setProperty("--emblem-scale", "1");
+      body.style.setProperty("--header-progress", "0");
       body.classList.remove("header-hide-emblem");
       cachedMaxShift = Math.max(0, nav.offsetTop || 0);
+    }
+
+    function smoothstep(t) {
+      return t * t * (3 - 2 * t);
     }
 
     function setEmblemHide(scrollY) {
@@ -59,63 +68,115 @@
           : scrollY > emblemHideEnd
             ? 1
             : 0;
-      var eased = progress * progress * (3 - 2 * progress);
+      var eased = smoothstep(progress);
       body.style.setProperty("--emblem-hide", eased.toFixed(4));
       body.style.setProperty("--emblem-scale", (1 - eased * 0.88).toFixed(4));
       body.classList.toggle("header-hide-emblem", eased >= 0.995);
     }
 
-    function applyShift() {
-      var y = window.scrollY || 0;
-      setEmblemHide(y);
-      targetShift = Math.min(y, cachedMaxShift);
+    function updateTargets(scrollY) {
+      setEmblemHide(scrollY);
+      targetShift = Math.min(scrollY, cachedMaxShift);
+      var headerProgress =
+        cachedMaxShift > 0 ? Math.min(1, targetShift / cachedMaxShift) : 0;
+      body.style.setProperty("--header-progress", headerProgress.toFixed(4));
       body.classList.toggle(
         "header-compact",
-        cachedMaxShift > 0 && targetShift >= cachedMaxShift - 0.5
+        cachedMaxShift > 0 && headerProgress >= 0.995
       );
     }
 
-    function animateShift() {
-      var delta = targetShift - currentShift;
-      if (Math.abs(delta) < 0.15) {
+    function paintShift() {
+      body.style.setProperty("--header-shift", currentShift.toFixed(3) + "px");
+    }
+
+    function tick(now) {
+      if (!lastFrameTime) lastFrameTime = now;
+      var dt = Math.min(32, now - lastFrameTime) / 1000;
+      lastFrameTime = now;
+
+      var scrollY = window.scrollY || 0;
+      updateTargets(scrollY);
+
+      if (!shiftSmoothingSec) {
         currentShift = targetShift;
       } else {
-        currentShift += delta * 0.18;
+        var alpha = 1 - Math.exp(-dt / shiftSmoothingSec);
+        currentShift += (targetShift - currentShift) * alpha;
+        if (Math.abs(targetShift - currentShift) < 0.02) {
+          currentShift = targetShift;
+        }
       }
-      body.style.setProperty("--header-shift", currentShift.toFixed(2) + "px");
-      if (Math.abs(targetShift - currentShift) > 0.15) {
-        rafId = window.requestAnimationFrame(animateShift);
+      paintShift();
+
+      if (isHome) {
+        rafId = window.requestAnimationFrame(tick);
+        return;
+      }
+
+      if (Math.abs(targetShift - currentShift) > 0.02) {
+        rafId = window.requestAnimationFrame(tick);
       } else {
         rafId = 0;
       }
     }
 
+    function startLoop() {
+      if (rafId) return;
+      lastFrameTime = 0;
+      rafId = window.requestAnimationFrame(tick);
+    }
+
+    function stopLoop() {
+      if (!rafId) return;
+      window.cancelAnimationFrame(rafId);
+      rafId = 0;
+      lastFrameTime = 0;
+    }
+
+    function syncImmediate() {
+      var scrollY = window.scrollY || 0;
+      updateTargets(scrollY);
+      currentShift = targetShift;
+      paintShift();
+    }
+
     function onScrollOrResize() {
-      applyShift();
-      if (!rafId) {
-        rafId = window.requestAnimationFrame(animateShift);
+      if (isHome) {
+        if (!rafId) startLoop();
+        return;
       }
+      syncImmediate();
+      if (Math.abs(targetShift - currentShift) > 0.02) startLoop();
     }
 
     measureLayout();
-    applyShift();
-    body.style.setProperty(
-      "--header-shift",
-      Math.min(window.scrollY || 0, cachedMaxShift).toFixed(2) + "px"
-    );
+    syncImmediate();
+    if (isHome) startLoop();
+
     window.addEventListener("scroll", onScrollOrResize, { passive: true });
     window.addEventListener(
       "resize",
       function () {
         measureLayout();
-        onScrollOrResize();
+        syncImmediate();
+        if (isHome && !rafId) startLoop();
       },
       { passive: true }
     );
+    document.addEventListener("visibilitychange", function () {
+      if (document.hidden) {
+        stopLoop();
+        return;
+      }
+      syncImmediate();
+      if (isHome) startLoop();
+    });
     if (document.fonts && document.fonts.ready) {
       document.fonts.ready.then(function () {
         measureLayout();
-        onScrollOrResize();
+        syncImmediate();
+        if (isHome && !rafId) startLoop();
       });
     }
   }
