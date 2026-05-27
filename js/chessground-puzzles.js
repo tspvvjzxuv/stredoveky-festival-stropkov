@@ -1,15 +1,14 @@
-import { Chessground } from "https://cdn.jsdelivr.net/npm/@lichess-org/chessground@10.1.1/dist/chessground.js";
-import { Chess } from "https://cdn.jsdelivr.net/npm/chess.js@1.4.0/+esm";
 import { FESTIVAL_PUZZLES } from "./puzzles-data.js";
-import { movesMatch } from "./puzzle-engine.js";
-import { mountBranchingPuzzle } from "./puzzle-branching.js";
+import { mountBotPuzzle } from "./puzzle-bot.js";
 import {
   unlockPuzzleReward,
   getRewardMeta,
   isPuzzleRewardUnlocked,
   initPuzzleRewards,
 } from "./puzzle-rewards.js";
-import { createWrongMoveOverlay } from "./puzzle-wrong-move-ui.js";
+import { renderInvesticiaGrid, renderPuzzleGrid, applyPuzzleAccessUI } from "./puzzle-board-ui.js";
+import { isPuzzleAccessUnlocked, syncPermanentFromSchedule, isDevUnlockAll } from "./puzzle-unlock.js";
+import { initPuzzleTimeline, bindPuzzleUnlockPrompts } from "./puzzle-timeline-ui.js";
 
 var ALL_SQUARES = [
   "a1","b1","c1","d1","e1","f1","g1","h1",
@@ -22,6 +21,13 @@ var ALL_SQUARES = [
   "a8","b8","c8","d8","e8","f8","g8","h8",
 ];
 
+var mountedIds = {};
+var mountObservers = {};
+
+/**
+ * Legálne cieľové polia pre Chessground — z chess.js (FIDE pravidlá:
+ * šach, mat, branie, promo pešiaka, rošáda, en passant podľa FEN).
+ */
 function buildDests(chess) {
   var dests = new Map();
   for (var i = 0; i < ALL_SQUARES.length; i++) {
@@ -33,25 +39,6 @@ function buildDests(chess) {
     dests.set(sq, to);
   }
   return dests;
-}
-
-function getStatusText(chess, lastMoveOk, extra) {
-  if (chess.isCheckmate()) {
-    return chess.turn() === "w"
-      ? "✅ Úspech! Hlavolam je vyriešený matom (vyhral čierny)."
-      : "✅ Úspech! Hlavolam je vyriešený matom (vyhral biely).";
-  }
-  if (chess.isStalemate()) return "ℹ️ Koniec: pat.";
-  if (chess.isDraw()) return "ℹ️ Koniec: remíza.";
-  if (chess.isCheck()) return chess.turn() === "w" ? "⚠️ Na ťahu biely (šach)." : "⚠️ Na ťahu čierny (šach).";
-  if (lastMoveOk) return "✅ Ťah bol úspešne vykonaný.";
-  if (extra) return extra;
-  return chess.turn() === "w" ? "Na ťahu biely." : "Na ťahu čierny.";
-}
-
-function isPuzzleSolved(chess, solutionLine, solutionStep) {
-  if (solutionLine.length && solutionStep >= solutionLine.length) return true;
-  return chess.isCheckmate();
 }
 
 function setCompletionUI(puzzleId, solvedNow) {
@@ -73,9 +60,9 @@ function setCompletionUI(puzzleId, solvedNow) {
     var meta = getRewardMeta(puzzleId);
     if (hasReward && meta) {
       banner.textContent =
-        "🏆 Úloha splnená! Máte " + meta.partLabel + " — pozrite investíciu vyššie.";
+        "🏆 Úloha splnená! Prispeli ste k " + meta.partLabel + " — pozrite investíciu vyššie.";
     } else {
-      banner.textContent = "🏆 Výborne! Úloha splnená.";
+      banner.textContent = "🏆 Výborne! Úloha splnená proti počítaču.";
     }
   } else if (banner) {
     banner.remove();
@@ -88,7 +75,7 @@ function setCompletionUI(puzzleId, solvedNow) {
       badge.className = "sach-reward-badge";
       item.appendChild(badge);
     }
-    badge.textContent = "✓ Pečať už získaná";
+    badge.textContent = "✓ Úloha už splnená";
   } else if (badge) {
     badge.remove();
   }
@@ -108,9 +95,9 @@ function notifyPuzzleSolved(puzzleId, options) {
         item.appendChild(banner);
       }
       var partial =
-        options && options.firstTry === false ? " (čiastočná pečať — boli chyby v riešení)" : "";
+        options && options.firstTry === false ? " (čiastočný zápis — boli chyby v riešení)" : "";
       banner.textContent =
-        "🎁 Nová odmena! " + meta.icon + " " + meta.title + " — časť investície je odkrytá." + partial;
+        "🎁 " + meta.icon + " " + meta.title + " — pokrok v investícii." + partial;
     }
   }
 }
@@ -130,171 +117,49 @@ function createPuzzleHelpers() {
 }
 
 function mountPuzzleBoard(puzzle) {
-  if (puzzle.branching) {
-    mountBranchingPuzzle(puzzle, createPuzzleHelpers());
-    return;
-  }
+  if (!isPuzzleAccessUnlocked(puzzle.id)) return;
+  if (mountedIds[puzzle.id]) return;
+  if (!puzzle.play || !puzzle.fen) return;
+  var el = document.getElementById(puzzle.id);
+  if (!el) return;
+  mountedIds[puzzle.id] = true;
+  mountBotPuzzle(puzzle, createPuzzleHelpers());
+}
 
+function schedulePuzzleMount(puzzle) {
+  if (!isPuzzleAccessUnlocked(puzzle.id) || mountedIds[puzzle.id]) return;
   var el = document.getElementById(puzzle.id);
   if (!el) return;
 
-  var title = document.getElementById(puzzle.id + "-title");
-  var subtitle = document.getElementById(puzzle.id + "-subtitle");
-  if (title && puzzle.title) title.textContent = puzzle.title;
-  var baseSubtitle = puzzle.subtitle || "";
-  if (subtitle && baseSubtitle) subtitle.textContent = baseSubtitle;
-  if (puzzle.ariaLabel) el.setAttribute("aria-label", puzzle.ariaLabel);
-
-  var chess = new Chess(puzzle.fen);
-  var solutionLine = puzzle.solutionLine || [];
-  var solutionStep = 0;
-  var startFen = puzzle.fen;
-  var busy = false;
-  var wrongMoveUi = createWrongMoveOverlay(el);
-
-  function expectedMove() {
-    return solutionLine[solutionStep] || null;
+  if (el.offsetWidth > 20) {
+    mountPuzzleBoard(puzzle);
+    return;
   }
 
-  function setSubtitle(status, extra) {
-    if (!subtitle) return;
-    var text = getStatusText(chess, !!status, extra);
-    subtitle.textContent = baseSubtitle ? baseSubtitle + " | " + text : text;
+  if (mountObservers[puzzle.id]) return;
+
+  if (typeof IntersectionObserver === "undefined") {
+    mountPuzzleBoard(puzzle);
+    return;
   }
 
-  function afterMove(orig, dest) {
-    onUserMove(ground, orig, dest);
-  }
-
-  function applyState(ground, lastMoveOk, extra) {
-    var gameOver = chess.isGameOver();
-    ground.set({
-      fen: chess.fen(),
-      turnColor: chess.turn() === "w" ? "white" : "black",
-      movable: {
-        free: false,
-        color: gameOver || busy || chess.turn() !== "w" ? null : "white",
-        showDests: true,
-        dests: gameOver || busy ? new Map() : buildDests(chess),
-        events: { after: afterMove },
-      },
-      drawable: { enabled: true },
-    });
-    setSubtitle(lastMoveOk, extra);
-    var solved = isPuzzleSolved(chess, solutionLine, solutionStep);
-    setCompletionUI(puzzle.id, solved);
-    if (solved) {
-      wrongMoveUi.hide();
-      notifyPuzzleSolved(puzzle.id, { firstTry: true });
-    }
-  }
-
-  function playMoveOnBoard(ground, move, extra) {
-    if (!move) return false;
-    var result = chess.move({
-      from: move.from,
-      to: move.to,
-      promotion: move.promotion || "q",
-    });
-    if (!result) return false;
-    solutionStep += 1;
-    applyState(ground, true, extra);
-    return true;
-  }
-
-  function maybePlayOpponentReply(ground) {
-    var next = expectedMove();
-    if (!next) return;
-    if (solutionLine.length > solutionStep) {
-      busy = true;
-      window.setTimeout(function () {
-        playMoveOnBoard(ground, next, "🤖 Protihráč odpovedá podľa vzorového riešenia.");
-        busy = false;
-        applyState(ground, true);
-      }, 420);
-    }
-  }
-
-  function onUserMove(ground, orig, dest) {
-    if (busy || !orig || !dest) {
-      applyState(ground, false);
-      return;
-    }
-
-    var attempted = { from: orig, to: dest, promotion: "q" };
-    var expected = expectedMove();
-
-    if (expected && !movesMatch(attempted, expected)) {
-      applyState(ground, false, "⚠️ Iný ťah.");
-      wrongMoveUi.show({
-        showStepBack: solutionStep > 0,
-        onRetry: function () {
-          applyState(ground, false);
-        },
-        onStepBack: function () {
-          while (solutionStep > 0) {
-            chess.undo();
-            solutionStep -= 1;
-          }
-          applyState(ground, false);
-        },
-      });
-      return;
-    }
-
-    var move = chess.move({ from: orig, to: dest, promotion: "q" });
-    if (!move) {
-      applyState(ground, false);
-      return;
-    }
-
-    solutionStep += 1;
-    wrongMoveUi.hide();
-    applyState(ground, true, expected ? "✅ Správny ťah v riešení." : null);
-
-    if (!chess.isGameOver() && expectedMove()) {
-      maybePlayOpponentReply(ground);
-    }
-  }
-
-  var ground = Chessground(el, {
-    fen: chess.fen(),
-    orientation: "white",
-    coordinates: true,
-    viewOnly: false,
-    selectable: { enabled: true },
-    draggable: { enabled: true, showGhost: true },
-    movable: {
-      free: false,
-      color: chess.turn() === "w" ? "white" : null,
-      showDests: true,
-      dests: buildDests(chess),
-      events: { after: afterMove },
+  mountObservers[puzzle.id] = new IntersectionObserver(
+    function (entries) {
+      for (var i = 0; i < entries.length; i++) {
+        if (entries[i].isIntersecting && !mountedIds[puzzle.id]) {
+          mountPuzzleBoard(puzzle);
+        }
+      }
     },
-    premovable: { enabled: false },
-    drawable: { enabled: true, visible: true },
-    highlight: { lastMove: true, check: true },
-    animation: { enabled: true },
-  });
-
-  function resetBoard() {
-    busy = false;
-    solutionStep = 0;
-    wrongMoveUi.hide();
-    chess.reset();
-    chess.load(startFen);
-    applyState(ground, false);
-  }
-
-  applyState(ground, false);
-  wirePuzzleControls(puzzle, { resetBoard: resetBoard });
+    { root: null, rootMargin: "80px", threshold: 0.12 }
+  );
+  mountObservers[puzzle.id].observe(el);
 }
 
-function initChessgroundPuzzles() {
-  initPuzzleRewards();
+function mountAllPlayablePuzzles() {
   for (var i = 0; i < FESTIVAL_PUZZLES.length; i++) {
     var p = FESTIVAL_PUZZLES[i];
-    if (p && p.id && p.fen) mountPuzzleBoard(p);
+    if (p && p.id && p.fen && isPuzzleAccessUnlocked(p.id)) schedulePuzzleMount(p);
   }
   for (var j = 0; j < FESTIVAL_PUZZLES.length; j++) {
     var pid = FESTIVAL_PUZZLES[j].id;
@@ -304,5 +169,37 @@ function initChessgroundPuzzles() {
   }
 }
 
+function refreshAfterAccessChange() {
+  applyPuzzleAccessUI();
+  mountAllPlayablePuzzles();
+  initPuzzleRewards();
+}
+
+function scrollToPuzzle(puzzleId) {
+  var item = document.querySelector('.sach-visual-item[data-puzzle-id="' + puzzleId + '"]');
+  if (item) item.scrollIntoView({ behavior: "smooth", block: "nearest" });
+  var weekSection = document.getElementById(
+    "sach-week-" + (item && item.dataset.weekIndex ? item.dataset.weekIndex : "")
+  );
+  if (weekSection && !item) weekSection.scrollIntoView({ behavior: "smooth", block: "start" });
+}
+
+function initChessgroundPuzzles() {
+  syncPermanentFromSchedule();
+  renderInvesticiaGrid();
+  renderPuzzleGrid();
+  applyPuzzleAccessUI();
+  initPuzzleRewards();
+  bindPuzzleUnlockPrompts();
+  initPuzzleTimeline(scrollToPuzzle);
+  mountAllPlayablePuzzles();
+
+  window.addEventListener("ptra-puzzle-access-changed", function () {
+    refreshAfterAccessChange();
+  });
+}
+
 if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", initChessgroundPuzzles);
 else initChessgroundPuzzles();
+
+export { isDevUnlockAll };

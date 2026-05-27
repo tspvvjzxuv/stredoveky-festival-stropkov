@@ -4649,6 +4649,10 @@ body.home-page {
 
 #sachove-hlavolamy .sach-investicia__part {
   position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   min-height: 7.5rem;
   padding: 0.85rem 0.75rem;
   border-radius: 8px;
@@ -4659,6 +4663,10 @@ body.home-page {
     border-color 0.3s ease,
     box-shadow 0.3s ease,
     background 0.3s ease;
+}
+
+#sachove-hlavolamy .sach-investicia__part.is-unlocked {
+  justify-content: flex-start;
 }
 
 #sachove-hlavolamy .sach-investicia__part.is-partial .sach-investicia__clue strong {
@@ -4679,9 +4687,16 @@ body.home-page {
 }
 
 #sachove-hlavolamy .sach-investicia__lock {
-  margin: 1.5rem 0 0;
+  margin: 0;
   font-size: 1.75rem;
+  line-height: 1;
   opacity: 0.55;
+  flex: 0 0 auto;
+}
+
+#sachove-hlavolamy .sach-investicia__body {
+  width: 100%;
+  flex: 0 1 auto;
 }
 
 #sachove-hlavolamy .sach-investicia__body h3 {
@@ -4760,10 +4775,148 @@ body.home-page {
   }
 }
 
-#sachove-hlavolamy .sach-visual-grid {
+#sachove-hlavolamy .sach-puzzle-week {
+  margin-bottom: 2rem;
+  padding-bottom: 1.25rem;
+  border-bottom: 1px solid rgba(255, 203, 0, 0.12);
+}
+
+#sachove-hlavolamy .sach-puzzle-week:not(.is-week-active) {
+  display: none;
+}
+
+#sachove-hlavolamy .sach-puzzle-week.is-week-active {
+  border-color: rgba(255, 203, 0, 0.35);
+  box-shadow: inset 0 0 0 1px rgba(255, 203, 0, 0.18);
+}
+
+#sachove-hlavolamy .sach-puzzle-week:last-child {
+  border-bottom: none;
+  margin-bottom: 0;
+}
+
+#sachove-hlavolamy .sach-puzzle-week__title {
+  margin: 0 0 0.35rem;
+  font-family: var(--font-display, "Cinzel", serif);
+  font-size: 1.15rem;
+  color: var(--ds-tertiary-bright, #ffe066) !important;
+}
+
+#sachove-hlavolamy .sach-puzzle-week__meta {
+  margin: 0 0 0.85rem;
+}
+
+#sachove-hlavolamy .sach-week-puzzles {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 0.9rem;
+  gap: 1rem;
+}
+
+#sachove-hlavolamy .sach-difficulty {
+  display: inline-block;
+  margin-right: 0.35rem;
+  padding: 0.1rem 0.45rem;
+  border-radius: 4px;
+  font-family: var(--font-ui, "Montserrat", sans-serif);
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  vertical-align: middle;
+}
+
+#sachove-hlavolamy .sach-difficulty--easy {
+  background: rgba(92, 201, 122, 0.22);
+  color: #9ee8b0;
+}
+
+#sachove-hlavolamy .sach-difficulty--medium {
+  background: rgba(255, 203, 0, 0.2);
+  color: #ffe066;
+}
+
+#sachove-hlavolamy .sach-difficulty--hard {
+  background: rgba(200, 72, 72, 0.25);
+  color: #ffb3b3;
+}
+
+#sachove-hlavolamy .sach-timeline__week-group {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.2rem;
+  padding: 0.2rem;
+  border-radius: 8px;
+  transition: box-shadow 0.2s ease;
+}
+
+#sachove-hlavolamy .sach-timeline__week-group.is-active {
+  box-shadow: 0 0 0 2px rgba(255, 203, 0, 0.28);
+}
+
+#sachove-hlavolamy .sach-timeline__week-group.is-active .sach-timeline__week-head {
+  border-color: var(--ds-tertiary, #ffcb00);
+  transform: translateY(-2px);
+}
+
+#sachove-hlavolamy .sach-timeline__week-head {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 3.1rem;
+  padding: 0.35rem 0.4rem;
+  border-radius: 6px;
+  border: 1px solid rgba(255, 203, 0, 0.28);
+  background: rgba(8, 10, 16, 0.55);
+  color: rgba(238, 231, 218, 0.88);
+  font-family: var(--font-ui, "Montserrat", sans-serif);
+  font-size: 0.68rem;
+  line-height: 1.2;
+  cursor: pointer;
+}
+
+#sachove-hlavolamy .sach-timeline__week-head.is-unlocked {
+  border-color: rgba(92, 201, 122, 0.55);
+  background: rgba(24, 48, 34, 0.65);
+}
+
+#sachove-hlavolamy .sach-timeline__slots {
+  display: flex;
+  gap: 0.2rem;
+}
+
+#sachove-hlavolamy .sach-timeline__slot {
+  min-width: 1.35rem;
+  height: 1.35rem;
+  padding: 0;
+  border-radius: 4px;
+  border: 1px solid rgba(255, 203, 0, 0.25);
+  background: rgba(8, 10, 16, 0.7);
+  color: rgba(238, 231, 218, 0.9);
+  font-family: var(--font-ui, "Montserrat", sans-serif);
+  font-size: 0.62rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+#sachove-hlavolamy .sach-timeline__slot.is-unlocked {
+  border-color: rgba(92, 201, 122, 0.5);
+}
+
+#sachove-hlavolamy .sach-timeline__slot.is-solved {
+  background: rgba(92, 201, 122, 0.35);
+}
+
+@media (max-width: 1100px) {
+  #sachove-hlavolamy .sach-week-puzzles {
+    grid-template-columns: 1fr;
+  }
+}
+
+#sachove-hlavolamy .sach-visual-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
   margin-top: 0.85rem;
 }
 
@@ -4781,6 +4934,19 @@ body.home-page {
   font-size: 0.95rem;
   letter-spacing: 0.04em;
   color: #f0d39e !important;
+}
+
+#sachove-hlavolamy .sach-visual-item h4.sach-puzzle-heading {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.35rem 0.5rem;
+}
+
+#sachove-hlavolamy .sach-puzzle-heading__main {
+  flex: 1 1 auto;
+  min-width: 0;
 }
 
 #sachove-hlavolamy .sach-visual-item p {
@@ -4840,6 +5006,10 @@ body.home-page {
 #sachove-hlavolamy .chessground-host {
   position: relative;
   z-index: 2300;
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 100%;
+  margin-inline: auto;
   padding: 0.25rem;
   border-radius: 7px;
   background: linear-gradient(180deg, rgba(8, 10, 14, 0.72) 0%, rgba(20, 12, 8, 0.58) 100%);
@@ -4865,6 +5035,63 @@ body.home-page {
   display: none !important;
 }
 
+#sachove-hlavolamy .sach-wrong-move-toast {
+  position: absolute;
+  left: 50%;
+  bottom: 0.65rem;
+  z-index: 5;
+  max-width: calc(100% - 1.5rem);
+  padding: 0.4rem 0.65rem;
+  border-radius: 6px;
+  font-size: 0.78rem;
+  line-height: 1.35;
+  text-align: center;
+  color: #fff8e8;
+  background: rgba(120, 28, 28, 0.92);
+  border: 1px solid rgba(255, 180, 120, 0.45);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
+  transform: translateX(-50%) translateY(0.35rem);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+#sachove-hlavolamy .sach-wrong-move-toast.is-visible,
+#sachove-hlavolamy .sach-wrong-move-toast:not([hidden]).is-visible {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+#sachove-hlavolamy .sach-wrong-move-toast[hidden] {
+  display: none !important;
+}
+
+#sachove-hlavolamy .sach-puzzle-stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  flex: 0 0 auto;
+  justify-content: flex-end;
+}
+
+#sachove-hlavolamy .sach-move-counter {
+  flex: 0 0 auto;
+  padding: 0.2rem 0.5rem;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: #f8f0dc;
+  background: rgba(12, 14, 20, 0.82);
+  border: 1px solid rgba(255, 212, 140, 0.35);
+  white-space: nowrap;
+}
+
+#sachove-hlavolamy .sach-attempt-counter {
+  border-color: rgba(220, 160, 120, 0.45);
+  color: #f5e6d8;
+}
+
 #sachove-hlavolamy .sach-wrong-move-btn {
   min-width: min(100%, 11rem);
   font-size: 0.82rem;
@@ -4873,7 +5100,10 @@ body.home-page {
 
 #sachove-hlavolamy .cg-board {
   position: relative;
+  box-sizing: border-box;
   width: 100%;
+  max-width: 100%;
+  margin-inline: auto;
   aspect-ratio: 1 / 1;
   border-radius: 6px;
   border: 1px solid rgba(242, 204, 140, 0.5);
@@ -4881,10 +5111,169 @@ body.home-page {
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.28);
 }
 
+/* Šachová stránka — širší layout na PC, väčšie dosky na tablete, mobil na celú šírku */
+.page-main.sach-page {
+  max-width: min(1320px, calc(100vw - 1.25rem));
+}
+
+@media (min-width: 1101px) {
+  .page-main.sach-page {
+    max-width: min(1380px, calc(100vw - 2rem));
+  }
+
+  #sachove-hlavolamy .sach-week-puzzles {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1.35rem;
+  }
+
+  #sachove-hlavolamy .chessground-host {
+    padding: 0.35rem;
+  }
+}
+
+@media (min-width: 601px) and (max-width: 1100px) {
+  #sachove-hlavolamy .sach-week-puzzles {
+    grid-template-columns: 1fr;
+    gap: 1.35rem;
+  }
+
+  #sachove-hlavolamy .chessground-host {
+    max-width: min(100%, 38rem);
+  }
+}
+
+@media (max-width: 600px) {
+  .page-main.sach-page {
+    padding-left: max(0.35rem, env(safe-area-inset-left, 0px));
+    padding-right: max(0.35rem, env(safe-area-inset-right, 0px));
+  }
+
+  #sachove-hlavolamy .card:has(#sach-puzzle-grid) {
+    padding-left: 0.35rem;
+    padding-right: 0.35rem;
+  }
+
+  #sachove-hlavolamy .sach-visual-item {
+    padding-left: 0.15rem;
+    padding-right: 0.15rem;
+  }
+
+  #sachove-hlavolamy .sach-week-puzzles {
+    gap: 1.15rem;
+  }
+
+  #sachove-hlavolamy .chessground-host {
+    width: 100%;
+    max-width: 100%;
+    padding: 0.2rem;
+  }
+
+  #sachove-hlavolamy .cg-board {
+    width: 100%;
+    max-width: 100%;
+  }
+}
+
 @media (max-width: 900px) {
-  #sachove-hlavolamy .sach-visual-grid {
+  #sachove-hlavolamy .sach-week-puzzles {
     grid-template-columns: 1fr;
   }
+}
+
+#sachove-hlavolamy .sach-investicia__grid {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+@media (max-width: 1100px) {
+  #sachove-hlavolamy .sach-investicia__grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 700px) {
+  #sachove-hlavolamy .sach-investicia__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+#sachove-hlavolamy .sach-puzzle-timeline-card {
+  margin-bottom: 1rem;
+}
+
+#sachove-hlavolamy .sach-puzzle-timeline {
+  margin-top: 0.75rem;
+}
+
+#sachove-hlavolamy .sach-timeline__range {
+  width: 100%;
+  margin: 0.5rem 0 0.75rem;
+  accent-color: var(--ds-tertiary, #ffcb00);
+}
+
+#sachove-hlavolamy .sach-timeline__label {
+  margin: 0 0 0.85rem;
+  font-family: var(--font-ui, "Montserrat", sans-serif);
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--ds-tertiary-bright, #ffe066) !important;
+}
+
+#sachove-hlavolamy .sach-timeline__track {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 0.35rem 0.5rem;
+  padding-bottom: 0.25rem;
+  overflow-x: auto;
+}
+
+#sachove-hlavolamy .sach-timeline__marker-week {
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+#sachove-hlavolamy .sach-timeline__marker-date {
+  opacity: 0.85;
+}
+
+#sachove-hlavolamy .sach-timeline__festival {
+  margin-left: auto;
+  padding: 0.35rem 0.55rem;
+  font-family: var(--font-ui, "Montserrat", sans-serif);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--ds-tertiary, #ffcb00) !important;
+  white-space: nowrap;
+}
+
+#sachove-hlavolamy .sach-timeline__dev {
+  margin-top: 0.65rem;
+}
+
+#sachove-hlavolamy .sach-visual-item.is-schedule-locked .cg-board {
+  pointer-events: none;
+  filter: grayscale(0.35) brightness(0.72);
+}
+
+#sachove-hlavolamy .sach-puzzle-lock {
+  margin: 0.65rem 0 0;
+  padding: 0.75rem 0.85rem;
+  border-radius: 8px;
+  border: 1px dashed rgba(255, 203, 0, 0.35);
+  background: rgba(8, 10, 16, 0.45);
+  text-align: center;
+}
+
+#sachove-hlavolamy .sach-puzzle-lock p {
+  margin: 0 0 0.5rem;
+  font-size: 0.88rem;
+  color: rgba(238, 231, 218, 0.92) !important;
+}
+
+#sachove-hlavolamy .sach-puzzle-lock p:last-child {
+  margin-bottom: 0.75rem;
 }
 
 .home-page .btn,

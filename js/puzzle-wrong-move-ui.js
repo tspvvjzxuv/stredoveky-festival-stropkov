@@ -28,10 +28,21 @@ export function createWrongMoveOverlay(boardEl) {
     host.appendChild(overlay);
   }
 
+  var toast = host.querySelector(".sach-wrong-move-toast");
+  if (!toast) {
+    toast = document.createElement("div");
+    toast.className = "sach-wrong-move-toast";
+    toast.hidden = true;
+    toast.setAttribute("role", "status");
+    toast.setAttribute("aria-live", "polite");
+    host.appendChild(toast);
+  }
+
   var retryBtn = overlay.querySelector(".btn-primary");
   var backBtn = overlay.querySelector(".btn-outline");
   var onRetry = null;
   var onStepBack = null;
+  var toastTimer = null;
 
   retryBtn.addEventListener("click", function () {
     if (onRetry) onRetry();
@@ -55,6 +66,26 @@ export function createWrongMoveOverlay(boardEl) {
       overlay.hidden = true;
       onRetry = null;
       onStepBack = null;
+    },
+    showBriefFeedback: function (message, durationMs) {
+      if (!message) return;
+      toast.textContent = message;
+      toast.hidden = false;
+      toast.classList.add("is-visible");
+      if (toastTimer) window.clearTimeout(toastTimer);
+      toastTimer = window.setTimeout(function () {
+        toast.hidden = true;
+        toast.classList.remove("is-visible");
+        toastTimer = null;
+      }, durationMs || 2800);
+    },
+    hideBriefFeedback: function () {
+      if (toastTimer) {
+        window.clearTimeout(toastTimer);
+        toastTimer = null;
+      }
+      toast.hidden = true;
+      toast.classList.remove("is-visible");
     },
   };
 }
