@@ -61,6 +61,7 @@ html {
   scroll-behavior: smooth;
   -webkit-text-size-adjust: 100%;
   text-size-adjust: 100%;
+  color-scheme: dark;
 }
 
 body {
@@ -5105,36 +5106,10 @@ body.home-page {
   max-width: 100%;
   margin-inline: auto;
   aspect-ratio: 1 / 1;
-  min-height: min(92vw, 24rem);
   border-radius: 6px;
   border: 1px solid rgba(242, 204, 140, 0.5);
   overflow: hidden;
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.28);
-}
-
-@supports (aspect-ratio: 1 / 1) {
-  #sachove-hlavolamy .cg-board {
-    min-height: 0;
-    height: auto;
-  }
-}
-
-@supports not (aspect-ratio: 1 / 1) {
-  #sachove-hlavolamy .chessground-host {
-    position: relative;
-    width: 100%;
-    height: 0;
-    padding-bottom: 100%;
-  }
-
-  #sachove-hlavolamy .cg-board {
-    position: absolute;
-    inset: 0.25rem;
-    width: auto;
-    max-width: none;
-    min-height: 0;
-    margin: 0;
-  }
 }
 
 /* Šachová stránka — širší layout na PC, väčšie dosky na tablete, mobil na celú šírku */
