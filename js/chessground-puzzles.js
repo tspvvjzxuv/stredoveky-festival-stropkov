@@ -6,7 +6,12 @@ import {
   isPuzzleRewardUnlocked,
   initPuzzleRewards,
 } from "./puzzle-rewards.js";
-import { renderInvesticiaGrid, renderPuzzleGrid, applyPuzzleAccessUI } from "./puzzle-board-ui.js";
+import {
+  renderInvesticiaGrid,
+  renderPuzzleGrid,
+  applyPuzzleAccessUI,
+  getActivePuzzleWeekIndex,
+} from "./puzzle-board-ui.js";
 import { isPuzzleAccessUnlocked, syncPermanentFromSchedule, isDevUnlockAll } from "./puzzle-unlock.js";
 import { initPuzzleTimeline, bindPuzzleUnlockPrompts } from "./puzzle-timeline-ui.js";
 
@@ -116,12 +121,23 @@ function createPuzzleHelpers() {
   };
 }
 
+function boardHasLayout(el) {
+  if (!el) return false;
+  var rect = el.getBoundingClientRect();
+  return rect.width > 20 && rect.height > 20;
+}
+
+function isBoardWeekVisible(el) {
+  var week = el && el.closest(".sach-puzzle-week");
+  return !week || week.classList.contains("is-week-active");
+}
+
 function mountPuzzleBoard(puzzle) {
   if (!isPuzzleAccessUnlocked(puzzle.id)) return;
   if (mountedIds[puzzle.id]) return;
   if (!puzzle.play || !puzzle.fen) return;
   var el = document.getElementById(puzzle.id);
-  if (!el) return;
+  if (!el || !isBoardWeekVisible(el)) return;
   mountedIds[puzzle.id] = true;
   mountBotPuzzle(puzzle, createPuzzleHelpers());
 }
@@ -133,13 +149,21 @@ function clearPuzzleMountWatch(puzzleId) {
   }
 }
 
-function schedulePuzzleMount(puzzle) {
+function schedulePuzzleMount(puzzle, attempt) {
+  attempt = attempt == null ? 0 : attempt;
   if (!isPuzzleAccessUnlocked(puzzle.id) || mountedIds[puzzle.id]) return;
   var el = document.getElementById(puzzle.id);
-  if (!el) return;
+  if (!el || !isBoardWeekVisible(el)) return;
 
-  if (el.offsetWidth > 20) {
+  if (boardHasLayout(el)) {
     mountPuzzleBoard(puzzle);
+    return;
+  }
+
+  if (attempt < 16) {
+    setTimeout(function () {
+      schedulePuzzleMount(puzzle, attempt + 1);
+    }, 40 + attempt * 45);
     return;
   }
 
@@ -153,19 +177,19 @@ function schedulePuzzleMount(puzzle) {
   mountObservers[puzzle.id] = new IntersectionObserver(
     function (entries) {
       for (var i = 0; i < entries.length; i++) {
-        if (entries[i].isIntersecting && !mountedIds[puzzle.id]) {
+        if (entries[i].isIntersecting && !mountedIds[puzzle.id] && boardHasLayout(el)) {
           mountPuzzleBoard(puzzle);
         }
       }
     },
-    { root: null, rootMargin: "80px", threshold: 0.12 }
+    { root: null, rootMargin: "120px", threshold: 0.01 }
   );
   mountObservers[puzzle.id].observe(el);
 
   requestAnimationFrame(function () {
     requestAnimationFrame(function () {
       var board = document.getElementById(puzzle.id);
-      if (board && board.offsetWidth > 20 && !mountedIds[puzzle.id]) mountPuzzleBoard(puzzle);
+      if (board && boardHasLayout(board) && !mountedIds[puzzle.id]) mountPuzzleBoard(puzzle);
     });
   });
 }
@@ -176,14 +200,14 @@ function mountWeekPuzzles(weekIndex) {
     if (!p || p.weekIndex !== weekIndex || !p.fen) continue;
     if (!isPuzzleAccessUnlocked(p.id) || mountedIds[p.id]) continue;
     clearPuzzleMountWatch(p.id);
-    schedulePuzzleMount(p);
+    schedulePuzzleMount(p, 0);
   }
 }
 
 function mountAllPlayablePuzzles() {
   for (var i = 0; i < FESTIVAL_PUZZLES.length; i++) {
     var p = FESTIVAL_PUZZLES[i];
-    if (p && p.id && p.fen && isPuzzleAccessUnlocked(p.id)) schedulePuzzleMount(p);
+    if (p && p.id && p.fen && isPuzzleAccessUnlocked(p.id)) schedulePuzzleMount(p, 0);
   }
   for (var j = 0; j < FESTIVAL_PUZZLES.length; j++) {
     var pid = FESTIVAL_PUZZLES[j].id;
@@ -193,10 +217,16 @@ function mountAllPlayablePuzzles() {
   }
 }
 
+function remountActiveWeek() {
+  var weekIndex = getActivePuzzleWeekIndex();
+  if (weekIndex != null) mountWeekPuzzles(weekIndex);
+}
+
 function refreshAfterAccessChange() {
   applyPuzzleAccessUI();
   mountAllPlayablePuzzles();
   initPuzzleRewards();
+  remountActiveWeek();
 }
 
 function scrollToPuzzle(puzzleId) {
@@ -215,11 +245,26 @@ function initChessgroundPuzzles() {
   applyPuzzleAccessUI();
   initPuzzleRewards();
   bindPuzzleUnlockPrompts();
+
+  window.addEventListener("ptra-puzzle-week-visible", function (ev) {
+    var weekIndex = ev.detail && ev.detail.weekIndex;
+    if (weekIndex != null) mountWeekPuzzles(weekIndex);
+  });
+
   initPuzzleTimeline(scrollToPuzzle);
   mountAllPlayablePuzzles();
+  remountActiveWeek();
 
   window.addEventListener("ptra-puzzle-access-changed", function () {
     refreshAfterAccessChange();
+  });
+
+  window.addEventListener("orientationchange", function () {
+    setTimeout(remountActiveWeek, 250);
+  });
+
+  window.addEventListener("pageshow", function (ev) {
+    if (ev.persisted) setTimeout(remountActiveWeek, 100);
   });
 }
 

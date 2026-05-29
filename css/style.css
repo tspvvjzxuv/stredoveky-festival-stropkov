@@ -1062,21 +1062,18 @@ a:hover {
     animation: heroGlowCta 3s ease-in-out infinite;
   }
 
-  .home-page .hero .btn-primary.hero-cta.hero-btn--podpor,
-  .home-page .stripe-btn,
-  .home-page #link-vstupenky,
-  .home-page #vstupenky-rezervacie #link-vstupenky.stripe-btn {
-    animation: emberCoalPulse 2.2s ease-in-out infinite;
-    transform-origin: center;
-    will-change: transform, filter, box-shadow;
+  .home-page .hero .btn-primary.hero-cta.hero-btn--podpor {
+    animation: heroGlowPodpor 2.6s ease-in-out infinite;
   }
 
   .home-page .hero .hero-btn--register {
     animation: heroGlowRegister 3s ease-in-out infinite;
   }
 
-  .home-page .hero .hero-btn--sach {
-    animation: heroGlowSach 3.2s ease-in-out infinite;
+  .home-page .stripe-btn,
+  .home-page #link-vstupenky,
+  .home-page #vstupenky-rezervacie #link-vstupenky.stripe-btn {
+    animation: heroGlowRed 2.8s ease-in-out infinite;
   }
 }
 
@@ -1120,59 +1117,45 @@ a:hover {
   }
 }
 
-/* Podpor + Prispieť — pulz ako žeravé uhlíky (žiara + mierne zväčšenie) */
-@keyframes emberCoalPulse {
+@keyframes heroGlowPodpor {
   0%,
   100% {
-    transform: scale(1);
-    filter: brightness(1) drop-shadow(0 0 8px rgba(255, 110, 45, 0.55))
-      drop-shadow(0 0 18px rgba(217, 36, 28, 0.42));
     box-shadow:
-      inset 0 1px 0 rgba(255, 190, 150, 0.24),
-      inset 0 -2px 8px rgba(60, 8, 4, 0.45),
+      inset 0 1px 0 rgba(255, 200, 180, 0.22),
       0 0 0 1px rgba(140, 28, 22, 0.55),
       0 10px 26px rgba(0, 0, 0, 0.38),
-      0 0 16px rgba(255, 120, 50, 0.72),
-      0 0 32px rgba(230, 48, 32, 0.58),
-      0 0 52px rgba(180, 28, 24, 0.34);
+      0 0 24px rgba(230, 48, 32, 0.78),
+      0 0 48px rgba(217, 36, 28, 0.55),
+      0 0 68px rgba(180, 28, 24, 0.38);
   }
   50% {
-    transform: scale(1.07);
-    filter: brightness(1.22) drop-shadow(0 0 14px rgba(255, 180, 70, 0.95))
-      drop-shadow(0 0 32px rgba(255, 100, 40, 0.82)) drop-shadow(0 0 52px rgba(217, 36, 28, 0.58));
     box-shadow:
-      inset 0 1px 0 rgba(255, 230, 200, 0.38),
-      inset 0 -2px 10px rgba(80, 12, 6, 0.5),
-      0 0 0 1px rgba(220, 72, 52, 0.82),
+      inset 0 1px 0 rgba(255, 220, 200, 0.3),
+      0 0 0 1px rgba(200, 48, 32, 0.7),
       0 10px 26px rgba(0, 0, 0, 0.38),
-      0 0 28px rgba(255, 160, 60, 1),
-      0 0 52px rgba(240, 56, 32, 0.92),
-      0 0 78px rgba(217, 36, 28, 0.72),
-      0 0 104px rgba(140, 20, 10, 0.48);
+      0 0 32px rgba(240, 56, 40, 0.95),
+      0 0 56px rgba(217, 36, 28, 0.72),
+      0 0 80px rgba(180, 28, 24, 0.52);
   }
 }
 
-
-
-@keyframes heroGlowSach {
+@keyframes heroGlowRed {
   0%,
   100% {
     box-shadow:
-      inset 0 1px 0 rgba(255, 232, 184, 0.16),
-      inset 0 -1px 0 rgba(8, 10, 16, 0.62),
-      0 0 0 1px rgba(36, 28, 16, 0.55),
-      0 10px 26px rgba(0, 0, 0, 0.38),
-      0 0 16px rgba(255, 200, 90, 0.45),
-      0 0 28px rgba(200, 100, 40, 0.28);
+      inset 0 1px 0 rgba(255, 200, 180, 0.22),
+      0 0 0 1px rgba(140, 28, 22, 0.55),
+      0 0 14px rgba(217, 36, 28, 0.6),
+      0 0 28px rgba(217, 36, 28, 0.36),
+      0 8px 22px rgba(0, 0, 0, 0.38);
   }
   50% {
     box-shadow:
-      inset 0 1px 0 rgba(255, 240, 200, 0.22),
-      inset 0 -1px 0 rgba(10, 12, 18, 0.65),
-      0 0 0 1px rgba(56, 44, 22, 0.58),
-      0 10px 26px rgba(0, 0, 0, 0.38),
-      0 0 22px rgba(255, 220, 120, 0.58),
-      0 0 38px rgba(200, 100, 40, 0.38);
+      inset 0 1px 0 rgba(255, 220, 200, 0.3),
+      0 0 0 1px rgba(200, 48, 32, 0.65),
+      0 0 22px rgba(230, 48, 32, 0.82),
+      0 0 40px rgba(217, 36, 28, 0.48),
+      0 8px 22px rgba(0, 0, 0, 0.38);
   }
 }
 
@@ -5122,10 +5105,36 @@ body.home-page {
   max-width: 100%;
   margin-inline: auto;
   aspect-ratio: 1 / 1;
+  min-height: min(92vw, 24rem);
   border-radius: 6px;
   border: 1px solid rgba(242, 204, 140, 0.5);
   overflow: hidden;
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.28);
+}
+
+@supports (aspect-ratio: 1 / 1) {
+  #sachove-hlavolamy .cg-board {
+    min-height: 0;
+    height: auto;
+  }
+}
+
+@supports not (aspect-ratio: 1 / 1) {
+  #sachove-hlavolamy .chessground-host {
+    position: relative;
+    width: 100%;
+    height: 0;
+    padding-bottom: 100%;
+  }
+
+  #sachove-hlavolamy .cg-board {
+    position: absolute;
+    inset: 0.25rem;
+    width: auto;
+    max-width: none;
+    min-height: 0;
+    margin: 0;
+  }
 }
 
 /* Šachová stránka — širší layout na PC, väčšie dosky na tablete, mobil na celú šírku */
