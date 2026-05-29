@@ -1,0 +1,246 @@
+/**
+ * DESIGN.md enforcement — jednotný rytiersko-čarovný jazyk na celom webe.
+ * Načítava sa po style.css a vy-frames.css.
+ */
+
+:root {
+  --ds-tertiary: #ffcb00;
+  --gold: #ffcb00;
+  --gold-dim: #c79d00;
+  --gold-bright: #ffe066;
+  --heading-on-dark: #ffcb00;
+  --heading-accent: #e4c992;
+  --ds-text-muted: #c9c0b0;
+  --text-muted: rgba(201, 192, 176, 0.88);
+  --card-border: rgba(174, 136, 76, 0.42);
+  --card-border-soft: rgba(126, 102, 64, 0.32);
+  --card-bg: linear-gradient(180deg, rgba(24, 32, 44, 0.94) 0%, rgba(16, 22, 34, 0.98) 100%);
+  --section-bg: linear-gradient(180deg, rgba(20, 26, 36, 0.56) 0%, rgba(14, 18, 28, 0.62) 100%);
+  --page-bg: linear-gradient(180deg, rgba(14, 18, 26, 0.96) 0%, rgba(10, 13, 20, 0.98) 100%);
+}
+
+/* --- Základ: typografia a odkazy --- */
+body {
+  font-family: var(--font-body);
+  font-size: 1.0625rem;
+  line-height: 1.62;
+  color: var(--ds-text-on-dark);
+}
+
+body.home-page {
+  background-color: var(--ds-surface-dark-2);
+  background-image:
+    radial-gradient(ellipse 88% 58% at 50% -18%, rgba(120, 42, 38, 0.12) 0%, transparent 56%),
+    radial-gradient(ellipse 72% 52% at 0% 62%, rgba(38, 52, 72, 0.22) 0%, transparent 60%),
+    radial-gradient(ellipse 78% 52% at 100% 82%, rgba(72, 42, 38, 0.1) 0%, transparent 58%),
+    linear-gradient(180deg, #10141c 0%, #0a0c10 100%);
+}
+
+body.home-page a:not(.btn):not(.stripe-btn):not(.logo):not(.nav a) {
+  color: var(--link-accent);
+}
+
+body.home-page a:not(.btn):not(.stripe-btn):not(.logo):hover {
+  color: var(--link-accent-hover);
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--font-display);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+
+body.home-page h1,
+body.home-page h2,
+body.home-page h3,
+body.home-page h4,
+body.home-page .page-main > h1 {
+  color: var(--heading-on-dark);
+  text-shadow: none;
+}
+
+body.home-page .lead,
+body.home-page .page-main > .lead {
+  color: var(--text-muted);
+  font-family: var(--font-body);
+  font-size: 1.12rem;
+  line-height: 1.58;
+  max-width: 52ch;
+}
+
+/* --- Panely: karty, sekcie, FAQ --- */
+body.home-page .page-main {
+  background: var(--page-bg);
+  border: 1px solid var(--card-border-soft);
+  color: var(--ds-text-on-dark);
+}
+
+body.home-page main section {
+  background: var(--section-bg);
+  border: 1px solid var(--card-border-soft);
+  border-radius: var(--ds-radius-md);
+}
+
+body.home-page .card,
+body.home-page .faq-item,
+body.home-page .choice-card,
+body.home-page .prihlasky-card,
+body.home-page .prihlasky-setup-note,
+body.home-page .prihlasky-quick-pick,
+body.home-page #sachove-hlavolamy .card {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: var(--ds-radius-md);
+  color: var(--ds-text-on-dark);
+}
+
+body.home-page .card h3,
+body.home-page .card h4,
+body.home-page main section h2,
+body.home-page .faq-item summary {
+  color: var(--heading-on-dark);
+  font-family: var(--font-display);
+}
+
+body.home-page .card p,
+body.home-page section p,
+body.home-page section li,
+body.home-page .note,
+body.home-page .faq-intro {
+  color: var(--ds-text-on-dark);
+  font-family: var(--font-body);
+}
+
+/* --- Prihlášky: prepis legacy svetlých štýlov --- */
+body.home-page .prihlasky-setup-note {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+}
+
+body.home-page .prihlasky-setup-note__title,
+body.home-page .prihlasky-quick-pick__title,
+body.home-page .prihlasky-section > h2,
+body.home-page .prihlasky-card h3 {
+  font-family: var(--font-display);
+  color: var(--heading-on-dark) !important;
+  letter-spacing: 0.04em;
+}
+
+body.home-page .prihlasky-card__hint {
+  color: var(--ds-text-muted) !important;
+}
+
+body.home-page .prihlasky-quick-pick__grid a {
+  background: rgba(14, 18, 26, 0.88);
+  border: 1px solid var(--card-border);
+  color: var(--link-accent);
+  font-family: var(--font-ui);
+  font-weight: 600;
+  border-radius: var(--ds-radius-sm);
+}
+
+body.home-page .prihlasky-quick-pick__grid a:hover {
+  background: rgba(28, 36, 50, 0.95);
+  border-color: rgba(255, 203, 0, 0.45);
+  color: var(--link-accent-hover);
+}
+
+body.home-page .prihlasky-riddle {
+  font-family: var(--font-body);
+  color: var(--ds-text-on-dark);
+  background: rgba(14, 18, 26, 0.75);
+  border-left: 4px solid var(--ds-tertiary);
+}
+
+/* --- Formuláre --- */
+body.home-page .workshop-form label {
+  font-family: var(--font-ui);
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--heading-accent) !important;
+}
+
+body.home-page .workshop-form input[type="text"],
+body.home-page .workshop-form input[type="email"],
+body.home-page .workshop-form input[type="tel"],
+body.home-page .workshop-form input[type="number"],
+body.home-page .workshop-form textarea {
+  background: rgba(11, 16, 24, 0.9);
+  border: 1px solid rgba(150, 118, 74, 0.46);
+  border-radius: var(--ds-radius-sm);
+  color: var(--ds-neutral);
+  font-family: var(--font-body);
+}
+
+body.home-page .workshop-form input:focus,
+body.home-page .workshop-form textarea:focus {
+  outline: none;
+  border-color: rgba(255, 203, 0, 0.76);
+  box-shadow: 0 0 0 2px rgba(255, 203, 0, 0.22);
+}
+
+body.home-page .workshop-form__check {
+  font-family: var(--font-body);
+  color: var(--ds-text-on-dark);
+}
+
+body.home-page .workshop-form__feedback--ok {
+  background: rgba(50, 153, 50, 0.18);
+  border: 1px solid var(--ds-secondary);
+  color: #b8e8b8;
+}
+
+body.home-page .workshop-form__feedback--err {
+  background: rgba(217, 36, 28, 0.15);
+  border: 1px solid var(--ds-primary);
+  color: #ffc9c5;
+}
+
+/* --- Navigácia a pätička --- */
+body.home-page .site-header .nav a {
+  font-family: var(--font-ui);
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  font-size: 0.72rem;
+  color: var(--gold-bright);
+}
+
+body.home-page .site-header .nav a:hover {
+  color: #fff8e8;
+}
+
+body.home-page .site-footer {
+  color: var(--ds-text-muted);
+}
+
+body.home-page .site-footer a {
+  color: var(--ds-tertiary);
+}
+
+/* --- Harmonogram --- */
+body.home-page .schedule-table th {
+  color: var(--heading-on-dark);
+  background: rgba(50, 153, 50, 0.14);
+}
+
+body.home-page .schedule-table td {
+  color: var(--ds-text-on-dark);
+  border-bottom-color: rgba(178, 140, 76, 0.24);
+}
+
+body.home-page .schedule-table .time {
+  color: var(--gold-bright);
+}
+
+/* --- Tlačidlá: jednotný radius --- */
+body.home-page .btn,
+body.home-page .stripe-btn {
+  border-radius: var(--ds-radius-md);
+  font-family: var(--font-ui);
+}
