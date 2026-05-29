@@ -64,6 +64,7 @@ export function createWrongMoveOverlay(boardEl) {
     },
     hide: function () {
       overlay.hidden = true;
+      overlay.classList.remove("is-game-over");
       onRetry = null;
       onStepBack = null;
     },
@@ -86,6 +87,29 @@ export function createWrongMoveOverlay(boardEl) {
       }
       toast.hidden = true;
       toast.classList.remove("is-visible");
+    },
+    showGameOver: function (options) {
+      var msg =
+        (options && options.message) ||
+        "Game over — prekročili ste limit ťahov.";
+      onRetry = options && options.onReset ? options.onReset : null;
+      onStepBack = null;
+      backBtn.hidden = true;
+      retryBtn.textContent = "Nová partia";
+      overlay.classList.add("is-game-over");
+      overlay.hidden = false;
+      if (!overlay.querySelector(".sach-game-over-msg")) {
+        var p = document.createElement("p");
+        p.className = "sach-game-over-msg";
+        overlay.insertBefore(p, overlay.firstChild);
+      }
+      overlay.querySelector(".sach-game-over-msg").textContent = msg;
+    },
+    hideGameOver: function () {
+      overlay.classList.remove("is-game-over");
+      retryBtn.textContent = "Skúsiť znova";
+      var msgEl = overlay.querySelector(".sach-game-over-msg");
+      if (msgEl) msgEl.remove();
     },
   };
 }

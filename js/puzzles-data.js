@@ -48,6 +48,8 @@ function buildFestivalPuzzle(entry) {
     play: entry.play,
     subtitle: entry.subtitle,
     solution: entry.solution,
+    maxMoves: entry.maxMoves,
+    freePlay: entry.freePlay === true,
   };
 }
 

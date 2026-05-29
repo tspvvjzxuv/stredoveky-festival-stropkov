@@ -1,4 +1,4 @@
-import { FESTIVAL_PUZZLES } from "./puzzles-data.js";
+import { FESTIVAL_PUZZLES, getPuzzleById } from "./puzzles-data.js";
 import { mountBotPuzzle } from "./puzzle-bot.js";
 import {
   unlockPuzzleReward,
@@ -6,6 +6,7 @@ import {
   isPuzzleRewardUnlocked,
   initPuzzleRewards,
 } from "./puzzle-rewards.js";
+import { recordPuzzleSolve, syncScoresFromRewards, refreshScoreUI } from "./puzzle-score.js";
 import {
   renderInvesticiaGrid,
   renderPuzzleGrid,
@@ -84,7 +85,17 @@ function setCompletionUI(puzzleId, solvedNow) {
 }
 
 function notifyPuzzleSolved(puzzleId, options) {
+  options = options || {};
   var wasNew = unlockPuzzleReward(puzzleId, options);
+  var puzzle = getPuzzleById(puzzleId);
+  if (puzzle) {
+    var earned = recordPuzzleSolve(puzzle, {
+      movesUsed: options.movesUsed,
+      maxMoves: options.maxMoves,
+    });
+    if (earned != null) options.points = earned;
+    refreshScoreUI();
+  }
   var meta = getRewardMeta(puzzleId);
   if (wasNew && meta) {
     var boardEl = document.getElementById(puzzleId);
@@ -97,9 +108,11 @@ function notifyPuzzleSolved(puzzleId, options) {
         item.appendChild(banner);
       }
       var partial =
-        options && options.firstTry === false ? " (čiastočný zápis — boli chyby v riešení)" : "";
+        options.firstTry === false ? " (čiastočný zápis — boli chyby v riešení)" : "";
+      var pts =
+        options.points != null ? " +" + options.points + " bodov." : "";
       banner.textContent =
-        "🎁 " + meta.icon + " " + meta.title + " — pokrok v investícii." + partial;
+        "🎁 " + meta.icon + " " + meta.title + " — pokrok v investícii." + pts + partial;
     }
   }
 }
@@ -273,6 +286,8 @@ function refreshAfterAccessChange() {
   applyPuzzleAccessUI();
   mountAllPlayablePuzzles();
   initPuzzleRewards();
+  syncScoresFromRewards();
+  refreshScoreUI();
   remountActiveWeek();
 }
 
@@ -297,6 +312,8 @@ function initChessgroundPuzzles() {
   renderPuzzleGrid();
   applyPuzzleAccessUI();
   initPuzzleRewards();
+  syncScoresFromRewards();
+  refreshScoreUI();
   bindPuzzleUnlockPrompts();
   initPuzzleTimeline(scrollToPuzzle);
   mountAllPlayablePuzzles();
