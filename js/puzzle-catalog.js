@@ -1101,7 +1101,7 @@ export const PUZZLE_CATALOG_ENTRIES = [
     "weekIndex": 8,
     "difficulty": "hard",
     "estimatedRating": 2232,
-    "fen": "6k1/8/8/8/8/4q3/8/2R3K1 w - - 0 1",
+    "fen": "6k1/8/8/4N3/4q3/8/8/2R3K1 w - - 0 1",
     "win": "black_queen_captured",
     "maxMoves": 14,
     "freePlay": true,
@@ -1109,8 +1109,8 @@ export const PUZZLE_CATALOG_ENTRIES = [
       {
         "who": "user",
         "suggest": {
-          "from": "g1",
-          "to": "g2"
+          "from": "e5",
+          "to": "c6"
         },
         "wrong": "Týmto ťahom nepostupujete správne — skúste iný biely ťah."
       },
@@ -1120,8 +1120,8 @@ export const PUZZLE_CATALOG_ENTRIES = [
         "choices": [
           {
             "move": {
-              "from": "e3",
-              "to": "c5"
+              "from": "e4",
+              "to": "e5"
             },
             "main": true,
             "hint": "Počítač odohral hlavnú obranu — pokračujte podľa plánu.",
@@ -1129,8 +1129,8 @@ export const PUZZLE_CATALOG_ENTRIES = [
               {
                 "who": "user",
                 "suggest": {
-                  "from": "c1",
-                  "to": "c5"
+                  "from": "c6",
+                  "to": "e5"
                 },
                 "wrong": "Týmto ťahom nezoberiete čiernu dámu.",
                 "accept": "black_queen_captured"
@@ -1140,8 +1140,8 @@ export const PUZZLE_CATALOG_ENTRIES = [
         ]
       }
     ],
-    "subtitle": "Zisk dámy (dáma v strede) — Sparta Stropkov: Kg2 Qc5 Rxc5.",
-    "solution": "Kg2 Qc5 Rxc5"
+    "subtitle": "Jazdec na e5 — Sparta Stropkov: Nc6 Qe5 Nxe5.",
+    "solution": "Nc6 Qe5 Nxe5"
   },
   {
     "weekIndex": 9,

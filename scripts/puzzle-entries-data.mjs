@@ -213,12 +213,12 @@ export const PUZZLE_SPECS = [
   {
     week: 8,
     difficulty: "hard",
-    fen: "6k1/8/8/8/8/4q3/8/2R3K1 w - - 0 1",
+    fen: "6k1/8/8/4N3/4q3/8/8/2R3K1 w - - 0 1",
     win: "black_queen_captured",
-    line: [["g1","g2"],["e3","c5"],["c1","c5"]],
+    line: [["e5","c6"],["e4","e5"],["c6","e5"]],
     userAccepts: [null,"black_queen_captured"],
-    subtitle: "Zisk dámy (dáma v strede) — Sparta Stropkov: Kg2 Qc5 Rxc5.",
-    solution: "Kg2 Qc5 Rxc5",
+    subtitle: "Jazdec na e5 — Sparta Stropkov: Nc6 Qe5 Nxe5.",
+    solution: "Nc6 Qe5 Nxe5",
   },
   {
     week: 9,
