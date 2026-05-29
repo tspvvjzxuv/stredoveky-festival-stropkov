@@ -169,7 +169,7 @@ export const PUZZLE_CATALOG_ENTRIES = [
     "weekIndex": 2,
     "difficulty": "easy",
     "estimatedRating": 1382,
-    "fen": "6k1/5ppp/8/8/8/8/1R6/6K1 w - - 0 1",
+    "fen": "5k2/5ppp/8/8/8/8/6Q1/6K1 w - - 0 1",
     "win": "checkmate",
     "maxMoves": 8,
     "freePlay": true,
@@ -177,8 +177,8 @@ export const PUZZLE_CATALOG_ENTRIES = [
       {
         "who": "user",
         "suggest": {
-          "from": "b2",
-          "to": "b3"
+          "from": "g2",
+          "to": "f3"
         },
         "wrong": "Tento ťah nevedie k matu v dvoch — skúste iný úvod.",
         "accept": "mate_in_2_opening"
@@ -189,8 +189,8 @@ export const PUZZLE_CATALOG_ENTRIES = [
         "choices": [
           {
             "move": {
-              "from": "g8",
-              "to": "h8"
+              "from": "f8",
+              "to": "g8"
             },
             "main": true,
             "hint": "Počítač odohral hlavnú obranu — pokračujte podľa plánu.",
@@ -198,8 +198,8 @@ export const PUZZLE_CATALOG_ENTRIES = [
               {
                 "who": "user",
                 "suggest": {
-                  "from": "b3",
-                  "to": "b8"
+                  "from": "f3",
+                  "to": "a8"
                 },
                 "wrong": "Týmto ťahom nedáte mat — skúste iný finiš.",
                 "accept": "checkmate"
@@ -209,8 +209,8 @@ export const PUZZLE_CATALOG_ENTRIES = [
         ]
       }
     ],
-    "subtitle": "Arabský mat vežou — Rytier Andreas: Rb3+ Kh8 Rb8#.",
-    "solution": "Rb3+ Kh8 Rb8#"
+    "subtitle": "Mat s kráľom na f8 — Rytier Andreas: Qf3+ Kg8 Qa8#.",
+    "solution": "Qf3+ Kg8 Qa8#"
   },
   {
     "weekIndex": 2,
@@ -309,7 +309,7 @@ export const PUZZLE_CATALOG_ENTRIES = [
     "weekIndex": 3,
     "difficulty": "easy",
     "estimatedRating": 1414,
-    "fen": "6k1/5ppp/8/8/8/8/6R1/6K1 w - - 0 1",
+    "fen": "7k/7p/6K1/8/8/8/8/7R w - - 0 1",
     "win": "checkmate",
     "maxMoves": 8,
     "freePlay": true,
@@ -317,8 +317,8 @@ export const PUZZLE_CATALOG_ENTRIES = [
       {
         "who": "user",
         "suggest": {
-          "from": "g2",
-          "to": "e2"
+          "from": "g6",
+          "to": "f7"
         },
         "wrong": "Tento ťah nevedie k matu v dvoch — skúste iný úvod.",
         "accept": "mate_in_2_opening"
@@ -329,8 +329,8 @@ export const PUZZLE_CATALOG_ENTRIES = [
         "choices": [
           {
             "move": {
-              "from": "g8",
-              "to": "h8"
+              "from": "h7",
+              "to": "h6"
             },
             "main": true,
             "hint": "Počítač odohral hlavnú obranu — pokračujte podľa plánu.",
@@ -338,8 +338,8 @@ export const PUZZLE_CATALOG_ENTRIES = [
               {
                 "who": "user",
                 "suggest": {
-                  "from": "e2",
-                  "to": "e8"
+                  "from": "h1",
+                  "to": "h6"
                 },
                 "wrong": "Týmto ťahom nedáte mat — skúste iný finiš.",
                 "accept": "checkmate"
@@ -349,8 +349,8 @@ export const PUZZLE_CATALOG_ENTRIES = [
         ]
       }
     ],
-    "subtitle": "Mat na e-file — Stredoveký festival: Re2+ Kh8 Re8#.",
-    "solution": "Re2+ Kh8 Re8#"
+    "subtitle": "Damiano — veža a kráľ — Stredoveký festival: Kf7 h6 Rxh6#.",
+    "solution": "Kf7 h6 Rxh6#"
   },
   {
     "weekIndex": 3,
@@ -518,7 +518,7 @@ export const PUZZLE_CATALOG_ENTRIES = [
     "weekIndex": 4,
     "difficulty": "hard",
     "estimatedRating": 2014,
-    "fen": "5qk1/5ppp/8/8/8/8/6R1/6K1 w - - 0 1",
+    "fen": "5qk1/5ppp/8/8/8/8/6R1/4K3 w - - 0 1",
     "win": "checkmate",
     "maxMoves": 14,
     "freePlay": true,
@@ -564,48 +564,23 @@ export const PUZZLE_CATALOG_ENTRIES = [
     "weekIndex": 5,
     "difficulty": "easy",
     "estimatedRating": 1477,
-    "fen": "6k1/5ppp/8/8/8/8/3Q4/6K1 w - - 0 1",
+    "fen": "6k1/4pppp/8/8/8/8/6Q1/6K1 w - - 0 1",
     "win": "checkmate",
-    "maxMoves": 8,
+    "maxMoves": 6,
     "freePlay": true,
     "play": [
       {
         "who": "user",
         "suggest": {
-          "from": "d2",
-          "to": "c3"
+          "from": "g2",
+          "to": "a8"
         },
-        "wrong": "Tento ťah nevedie k matu v dvoch — skúste iný úvod.",
-        "accept": "mate_in_2_opening"
-      },
-      {
-        "who": "bot",
-        "pick": "main",
-        "choices": [
-          {
-            "move": {
-              "from": "g8",
-              "to": "h8"
-            },
-            "main": true,
-            "hint": "Počítač odohral hlavnú obranu — pokračujte podľa plánu.",
-            "then": [
-              {
-                "who": "user",
-                "suggest": {
-                  "from": "c3",
-                  "to": "c8"
-                },
-                "wrong": "Týmto ťahom nedáte mat — skúste iný finiš.",
-                "accept": "checkmate"
-              }
-            ]
-          }
-        ]
+        "wrong": "Týmto ťahom nedáte mat — skúste iný finiš.",
+        "accept": "checkmate"
       }
     ],
-    "subtitle": "Mat po c-file — Lukostreľba: Qc3+ Kh8 Qc8#.",
-    "solution": "Qc3+ Kh8 Qc8#"
+    "subtitle": "Mat jedným ťahom — Lukostreľba: Qa8#.",
+    "solution": "Qa8#"
   },
   {
     "weekIndex": 5,
@@ -799,7 +774,7 @@ export const PUZZLE_CATALOG_ENTRIES = [
     "weekIndex": 6,
     "difficulty": "medium",
     "estimatedRating": 1764,
-    "fen": "6k1/4pppp/8/8/8/5N2/5Q2/6K1 w - - 0 1",
+    "fen": "5qk1/4pppp/8/8/8/8/6Q1/6K1 w - - 0 1",
     "win": "checkmate",
     "maxMoves": 10,
     "freePlay": true,
@@ -807,10 +782,11 @@ export const PUZZLE_CATALOG_ENTRIES = [
       {
         "who": "user",
         "suggest": {
-          "from": "f3",
-          "to": "e5"
+          "from": "g2",
+          "to": "f3"
         },
-        "wrong": "Týmto ťahom nepostupujete správne — skúste iný biely ťah."
+        "wrong": "Tento ťah nevedie k matu v dvoch — skúste iný úvod.",
+        "accept": "mate_in_2_opening"
       },
       {
         "who": "bot",
@@ -818,8 +794,8 @@ export const PUZZLE_CATALOG_ENTRIES = [
         "choices": [
           {
             "move": {
-              "from": "g8",
-              "to": "f8"
+              "from": "f8",
+              "to": "a8"
             },
             "main": true,
             "hint": "Počítač odohral hlavnú obranu — pokračujte podľa plánu.",
@@ -827,8 +803,8 @@ export const PUZZLE_CATALOG_ENTRIES = [
               {
                 "who": "user",
                 "suggest": {
-                  "from": "f2",
-                  "to": "f7"
+                  "from": "f3",
+                  "to": "a8"
                 },
                 "wrong": "Týmto ťahom nedáte mat — skúste iný finiš.",
                 "accept": "checkmate"
@@ -838,8 +814,8 @@ export const PUZZLE_CATALOG_ENTRIES = [
         ]
       }
     ],
-    "subtitle": "Jazdec + dáma — Táborová opekačka: Ne5+ Kf8 Qxf7#.",
-    "solution": "Ne5+ Kf8 Qxf7#"
+    "subtitle": "Morphy s oslabenými pešiakmi — Táborová opekačka: Qf3+ Qa8 Qxa8#.",
+    "solution": "Qf3+ Qa8 Qxa8#"
   },
   {
     "weekIndex": 6,
@@ -1031,7 +1007,7 @@ export const PUZZLE_CATALOG_ENTRIES = [
     "weekIndex": 8,
     "difficulty": "easy",
     "estimatedRating": 1573,
-    "fen": "6k1/5ppp/8/8/8/8/6R1/6K1 w - - 0 1",
+    "fen": "6k1/5ppp/8/8/8/8/6R1/4K3 w - - 0 1",
     "win": "checkmate",
     "maxMoves": 8,
     "freePlay": true,
@@ -1040,7 +1016,7 @@ export const PUZZLE_CATALOG_ENTRIES = [
         "who": "user",
         "suggest": {
           "from": "g2",
-          "to": "d2"
+          "to": "e2"
         },
         "wrong": "Tento ťah nevedie k matu v dvoch — skúste iný úvod.",
         "accept": "mate_in_2_opening"
@@ -1060,8 +1036,8 @@ export const PUZZLE_CATALOG_ENTRIES = [
               {
                 "who": "user",
                 "suggest": {
-                  "from": "d2",
-                  "to": "d8"
+                  "from": "e2",
+                  "to": "e8"
                 },
                 "wrong": "Týmto ťahom nedáte mat — skúste iný finiš.",
                 "accept": "checkmate"
@@ -1071,8 +1047,8 @@ export const PUZZLE_CATALOG_ENTRIES = [
         ]
       }
     ],
-    "subtitle": "Mat vežou na d-file — Sparta Stropkov: Rd2+ Kh8 Rd8#.",
-    "solution": "Rd2+ Kh8 Rd8#"
+    "subtitle": "Mat na e8 (aktívny kráľ) — Sparta Stropkov: Re2+ Kh8 Re8#.",
+    "solution": "Re2+ Kh8 Re8#"
   },
   {
     "weekIndex": 8,
@@ -1125,7 +1101,7 @@ export const PUZZLE_CATALOG_ENTRIES = [
     "weekIndex": 8,
     "difficulty": "hard",
     "estimatedRating": 2232,
-    "fen": "6k1/8/8/4N3/5q2/8/8/2R3K1 w - - 0 1",
+    "fen": "6k1/8/8/8/8/4q3/8/2R3K1 w - - 0 1",
     "win": "black_queen_captured",
     "maxMoves": 14,
     "freePlay": true,
@@ -1133,8 +1109,8 @@ export const PUZZLE_CATALOG_ENTRIES = [
       {
         "who": "user",
         "suggest": {
-          "from": "e5",
-          "to": "c6"
+          "from": "g1",
+          "to": "g2"
         },
         "wrong": "Týmto ťahom nepostupujete správne — skúste iný biely ťah."
       },
@@ -1144,8 +1120,8 @@ export const PUZZLE_CATALOG_ENTRIES = [
         "choices": [
           {
             "move": {
-              "from": "f4",
-              "to": "e5"
+              "from": "e3",
+              "to": "c5"
             },
             "main": true,
             "hint": "Počítač odohral hlavnú obranu — pokračujte podľa plánu.",
@@ -1153,8 +1129,8 @@ export const PUZZLE_CATALOG_ENTRIES = [
               {
                 "who": "user",
                 "suggest": {
-                  "from": "c6",
-                  "to": "e5"
+                  "from": "c1",
+                  "to": "c5"
                 },
                 "wrong": "Týmto ťahom nezoberiete čiernu dámu.",
                 "accept": "black_queen_captured"
@@ -1164,14 +1140,14 @@ export const PUZZLE_CATALOG_ENTRIES = [
         ]
       }
     ],
-    "subtitle": "Jazdecká vidlička — Sparta Stropkov: Nc6 Qe5 Nxe5.",
-    "solution": "Nc6 Qe5 Nxe5"
+    "subtitle": "Zisk dámy (dáma v strede) — Sparta Stropkov: Kg2 Qc5 Rxc5.",
+    "solution": "Kg2 Qc5 Rxc5"
   },
   {
     "weekIndex": 9,
     "difficulty": "easy",
     "estimatedRating": 1605,
-    "fen": "6k1/4pppp/8/8/8/8/6R1/6K1 w - - 0 1",
+    "fen": "3r1k2/5ppp/8/8/8/8/5Q2/6K1 w - - 0 1",
     "win": "checkmate",
     "maxMoves": 8,
     "freePlay": true,
@@ -1179,8 +1155,8 @@ export const PUZZLE_CATALOG_ENTRIES = [
       {
         "who": "user",
         "suggest": {
-          "from": "g2",
-          "to": "d2"
+          "from": "f2",
+          "to": "d4"
         },
         "wrong": "Tento ťah nevedie k matu v dvoch — skúste iný úvod.",
         "accept": "mate_in_2_opening"
@@ -1191,8 +1167,8 @@ export const PUZZLE_CATALOG_ENTRIES = [
         "choices": [
           {
             "move": {
-              "from": "g8",
-              "to": "h8"
+              "from": "f8",
+              "to": "g8"
             },
             "main": true,
             "hint": "Počítač odohral hlavnú obranu — pokračujte podľa plánu.",
@@ -1200,7 +1176,7 @@ export const PUZZLE_CATALOG_ENTRIES = [
               {
                 "who": "user",
                 "suggest": {
-                  "from": "d2",
+                  "from": "d4",
                   "to": "d8"
                 },
                 "wrong": "Týmto ťahom nedáte mat — skúste iný finiš.",
@@ -1211,8 +1187,8 @@ export const PUZZLE_CATALOG_ENTRIES = [
         ]
       }
     ],
-    "subtitle": "Mat po d-file — Šachová bitka: Rd2+ Kh8 Rd8#.",
-    "solution": "Rd2+ Kh8 Rd8#"
+    "subtitle": "Mat s čiernou vežou na d8 — Šachová bitka: Qd4+ Kg8 Qxd8#.",
+    "solution": "Qd4+ Kg8 Qxd8#"
   },
   {
     "weekIndex": 9,
@@ -1312,7 +1288,7 @@ export const PUZZLE_CATALOG_ENTRIES = [
     "weekIndex": 10,
     "difficulty": "easy",
     "estimatedRating": 1636,
-    "fen": "6k1/5ppp/8/8/8/8/5Q2/6K1 w - - 0 1",
+    "fen": "2r3k1/5ppp/8/8/8/8/6R1/6K1 w - - 0 1",
     "win": "checkmate",
     "maxMoves": 8,
     "freePlay": true,
@@ -1320,8 +1296,8 @@ export const PUZZLE_CATALOG_ENTRIES = [
       {
         "who": "user",
         "suggest": {
-          "from": "f2",
-          "to": "e3"
+          "from": "g2",
+          "to": "e2"
         },
         "wrong": "Tento ťah nevedie k matu v dvoch — skúste iný úvod.",
         "accept": "mate_in_2_opening"
@@ -1332,8 +1308,8 @@ export const PUZZLE_CATALOG_ENTRIES = [
         "choices": [
           {
             "move": {
-              "from": "g8",
-              "to": "h8"
+              "from": "c8",
+              "to": "e8"
             },
             "main": true,
             "hint": "Počítač odohral hlavnú obranu — pokračujte podľa plánu.",
@@ -1341,7 +1317,7 @@ export const PUZZLE_CATALOG_ENTRIES = [
               {
                 "who": "user",
                 "suggest": {
-                  "from": "e3",
+                  "from": "e2",
                   "to": "e8"
                 },
                 "wrong": "Týmto ťahom nedáte mat — skúste iný finiš.",
@@ -1352,8 +1328,8 @@ export const PUZZLE_CATALOG_ENTRIES = [
         ]
       }
     ],
-    "subtitle": "Mat na e8 — Kronika hlavolamu: Qe3+ Kh8 Qe8#.",
-    "solution": "Qe3+ Kh8 Qe8#"
+    "subtitle": "Výměna s vežou — Kronika hlavolamu: Re2 Re8 Rxe8#.",
+    "solution": "Re2 Re8 Rxe8#"
   },
   {
     "weekIndex": 10,
@@ -1476,7 +1452,7 @@ export const PUZZLE_CATALOG_ENTRIES = [
     "weekIndex": 11,
     "difficulty": "easy",
     "estimatedRating": 1668,
-    "fen": "6k1/5ppp/8/8/8/8/5Q2/5K2 w - - 0 1",
+    "fen": "6k1/5ppp/8/8/8/8/3Q4/5K2 w - - 0 1",
     "win": "checkmate",
     "maxMoves": 8,
     "freePlay": true,
@@ -1484,8 +1460,8 @@ export const PUZZLE_CATALOG_ENTRIES = [
       {
         "who": "user",
         "suggest": {
-          "from": "f2",
-          "to": "c5"
+          "from": "d2",
+          "to": "c3"
         },
         "wrong": "Tento ťah nevedie k matu v dvoch — skúste iný úvod.",
         "accept": "mate_in_2_opening"
@@ -1505,7 +1481,7 @@ export const PUZZLE_CATALOG_ENTRIES = [
               {
                 "who": "user",
                 "suggest": {
-                  "from": "c5",
+                  "from": "c3",
                   "to": "c8"
                 },
                 "wrong": "Týmto ťahom nedáte mat — skúste iný finiš.",
@@ -1516,8 +1492,8 @@ export const PUZZLE_CATALOG_ENTRIES = [
         ]
       }
     ],
-    "subtitle": "Mat po diagonále — Investícia rytiera: Qc5+ Kh8 Qc8#.",
-    "solution": "Qc5+ Kh8 Qc8#"
+    "subtitle": "Mat po c-file — Investícia rytiera: Qc3+ Kh8 Qc8#.",
+    "solution": "Qc3+ Kh8 Qc8#"
   },
   {
     "weekIndex": 11,
