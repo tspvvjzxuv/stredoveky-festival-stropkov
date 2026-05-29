@@ -118,55 +118,28 @@
       </div>
     </header>
 
-    <main class="page-main prihlasky-page">
+    <main class="page-main prihlasky-page sach-page">
       <section id="sachove-hlavolamy" aria-labelledby="sachove-hlavolamy-heading">
         <h1 id="sachove-hlavolamy-heading">Šachové hlavolamy týždňa</h1>
         <p class="lead">
-          Každý týždeň prinášame novú sériu úloh. Za každý vyriešený hlavolam sa odhalí časť
-          <strong>rytierskej investície</strong> — po troch úlohách získate heslo na malú odmenu na
-          festivale. Na turnaj sa prihláste cez
+          Každý pondelok sa odomknú <strong>tri hlavolamy</strong> (ľahšia, stredná, najťažšia) až do
+          dňa festivalu (16. augusta 2026). Hráte vždy <strong>bielym proti počítaču</strong>. Za
+          splnený týždeň sa odhalí časť <strong>rytierskej investície</strong> — po dvanástich
+          týždňoch získate heslo na malú odmenu na festivale. Na turnaj sa prihláste cez
           <a href="prihlasky.html#prihlaska-sach">prihlášky</a>.
         </p>
         <div class="card sach-investicia" id="sach-investicia" aria-labelledby="sach-investicia-heading">
           <div class="sach-investicia__head">
             <h2 id="sach-investicia-heading">Rytierska investícia</h2>
-            <p class="sach-investicia__progress" data-investicia-progress>0 / 3 pečatí</p>
+            <p class="sach-investicia__progress" data-investicia-progress>0 / 12 pečatí</p>
           </div>
           <p class="sach-investicia__intro">
-            Vyriešte všetky tri hlavolamy a odkryjete tajomstvo rytiera Andreasa. Pri úlohách 2 a 3
-            ťaháte aj ako čierny — nie každá obrana vedie k cieľu. Riešenie na prvý pokus odkryje
-            plnú časť hesla; po chybe len skrátenú nápovedu (môžete skúsiť znova). Pokrok sa uloží v
-            prehliadači na tomto zariadení.
+            Vyriešte všetky tri úlohy v každom týždni a odkryjete dvanásť pečatí investície. Po vašom
+            správnom ťahu odpovedá <strong>počítač</strong> ako čierny — nie každá jeho obrana vedie k
+            cieľu. Pri chybe použite tlačidlá priamo na šachovnici. Pokrok sa uloží v prehliadači na
+            tomto zariadení.
           </p>
-          <div class="sach-investicia__grid">
-            <article class="sach-investicia__part" data-reward-part="cg-puzzle-1">
-              <p class="sach-investicia__lock" aria-hidden="false">🔒</p>
-              <div class="sach-investicia__body" hidden>
-                <span class="sach-investicia__icon" aria-hidden="true">🪙</span>
-                <h3>Pečať I — Rytierska minca</h3>
-                <p>Prednosť pri registrácii na šachový turnaj.</p>
-                <p class="sach-investicia__clue"><span>Časť hesla:</span> <strong>P</strong></p>
-              </div>
-            </article>
-            <article class="sach-investicia__part" data-reward-part="cg-puzzle-2">
-              <p class="sach-investicia__lock" aria-hidden="false">🔒</p>
-              <div class="sach-investicia__body" hidden>
-                <span class="sach-investicia__icon" aria-hidden="true">📜</span>
-                <h3>Pečať II — Listina rytiera</h3>
-                <p>Druhá časť tajomstva investície.</p>
-                <p class="sach-investicia__clue"><span>Časť hesla:</span> <strong>TRA–</strong></p>
-              </div>
-            </article>
-            <article class="sach-investicia__part" data-reward-part="cg-puzzle-3">
-              <p class="sach-investicia__lock" aria-hidden="false">🔒</p>
-              <div class="sach-investicia__body" hidden>
-                <span class="sach-investicia__icon" aria-hidden="true">⚔️</span>
-                <h3>Pečať III — Meč taktika</h3>
-                <p>Posledná časť pred plným odkrytím.</p>
-                <p class="sach-investicia__clue"><span>Časť hesla:</span> <strong>ŠACH</strong></p>
-              </div>
-            </article>
-          </div>
+          <div class="sach-investicia__grid" id="sach-investicia-grid"></div>
           <div class="sach-investicia__vault" hidden>
             <h3>Investícia odkrytá</h3>
             <p>
@@ -180,97 +153,37 @@
             <a class="btn btn-primary" href="prihlasky.html#prihlaska-sach">Prihlásiť sa na turnaj</a>
           </div>
         </div>
-        <div class="card">
-          <h2>Aktuálny týždeň</h2>
-          <ol>
-            <li>
-              <strong>Mat 1. ťahom:</strong> Biely je na ťahu. Nájdite okamžitý mat.
-              <em>(Téma: kráľ v rohu)</em>
-            </li>
-            <li>
-              <strong>Mat 2. ťahmi:</strong> Biely je na ťahu a musí zahrať tichý prípravný ťah.
-              <em>(Téma: odvlečenie obrancu)</em>
-            </li>
-            <li>
-              <strong>Taktika:</strong> Biely je na ťahu a získava materiál.
-              <em>(Téma: dvojitý útok jazdcom)</em>
-            </li>
-          </ol>
+        <div class="card sach-puzzle-timeline-card">
+          <h2>Harmonogram odomykania</h2>
+          <p class="note">
+            Posúvajte časovú os alebo kliknite na týždeň. Zamknuté úlohy môžete otvoriť skôr heslom
+            (tlačidlo „Mám heslo“ pri úlohe).
+          </p>
+          <div class="sach-puzzle-timeline" id="sach-puzzle-timeline">
+            <label class="visually-hidden" for="sach-puzzle-timeline-range">Týždeň hlavolamu</label>
+            <input
+              type="range"
+              id="sach-puzzle-timeline-range"
+              class="sach-timeline__range"
+              value="0"
+              aria-describedby="sach-puzzle-timeline-label"
+            />
+            <p id="sach-puzzle-timeline-label" class="sach-timeline__label"></p>
+            <div id="sach-puzzle-timeline-track" class="sach-timeline__track" aria-hidden="true"></div>
+            <p id="sach-puzzle-timeline-dev" class="sach-timeline__dev note" hidden></p>
+          </div>
         </div>
         <div class="card">
-          <h2>Grafické znázornenie úloh</h2>
-          <p>
-            Pozície nižšie patria k aktuálnej sade hlavolamov. Úloha 1: biely na ťahu. Úlohy 2 a 3:
-            po správnom bielom úvode ťaháte <strong>aj ako čierny</strong> (Kf8, h6, Kh7 a pod.).
-            K dispozícii sú <strong>nápoveda</strong>, <strong>tréner</strong> a
-            <strong>silný motor</strong> (chess.js).
+          <h2>Taktika</h2>
+          <div
+            class="sach-visual-grid"
+            id="sach-puzzle-grid"
+            aria-label="Šachové úlohy týždňa"
+          ></div>
+          <p class="note">
+            Zobrazuje sa jeden týždeň naraz — vyberte ho na časovej osi vyššie. Predchádzajúce
+            týždne zostávajú hrateľné po prepnutí.
           </p>
-          <div class="sach-visual-grid" aria-label="Grafické znázornenie troch šachových pozícií">
-            <article class="sach-visual-item">
-              <h3 id="cg-puzzle-1-title">Úloha 1</h3>
-              <div class="chessground-host">
-                <div id="cg-puzzle-1" class="cg-board" aria-label="Šachový hlavolam 1"></div>
-              </div>
-              <p id="cg-puzzle-1-subtitle">Mat 1. ťahom</p>
-              <div class="sach-puzzle-actions">
-                <button type="button" class="btn btn-outline sach-hint-btn" data-hint-puzzle="cg-puzzle-1">
-                  Nápoveda
-                </button>
-                <button type="button" class="btn btn-outline sach-coach-btn" data-coach-puzzle="cg-puzzle-1">
-                  Tréner
-                </button>
-                <button type="button" class="btn btn-outline sach-engine-btn" data-engine-puzzle="cg-puzzle-1">
-                  Silný ťah
-                </button>
-                <button type="button" class="btn btn-outline sach-reset-btn" data-reset-puzzle="cg-puzzle-1">
-                  Reset
-                </button>
-              </div>
-            </article>
-            <article class="sach-visual-item">
-              <h3 id="cg-puzzle-2-title">Úloha 2</h3>
-              <div class="chessground-host">
-                <div id="cg-puzzle-2" class="cg-board" aria-label="Šachový hlavolam 2"></div>
-              </div>
-              <p id="cg-puzzle-2-subtitle">Mat 2. ťahmi</p>
-              <div class="sach-puzzle-actions">
-                <button type="button" class="btn btn-outline sach-hint-btn" data-hint-puzzle="cg-puzzle-2">
-                  Nápoveda
-                </button>
-                <button type="button" class="btn btn-outline sach-coach-btn" data-coach-puzzle="cg-puzzle-2">
-                  Tréner
-                </button>
-                <button type="button" class="btn btn-outline sach-engine-btn" data-engine-puzzle="cg-puzzle-2">
-                  Silný ťah
-                </button>
-                <button type="button" class="btn btn-outline sach-reset-btn" data-reset-puzzle="cg-puzzle-2">
-                  Reset
-                </button>
-              </div>
-            </article>
-            <article class="sach-visual-item">
-              <h3 id="cg-puzzle-3-title">Úloha 3</h3>
-              <div class="chessground-host">
-                <div id="cg-puzzle-3" class="cg-board" aria-label="Šachový hlavolam 3"></div>
-              </div>
-              <p id="cg-puzzle-3-subtitle">Taktika</p>
-              <div class="sach-puzzle-actions">
-                <button type="button" class="btn btn-outline sach-hint-btn" data-hint-puzzle="cg-puzzle-3">
-                  Nápoveda
-                </button>
-                <button type="button" class="btn btn-outline sach-coach-btn" data-coach-puzzle="cg-puzzle-3">
-                  Tréner
-                </button>
-                <button type="button" class="btn btn-outline sach-engine-btn" data-engine-puzzle="cg-puzzle-3">
-                  Silný ťah
-                </button>
-                <button type="button" class="btn btn-outline sach-reset-btn" data-reset-puzzle="cg-puzzle-3">
-                  Reset
-                </button>
-              </div>
-            </article>
-          </div>
-          <p class="note">Nová sada hlavolamov sa zverejňuje každý týždeň.</p>
         </div>
       </section>
     </main>

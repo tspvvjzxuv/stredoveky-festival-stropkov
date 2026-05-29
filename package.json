@@ -5,6 +5,9 @@
     "dev": "live-server --port=5500 --open=/",
     "start": "npm run dev",
     "build": "node scripts/build.mjs",
+    "test:puzzles": "node scripts/validate-puzzles.mjs",
+    "test:puzzles:soundness": "node scripts/audit-puzzle-soundness.mjs",
+    "test:puzzles:alt": "node scripts/test-puzzle-alternatives.mjs",
     "generated:normalize": "node normalize-generated-files.mjs",
     "postspec:gen": "npm run generated:normalize"
   },

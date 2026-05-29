@@ -1,55 +1,37 @@
-import { FESTIVAL_PUZZLES } from "./puzzles-data.js";
+import { FESTIVAL_PUZZLES, DIFFICULTIES, puzzleId } from "./puzzles-data.js";
+import { PUZZLE_REWARD_META, weekRewardId } from "./puzzle-schedule.js";
 
-var STORAGE_KEY = "ptra-puzzle-rewards-v2";
-var LEGACY_KEY = "ptra-puzzle-rewards-v1";
+var STORAGE_KEY = "ptra-puzzle-rewards-v3";
+var LEGACY_V2 = "ptra-puzzle-rewards-v2";
+var LEGACY_V1 = "ptra-puzzle-rewards-v1";
 
-var REWARD_BY_ID = {
-  "cg-puzzle-1": {
-    partLabel: "Pečať I",
-    icon: "🪙",
-    title: "Rytierska minca",
-    text: "Máte prednosť pri registrácii na šachový turnaj — príďte skôr do fronty pri hlavolamoch.",
-    clue: "P",
-    cluePartial: "P",
-  },
-  "cg-puzzle-2": {
-    partLabel: "Pečať II",
-    icon: "📜",
-    title: "Listina rytiera",
-    text: "Druhá časť hesla investície. Spojte ju s ostatnými po vyriešení všetkých úloh.",
-    clue: "TRA",
-    cluePartial: "TR",
-  },
-  "cg-puzzle-3": {
-    partLabel: "Pečať III",
-    icon: "⚔️",
-    title: "Meč taktika",
-    text: "Posledná časť tajomstva. Po troch úlohách sa odkryje celá investícia.",
-    clue: "ŠACH",
-    cluePartial: "ŠA",
-  },
-};
+var REWARD_BY_ID = PUZZLE_REWARD_META;
 
 var FULL_REWARD = {
   title: "Investícia rytiera Andreasa je odkrytá!",
   text:
-    "Ste pripravení na turnaj. Na festivale pri šachovej registrácii ukážte túto stránku alebo povedzte heslo:",
+    "Ste pripravení na turnaj. Po všetkých týždenných úlohách na festivale pri šachovej registrácii ukážte túto stránku alebo povedzte heslo:",
   code: "PTRA–RYTIER–ŠACH",
   note: "Organizátor vám pridelí pamätný rytiersky žetón naviac (podľa dostupnosti v deň podujatia).",
 };
 
 function migrateLegacy() {
   try {
-    var raw = localStorage.getItem(LEGACY_KEY);
+    var raw = localStorage.getItem(LEGACY_V2) || localStorage.getItem(LEGACY_V1);
     if (!raw) return null;
     var parsed = JSON.parse(raw);
-    if (!Array.isArray(parsed)) return null;
+    if (!parsed || typeof parsed !== "object") return null;
     var out = {};
-    for (var i = 0; i < parsed.length; i++) {
-      out[parsed[i]] = { unlocked: true, firstTry: true, tier: "full" };
+    if (Array.isArray(parsed)) {
+      for (var i = 0; i < parsed.length; i++) {
+        out[parsed[i]] = { unlocked: true, firstTry: true, tier: "full" };
+      }
+    } else {
+      out = parsed;
     }
     writeRecords(out);
-    localStorage.removeItem(LEGACY_KEY);
+    localStorage.removeItem(LEGACY_V2);
+    localStorage.removeItem(LEGACY_V1);
     return out;
   } catch (e) {
     return null;
@@ -82,6 +64,33 @@ function getRecord(puzzleId) {
   return records[puzzleId] || null;
 }
 
+function weekPuzzleIds(weekIndex) {
+  return DIFFICULTIES.map(function (d) {
+    return puzzleId(weekIndex, d);
+  });
+}
+
+export function getWeekSolveProgress(weekIndex) {
+  var ids = weekPuzzleIds(weekIndex);
+  var solved = 0;
+  var full = 0;
+  for (var i = 0; i < ids.length; i++) {
+    var rec = getRecord(ids[i]);
+    if (rec && rec.unlocked) {
+      solved += 1;
+      if (rec.tier === "full") full += 1;
+    }
+  }
+  return { solved: solved, full: full, total: ids.length };
+}
+
+export function getWeekRewardTier(weekIndex) {
+  var p = getWeekSolveProgress(weekIndex);
+  if (p.solved === 0) return null;
+  if (p.full >= p.total) return "full";
+  return "partial";
+}
+
 export function isPuzzleRewardUnlocked(puzzleId) {
   var rec = getRecord(puzzleId);
   return !!(rec && rec.unlocked);
@@ -99,7 +108,15 @@ export function getPuzzleRewardTier(puzzleId) {
 }
 
 export function unlockPuzzleReward(puzzleId, options) {
-  if (!REWARD_BY_ID[puzzleId]) return false;
+  var known = false;
+  for (var k = 0; k < FESTIVAL_PUZZLES.length; k++) {
+    if (FESTIVAL_PUZZLES[k].id === puzzleId) {
+      known = true;
+      break;
+    }
+  }
+  if (!known) return false;
+
   options = options || {};
   var records = readRecords();
   var prev = records[puzzleId];
@@ -127,12 +144,11 @@ function allPuzzleIds() {
   });
 }
 
-function allUnlockedFull() {
-  var ids = allPuzzleIds();
-  for (var i = 0; i < ids.length; i++) {
-    if (getPuzzleRewardTier(ids[i]) !== "full") return false;
+function allWeeksCompleteFull() {
+  for (var w = 1; w <= 12; w++) {
+    if (getWeekRewardTier(w) !== "full") return false;
   }
-  return ids.length > 0;
+  return true;
 }
 
 function updateInvesticiaUI() {
@@ -141,8 +157,9 @@ function updateInvesticiaUI() {
 
   var parts = root.querySelectorAll("[data-reward-part]");
   for (var i = 0; i < parts.length; i++) {
-    var id = parts[i].getAttribute("data-reward-part");
-    var tier = getPuzzleRewardTier(id);
+    var weekKey = parts[i].getAttribute("data-reward-part");
+    var weekNum = parseInt(String(weekKey).replace("week-", ""), 10);
+    var tier = getWeekRewardTier(weekNum);
     var unlocked = !!tier;
     parts[i].classList.toggle("is-unlocked", unlocked);
     parts[i].classList.toggle("is-partial", tier === "partial");
@@ -153,10 +170,24 @@ function updateInvesticiaUI() {
     if (body) body.hidden = !unlocked;
 
     var clueEl = parts[i].querySelector(".sach-investicia__clue strong");
-    var meta = REWARD_BY_ID[id];
+    var meta = REWARD_BY_ID[weekKey];
     if (clueEl && meta) {
-      clueEl.textContent =
-        tier === "partial" ? meta.cluePartial || meta.clue : meta.clue;
+      clueEl.textContent = tier === "partial" ? meta.cluePartial || meta.clue : meta.clue;
+    }
+
+    var progressNote = parts[i].querySelector(".sach-investicia__week-progress");
+    var prog = getWeekSolveProgress(weekNum);
+    if (unlocked && prog.solved < prog.total) {
+      if (!progressNote) {
+        progressNote = document.createElement("p");
+        progressNote.className = "sach-investicia__week-progress note";
+        var bodyEl = parts[i].querySelector(".sach-investicia__body");
+        if (bodyEl) bodyEl.insertBefore(progressNote, bodyEl.firstChild);
+      }
+      progressNote.textContent = prog.solved + " / " + prog.total + " úloh týždňa splnených";
+      progressNote.hidden = false;
+    } else if (progressNote) {
+      progressNote.hidden = true;
     }
 
     var note = parts[i].querySelector(".sach-investicia__partial-note");
@@ -164,33 +195,29 @@ function updateInvesticiaUI() {
       if (!note) {
         note = document.createElement("p");
         note.className = "sach-investicia__partial-note note";
-        var bodyEl = parts[i].querySelector(".sach-investicia__body");
-        if (bodyEl) bodyEl.appendChild(note);
+        var bodyEl2 = parts[i].querySelector(".sach-investicia__body");
+        if (bodyEl2) bodyEl2.appendChild(note);
       }
       note.textContent =
-        "Čiastočná pečať — riešenie malo chybu. Vyriešte znova bez chyby pre plnú časť hesla.";
+        "Čiastočná pečať — vyriešte všetky tri úlohy týždňa bez chyby pre plnú časť hesla.";
       note.hidden = false;
     } else if (note) {
       note.hidden = true;
     }
   }
 
-  var count = 0;
-  var ids = allPuzzleIds();
-  for (var j = 0; j < ids.length; j++) {
-    if (isPuzzleRewardUnlocked(ids[j])) count += 1;
+  var weeksFull = 0;
+  for (var w = 1; w <= 12; w++) {
+    if (getWeekRewardTier(w) === "full") weeksFull += 1;
   }
-  var total = ids.length;
   var progress = root.querySelector("[data-investicia-progress]");
   if (progress) {
-    progress.textContent = count + " / " + total + " pečatí";
+    progress.textContent = weeksFull + " / 12 pečatí";
   }
 
   var vault = root.querySelector(".sach-investicia__vault");
-  var complete = allUnlockedFull();
-  if (vault) {
-    vault.hidden = !complete;
-  }
+  var complete = allWeeksCompleteFull();
+  if (vault) vault.hidden = !complete;
   root.classList.toggle("is-complete", complete);
 }
 
@@ -200,12 +227,20 @@ export function initPuzzleRewards() {
 }
 
 export function getRewardMeta(puzzleId) {
-  var meta = REWARD_BY_ID[puzzleId];
+  var puzzle = null;
+  for (var i = 0; i < FESTIVAL_PUZZLES.length; i++) {
+    if (FESTIVAL_PUZZLES[i].id === puzzleId) {
+      puzzle = FESTIVAL_PUZZLES[i];
+      break;
+    }
+  }
+  if (!puzzle) return null;
+  var meta = REWARD_BY_ID[weekRewardId(puzzle.weekIndex)];
   if (!meta) return null;
   var tier = getPuzzleRewardTier(puzzleId);
   if (tier === "partial") {
     return {
-      partLabel: meta.partLabel + " (čiastočná)",
+      partLabel: meta.partLabel + " (čiastočná úloha)",
       icon: meta.icon,
       title: meta.title,
       text: meta.text,
