@@ -472,21 +472,35 @@ export function mountBotPuzzle(puzzle, helpers) {
     applyState(ground);
   }
 
-  function ensureBoardLayout() {
-    if (el.offsetWidth < 2) return;
+  function ensureBoardLayout(attempt) {
+    attempt = attempt == null ? 0 : attempt;
+    var rect = el.getBoundingClientRect();
+    if (rect.width < 2 || rect.height < 2) {
+      if (attempt < 24) {
+        requestAnimationFrame(function () {
+          ensureBoardLayout(attempt + 1);
+        });
+      }
+      return;
+    }
     ground.set({ fen: chess.fen() });
     applyState(ground);
+    if (typeof ground.redrawAll === "function") ground.redrawAll();
   }
 
   if (typeof ResizeObserver !== "undefined") {
     var resizeObserver = new ResizeObserver(function () {
-      ensureBoardLayout();
+      ensureBoardLayout(0);
     });
     resizeObserver.observe(el);
+    var host = el.closest(".chessground-host");
+    if (host && host !== el) resizeObserver.observe(host);
   }
 
   requestAnimationFrame(function () {
-    requestAnimationFrame(ensureBoardLayout);
+    requestAnimationFrame(function () {
+      ensureBoardLayout(0);
+    });
   });
 
   positionHistory = [snapshotNow()];

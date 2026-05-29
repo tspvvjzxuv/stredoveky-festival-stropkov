@@ -151,19 +151,40 @@ export function renderPuzzleGrid() {
     section.appendChild(row);
     grid.appendChild(section);
   }
+
+  var initialWeek = PUZZLE_WEEKS[getDefaultWeekIndex()];
+  if (initialWeek) setPuzzleWeekVisible(initialWeek.weekIndex, { scroll: false });
 }
 
-export function setPuzzleWeekVisible(weekIndex) {
+export function setPuzzleWeekVisible(weekIndex, options) {
   var grid = document.getElementById("sach-puzzle-grid");
   if (!grid) return;
+  var scroll = !options || options.scroll !== false;
   var sections = grid.querySelectorAll(".sach-puzzle-week");
+  var anyActive = false;
   for (var s = 0; s < sections.length; s++) {
     var wIdx = parseInt(sections[s].dataset.weekIndex, 10);
-    sections[s].classList.toggle("is-week-active", wIdx === weekIndex);
+    var active = wIdx === weekIndex;
+    sections[s].classList.toggle("is-week-active", active);
+    if (active) anyActive = true;
+  }
+  if (!anyActive && sections.length) {
+    sections[0].classList.add("is-week-active");
+    weekIndex = parseInt(sections[0].dataset.weekIndex, 10) || 1;
   }
   var target = document.getElementById("sach-week-" + weekIndex);
-  if (target) target.scrollIntoView({ behavior: "smooth", block: "start" });
+  if (target && scroll) target.scrollIntoView({ behavior: "smooth", block: "start" });
   grid.dataset.activeWeek = String(weekIndex);
+  window.dispatchEvent(
+    new CustomEvent("ptra-puzzle-week-visible", { detail: { weekIndex: weekIndex } })
+  );
+}
+
+export function getActivePuzzleWeekIndex() {
+  var grid = document.getElementById("sach-puzzle-grid");
+  if (!grid || !grid.dataset.activeWeek) return null;
+  var n = parseInt(grid.dataset.activeWeek, 10);
+  return isNaN(n) ? null : n;
 }
 
 export function applyPuzzleAccessUI() {
