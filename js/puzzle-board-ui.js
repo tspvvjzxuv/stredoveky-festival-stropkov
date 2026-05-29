@@ -6,7 +6,7 @@ import {
   getScheduleEntry,
   formatUnlockDateSk,
 } from "./puzzle-schedule.js";
-import { isPuzzleAccessUnlocked } from "./puzzle-unlock.js";
+import { isPuzzleAccessUnlocked, getDefaultWeekIndex } from "./puzzle-unlock.js";
 
 export function renderInvesticiaGrid() {
   var grid = document.getElementById("sach-investicia-grid");

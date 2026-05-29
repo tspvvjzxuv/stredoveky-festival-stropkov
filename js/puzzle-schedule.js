@@ -13,7 +13,8 @@ import {
 export const FESTIVAL_DATE = "2026-08-16";
 export const SCHEDULE_TIMEZONE = "Europe/Bratislava";
 
-export const FORCE_UNLOCK_ALL_FOR_REVIEW = true;
+/** true len pri ladení — na webe nechajte false. */
+export const FORCE_UNLOCK_ALL_FOR_REVIEW = false;
 
 export const SCHEDULE_START = "2026-05-26";
 
