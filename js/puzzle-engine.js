@@ -58,6 +58,60 @@ export function isPuzzleWinPosition(chess, winType) {
   return chess.isCheckmate() && chess.turn() === "b";
 }
 
+/** Výsledok partie mimo skriptu (voľná hra / flex): výhra, remíza alebo prehra. */
+export function detectTerminalOutcome(chess, puzzle) {
+  if (!chess || !puzzle) return null;
+  if (isPuzzleWinPosition(chess, puzzle.win)) {
+    return { type: "win" };
+  }
+  if (!chess.isGameOver()) return null;
+
+  if (chess.isCheckmate()) {
+    if (chess.turn() === "w") {
+      return { type: "loss", reason: "white_mated" };
+    }
+    return { type: "loss", reason: "unexpected_mate" };
+  }
+
+  if (chess.isDraw()) {
+    var reason = "draw";
+    if (chess.isStalemate()) reason = "stalemate";
+    else if (chess.isInsufficientMaterial()) reason = "insufficient_material";
+    else if (typeof chess.isThreefoldRepetition === "function" && chess.isThreefoldRepetition()) {
+      reason = "threefold";
+    } else if (typeof chess.isFiftyMove === "function" && chess.isFiftyMove()) {
+      reason = "fifty_move";
+    }
+    return { type: "draw", reason: reason };
+  }
+
+  return { type: "draw", reason: "unknown" };
+}
+
+export function terminalOutcomeMessage(outcome) {
+  if (!outcome) return "Koniec partie.";
+  if (outcome.type === "win") return "Hlavolam je vyriešený.";
+  if (outcome.type === "loss") {
+    if (outcome.reason === "white_mated") {
+      return "Prehra — váš kráľ je v mat. Cieľ úlohy ste nesplnili.";
+    }
+    return "Prehra — mat na doske, ale cieľ úlohy nie je splnený.";
+  }
+  if (outcome.reason === "insufficient_material") {
+    return "Remíza — na doske zostal nedostatočný materiál na mat (napr. kráľ proti kráľovi). Cieľ úlohy nie je splnený.";
+  }
+  if (outcome.reason === "stalemate") {
+    return "Remíza — pat. Cieľ úlohy nie je splnený.";
+  }
+  if (outcome.reason === "threefold") {
+    return "Remíza — trojnásobné opakovanie pozície. Cieľ úlohy nie je splnený.";
+  }
+  if (outcome.reason === "fifty_move") {
+    return "Remíza — pravidlo 50 ťahov. Cieľ úlohy nie je splnený.";
+  }
+  return "Remíza — partie skončila remízou. Cieľ úlohy nie je splnený.";
+}
+
 export function hasWhiteMateInOne(chess) {
   if (chess.turn() !== "w" || chess.isGameOver()) return false;
   var moves = chess.moves({ verbose: true });
@@ -174,27 +228,121 @@ export function filterSoundBotChoices(chess, step, puzzle) {
   return out;
 }
 
-var CAPTURE_SCORE = { q: 90, r: 55, n: 35, b: 35, p: 12, k: 0 };
+/** Kľúč pozície (figúry + na ťahu) — ignoruje počítadlo pol-ťahov. */
+export function positionKey(fen) {
+  var parts = String(fen || "").split(" ");
+  return parts[0] + " " + (parts[1] || "w");
+}
 
-/** Bodovanie čierneho ťahu: uprednostní šach, brania a aktívnu hru pred pasívnym ustúpením kráľa. */
-export function scoreBlackMoveAggression(chess, move, winType) {
+function mainBotChoice(step) {
+  var choices = (step && step.choices) || [];
+  for (var i = 0; i < choices.length; i++) {
+    if (choices[i].main) return choices[i];
+  }
+  return choices[0] || null;
+}
+
+/** Mapa pozícií (pred ťahom bota) → krok bota z hlavnej línie riešenia. */
+export function buildSolutionBotMap(puzzle) {
+  var map = Object.create(null);
+  if (!puzzle || !puzzle.fen) return map;
+  var sim = new Chess(puzzle.fen);
+
+  function consume(steps) {
+    if (!steps || !steps.length) return;
+    for (var i = 0; i < steps.length; i++) {
+      var step = steps[i];
+      if (step.who === "bot") {
+        map[positionKey(sim.fen())] = step;
+        var main = mainBotChoice(step);
+        if (!main || !main.move) return;
+        var applied = sim.move({
+          from: main.move.from,
+          to: main.move.to,
+          promotion: main.move.promotion,
+        });
+        if (!applied) return;
+        if (main.then && main.then.length) consume(main.then);
+        return;
+      }
+      var um = step.suggest || step.move;
+      if (!um) return;
+      if (
+        !sim.move({
+          from: um.from,
+          to: um.to,
+          promotion: um.promotion,
+        })
+      ) {
+        return;
+      }
+    }
+  }
+
+  consume(puzzle.play || []);
+  return map;
+}
+
+/** Na pozícii z hlavnej línie zahrá obranu zo skriptu (nie náhodný super-bot). */
+export function pickCatalogBlackMove(chess, puzzle, botMap) {
+  if (!chess || chess.turn() !== "b") return null;
+  botMap = botMap || buildSolutionBotMap(puzzle);
+  var step = botMap[positionKey(chess.fen())];
+  if (!step) return null;
+
+  var choices = filterSoundBotChoices(chess, step, puzzle);
+  if (!choices.length) return null;
+
+  for (var i = 0; i < choices.length; i++) {
+    if (choices[i].main) {
+      return {
+        move: choices[i].move,
+        hint: choices[i].hint || "Počítač odohral hlavnú obranu — pokračujte podľa plánu.",
+        fromScript: true,
+      };
+    }
+  }
+
+  var pick = choices[0];
+  return {
+    move: pick.move,
+    hint: pick.hint || "Počítač odohral obranu — pokračujte.",
+    fromScript: true,
+  };
+}
+
+function probeBlackMove(chess, move) {
   var probe = new Chess(chess.fen());
   var applied = probe.move({
     from: move.from,
     to: move.to,
     promotion: move.promotion,
   });
-  if (!applied) return -1000;
+  if (!applied) return null;
+  return probe;
+}
 
+var CAPTURE_SCORE = { q: 90, r: 55, n: 35, b: 35, p: 12, k: 0 };
+
+/** Bodovanie čierneho ťahu: super-bot — šach a útok majú absolútnu prioritu. */
+export function scoreBlackMoveAggression(chess, move, winType) {
+  var probe = probeBlackMove(chess, move);
+  if (!probe) return -1000;
+
+  var isCheck = probe.isCheck();
   var score = 0;
-  if (probe.isCheck()) score += 120;
+  if (isCheck) score += 520;
   if (move.captured) score += CAPTURE_SCORE[move.captured] || 8;
-  if (move.san && move.san.indexOf("+") >= 0) score += 15;
-  if (move.san && move.san.indexOf("x") >= 0) score += 8;
+  if (isCheck && move.captured) score += 80;
+  if (move.san && move.san.indexOf("+") >= 0) score += 25;
+  if (move.san && move.san.indexOf("x") >= 0) score += 10;
 
   var fromPiece = chess.get(move.from);
-  if (fromPiece && fromPiece.type === "k" && !move.captured && !probe.isCheck()) {
-    score -= 40;
+  if (fromPiece && fromPiece.type === "k" && !move.captured && !isCheck) {
+    score -= 120;
+  }
+  if (!isCheck && !move.captured) {
+    score -= 35;
   }
 
   if (whiteCanReachGoal(probe, winType)) score += 60;
@@ -204,7 +352,12 @@ export function scoreBlackMoveAggression(chess, move, winType) {
   return score;
 }
 
-/** Najaktívnejší z legálnych ťahov, pri ktorých biely stále môže vyhrať. */
+function moveGivesCheck(chess, move) {
+  var probe = probeBlackMove(chess, move);
+  return probe ? probe.isCheck() : false;
+}
+
+/** Najsilnejší legálny čierny ťah — vždy šach, ak existuje a biely môže stále vyhrať. */
 export function pickEngagedBlackMove(chess, puzzle) {
   var win = puzzle.win;
   var moves = chess.moves({ verbose: true });
@@ -212,7 +365,11 @@ export function pickEngagedBlackMove(chess, puzzle) {
 
   var ranked = moves
     .map(function (m) {
-      return { move: m, score: scoreBlackMoveAggression(chess, m, win) };
+      return {
+        move: m,
+        score: scoreBlackMoveAggression(chess, m, win),
+        isCheck: moveGivesCheck(chess, m),
+      };
     })
     .sort(function (a, b) {
       return b.score - a.score;
@@ -228,16 +385,19 @@ export function pickEngagedBlackMove(chess, puzzle) {
   }
   if (!pool.length) pool = ranked;
 
-  var topCount = Math.min(4, pool.length);
-  var pick = pool[Math.floor(Math.random() * topCount)].move;
-  var probe = new Chess(chess.fen());
-  probe.move({ from: pick.from, to: pick.to, promotion: pick.promotion });
-  var aggressive = probe.isCheck() || !!pick.captured;
+  var checks = pool.filter(function (r) {
+    return r.isCheck;
+  });
+  if (checks.length) pool = checks;
+
+  var pick = pool[0].move;
+  var probe = probeBlackMove(chess, pick);
+  var aggressive = (probe && probe.isCheck()) || !!pick.captured;
 
   return {
     move: { from: pick.from, to: pick.to, promotion: pick.promotion },
     aggressive: aggressive,
-    isCheck: probe.isCheck(),
+    isCheck: probe ? probe.isCheck() : false,
     captured: pick.captured || null,
   };
 }
@@ -245,9 +405,9 @@ export function pickEngagedBlackMove(chess, puzzle) {
 function engagedBotHint(result) {
   if (!result) return "Počítač odohral ťah — pokračujte bielym.";
   if (result.isCheck && result.captured) {
-    return "Počítač dal šach a zobral figúru — pokračujte bielym.";
+    return "♟ Šach! Počítač berie figúru — bráňte kráľa bielym.";
   }
-  if (result.isCheck) return "Počítač dal šach — pokračujte bielym.";
+  if (result.isCheck) return "♟ Šach! Počítač tlačí na vášho kráľa — pokračujte bielym.";
   if (result.captured) return "Počítač zobral figúru — pokračujte bielym.";
   if (result.aggressive) return "Počítač útočí — pokračujte bielym.";
   return "Počítač odohral ťah — pokračujte bielym.";
@@ -271,16 +431,28 @@ export function pickFlexSoundBotMove(chess, puzzle) {
   };
 }
 
-/** Z viacerých zvukových vetiev v dátach vyberie najaktívnejšiu. */
+/** Z viacerých zvukových vetiev v dátach vyberie najagresívnejšiu (šach má prednosť). */
 export function pickMostEngagedBotChoice(chess, choices, puzzle) {
   if (!choices || !choices.length) return null;
   if (choices.length === 1) return choices[0];
 
-  var best = choices[0];
+  var viable = [];
+  for (var v = 0; v < choices.length; v++) {
+    var ch0 = choices[v];
+    if (!ch0 || !ch0.move || ch0.fail) continue;
+    viable.push(ch0);
+  }
+  if (!viable.length) return choices[0];
+
+  var checking = viable.filter(function (ch) {
+    return moveGivesCheck(chess, ch.move);
+  });
+  var pool = checking.length ? checking : viable;
+
+  var best = pool[0];
   var bestScore = -Infinity;
-  for (var i = 0; i < choices.length; i++) {
-    var ch = choices[i];
-    if (!ch || !ch.move || ch.fail) continue;
+  for (var i = 0; i < pool.length; i++) {
+    var ch = pool[i];
     var fakeMove = {
       from: ch.move.from,
       to: ch.move.to,

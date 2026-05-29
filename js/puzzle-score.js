@@ -43,14 +43,46 @@ function sumPoints(puzzles) {
   return total;
 }
 
-export function computePointsForSolve(puzzle, movesUsed, maxMoves) {
+/** @returns {{ base: number, bonus: number, total: number, movesUsed: number|null, maxMoves: number|null }} */
+export function computeScoreBreakdown(puzzle, movesUsed, maxMoves) {
   var base = BASE_POINTS[puzzle.difficulty] || 100;
-  if (typeof movesUsed !== "number" || typeof maxMoves !== "number" || maxMoves < 1) {
-    return base;
+  var bonus = 0;
+  if (typeof movesUsed === "number" && typeof maxMoves === "number" && maxMoves >= 1) {
+    var saved = Math.max(0, maxMoves - movesUsed);
+    bonus = Math.round((saved / maxMoves) * base * 0.6);
   }
-  var saved = Math.max(0, maxMoves - movesUsed);
-  var bonus = Math.round((saved / maxMoves) * base * 0.6);
-  return base + bonus;
+  return {
+    base: base,
+    bonus: bonus,
+    total: base + bonus,
+    movesUsed: typeof movesUsed === "number" ? movesUsed : null,
+    maxMoves: typeof maxMoves === "number" ? maxMoves : null,
+  };
+}
+
+export function computePointsForSolve(puzzle, movesUsed, maxMoves) {
+  return computeScoreBreakdown(puzzle, movesUsed, maxMoves).total;
+}
+
+export function formatPuzzleSolvePointsMessage(result) {
+  if (!result || result.total == null) return "";
+  var total = result.total;
+  if (result.bonus > 0 && result.movesUsed != null && result.maxMoves != null) {
+    return (
+      "+" +
+      total +
+      " bodov (" +
+      result.base +
+      " základ + " +
+      result.bonus +
+      " bonus za " +
+      result.movesUsed +
+      "/" +
+      result.maxMoves +
+      " ťahov)"
+    );
+  }
+  return "+" + total + " bodov";
 }
 
 export function getPuzzleScoreRecord(puzzleId) {
@@ -62,23 +94,45 @@ export function recordPuzzleSolve(puzzle, options) {
   options = options || {};
   var movesUsed = options.movesUsed;
   var maxMoves = options.maxMoves != null ? options.maxMoves : puzzle.maxMoves;
-  var points = computePointsForSolve(puzzle, movesUsed, maxMoves);
+  var breakdown = computeScoreBreakdown(puzzle, movesUsed, maxMoves);
 
   var store = readStore();
   var prev = store.puzzles[puzzle.id];
-  if (prev && prev.points >= points) return prev.points;
+  var recorded = !prev || breakdown.total > prev.points;
+  if (!recorded) {
+    return {
+      recorded: false,
+      points: prev.points,
+      base: breakdown.base,
+      bonus: breakdown.bonus,
+      total: breakdown.total,
+      movesUsed: breakdown.movesUsed,
+      maxMoves: breakdown.maxMoves,
+      bestPoints: prev.points,
+    };
+  }
 
   store.puzzles[puzzle.id] = {
-    points: points,
-    movesUsed: typeof movesUsed === "number" ? movesUsed : null,
-    maxMoves: typeof maxMoves === "number" ? maxMoves : null,
+    points: breakdown.total,
+    base: breakdown.base,
+    bonus: breakdown.bonus,
+    movesUsed: breakdown.movesUsed,
+    maxMoves: breakdown.maxMoves,
     difficulty: puzzle.difficulty,
     weekIndex: puzzle.weekIndex,
     solvedAt: new Date().toISOString(),
   };
   store.totalPoints = sumPoints(store.puzzles);
   writeStore(store);
-  return points;
+  return {
+    recorded: true,
+    points: breakdown.total,
+    base: breakdown.base,
+    bonus: breakdown.bonus,
+    total: breakdown.total,
+    movesUsed: breakdown.movesUsed,
+    maxMoves: breakdown.maxMoves,
+  };
 }
 
 export function setScoreDisplayName(name) {
@@ -137,6 +191,7 @@ export function getScoreSummary() {
       points: rec.points,
       movesUsed: rec.movesUsed,
       maxMoves: rec.maxMoves,
+      bonus: rec.bonus || 0,
     };
   })
     .filter(Boolean)
@@ -168,9 +223,11 @@ export function syncScoresFromRewards() {
       typeof p.maxMoves === "number"
         ? Math.max(1, Math.ceil(p.maxMoves * 0.55))
         : null;
-    var points = computePointsForSolve(p, estMoves, p.maxMoves);
+    var est = computeScoreBreakdown(p, estMoves, p.maxMoves);
     store.puzzles[p.id] = {
-      points: points,
+      points: est.total,
+      base: est.base,
+      bonus: est.bonus,
       movesUsed: estMoves,
       maxMoves: p.maxMoves,
       difficulty: p.difficulty,
@@ -224,12 +281,15 @@ export function renderScorePanel() {
               t.movesUsed != null && t.maxMoves != null
                 ? " · " + t.movesUsed + "/" + t.maxMoves + " ťahov"
                 : "";
+            var bonus =
+              t.bonus > 0 ? ' <span class="sach-score-bonus">(+' + t.bonus + " bonus)</span>" : "";
             return (
               "<li><span>" +
               escapeHtml(t.title) +
               '</span><strong class="sach-score-num">+' +
               t.points +
               "</strong>" +
+              bonus +
               moves +
               "</li>"
             );
@@ -266,7 +326,7 @@ export function renderScorePanel() {
     "</tbody></table></div>" +
     '<h3 class="sach-score__sub">Najlepšie úlohy</h3>' +
     topHtml +
-    '<p class="note sach-score__note">Body sa počítajú podľa obtiažnosti a počtu ťahov (bonus za menej ťahov). Ukladajú sa výhradne v localStorage tohto prehliadača — pri vymazaní dát alebo na inom zariadení začínate od nuly. Na festivale platí investícia a heslo z úloh, nie online porovnanie hráčov.</p>';
+    '<p class="note sach-score__note">Základ podľa obtiažnosti (ľahká 100, stredná 250, ťažká 500). K tomu až +60&nbsp;% základu ako bonus, ak spotrebujete menej bielych ťahov v rámci limitu úlohy (1 ťah = maximum bonusu). Ukladá sa len váš najlepší výsledok na úlohu. Dáta sú len v localStorage tohto prehliadača.</p>';
 
   var input = root.querySelector("#sach-score-name");
   if (input) {

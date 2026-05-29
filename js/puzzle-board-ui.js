@@ -88,7 +88,7 @@ function renderPuzzleCard(puzzle) {
     '-attempt-count" class="sach-move-counter sach-attempt-counter" aria-label="Počet neúspešných pokusov: 0">Pokusy: 0</span>' +
     '<span id="' +
     puzzle.id +
-    '-move-count" class="sach-move-counter" aria-label="Počet vašich ťahov v tejto partii: 0">Ťahy: 0</span>' +
+    '-move-count" class="sach-move-counter" aria-label="Vaše ťahy: 0">Ťahy: 0</span>' +
     "</span>" +
     "</h4>" +
     '<div class="chessground-host">' +

@@ -50,8 +50,11 @@ export function createWrongMoveOverlay(boardEl) {
   });
 
   backBtn.addEventListener("click", function () {
-    if (onStepBack) onStepBack();
-    overlay.hidden = true;
+    if (!onStepBack) return;
+    onStepBack();
+    if (!overlay.classList.contains("is-game-over")) {
+      overlay.hidden = true;
+    }
   });
 
   return {
@@ -64,7 +67,7 @@ export function createWrongMoveOverlay(boardEl) {
     },
     hide: function () {
       overlay.hidden = true;
-      overlay.classList.remove("is-game-over");
+      overlay.classList.remove("is-game-over", "is-game-draw", "is-game-loss", "is-game-limit");
       onRetry = null;
       onStepBack = null;
     },
@@ -93,10 +96,16 @@ export function createWrongMoveOverlay(boardEl) {
         (options && options.message) ||
         "Game over — prekročili ste limit ťahov.";
       onRetry = options && options.onReset ? options.onReset : null;
-      onStepBack = null;
-      backBtn.hidden = true;
-      retryBtn.textContent = "Nová partia";
+      onStepBack = options && options.onStepBack ? options.onStepBack : null;
+      var showBack = !!(options && options.showStepBack && onStepBack);
+      backBtn.hidden = !showBack;
+      retryBtn.textContent = (options && options.retryLabel) || "Nová partia";
+      overlay.classList.remove("is-game-draw", "is-game-loss", "is-game-limit");
       overlay.classList.add("is-game-over");
+      var kind = (options && options.kind) || "limit";
+      if (kind === "draw") overlay.classList.add("is-game-draw");
+      else if (kind === "loss") overlay.classList.add("is-game-loss");
+      else overlay.classList.add("is-game-limit");
       overlay.hidden = false;
       if (!overlay.querySelector(".sach-game-over-msg")) {
         var p = document.createElement("p");
@@ -106,7 +115,7 @@ export function createWrongMoveOverlay(boardEl) {
       overlay.querySelector(".sach-game-over-msg").textContent = msg;
     },
     hideGameOver: function () {
-      overlay.classList.remove("is-game-over");
+      overlay.classList.remove("is-game-over", "is-game-draw", "is-game-loss", "is-game-limit");
       retryBtn.textContent = "Skúsiť znova";
       var msgEl = overlay.querySelector(".sach-game-over-msg");
       if (msgEl) msgEl.remove();
