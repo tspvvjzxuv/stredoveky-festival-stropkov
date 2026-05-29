@@ -126,6 +126,13 @@ function mountPuzzleBoard(puzzle) {
   mountBotPuzzle(puzzle, createPuzzleHelpers());
 }
 
+function clearPuzzleMountWatch(puzzleId) {
+  if (mountObservers[puzzleId]) {
+    mountObservers[puzzleId].disconnect();
+    delete mountObservers[puzzleId];
+  }
+}
+
 function schedulePuzzleMount(puzzle) {
   if (!isPuzzleAccessUnlocked(puzzle.id) || mountedIds[puzzle.id]) return;
   var el = document.getElementById(puzzle.id);
@@ -136,7 +143,7 @@ function schedulePuzzleMount(puzzle) {
     return;
   }
 
-  if (mountObservers[puzzle.id]) return;
+  clearPuzzleMountWatch(puzzle.id);
 
   if (typeof IntersectionObserver === "undefined") {
     mountPuzzleBoard(puzzle);
@@ -154,6 +161,23 @@ function schedulePuzzleMount(puzzle) {
     { root: null, rootMargin: "80px", threshold: 0.12 }
   );
   mountObservers[puzzle.id].observe(el);
+
+  requestAnimationFrame(function () {
+    requestAnimationFrame(function () {
+      var board = document.getElementById(puzzle.id);
+      if (board && board.offsetWidth > 20 && !mountedIds[puzzle.id]) mountPuzzleBoard(puzzle);
+    });
+  });
+}
+
+function mountWeekPuzzles(weekIndex) {
+  for (var i = 0; i < FESTIVAL_PUZZLES.length; i++) {
+    var p = FESTIVAL_PUZZLES[i];
+    if (!p || p.weekIndex !== weekIndex || !p.fen) continue;
+    if (!isPuzzleAccessUnlocked(p.id) || mountedIds[p.id]) continue;
+    clearPuzzleMountWatch(p.id);
+    schedulePuzzleMount(p);
+  }
 }
 
 function mountAllPlayablePuzzles() {

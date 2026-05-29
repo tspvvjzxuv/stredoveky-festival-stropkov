@@ -17,6 +17,7 @@ var required = [
   "js/puzzle-engine.js",
   "js/puzzle-rewards.js",
   "js/puzzles-data.js",
+  "js/puzzle-catalog.js",
   "js/harmonogram-data.js",
   "js/harmonogram-live.js",
   "js/config.js",
