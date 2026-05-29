@@ -174,23 +174,90 @@ export function filterSoundBotChoices(chess, step, puzzle) {
   return out;
 }
 
-/** Záloha: ak v dátach nie je zdravá vetva, nájdi legálnu čiernu odpoveď, po ktorej biely vyhrá. */
-export function pickFlexSoundBotMove(chess, puzzle) {
-  var moves = chess.moves({ verbose: true });
-  var sound = [];
-  for (var i = 0; i < moves.length; i++) {
-    var probe = new Chess(chess.fen());
-    probe.move({
-      from: moves[i].from,
-      to: moves[i].to,
-      promotion: moves[i].promotion,
-    });
-    if (whiteCanReachGoal(probe, puzzle.win)) {
-      sound.push(moves[i]);
-    }
+var CAPTURE_SCORE = { q: 90, r: 55, n: 35, b: 35, p: 12, k: 0 };
+
+/** Bodovanie čierneho ťahu: uprednostní šach, brania a aktívnu hru pred pasívnym ustúpením kráľa. */
+export function scoreBlackMoveAggression(chess, move, winType) {
+  var probe = new Chess(chess.fen());
+  var applied = probe.move({
+    from: move.from,
+    to: move.to,
+    promotion: move.promotion,
+  });
+  if (!applied) return -1000;
+
+  var score = 0;
+  if (probe.isCheck()) score += 120;
+  if (move.captured) score += CAPTURE_SCORE[move.captured] || 8;
+  if (move.san && move.san.indexOf("+") >= 0) score += 15;
+  if (move.san && move.san.indexOf("x") >= 0) score += 8;
+
+  var fromPiece = chess.get(move.from);
+  if (fromPiece && fromPiece.type === "k" && !move.captured && !probe.isCheck()) {
+    score -= 40;
   }
-  if (!sound.length) return null;
-  var pick = sound[Math.floor(Math.random() * sound.length)];
+
+  if (whiteCanReachGoal(probe, winType)) score += 60;
+  else if (hasWhiteMateInOne(probe)) score += 25;
+  else score -= 800;
+
+  return score;
+}
+
+/** Najaktívnejší z legálnych ťahov, pri ktorých biely stále môže vyhrať. */
+export function pickEngagedBlackMove(chess, puzzle) {
+  var win = puzzle.win;
+  var moves = chess.moves({ verbose: true });
+  if (!moves.length) return null;
+
+  var ranked = moves
+    .map(function (m) {
+      return { move: m, score: scoreBlackMoveAggression(chess, m, win) };
+    })
+    .sort(function (a, b) {
+      return b.score - a.score;
+    });
+
+  var pool = ranked.filter(function (r) {
+    return r.score > 0;
+  });
+  if (!pool.length) {
+    pool = ranked.filter(function (r) {
+      return r.score > -400;
+    });
+  }
+  if (!pool.length) pool = ranked;
+
+  var topCount = Math.min(4, pool.length);
+  var pick = pool[Math.floor(Math.random() * topCount)].move;
+  var probe = new Chess(chess.fen());
+  probe.move({ from: pick.from, to: pick.to, promotion: pick.promotion });
+  var aggressive = probe.isCheck() || !!pick.captured;
+
+  return {
+    move: { from: pick.from, to: pick.to, promotion: pick.promotion },
+    aggressive: aggressive,
+    isCheck: probe.isCheck(),
+    captured: pick.captured || null,
+  };
+}
+
+function engagedBotHint(result) {
+  if (!result) return "Počítač odohral ťah — pokračujte bielym.";
+  if (result.isCheck && result.captured) {
+    return "Počítač dal šach a zobral figúru — pokračujte bielym.";
+  }
+  if (result.isCheck) return "Počítač dal šach — pokračujte bielym.";
+  if (result.captured) return "Počítač zobral figúru — pokračujte bielym.";
+  if (result.aggressive) return "Počítač útočí — pokračujte bielym.";
+  return "Počítač odohral ťah — pokračujte bielym.";
+}
+
+/** Záloha / flex: aktívna čierna odpoveď, po ktorej biely stále dosiahne cieľ. */
+export function pickFlexSoundBotMove(chess, puzzle) {
+  var engaged = pickEngagedBlackMove(chess, puzzle);
+  if (!engaged) return null;
+
   var thenStep = {
     who: "user",
     accept: puzzle.win === "black_queen_captured" ? "black_queen_captured" : "checkmate",
@@ -198,10 +265,37 @@ export function pickFlexSoundBotMove(chess, puzzle) {
     wrong: "Týmto ťahom cieľ nesplníte.",
   };
   return {
-    move: { from: pick.from, to: pick.to, promotion: pick.promotion },
+    move: engaged.move,
     then: [thenStep],
-    hint: "Počítač odohral obranu — dokončite úlohu.",
+    hint: engagedBotHint(engaged),
   };
+}
+
+/** Z viacerých zvukových vetiev v dátach vyberie najaktívnejšiu. */
+export function pickMostEngagedBotChoice(chess, choices, puzzle) {
+  if (!choices || !choices.length) return null;
+  if (choices.length === 1) return choices[0];
+
+  var best = choices[0];
+  var bestScore = -Infinity;
+  for (var i = 0; i < choices.length; i++) {
+    var ch = choices[i];
+    if (!ch || !ch.move || ch.fail) continue;
+    var fakeMove = {
+      from: ch.move.from,
+      to: ch.move.to,
+      promotion: ch.move.promotion,
+      captured: ch.move.captured,
+      san: ch.move.san || "",
+    };
+    var score = scoreBlackMoveAggression(chess, fakeMove, puzzle.win);
+    if (ch.main) score += 5;
+    if (score > bestScore) {
+      bestScore = score;
+      best = ch;
+    }
+  }
+  return best;
 }
 
 /**

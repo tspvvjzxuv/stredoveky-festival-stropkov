@@ -6,6 +6,8 @@ import {
   isPuzzleWinPosition,
   filterSoundBotChoices,
   pickFlexSoundBotMove,
+  pickEngagedBlackMove,
+  pickMostEngagedBotChoice,
 } from "./puzzle-engine.js";
 import { createWrongMoveOverlay } from "./puzzle-wrong-move-ui.js";
 
@@ -33,17 +35,19 @@ function pickBotChoice(step, chess, puzzle) {
   }
 
   if (step.pick === "main" || step.pick === "preferred") {
+    var preferred = [];
     for (var i = 0; i < choices.length; i++) {
-      if (choices[i].main || choices[i].preferred) return choices[i];
+      if (choices[i].main || choices[i].preferred) preferred.push(choices[i]);
     }
-    return choices[0];
+    if (preferred.length) return pickMostEngagedBotChoice(chess, preferred, puzzle) || preferred[0];
+    return pickMostEngagedBotChoice(chess, choices, puzzle) || choices[0];
   }
 
   if (step.pick === "random") {
-    return choices[Math.floor(Math.random() * choices.length)];
+    return pickMostEngagedBotChoice(chess, choices, puzzle) || choices[Math.floor(Math.random() * choices.length)];
   }
 
-  return choices[0];
+  return pickMostEngagedBotChoice(chess, choices, puzzle) || choices[0];
 }
 
 function statusForTurn(chess, botThinking) {
@@ -379,12 +383,13 @@ export function mountBotPuzzle(puzzle, helpers) {
   }
 
   function pickBlackMoveForFreePlay() {
+    var engaged = pickEngagedBlackMove(chess, puzzle);
+    if (engaged && engaged.move) {
+      return { move: engaged.move, hint: engaged };
+    }
     var flex = pickFlexSoundBotMove(chess, puzzle);
-    if (flex && flex.move) return flex.move;
-    var moves = chess.moves({ verbose: true });
-    if (!moves.length) return null;
-    var m = moves[Math.floor(Math.random() * moves.length)];
-    return { from: m.from, to: m.to, promotion: m.promotion };
+    if (flex && flex.move) return { move: flex.move, hint: flex };
+    return null;
   }
 
   function runFlexBotTurn(ground) {
@@ -392,13 +397,22 @@ export function mountBotPuzzle(puzzle, helpers) {
       applyState(ground);
       return;
     }
-    var move = pickBlackMoveForFreePlay();
-    if (!move) {
+    var picked = pickBlackMoveForFreePlay();
+    if (!picked || !picked.move) {
       applyState(ground);
       return;
     }
+    var move = picked.move;
+    var statusMsg = "Počítač útočí…";
+    if (picked.hint) {
+      if (typeof picked.hint === "string") statusMsg = picked.hint;
+      else if (picked.hint.hint) statusMsg = picked.hint.hint;
+      else if (picked.hint.isCheck && picked.hint.captured) statusMsg = "Počítač dal šach a berie figúru…";
+      else if (picked.hint.isCheck) statusMsg = "Počítač dal šach…";
+      else if (picked.hint.captured) statusMsg = "Počítač berie figúru…";
+    }
     busy = true;
-    applyState(ground, "Počítač hrá obranu…");
+    applyState(ground, statusMsg);
     window.setTimeout(function () {
       var botMove = { from: move.from, to: move.to };
       if (move.promotion) botMove.promotion = move.promotion;
@@ -492,7 +506,7 @@ export function mountBotPuzzle(puzzle, helpers) {
       }
 
       busy = true;
-      applyState(ground, choice.hint || "🤖 Počítač hrá obranu…");
+      applyState(ground, choice.hint || "🤖 Počítač útočí…");
 
       var move = choice.move;
       var thenSteps = choice.then || [];
