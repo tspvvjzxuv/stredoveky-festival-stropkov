@@ -244,3 +244,86 @@ body.home-page .stripe-btn {
   border-radius: var(--ds-radius-md);
   font-family: var(--font-ui);
 }
+
+/* --- Šach: taktika, časová os, dosky --- */
+body.home-page #sachove-hlavolamy,
+body.home-page #sachove-hlavolamy .card {
+  color: var(--ds-text-on-dark);
+}
+
+body.home-page #sachove-hlavolamy .sach-puzzle-week__title,
+body.home-page #sachove-hlavolamy h2,
+body.home-page #sachove-hlavolamy h3,
+body.home-page #sachove-hlavolamy h4 {
+  color: var(--heading-on-dark);
+}
+
+body.home-page #sachove-hlavolamy .note,
+body.home-page #sachove-hlavolamy .sach-puzzle-week__meta,
+body.home-page #sachove-hlavolamy #cg-w1-easy-subtitle,
+body.home-page #sachove-hlavolamy [id$="-subtitle"] {
+  color: var(--text-muted);
+}
+
+body.home-page #sachove-hlavolamy .sach-timeline__week-head,
+body.home-page #sachove-hlavolamy .sach-timeline__slot {
+  font-family: var(--font-ui);
+  color: var(--ds-text-on-dark);
+  border-color: var(--card-border-soft);
+  background: rgba(12, 16, 24, 0.72);
+}
+
+body.home-page #sachove-hlavolamy .sach-timeline__week-head.is-unlocked,
+body.home-page #sachove-hlavolamy .sach-timeline__slot.is-unlocked {
+  border-color: rgba(255, 203, 0, 0.45);
+  color: var(--gold-bright);
+}
+
+body.home-page #sachove-hlavolamy .sach-investicia__part {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  color: var(--ds-text-on-dark);
+}
+
+body.home-page #sachove-hlavolamy .chessground-host {
+  border-color: var(--card-border);
+}
+
+/* --- Prihlášky: legacy .prihlasky-page prepis --- */
+body.home-page .prihlasky-page,
+body.home-page .prihlasky-page > h1,
+body.home-page .prihlasky-page h2,
+body.home-page .prihlasky-page h3,
+body.home-page .prihlasky-page p,
+body.home-page .prihlasky-page li,
+body.home-page .prihlasky-page label,
+body.home-page .prihlasky-page td,
+body.home-page .prihlasky-page th {
+  color: var(--ds-text-on-dark) !important;
+  background-color: transparent;
+}
+
+body.home-page .prihlasky-page .workshop-form input,
+body.home-page .prihlasky-page .workshop-form textarea,
+body.home-page .prihlasky-page .workshop-form select {
+  background: rgba(11, 16, 24, 0.9) !important;
+  border: 1px solid rgba(150, 118, 74, 0.46) !important;
+  color: var(--ds-neutral) !important;
+}
+
+body.home-page .prihlasky-page code {
+  background: rgba(255, 203, 0, 0.12);
+  color: var(--gold-bright);
+}
+
+body.home-page .gdpr-page,
+body.home-page .cookies-page {
+  color: var(--ds-text-on-dark);
+}
+
+body.home-page .gdpr-page h1,
+body.home-page .gdpr-page h2,
+body.home-page .cookies-page h1,
+body.home-page .cookies-page h2 {
+  color: var(--heading-on-dark);
+}
