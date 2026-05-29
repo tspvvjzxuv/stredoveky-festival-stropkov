@@ -3,6 +3,8 @@
  * GitHub Pages = len táto prezentačná stránka. WooCommerce musí bežať na hostingu s WordPressom.
  */
 window.FESTIVAL_CONFIG = {
+  /** Zmeňte pri deployi — vynúti obnovu cache modulov šachu v prehliadači. */
+  assetsVersion: "20260529b",
   rok: 2026,
   miesto: "Stropkov",
 

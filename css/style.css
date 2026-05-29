@@ -4,9 +4,9 @@
   --ds-primary-dark: #a11c16;
   --ds-primary-mid: #e23a33;
   --ds-secondary: #329932;
-  --ds-tertiary: #ffcb00;
-  --ds-tertiary-dim: #c79d00;
-  --ds-tertiary-bright: #ffe066;
+  --ds-tertiary: #ffd84a;
+  --ds-tertiary-dim: #e8b830;
+  --ds-tertiary-bright: #fff2b0;
   --ds-neutral: #ffeed2;
   --ds-surface-dark: #0e1219;
   --ds-surface-dark-2: #0a0c12;
@@ -5103,12 +5103,24 @@ body.home-page {
   box-sizing: border-box;
   width: 100%;
   max-width: 100%;
+  min-width: 200px;
+  min-height: 200px;
   margin-inline: auto;
   aspect-ratio: 1 / 1;
   border-radius: 6px;
   border: 1px solid rgba(242, 204, 140, 0.5);
   overflow: hidden;
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.28);
+}
+
+#sachove-hlavolamy .sach-board-load-error {
+  margin: 0.5rem 0 0;
+  padding: 0.55rem 0.65rem;
+  border-radius: var(--ds-radius-sm, 6px);
+  background: rgba(120, 28, 28, 0.35);
+  border: 1px solid rgba(255, 140, 100, 0.45);
+  color: #ffe8dc;
+  font-size: 0.82rem;
 }
 
 /* Šachová stránka — širší layout na PC, väčšie dosky na tablete, mobil na celú šírku */
