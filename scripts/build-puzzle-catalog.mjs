@@ -245,10 +245,41 @@ function buildPlay(spec) {
   return recurse(0);
 }
 
+function countPieces(chess) {
+  const w = {};
+  const b = {};
+  for (const row of chess.board()) {
+    for (const p of row) {
+      if (!p) continue;
+      const bag = p.color === "w" ? w : b;
+      bag[p.type] = (bag[p.type] || 0) + 1;
+    }
+  }
+  return { w, b };
+}
+
+function validatePieceCounts(chess) {
+  const { w, b } = countPieces(chess);
+  for (const [color, bag, label] of [
+    ["w", w, "white"],
+    ["b", b, "black"],
+  ]) {
+    if (!bag.k) return `${label} missing king`;
+    if ((bag.q || 0) > 1) return `${label} has ${bag.q} queens`;
+    if ((bag.b || 0) > 2) return `${label} has ${bag.b} bishops`;
+    if ((bag.n || 0) > 2) return `${label} has ${bag.n} knights`;
+    if ((bag.r || 0) > 2) return `${label} has ${bag.r} rooks`;
+    if ((bag.p || 0) > 8) return `${label} has ${bag.p} pawns`;
+  }
+  return null;
+}
+
 function verifyEntry(spec) {
   const pc = playerColorFromSpec(spec);
   const opp = opponentColor(pc);
   const chess = new Chess(spec.fen);
+  const pieceErr = validatePieceCounts(chess);
+  if (pieceErr) return { ok: false, err: pieceErr };
   const sans = [];
   for (const [from, to] of spec.line) {
     const m = moveFromPair(chess, from, to);
