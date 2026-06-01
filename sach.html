@@ -34,22 +34,21 @@
       href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Montserrat:wght@400;500;600;700;800&family=Source+Sans+3:ital,wght@0,400;0,600;0,700;1,400&display=swap"
       rel="stylesheet"
     />
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/@lichess-org/chessground@10.1.1/assets/chessground.base.css"
-    />
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/@lichess-org/chessground@10.1.1/assets/chessground.brown.css"
-    />
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/@lichess-org/chessground@10.1.1/assets/chessground.cburnett.css"
-    />
+    <link rel="stylesheet" href="css/vendor/chessground/chessground.base.css" />
+    <link rel="stylesheet" href="css/vendor/chessground/chessground.brown.css" />
+    <link rel="stylesheet" href="css/vendor/chessground/chessground.cburnett.css" />
     <link rel="stylesheet" href="css/style.css" />
     <script src="js/config.js" defer></script>
     <script src="js/main.js" defer></script>
-    <script type="module" src="js/chessground-puzzles.js?v=20260601g"></script>
+    <script type="module">
+      import("./js/chessground-puzzles.js?v=20260601h").catch(function () {
+        var grid = document.getElementById("sach-puzzle-grid");
+        if (grid && !grid.children.length) {
+          grid.innerHTML =
+            '<p class="note sach-module-fail" role="alert">Úlohy sa nepodarilo načítať. Obnovte stránku (potiahnutie nadol) alebo skúste iný prehliadač bez blokovania skriptov.</p>';
+        }
+      });
+    </script>
   </head>
   <body class="home-page">
     <a class="skip-link" href="#sachove-hlavolamy">Preskočiť na obsah</a>

@@ -5,6 +5,8 @@
     "dev": "live-server --port=5500 --open=/",
     "start": "npm run dev",
     "build": "node scripts/build.mjs",
+    "vendor:copy": "node scripts/copy-vendor.mjs",
+    "prebuild": "node scripts/copy-vendor.mjs",
     "test:puzzles": "node scripts/validate-puzzles.mjs",
     "test:puzzles:soundness": "node scripts/audit-puzzle-soundness.mjs",
     "test:puzzles:alt": "node scripts/test-puzzle-alternatives.mjs",

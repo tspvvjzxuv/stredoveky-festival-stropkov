@@ -1,5 +1,5 @@
-import { Chessground } from "https://cdn.jsdelivr.net/npm/@lichess-org/chessground@10.1.1/dist/chessground.js";
-import { Chess } from "https://cdn.jsdelivr.net/npm/chess.js@1.4.0/+esm";
+import { Chessground } from "./vendor/chessground/chessground.js";
+import { Chess } from "./vendor/chess.mjs";
 import { movesMatch } from "./puzzle-engine.js";
 import { createWrongMoveOverlay } from "./puzzle-wrong-move-ui.js";
 

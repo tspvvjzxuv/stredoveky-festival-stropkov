@@ -1,5 +1,5 @@
 /** Spoločná logika porovnávania ťahov a cieľov pre hlavolamy. */
-import { Chess } from "https://cdn.jsdelivr.net/npm/chess.js@1.4.0/+esm";
+import { Chess } from "./vendor/chess.mjs";
 
 function squareKey(value) {
   if (!value) return "";

@@ -1,5 +1,28 @@
 import { FESTIVAL_PUZZLES, getPuzzleById } from "./puzzles-data.js";
-import { mountBotPuzzle, destroyPuzzleGround } from "./puzzle-bot.js";
+/** Načítané až pri mounte dosky — UI (grid, harmonogram) funguje aj keď modul zlyhá. */
+var botModulePromise = null;
+
+function loadBotModule() {
+  if (!botModulePromise) {
+    botModulePromise = import("./puzzle-bot.js").catch(function (err) {
+      console.error("PTRA šach: puzzle-bot", err);
+      return null;
+    });
+  }
+  return botModulePromise;
+}
+
+function destroyPuzzleGround(el) {
+  if (!el) return;
+  if (el._ptraChessground && typeof el._ptraChessground.destroy === "function") {
+    try {
+      el._ptraChessground.destroy();
+    } catch (e) {}
+  }
+  delete el._ptraChessground;
+  el.classList.remove("cg-wrap", "orientation-white", "orientation-black", "manipulable");
+  el.innerHTML = "";
+}
 import {
   unlockPuzzleReward,
   getRewardMeta,
@@ -221,24 +244,32 @@ function mountPuzzleBoard(puzzle, options) {
   syncChessBoardSize(el);
   if (!force && !boardHasLayout(el)) return;
 
-  try {
-    mountedIds[puzzle.id] = true;
-    el.classList.add("cg-board--mounted");
-    mountBotPuzzle(puzzle, createPuzzleHelpers());
-    requestAnimationFrame(function () {
+  loadBotModule().then(function (mod) {
+    if (!mod || !mod.mountBotPuzzle) {
+      delete mountedIds[puzzle.id];
+      el.classList.remove("cg-board--mounted");
+      showBoardLoadError(el, puzzle.id);
+      return;
+    }
+    try {
+      mountedIds[puzzle.id] = true;
+      el.classList.add("cg-board--mounted");
+      mod.mountBotPuzzle(puzzle, createPuzzleHelpers());
       requestAnimationFrame(function () {
-        if (!boardHasPieces(el)) {
-          clearMountedIfEmpty(puzzle);
-          schedulePuzzleMount(puzzle, 0);
-        }
+        requestAnimationFrame(function () {
+          if (!boardHasPieces(el)) {
+            clearMountedIfEmpty(puzzle);
+            schedulePuzzleMount(puzzle, 0);
+          }
+        });
       });
-    });
-  } catch (err) {
-    delete mountedIds[puzzle.id];
-    el.classList.remove("cg-board--mounted");
-    console.error("PTRA šach:", puzzle.id, err);
-    showBoardLoadError(el, puzzle.id);
-  }
+    } catch (err) {
+      delete mountedIds[puzzle.id];
+      el.classList.remove("cg-board--mounted");
+      console.error("PTRA šach:", puzzle.id, err);
+      showBoardLoadError(el, puzzle.id);
+    }
+  });
 }
 
 function showBoardLoadError(el, puzzleId) {

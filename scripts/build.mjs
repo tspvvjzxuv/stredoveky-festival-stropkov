@@ -1,4 +1,8 @@
 import { existsSync } from "node:fs";
+import { spawnSync } from "node:child_process";
+
+var vendorCopy = spawnSync("node", ["scripts/copy-vendor.mjs"], { stdio: "inherit" });
+if (vendorCopy.status !== 0) process.exit(vendorCopy.status || 1);
 
 var required = [
   "index.html",
@@ -20,6 +24,9 @@ var required = [
   "js/puzzle-engine.js",
   "js/puzzle-rewards.js",
   "js/puzzles-data.js",
+  "js/vendor/chess.mjs",
+  "js/vendor/chessground/chessground.js",
+  "css/vendor/chessground/chessground.base.css",
   "js/harmonogram-data.js",
   "js/harmonogram-live.js",
   "js/config.js",
