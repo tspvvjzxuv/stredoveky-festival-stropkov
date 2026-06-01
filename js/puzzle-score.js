@@ -98,7 +98,8 @@ export function recordPuzzleSolve(puzzle, options) {
 
   var store = readStore();
   var prev = store.puzzles[puzzle.id];
-  var recorded = !prev || breakdown.total > prev.points;
+  var recorded =
+    !prev || prev.estimated === true || breakdown.total > (prev.points || 0);
   if (!recorded) {
     return {
       recorded: false,

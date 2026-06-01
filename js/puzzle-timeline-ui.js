@@ -172,6 +172,7 @@ export function initPuzzleTimeline(onSelectPuzzle) {
   }
 
   window.addEventListener("ptra-puzzle-access-changed", refreshMarkers);
+  window.addEventListener("ptra-puzzle-solved", refreshMarkers);
 
   return { refresh: refreshMarkers };
 }
