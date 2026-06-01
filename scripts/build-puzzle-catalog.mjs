@@ -286,7 +286,7 @@ for (const entry of ENTRIES) {
     playerColor: playerColorFromSpec(entry),
     win: entry.win || "checkmate",
     maxMoves,
-    freePlay: true,
+    freePlay: entry.freePlay === true,
     play,
     subtitle: entry.subtitle,
     solution: entry.solution,

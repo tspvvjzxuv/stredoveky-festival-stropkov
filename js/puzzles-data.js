@@ -15,10 +15,10 @@ export const DIFFICULTY_LABELS = {
 };
 
 export const WEEK_THEMES = [
-  { title: "Mat jedným ťahom", tagline: "Úlohy z knihy — mat v 1 ťahu" },
-  { title: "Mat jedným ťahom II", tagline: "Pokračovanie — strelci a jazdci" },
-  { title: "Mat jedným ťahom III", tagline: "Úlohy z knihy č. 91–96" },
-  { title: "Mat jedným ťahom IV", tagline: "Veže a dámy — finiš jedným ťahom" },
+  { title: "Mat v dvoch", tagline: "Úvodné kombinácie — dva biele ťahy k matu" },
+  { title: "Mat v dvoch II", tagline: "Veža, dáma a jazdec — overené riešenia" },
+  { title: "Mat v dvoch III", tagline: "Taktika s dámou a vežou" },
+  { title: "Kombinácie", tagline: "Viacťahové finále — šachové pravidlá" },
   { title: "Mat dvoma ťahmi", tagline: "Úlohy z knihy č. 175, 187–188" },
   { title: "Mat dvoma ťahmi II", tagline: "Úlohy z knihy č. 189–190, 192" },
   { title: "Väzba", tagline: "Taktika z knihy — väzba" },
