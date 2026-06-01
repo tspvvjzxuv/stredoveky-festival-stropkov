@@ -9,6 +9,7 @@ import { PUZZLE_SPECS } from "./puzzle-entries-data.mjs";
 import { PUZZLE_BOOK_BATCH_1 } from "./puzzle-book-batch-1.mjs";
 import { PUZZLE_BOOK_BATCH_2 } from "./puzzle-book-batch-2.mjs";
 import { PUZZLE_BOOK_BATCH_3 } from "./puzzle-book-batch-3.mjs";
+import { PUZZLE_BOOK_BATCH_4 } from "./puzzle-book-batch-4.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const batchNum = parseInt(process.argv[2] || "3", 10);
@@ -19,10 +20,12 @@ const batch =
       ? PUZZLE_BOOK_BATCH_2
       : batchNum === 3
         ? PUZZLE_BOOK_BATCH_3
-        : null;
+        : batchNum === 4
+          ? PUZZLE_BOOK_BATCH_4
+          : null;
 
 if (!batch) {
-  console.error("Usage: node scripts/apply-puzzle-book-batch.mjs <1|2|3>");
+  console.error("Usage: node scripts/apply-puzzle-book-batch.mjs <1|2|3|4>");
   process.exit(1);
 }
 
@@ -68,11 +71,13 @@ function fmtSpec(s) {
 }
 
 const batchesNote =
-  batchNum >= 3
-    ? "scripts/puzzle-book-batch-1.mjs, puzzle-book-batch-2.mjs, puzzle-book-batch-3.mjs"
-    : batchNum >= 2
-      ? "scripts/puzzle-book-batch-1.mjs, puzzle-book-batch-2.mjs"
-      : "scripts/puzzle-book-batch-1.mjs";
+  batchNum >= 4
+    ? "scripts/puzzle-book-batch-1.mjs … puzzle-book-batch-4.mjs"
+    : batchNum >= 3
+      ? "scripts/puzzle-book-batch-1.mjs, puzzle-book-batch-2.mjs, puzzle-book-batch-3.mjs"
+      : batchNum >= 2
+        ? "scripts/puzzle-book-batch-1.mjs, puzzle-book-batch-2.mjs"
+        : "scripts/puzzle-book-batch-1.mjs";
 
 const header = `/**
  * 36 úloh — týždne 1–2, 7–9, 10–12 z knihy; ostatné podľa motívu.

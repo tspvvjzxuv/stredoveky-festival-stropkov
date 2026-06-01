@@ -269,251 +269,16 @@ export const PUZZLE_CATALOG_ENTRIES = [
     "weekIndex": 5,
     "difficulty": "easy",
     "estimatedRating": 1477,
-    "fen": "r3br2/1pq2p1p/p3pNp1/4P1k1/1n1P4/7R/PP2B1PP/R6K w - - 0 1",
+    "fen": "r4rbk/6Np/3p1Pq1/p3p1N1/1p6/7Q/PPP4P/1K1R4 w - - 0 1",
     "win": "checkmate",
     "maxMoves": 8,
-    "freePlay": true,
-    "play": [
-      {
-        "who": "user",
-        "suggest": {
-          "from": "h3",
-          "to": "g3"
-        },
-        "wrong": "Tento ťah nevedie k matu v dvoch — skúste iný úvod.",
-        "accept": "mate_in_2_opening"
-      },
-      {
-        "who": "bot",
-        "pick": "main",
-        "choices": [
-          {
-            "move": {
-              "from": "g5",
-              "to": "h4"
-            },
-            "main": true,
-            "hint": "Počítač odohral hlavnú obranu — pokračujte podľa plánu.",
-            "then": [
-              {
-                "who": "user",
-                "suggest": {
-                  "from": "g3",
-                  "to": "g4"
-                },
-                "wrong": "Týmto ťahom nedáte mat — skúste iný finiš.",
-                "accept": "checkmate"
-              }
-            ]
-          }
-        ]
-      }
-    ],
-    "subtitle": "Kniha č. 183 — Rg3+ a mat Rg4#.",
-    "solution": "Rg3+ Kh4 Rg4#"
-  },
-  {
-    "weekIndex": 5,
-    "difficulty": "medium",
-    "estimatedRating": 1721,
-    "fen": "8/7k/8/5K2/8/3R4/8/1B6 w - - 0 1",
-    "win": "checkmate",
-    "maxMoves": 10,
-    "freePlay": true,
-    "play": [
-      {
-        "who": "user",
-        "suggest": {
-          "from": "f5",
-          "to": "f6"
-        },
-        "wrong": "Tento ťah nevedie k matu v dvoch — skúste iný úvod.",
-        "accept": "mate_in_2_opening"
-      },
-      {
-        "who": "bot",
-        "pick": "main",
-        "choices": [
-          {
-            "move": {
-              "from": "h7",
-              "to": "h8"
-            },
-            "main": true,
-            "hint": "Počítač odohral hlavnú obranu — pokračujte podľa plánu.",
-            "then": [
-              {
-                "who": "user",
-                "suggest": {
-                  "from": "d3",
-                  "to": "d8"
-                },
-                "wrong": "Týmto ťahom nedáte mat — skúste iný finiš.",
-                "accept": "checkmate"
-              }
-            ]
-          }
-        ]
-      }
-    ],
-    "subtitle": "Kniha č. 184 — Kf6 a mat vežou Rd8#.",
-    "solution": "Kf6 Kh8 Rd8#"
-  },
-  {
-    "weekIndex": 5,
-    "difficulty": "hard",
-    "estimatedRating": 2068,
-    "fen": "2R5/b4kB1/r4nN1/5P2/r2p4/2pK4/2P5/7R w - - 0 1",
-    "win": "checkmate",
-    "maxMoves": 14,
-    "freePlay": true,
-    "play": [
-      {
-        "who": "user",
-        "suggest": {
-          "from": "c8",
-          "to": "c7"
-        },
-        "wrong": "Tento ťah nevedie k matu v dvoch — skúste iný úvod.",
-        "accept": "mate_in_2_opening"
-      },
-      {
-        "who": "bot",
-        "pick": "main",
-        "choices": [
-          {
-            "move": {
-              "from": "f7",
-              "to": "g8"
-            },
-            "main": true,
-            "hint": "Počítač odohral hlavnú obranu — pokračujte podľa plánu.",
-            "then": [
-              {
-                "who": "user",
-                "suggest": {
-                  "from": "h1",
-                  "to": "h8"
-                },
-                "wrong": "Týmto ťahom nedáte mat — skúste iný finiš.",
-                "accept": "checkmate"
-              }
-            ]
-          }
-        ]
-      }
-    ],
-    "subtitle": "Kniha č. 185 — Rc7+ a mat Rh8#.",
-    "solution": "Rc7+ Kg8 Rh8#"
-  },
-  {
-    "weekIndex": 6,
-    "difficulty": "easy",
-    "estimatedRating": 1509,
-    "fen": "r3br2/1pq2p1p/p3pNp1/4P1k1/1n1P4/7R/PP2B1PP/R6K w - - 0 1",
-    "win": "checkmate",
-    "maxMoves": 8,
-    "freePlay": true,
-    "play": [
-      {
-        "who": "user",
-        "suggest": {
-          "from": "h3",
-          "to": "g3"
-        },
-        "wrong": "Tento ťah nevedie k matu v dvoch — skúste iný úvod.",
-        "accept": "mate_in_2_opening"
-      },
-      {
-        "who": "bot",
-        "pick": "main",
-        "choices": [
-          {
-            "move": {
-              "from": "g5",
-              "to": "h4"
-            },
-            "main": true,
-            "hint": "Počítač odohral hlavnú obranu — pokračujte podľa plánu.",
-            "then": [
-              {
-                "who": "user",
-                "suggest": {
-                  "from": "g3",
-                  "to": "g4"
-                },
-                "wrong": "Týmto ťahom nedáte mat — skúste iný finiš.",
-                "accept": "checkmate"
-              }
-            ]
-          }
-        ]
-      }
-    ],
-    "subtitle": "Kniha č. 183 — opakovanie motívu: Rg3+ Kh4 Rg4#.",
-    "solution": "Rg3+ Kh4 Rg4#"
-  },
-  {
-    "weekIndex": 6,
-    "difficulty": "medium",
-    "estimatedRating": 1764,
-    "fen": "8/7k/8/5K2/8/3R4/8/1B6 w - - 0 1",
-    "win": "checkmate",
-    "maxMoves": 10,
-    "freePlay": true,
-    "play": [
-      {
-        "who": "user",
-        "suggest": {
-          "from": "f5",
-          "to": "f6"
-        },
-        "wrong": "Tento ťah nevedie k matu v dvoch — skúste iný úvod.",
-        "accept": "mate_in_2_opening"
-      },
-      {
-        "who": "bot",
-        "pick": "main",
-        "choices": [
-          {
-            "move": {
-              "from": "h7",
-              "to": "g8"
-            },
-            "main": true,
-            "hint": "Počítač odohral hlavnú obranu — pokračujte podľa plánu.",
-            "then": [
-              {
-                "who": "user",
-                "suggest": {
-                  "from": "d3",
-                  "to": "d8"
-                },
-                "wrong": "Týmto ťahom nedáte mat — skúste iný finiš.",
-                "accept": "checkmate"
-              }
-            ]
-          }
-        ]
-      }
-    ],
-    "subtitle": "Kniha č. 184 — Kf6 Kg8 Rd8#.",
-    "solution": "Kf6 Kg8 Rd8#"
-  },
-  {
-    "weekIndex": 6,
-    "difficulty": "hard",
-    "estimatedRating": 2123,
-    "fen": "2R5/b4kB1/r4nN1/5P2/r2p4/2pK4/2P5/7R w - - 0 1",
-    "win": "checkmate",
-    "maxMoves": 14,
     "freePlay": true,
     "play": [
       {
         "who": "user",
         "suggest": {
           "from": "g7",
-          "to": "h8"
+          "to": "e8"
         },
         "wrong": "Tento ťah nevedie k matu v dvoch — skúste iný úvod.",
         "accept": "mate_in_2_opening"
@@ -524,8 +289,8 @@ export const PUZZLE_CATALOG_ENTRIES = [
         "choices": [
           {
             "move": {
-              "from": "a7",
-              "to": "b8"
+              "from": "g6",
+              "to": "g7"
             },
             "main": true,
             "hint": "Počítač odohral hlavnú obranu — pokračujte podľa plánu.",
@@ -533,7 +298,242 @@ export const PUZZLE_CATALOG_ENTRIES = [
               {
                 "who": "user",
                 "suggest": {
-                  "from": "c8",
+                  "from": "f6",
+                  "to": "g7"
+                },
+                "wrong": "Týmto ťahom nedáte mat — skúste iný finiš.",
+                "accept": "checkmate"
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "subtitle": "Kniha č. 175 — Ne8 a po Qg7 mat po fxg7#.",
+    "solution": "Ne8 Qg7 fxg7#"
+  },
+  {
+    "weekIndex": 5,
+    "difficulty": "medium",
+    "estimatedRating": 1721,
+    "fen": "1r6/7p/2R3p1/pp2p3/k3B2r/P7/1PP3P1/6K1 w - - 0 1",
+    "win": "checkmate",
+    "maxMoves": 10,
+    "freePlay": true,
+    "play": [
+      {
+        "who": "user",
+        "suggest": {
+          "from": "c6",
+          "to": "b6"
+        },
+        "wrong": "Tento ťah nevedie k matu v dvoch — skúste iný úvod.",
+        "accept": "mate_in_2_opening"
+      },
+      {
+        "who": "bot",
+        "pick": "main",
+        "choices": [
+          {
+            "move": {
+              "from": "b5",
+              "to": "b4"
+            },
+            "main": true,
+            "hint": "Počítač odohral hlavnú obranu — pokračujte podľa plánu.",
+            "then": [
+              {
+                "who": "user",
+                "suggest": {
+                  "from": "e4",
+                  "to": "c6"
+                },
+                "wrong": "Týmto ťahom nedáte mat — skúste iný finiš.",
+                "accept": "checkmate"
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "subtitle": "Kniha č. 187 — Rb6 a mat strelcom Bc6#.",
+    "solution": "Rb6 b4 Bc6#"
+  },
+  {
+    "weekIndex": 5,
+    "difficulty": "hard",
+    "estimatedRating": 2068,
+    "fen": "2r4k/2qb1qb1/p3pN1p/1p2PpN1/5P1P/8/PPP5/2K3RR w - - 0 1",
+    "win": "checkmate",
+    "maxMoves": 14,
+    "freePlay": true,
+    "play": [
+      {
+        "who": "user",
+        "suggest": {
+          "from": "h4",
+          "to": "h5"
+        },
+        "wrong": "Tento ťah nevedie k matu v dvoch — skúste iný úvod.",
+        "accept": "mate_in_2_opening"
+      },
+      {
+        "who": "bot",
+        "pick": "main",
+        "choices": [
+          {
+            "move": {
+              "from": "c8",
+              "to": "d8"
+            },
+            "main": true,
+            "hint": "Počítač odohral hlavnú obranu — pokračujte podľa plánu.",
+            "then": [
+              {
+                "who": "user",
+                "suggest": {
+                  "from": "g5",
+                  "to": "f7"
+                },
+                "wrong": "Týmto ťahom nedáte mat — skúste iný finiš.",
+                "accept": "checkmate"
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "subtitle": "Kniha č. 188 — h5, Rd8 a Nxf7#.",
+    "solution": "h5 Rd8 Nxf7#"
+  },
+  {
+    "weekIndex": 6,
+    "difficulty": "easy",
+    "estimatedRating": 1509,
+    "fen": "7k/1n4Bp/7R/8/8/8/B7/B6K w - - 0 1",
+    "win": "checkmate",
+    "maxMoves": 8,
+    "freePlay": true,
+    "play": [
+      {
+        "who": "user",
+        "suggest": {
+          "from": "h6",
+          "to": "e6"
+        },
+        "wrong": "Tento ťah nevedie k matu v dvoch — skúste iný úvod.",
+        "accept": "mate_in_2_opening"
+      },
+      {
+        "who": "bot",
+        "pick": "main",
+        "choices": [
+          {
+            "move": {
+              "from": "h8",
+              "to": "g8"
+            },
+            "main": true,
+            "hint": "Počítač odohral hlavnú obranu — pokračujte podľa plánu.",
+            "then": [
+              {
+                "who": "user",
+                "suggest": {
+                  "from": "e6",
+                  "to": "e7"
+                },
+                "wrong": "Týmto ťahom nedáte mat — skúste iný finiš.",
+                "accept": "checkmate"
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "subtitle": "Kniha č. 189 — Re6+ a mat Re7#.",
+    "solution": "Re6+ Kg8 Re7#"
+  },
+  {
+    "weekIndex": 6,
+    "difficulty": "medium",
+    "estimatedRating": 1764,
+    "fen": "1r5r/pbn1n1k1/3p1ppp/3B1B2/2P2P2/1R2B3/PQ4PP/1R4K1 w - - 0 1",
+    "win": "checkmate",
+    "maxMoves": 10,
+    "freePlay": true,
+    "play": [
+      {
+        "who": "user",
+        "suggest": {
+          "from": "f5",
+          "to": "d7"
+        },
+        "wrong": "Tento ťah nevedie k matu v dvoch — skúste iný úvod.",
+        "accept": "mate_in_2_opening"
+      },
+      {
+        "who": "bot",
+        "pick": "main",
+        "choices": [
+          {
+            "move": {
+              "from": "g7",
+              "to": "f8"
+            },
+            "main": true,
+            "hint": "Počítač odohral hlavnú obranu — pokračujte podľa plánu.",
+            "then": [
+              {
+                "who": "user",
+                "suggest": {
+                  "from": "b2",
+                  "to": "f6"
+                },
+                "wrong": "Týmto ťahom nedáte mat — skúste iný finiš.",
+                "accept": "checkmate"
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "subtitle": "Kniha č. 190 — Bd7 a mat Qxf6#.",
+    "solution": "Bd7 Kf8 Qxf6#"
+  },
+  {
+    "weekIndex": 6,
+    "difficulty": "hard",
+    "estimatedRating": 2123,
+    "fen": "8/r3Bpkp/4q1p1/8/5Q1K/8/8/8 w - - 0 1",
+    "win": "checkmate",
+    "maxMoves": 14,
+    "freePlay": true,
+    "play": [
+      {
+        "who": "user",
+        "suggest": {
+          "from": "f4",
+          "to": "e5"
+        },
+        "wrong": "Tento ťah nevedie k matu v dvoch — skúste iný úvod.",
+        "accept": "mate_in_2_opening"
+      },
+      {
+        "who": "bot",
+        "pick": "main",
+        "choices": [
+          {
+            "move": {
+              "from": "g7",
+              "to": "h6"
+            },
+            "main": true,
+            "hint": "Počítač odohral hlavnú obranu — pokračujte podľa plánu.",
+            "then": [
+              {
+                "who": "user",
+                "suggest": {
+                  "from": "e7",
                   "to": "f8"
                 },
                 "wrong": "Týmto ťahom nedáte mat — skúste iný finiš.",
@@ -544,8 +544,8 @@ export const PUZZLE_CATALOG_ENTRIES = [
         ]
       }
     ],
-    "subtitle": "Kniha č. 185 — Bh8 a mat Rxf8#.",
-    "solution": "Bh8 Bb8 Rf8#"
+    "subtitle": "Kniha č. 192 — Qe5+ Kh6 a Bf8# (FEN s kráľom na g7).",
+    "solution": "Qe5+ Kh6 Bf8#"
   },
   {
     "weekIndex": 7,
