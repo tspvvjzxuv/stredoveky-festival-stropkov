@@ -53,8 +53,28 @@ function blackQueenOnBoard(chess) {
   return false;
 }
 
+function materialScore(chess) {
+  var v = { p: 1, n: 3, b: 3, r: 5, q: 9 };
+  var s = 0;
+  var board = chess.board();
+  for (var r = 0; r < board.length; r++) {
+    for (var c = 0; c < board[r].length; c++) {
+      var piece = board[r][c];
+      if (piece) s += (piece.color === "w" ? 1 : -1) * v[piece.type];
+    }
+  }
+  return s;
+}
+
+function isDecisiveForWhite(chess) {
+  if (chess.isCheckmate() && chess.turn() === "b") return true;
+  if (!blackQueenOnBoard(chess)) return true;
+  return materialScore(chess) >= 5;
+}
+
 export function isPuzzleWinPosition(chess, winType) {
   if (winType === "black_queen_captured") return !blackQueenOnBoard(chess);
+  if (winType === "decisive") return isDecisiveForWhite(chess);
   return chess.isCheckmate() && chess.turn() === "b";
 }
 
@@ -153,7 +173,11 @@ function applyChoiceMove(chess, choice) {
 
 function applyScriptUserStep(chess, step, winType) {
   if (!step || step.fail) return false;
-  if (step.accept === "checkmate" || step.accept === "black_queen_captured") {
+  if (
+    step.accept === "checkmate" ||
+    step.accept === "black_queen_captured" ||
+    step.accept === "decisive"
+  ) {
     var moves = chess.moves({ verbose: true });
     for (var i = 0; i < moves.length; i++) {
       var clone = new Chess(chess.fen());
@@ -541,6 +565,9 @@ export function evaluateUserStep(fen, step, attempted, puzzle) {
   }
   if (accept === "black_queen_captured" && !blackQueenOnBoard(trial)) {
     return { ok: true, mode: "goal", goal: "black_queen_captured" };
+  }
+  if (accept === "decisive" && isDecisiveForWhite(trial)) {
+    return { ok: true, mode: "goal", goal: "decisive" };
   }
 
   if (step.allowMaintainWin && whiteCanReachGoal(trial, puzzle.win)) {

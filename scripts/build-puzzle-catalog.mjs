@@ -50,16 +50,39 @@ function blackQueenOnBoard(chess) {
   return false;
 }
 
+function materialScore(chess) {
+  const v = { p: 1, n: 3, b: 3, r: 5, q: 9 };
+  let s = 0;
+  for (const row of chess.board()) {
+    for (const p of row) {
+      if (p) s += (p.color === "w" ? 1 : -1) * v[p.type];
+    }
+  }
+  return s;
+}
+
+function isDecisiveForWhite(chess) {
+  if (chess.isCheckmate() && chess.turn() === "b") return true;
+  if (!blackQueenOnBoard(chess)) return true;
+  return materialScore(chess) >= 5;
+}
+
 function whiteCanReachGoal(chess, win) {
   if (chess.turn() !== "w" || chess.isGameOver()) return false;
   if (win === "black_queen_captured") {
     if (!blackQueenOnBoard(chess)) return true;
+  } else if (win === "decisive") {
+    if (isDecisiveForWhite(chess)) return true;
+  } else if (win === "decisive") {
+    if (isDecisiveForWhite(chess)) return true;
   } else if (chess.isCheckmate() && chess.turn() === "b") return true;
   for (const m of chess.moves({ verbose: true })) {
     const c2 = new Chess(chess.fen());
     c2.move({ from: m.from, to: m.to, promotion: m.promotion });
     if (win === "black_queen_captured") {
       if (!blackQueenOnBoard(c2)) return true;
+    } else if (win === "decisive") {
+      if (isDecisiveForWhite(c2)) return true;
     } else if (c2.isCheckmate() && c2.turn() === "b") return true;
   }
   return false;
@@ -76,7 +99,7 @@ function countWhiteMovesInLine(line, fen) {
   let n = 0;
   for (const [f, t] of line) {
     if (c.turn() === "w") n++;
-    c.move({ from: f, to: t });
+    moveFromPair(c, f, t);
   }
   return n;
 }
@@ -98,15 +121,23 @@ function userAcceptForStep(wIdx, totalWhite, spec, win) {
   }
   if (wIdx === 0 && spec.openingAccept) return spec.openingAccept;
   if (wIdx === totalWhite - 1) {
-    return win === "black_queen_captured" ? "black_queen_captured" : "checkmate";
+    if (win === "black_queen_captured") return "black_queen_captured";
+    if (win === "decisive") return "decisive";
+    return "checkmate";
   }
   return null;
 }
 
-function buildUserStep(move, accept, win) {
+function buildUserStep(move, accept, win, fenBefore) {
+  const probe = new Chess(fenBefore);
+  const piece = probe.get(move.from);
+  const suggest = { from: move.from, to: move.to };
+  if (piece && piece.type === "p" && (move.to[1] === "8" || move.to[1] === "1")) {
+    suggest.promotion = "q";
+  }
   const step = {
     who: "user",
-    suggest: { from: move.from, to: move.to },
+    suggest,
     wrong:
       accept === "black_queen_captured"
         ? "Týmto ťahom nezoberiete čiernu dámu."
@@ -114,6 +145,8 @@ function buildUserStep(move, accept, win) {
           ? "Tento ťah nevedie k matu v dvoch — skúste iný úvod."
           : accept === "check"
             ? "Začnite šachom podľa plánu úlohy."
+            : accept === "decisive"
+            ? "Týmto ťahom nezískate rozhodujúcu výhodu — skúste taktický ťah z riešenia."
             : accept === "checkmate"
               ? "Týmto ťahom nedáte mat — skúste iný finiš."
               : "Týmto ťahom nepostupujete správne — skúste iný biely ťah.",
@@ -122,11 +155,18 @@ function buildUserStep(move, accept, win) {
   return step;
 }
 
-function buildBotChoices(fen, mainFrom, mainTo, thenSteps, win) {
+function botMoveShape(fen, from, to) {
   const c = new Chess(fen);
+  const piece = c.get(from);
+  const move = { from, to };
+  if (piece && piece.type === "p" && (to[1] === "8" || to[1] === "1")) move.promotion = "q";
+  return move;
+}
+
+function buildBotChoices(fen, mainFrom, mainTo, thenSteps, win) {
   const choices = [
     {
-      move: { from: mainFrom, to: mainTo },
+      move: botMoveShape(fen, mainFrom, mainTo),
       main: true,
       hint: "Počítač odohral hlavnú obranu — pokračujte podľa plánu.",
       then: thenSteps,
@@ -138,13 +178,20 @@ function buildBotChoices(fen, mainFrom, mainTo, thenSteps, win) {
   return choices;
 }
 
+function moveFromPair(chess, from, to) {
+  const piece = chess.get(from);
+  const opts = { from, to };
+  if (piece && piece.type === "p" && (to[1] === "8" || to[1] === "1")) opts.promotion = "q";
+  return chess.move(opts);
+}
+
 function buildPlay(spec) {
   const win = spec.win || "checkmate";
   const line = spec.line;
   const whiteIndices = [];
   for (let i = 0; i < line.length; i++) {
     const probe = new Chess(spec.fen);
-    for (let j = 0; j < i; j++) probe.move({ from: line[j][0], to: line[j][1] });
+    for (let j = 0; j < i; j++) moveFromPair(probe, line[j][0], line[j][1]);
     if (probe.turn() === "w") whiteIndices.push(i);
   }
   const totalWhite = whiteIndices.length;
@@ -159,12 +206,12 @@ function buildPlay(spec) {
     if (chess.turn() === "w") {
       const wNum = whiteIndices.indexOf(lineIdx);
       const accept = userAcceptForStep(wNum, totalWhite, spec, win);
-      chess.move({ from, to });
+      moveFromPair(chess, from, to);
       const then = recurse(lineIdx + 1);
-      return [buildUserStep({ from, to }, accept, win), ...then];
+      return [buildUserStep({ from, to }, accept, win, fenBefore), ...then];
     }
 
-    chess.move({ from, to });
+    moveFromPair(chess, from, to);
     const then = recurse(lineIdx + 1);
     return [
       {
@@ -182,13 +229,15 @@ function verifyEntry(spec) {
   const chess = new Chess(spec.fen);
   const sans = [];
   for (const [from, to] of spec.line) {
-    const m = chess.move({ from, to });
+    const m = moveFromPair(chess, from, to);
     if (!m) return { ok: false, err: `illegal ${from}-${to}` };
     sans.push(m.san);
   }
   const win = spec.win || "checkmate";
   if (win === "black_queen_captured") {
     if (blackQueenOnBoard(chess)) return { ok: false, err: "black queen remains" };
+  } else if (win === "decisive") {
+    if (!isDecisiveForWhite(chess)) return { ok: false, err: "not decisive" };
   } else if (!chess.isCheckmate() || chess.turn() !== "b") {
     return { ok: false, err: "not checkmate" };
   }

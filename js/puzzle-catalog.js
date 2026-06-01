@@ -5,7 +5,7 @@ export const PUZZLE_CATALOG_ENTRIES = [
     "weekIndex": 1,
     "difficulty": "easy",
     "estimatedRating": 1350,
-    "fen": "5qk1/5ppp/8/8/8/8/6Q1/6K1 w - - 0 1",
+    "fen": "6k1/5ppp/8/8/8/8/6Q1/6K1 w - - 0 1",
     "win": "checkmate",
     "maxMoves": 8,
     "freePlay": true,
@@ -25,8 +25,8 @@ export const PUZZLE_CATALOG_ENTRIES = [
         "choices": [
           {
             "move": {
-              "from": "f8",
-              "to": "a8"
+              "from": "g8",
+              "to": "h8"
             },
             "main": true,
             "hint": "Počítač odohral hlavnú obranu — pokračujte podľa plánu.",
@@ -45,8 +45,8 @@ export const PUZZLE_CATALOG_ENTRIES = [
         ]
       }
     ],
-    "subtitle": "Motív Morphy — Brána pod Vliekom: Qf3+ Qa8 Qxa8#.",
-    "solution": "Qf3+ Qa8 Qxa8#"
+    "subtitle": "Motív Morphy: Qf3+ a mat na opačnom rohu Qa8#.",
+    "solution": "Qf3+ Kh8 Qa8#"
   },
   {
     "weekIndex": 1,
@@ -115,7 +115,7 @@ export const PUZZLE_CATALOG_ENTRIES = [
         ]
       }
     ],
-    "subtitle": "Anastázin motív — Brána pod Vliekom: Rb4 Rd8 Rb7+ Kf8 Qxf7#.",
+    "subtitle": "Kombinácia Rb4–Rb7 a mat dámou na f7 (tri biele ťahy).",
     "solution": "Rb4 Rd8 Rb7+ Kf8 Qxf7#"
   },
   {
@@ -162,14 +162,14 @@ export const PUZZLE_CATALOG_ENTRIES = [
         ]
       }
     ],
-    "subtitle": "Zdvojený útok — Brána pod Vliekom: Rc8+ Qf8 Rxf8.",
+    "subtitle": "Taktika: šach vežou a zisk čiernej dámy.",
     "solution": "Rc8+ Qf8 Rxf8"
   },
   {
     "weekIndex": 2,
     "difficulty": "easy",
     "estimatedRating": 1382,
-    "fen": "5k2/5ppp/8/8/8/8/6Q1/6K1 w - - 0 1",
+    "fen": "6k1/5ppp/8/8/8/8/1R6/6K1 w - - 0 1",
     "win": "checkmate",
     "maxMoves": 8,
     "freePlay": true,
@@ -177,8 +177,8 @@ export const PUZZLE_CATALOG_ENTRIES = [
       {
         "who": "user",
         "suggest": {
-          "from": "g2",
-          "to": "f3"
+          "from": "b2",
+          "to": "b3"
         },
         "wrong": "Tento ťah nevedie k matu v dvoch — skúste iný úvod.",
         "accept": "mate_in_2_opening"
@@ -189,8 +189,8 @@ export const PUZZLE_CATALOG_ENTRIES = [
         "choices": [
           {
             "move": {
-              "from": "f8",
-              "to": "g8"
+              "from": "g8",
+              "to": "h8"
             },
             "main": true,
             "hint": "Počítač odohral hlavnú obranu — pokračujte podľa plánu.",
@@ -198,8 +198,8 @@ export const PUZZLE_CATALOG_ENTRIES = [
               {
                 "who": "user",
                 "suggest": {
-                  "from": "f3",
-                  "to": "a8"
+                  "from": "b3",
+                  "to": "b8"
                 },
                 "wrong": "Týmto ťahom nedáte mat — skúste iný finiš.",
                 "accept": "checkmate"
@@ -209,8 +209,8 @@ export const PUZZLE_CATALOG_ENTRIES = [
         ]
       }
     ],
-    "subtitle": "Mat s kráľom na f8 — Rytier Andreas: Qf3+ Kg8 Qa8#.",
-    "solution": "Qf3+ Kg8 Qa8#"
+    "subtitle": "Mat v dvoch vežou: Rb3+ a Rb8#.",
+    "solution": "Rb3+ Kh8 Rb8#"
   },
   {
     "weekIndex": 2,
@@ -256,23 +256,23 @@ export const PUZZLE_CATALOG_ENTRIES = [
         ]
       }
     ],
-    "subtitle": "Scholastický mat — Rytier Andreas: Qe1+ Kh8 Qe8#.",
+    "subtitle": "Mat v dvoch s jazdcom: Qe1+ a mat na ôsmom rade.",
     "solution": "Qe1+ Kh8 Qe8#"
   },
   {
     "weekIndex": 2,
     "difficulty": "hard",
     "estimatedRating": 1905,
-    "fen": "6k1/8/8/8/8/4q3/8/2R3K1 w - - 0 1",
-    "win": "black_queen_captured",
-    "maxMoves": 14,
+    "fen": "5rk1/5ppp/8/8/8/8/5N2/6K1 w - - 0 1",
+    "win": "checkmate",
+    "maxMoves": 16,
     "freePlay": true,
     "play": [
       {
         "who": "user",
         "suggest": {
-          "from": "g1",
-          "to": "g2"
+          "from": "f2",
+          "to": "d3"
         },
         "wrong": "Týmto ťahom nepostupujete správne — skúste iný biely ťah."
       },
@@ -282,8 +282,8 @@ export const PUZZLE_CATALOG_ENTRIES = [
         "choices": [
           {
             "move": {
-              "from": "e3",
-              "to": "c5"
+              "from": "g8",
+              "to": "h8"
             },
             "main": true,
             "hint": "Počítač odohral hlavnú obranu — pokračujte podľa plánu.",
@@ -291,25 +291,49 @@ export const PUZZLE_CATALOG_ENTRIES = [
               {
                 "who": "user",
                 "suggest": {
-                  "from": "c1",
-                  "to": "c5"
+                  "from": "d3",
+                  "to": "e5"
                 },
-                "wrong": "Týmto ťahom nezoberiete čiernu dámu.",
-                "accept": "black_queen_captured"
+                "wrong": "Týmto ťahom nepostupujete správne — skúste iný biely ťah."
+              },
+              {
+                "who": "bot",
+                "pick": "main",
+                "choices": [
+                  {
+                    "move": {
+                      "from": "f8",
+                      "to": "g8"
+                    },
+                    "main": true,
+                    "hint": "Počítač odohral hlavnú obranu — pokračujte podľa plánu.",
+                    "then": [
+                      {
+                        "who": "user",
+                        "suggest": {
+                          "from": "e5",
+                          "to": "f7"
+                        },
+                        "wrong": "Týmto ťahom nedáte mat — skúste iný finiš.",
+                        "accept": "checkmate"
+                      }
+                    ]
+                  }
+                ]
               }
             ]
           }
         ]
       }
     ],
-    "subtitle": "Kráľ pripraví vežu — Rytier Andreas: Kg2 Qc5 Rxc5.",
-    "solution": "Kg2 Qc5 Rxc5"
+    "subtitle": "Mat v troch: jazdec cez d3–e5 na f7.",
+    "solution": "Nd3+ Kh8 Ne5 Rg8 Nxf7#"
   },
   {
     "weekIndex": 3,
     "difficulty": "easy",
     "estimatedRating": 1414,
-    "fen": "7k/7p/6K1/8/8/8/8/7R w - - 0 1",
+    "fen": "6k1/5ppp/8/8/8/8/3Q4/6K1 w - - 0 1",
     "win": "checkmate",
     "maxMoves": 8,
     "freePlay": true,
@@ -317,8 +341,8 @@ export const PUZZLE_CATALOG_ENTRIES = [
       {
         "who": "user",
         "suggest": {
-          "from": "g6",
-          "to": "f7"
+          "from": "d2",
+          "to": "c3"
         },
         "wrong": "Tento ťah nevedie k matu v dvoch — skúste iný úvod.",
         "accept": "mate_in_2_opening"
@@ -329,8 +353,8 @@ export const PUZZLE_CATALOG_ENTRIES = [
         "choices": [
           {
             "move": {
-              "from": "h7",
-              "to": "h6"
+              "from": "g8",
+              "to": "h8"
             },
             "main": true,
             "hint": "Počítač odohral hlavnú obranu — pokračujte podľa plánu.",
@@ -338,8 +362,8 @@ export const PUZZLE_CATALOG_ENTRIES = [
               {
                 "who": "user",
                 "suggest": {
-                  "from": "h1",
-                  "to": "h6"
+                  "from": "c3",
+                  "to": "c8"
                 },
                 "wrong": "Týmto ťahom nedáte mat — skúste iný finiš.",
                 "accept": "checkmate"
@@ -349,8 +373,8 @@ export const PUZZLE_CATALOG_ENTRIES = [
         ]
       }
     ],
-    "subtitle": "Damiano — veža a kráľ — Stredoveký festival: Kf7 h6 Rxh6#.",
-    "solution": "Kf7 h6 Rxh6#"
+    "subtitle": "Mat v dvoch: úvod dámou (Qc3+, Qd3+ …), finiš ľubovoľným matom.",
+    "solution": "Qc3+ Kh8 Qc8#"
   },
   {
     "weekIndex": 3,
@@ -396,7 +420,7 @@ export const PUZZLE_CATALOG_ENTRIES = [
         ]
       }
     ],
-    "subtitle": "Útok na diagonále — Stredoveký festival: Qa5+ Kf8 Qd8#.",
+    "subtitle": "Mat v dvoch: dáma na a5 a finiš Qd8# (kráľ na f8).",
     "solution": "Qa5+ Kf8 Qd8#"
   },
   {
@@ -442,45 +466,23 @@ export const PUZZLE_CATALOG_ENTRIES = [
         ]
       }
     ],
-    "subtitle": "Zisk dámy — Stredoveký festival: Rc2 Qc6 Rxc6.",
+    "subtitle": "Získajte dámu: Rc2 a výměna po Qc6.",
     "solution": "Rc2 Qc6 Rxc6"
   },
   {
     "weekIndex": 4,
     "difficulty": "easy",
     "estimatedRating": 1445,
-    "fen": "6k1/5ppp/8/8/8/8/R7/4K3 w - - 0 1",
+    "fen": "6k1/5ppp/8/8/8/8/5Q2/6K1 w - - 0 1",
     "win": "checkmate",
-    "maxMoves": 6,
+    "maxMoves": 8,
     "freePlay": true,
     "play": [
       {
         "who": "user",
         "suggest": {
-          "from": "a2",
-          "to": "a8"
-        },
-        "wrong": "Týmto ťahom nedáte mat — skúste iný finiš.",
-        "accept": "checkmate"
-      }
-    ],
-    "subtitle": "Operný mat — Pasovanie rytierov: Ra8#.",
-    "solution": "Ra8#"
-  },
-  {
-    "weekIndex": 4,
-    "difficulty": "medium",
-    "estimatedRating": 1678,
-    "fen": "6k1/5ppp/8/8/8/8/2Q5/6K1 w - - 0 1",
-    "win": "checkmate",
-    "maxMoves": 10,
-    "freePlay": true,
-    "play": [
-      {
-        "who": "user",
-        "suggest": {
-          "from": "c2",
-          "to": "b3"
+          "from": "f2",
+          "to": "f7"
         },
         "wrong": "Tento ťah nevedie k matu v dvoch — skúste iný úvod.",
         "accept": "mate_in_2_opening"
@@ -500,8 +502,8 @@ export const PUZZLE_CATALOG_ENTRIES = [
               {
                 "who": "user",
                 "suggest": {
-                  "from": "b3",
-                  "to": "b8"
+                  "from": "f7",
+                  "to": "f8"
                 },
                 "wrong": "Týmto ťahom nedáte mat — skúste iný finiš.",
                 "accept": "checkmate"
@@ -511,81 +513,13 @@ export const PUZZLE_CATALOG_ENTRIES = [
         ]
       }
     ],
-    "subtitle": "Mat po b-file — Pasovanie rytierov: Qb3+ Kh8 Qb8#.",
-    "solution": "Qb3+ Kh8 Qb8#"
+    "subtitle": "Úvodný mat v dvoch: útok dámou na f7.",
+    "solution": "Qxf7+ Kh8 Qf8#"
   },
   {
     "weekIndex": 4,
-    "difficulty": "hard",
-    "estimatedRating": 2014,
-    "fen": "5qk1/5ppp/8/8/8/8/6R1/4K3 w - - 0 1",
-    "win": "checkmate",
-    "maxMoves": 14,
-    "freePlay": true,
-    "play": [
-      {
-        "who": "user",
-        "suggest": {
-          "from": "g2",
-          "to": "e2"
-        },
-        "wrong": "Týmto ťahom nepostupujete správne — skúste iný biely ťah."
-      },
-      {
-        "who": "bot",
-        "pick": "main",
-        "choices": [
-          {
-            "move": {
-              "from": "f8",
-              "to": "e8"
-            },
-            "main": true,
-            "hint": "Počítač odohral hlavnú obranu — pokračujte podľa plánu.",
-            "then": [
-              {
-                "who": "user",
-                "suggest": {
-                  "from": "e2",
-                  "to": "e8"
-                },
-                "wrong": "Týmto ťahom nedáte mat — skúste iný finiš.",
-                "accept": "checkmate"
-              }
-            ]
-          }
-        ]
-      }
-    ],
-    "subtitle": "Háčikový mat — Pasovanie rytierov: Re2+ Qe8 Rxe8#.",
-    "solution": "Re2+ Qe8 Rxe8#"
-  },
-  {
-    "weekIndex": 5,
-    "difficulty": "easy",
-    "estimatedRating": 1477,
-    "fen": "6k1/4pppp/8/8/8/8/6Q1/6K1 w - - 0 1",
-    "win": "checkmate",
-    "maxMoves": 6,
-    "freePlay": true,
-    "play": [
-      {
-        "who": "user",
-        "suggest": {
-          "from": "g2",
-          "to": "a8"
-        },
-        "wrong": "Týmto ťahom nedáte mat — skúste iný finiš.",
-        "accept": "checkmate"
-      }
-    ],
-    "subtitle": "Mat jedným ťahom — Lukostreľba: Qa8#.",
-    "solution": "Qa8#"
-  },
-  {
-    "weekIndex": 5,
     "difficulty": "medium",
-    "estimatedRating": 1721,
+    "estimatedRating": 1678,
     "fen": "6k1/5ppp/8/8/8/8/4Q2R/6K1 w - - 0 1",
     "win": "checkmate",
     "maxMoves": 10,
@@ -626,13 +560,13 @@ export const PUZZLE_CATALOG_ENTRIES = [
         ]
       }
     ],
-    "subtitle": "Anderssen — Lukostreľba: Qa6+ Kh8 Qa8#.",
+    "subtitle": "Mat v troch: Qa6+ a doraz na a8, veža na h2.",
     "solution": "Qa6+ Kh8 Qa8#"
   },
   {
-    "weekIndex": 5,
+    "weekIndex": 4,
     "difficulty": "hard",
-    "estimatedRating": 2068,
+    "estimatedRating": 2014,
     "fen": "5rk1/5ppp/8/8/8/8/5Q2/6K1 w - - 0 1",
     "win": "checkmate",
     "maxMoves": 18,
@@ -720,14 +654,14 @@ export const PUZZLE_CATALOG_ENTRIES = [
         ]
       }
     ],
-    "subtitle": "Lawnmower — Lukostreľba: Qe3+ Re8 Qd4+ Rf8 Qc5+ Rc8 Qxc8#.",
+    "subtitle": "Štvorťahová dámska kombinácia proti veži na c8.",
     "solution": "Qe3+ Re8 Qd4+ Rf8 Qc5+ Rc8 Qxc8#"
   },
   {
-    "weekIndex": 6,
+    "weekIndex": 5,
     "difficulty": "easy",
-    "estimatedRating": 1509,
-    "fen": "6k1/4pppp/8/8/8/8/5Q2/6K1 w - - 0 1",
+    "estimatedRating": 1477,
+    "fen": "6k1/5ppp/8/8/8/8/6R1/6K1 w - - 0 1",
     "win": "checkmate",
     "maxMoves": 8,
     "freePlay": true,
@@ -735,8 +669,8 @@ export const PUZZLE_CATALOG_ENTRIES = [
       {
         "who": "user",
         "suggest": {
-          "from": "f2",
-          "to": "d4"
+          "from": "g2",
+          "to": "e2"
         },
         "wrong": "Tento ťah nevedie k matu v dvoch — skúste iný úvod.",
         "accept": "mate_in_2_opening"
@@ -756,8 +690,8 @@ export const PUZZLE_CATALOG_ENTRIES = [
               {
                 "who": "user",
                 "suggest": {
-                  "from": "d4",
-                  "to": "d8"
+                  "from": "e2",
+                  "to": "e8"
                 },
                 "wrong": "Týmto ťahom nedáte mat — skúste iný finiš.",
                 "accept": "checkmate"
@@ -767,14 +701,14 @@ export const PUZZLE_CATALOG_ENTRIES = [
         ]
       }
     ],
-    "subtitle": "Koridorový mat — Táborová opekačka: Qd4+ Kh8 Qd8#.",
-    "solution": "Qd4+ Kh8 Qd8#"
+    "subtitle": "Mat v dvoch: veža na e2 a Re8#.",
+    "solution": "Re2+ Kh8 Re8#"
   },
   {
-    "weekIndex": 6,
+    "weekIndex": 5,
     "difficulty": "medium",
-    "estimatedRating": 1764,
-    "fen": "5qk1/4pppp/8/8/8/8/6Q1/6K1 w - - 0 1",
+    "estimatedRating": 1721,
+    "fen": "6k1/5ppp/8/8/8/8/2Q5/6K1 w - - 0 1",
     "win": "checkmate",
     "maxMoves": 10,
     "freePlay": true,
@@ -782,8 +716,8 @@ export const PUZZLE_CATALOG_ENTRIES = [
       {
         "who": "user",
         "suggest": {
-          "from": "g2",
-          "to": "f3"
+          "from": "c2",
+          "to": "b3"
         },
         "wrong": "Tento ťah nevedie k matu v dvoch — skúste iný úvod.",
         "accept": "mate_in_2_opening"
@@ -794,8 +728,8 @@ export const PUZZLE_CATALOG_ENTRIES = [
         "choices": [
           {
             "move": {
-              "from": "f8",
-              "to": "a8"
+              "from": "g8",
+              "to": "h8"
             },
             "main": true,
             "hint": "Počítač odohral hlavnú obranu — pokračujte podľa plánu.",
@@ -803,7 +737,100 @@ export const PUZZLE_CATALOG_ENTRIES = [
               {
                 "who": "user",
                 "suggest": {
-                  "from": "f3",
+                  "from": "b3",
+                  "to": "b8"
+                },
+                "wrong": "Týmto ťahom nedáte mat — skúste iný finiš.",
+                "accept": "checkmate"
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "subtitle": "Mat v dvoch po b-file: Qb3+ a Qb8#.",
+    "solution": "Qb3+ Kh8 Qb8#"
+  },
+  {
+    "weekIndex": 5,
+    "difficulty": "hard",
+    "estimatedRating": 2068,
+    "fen": "5qk1/5ppp/8/8/8/8/6R1/6K1 w - - 0 1",
+    "win": "checkmate",
+    "maxMoves": 14,
+    "freePlay": true,
+    "play": [
+      {
+        "who": "user",
+        "suggest": {
+          "from": "g2",
+          "to": "e2"
+        },
+        "wrong": "Týmto ťahom nepostupujete správne — skúste iný biely ťah."
+      },
+      {
+        "who": "bot",
+        "pick": "main",
+        "choices": [
+          {
+            "move": {
+              "from": "f8",
+              "to": "e8"
+            },
+            "main": true,
+            "hint": "Počítač odohral hlavnú obranu — pokračujte podľa plánu.",
+            "then": [
+              {
+                "who": "user",
+                "suggest": {
+                  "from": "e2",
+                  "to": "e8"
+                },
+                "wrong": "Týmto ťahom nedáte mat — skúste iný finiš.",
+                "accept": "checkmate"
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "subtitle": "Získajte čiernu dámu: Re2 a výměna na e8.",
+    "solution": "Re2+ Qe8 Rxe8#"
+  },
+  {
+    "weekIndex": 6,
+    "difficulty": "easy",
+    "estimatedRating": 1509,
+    "fen": "6k1/5ppp/8/8/8/8/R7/4K3 w - - 0 1",
+    "win": "checkmate",
+    "maxMoves": 8,
+    "freePlay": true,
+    "play": [
+      {
+        "who": "user",
+        "suggest": {
+          "from": "a2",
+          "to": "a3"
+        },
+        "wrong": "Tento ťah nevedie k matu v dvoch — skúste iný úvod.",
+        "accept": "mate_in_2_opening"
+      },
+      {
+        "who": "bot",
+        "pick": "main",
+        "choices": [
+          {
+            "move": {
+              "from": "g8",
+              "to": "h8"
+            },
+            "main": true,
+            "hint": "Počítač odohral hlavnú obranu — pokračujte podľa plánu.",
+            "then": [
+              {
+                "who": "user",
+                "suggest": {
+                  "from": "a3",
                   "to": "a8"
                 },
                 "wrong": "Týmto ťahom nedáte mat — skúste iný finiš.",
@@ -814,8 +841,54 @@ export const PUZZLE_CATALOG_ENTRIES = [
         ]
       }
     ],
-    "subtitle": "Morphy s oslabenými pešiakmi — Táborová opekačka: Qf3+ Qa8 Qxa8#.",
-    "solution": "Qf3+ Qa8 Qxa8#"
+    "subtitle": "Mat v dvoch po a-file: Ra3+ a Ra8#.",
+    "solution": "Ra3+ Kh8 Ra8#"
+  },
+  {
+    "weekIndex": 6,
+    "difficulty": "medium",
+    "estimatedRating": 1764,
+    "fen": "6k1/4pppp/8/8/8/5N2/5Q2/6K1 w - - 0 1",
+    "win": "checkmate",
+    "maxMoves": 10,
+    "freePlay": true,
+    "play": [
+      {
+        "who": "user",
+        "suggest": {
+          "from": "f3",
+          "to": "e5"
+        },
+        "wrong": "Týmto ťahom nepostupujete správne — skúste iný biely ťah."
+      },
+      {
+        "who": "bot",
+        "pick": "main",
+        "choices": [
+          {
+            "move": {
+              "from": "g8",
+              "to": "f8"
+            },
+            "main": true,
+            "hint": "Počítač odohral hlavnú obranu — pokračujte podľa plánu.",
+            "then": [
+              {
+                "who": "user",
+                "suggest": {
+                  "from": "f2",
+                  "to": "f7"
+                },
+                "wrong": "Týmto ťahom nedáte mat — skúste iný finiš.",
+                "accept": "checkmate"
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "subtitle": "Jazdec a dáma pri oslabených pešiakoch: Ne5+ a Qxf7#.",
+    "solution": "Ne5+ Kf8 Qxf7#"
   },
   {
     "weekIndex": 6,
@@ -860,61 +933,14 @@ export const PUZZLE_CATALOG_ENTRIES = [
         ]
       }
     ],
-    "subtitle": "Zisk dámy — Táborová opekačka: Rd2 Qd5 Rxd5.",
+    "subtitle": "Získajte dámu: Rd2 a výměna na d5.",
     "solution": "Rd2 Qd5 Rxd5"
   },
   {
     "weekIndex": 7,
     "difficulty": "easy",
     "estimatedRating": 1541,
-    "fen": "6k1/5pp1/8/6p1/8/8/2Q5/6K1 w - - 0 1",
-    "win": "checkmate",
-    "maxMoves": 8,
-    "freePlay": true,
-    "play": [
-      {
-        "who": "user",
-        "suggest": {
-          "from": "c2",
-          "to": "c7"
-        },
-        "wrong": "Tento ťah nevedie k matu v dvoch — skúste iný úvod.",
-        "accept": "mate_in_2_opening"
-      },
-      {
-        "who": "bot",
-        "pick": "main",
-        "choices": [
-          {
-            "move": {
-              "from": "g8",
-              "to": "f8"
-            },
-            "main": true,
-            "hint": "Počítač odohral hlavnú obranu — pokračujte podľa plánu.",
-            "then": [
-              {
-                "who": "user",
-                "suggest": {
-                  "from": "c7",
-                  "to": "d8"
-                },
-                "wrong": "Týmto ťahom nedáte mat — skúste iný finiš.",
-                "accept": "checkmate"
-              }
-            ]
-          }
-        ]
-      }
-    ],
-    "subtitle": "Mayetov mat — Drak pod Vliekom: Qc7+ Kf8 Qd8#.",
-    "solution": "Qc7+ Kf8 Qd8#"
-  },
-  {
-    "weekIndex": 7,
-    "difficulty": "medium",
-    "estimatedRating": 1806,
-    "fen": "5qk1/5ppp/8/8/8/8/1R6/6K1 w - - 0 1",
+    "fen": "1rn5/kp3ppp/p1q5/N1Q5/8/7P/PP3PP1/3R2K1 w - - 0 1",
     "win": "checkmate",
     "maxMoves": 10,
     "freePlay": true,
@@ -922,11 +948,10 @@ export const PUZZLE_CATALOG_ENTRIES = [
       {
         "who": "user",
         "suggest": {
-          "from": "b2",
-          "to": "b3"
+          "from": "a5",
+          "to": "c6"
         },
-        "wrong": "Tento ťah nevedie k matu v dvoch — skúste iný úvod.",
-        "accept": "mate_in_2_opening"
+        "wrong": "Týmto ťahom nepostupujete správne — skúste iný biely ťah."
       },
       {
         "who": "bot",
@@ -934,7 +959,217 @@ export const PUZZLE_CATALOG_ENTRIES = [
         "choices": [
           {
             "move": {
-              "from": "f8",
+              "from": "a7",
+              "to": "a8"
+            },
+            "main": true,
+            "hint": "Počítač odohral hlavnú obranu — pokračujte podľa plánu.",
+            "then": [
+              {
+                "who": "user",
+                "suggest": {
+                  "from": "c5",
+                  "to": "b6"
+                },
+                "wrong": "Týmto ťahom nepostupujete správne — skúste iný biely ťah."
+              },
+              {
+                "who": "bot",
+                "pick": "main",
+                "choices": [
+                  {
+                    "move": {
+                      "from": "c8",
+                      "to": "a7"
+                    },
+                    "main": true,
+                    "hint": "Počítač odohral hlavnú obranu — pokračujte podľa plánu.",
+                    "then": [
+                      {
+                        "who": "user",
+                        "suggest": {
+                          "from": "b6",
+                          "to": "a7"
+                        },
+                        "wrong": "Týmto ťahom nedáte mat — skúste iný finiš.",
+                        "accept": "checkmate"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "subtitle": "Kniha č. 381 — väzba: Nxc6+ a mat Qxa7#.",
+    "solution": "Nxc6+ Ka8 Qb6 Na7 Qxa7#"
+  },
+  {
+    "weekIndex": 7,
+    "difficulty": "medium",
+    "estimatedRating": 1806,
+    "fen": "2rqkb1r/pp1npppp/2Q2n2/2pPN3/1p6/8/PP3PPP/R3KB1R w KQkq - 0 1",
+    "win": "checkmate",
+    "maxMoves": 12,
+    "freePlay": true,
+    "play": [
+      {
+        "who": "user",
+        "suggest": {
+          "from": "e5",
+          "to": "d7"
+        },
+        "wrong": "Týmto ťahom nepostupujete správne — skúste iný biely ťah."
+      },
+      {
+        "who": "bot",
+        "pick": "main",
+        "choices": [
+          {
+            "move": {
+              "from": "d8",
+              "to": "d7"
+            },
+            "main": true,
+            "hint": "Počítač odohral hlavnú obranu — pokračujte podľa plánu.",
+            "then": [
+              {
+                "who": "user",
+                "suggest": {
+                  "from": "f1",
+                  "to": "b5"
+                },
+                "wrong": "Týmto ťahom nepostupujete správne — skúste iný biely ťah."
+              },
+              {
+                "who": "bot",
+                "pick": "main",
+                "choices": [
+                  {
+                    "move": {
+                      "from": "f6",
+                      "to": "g8"
+                    },
+                    "main": true,
+                    "hint": "Počítač odohral hlavnú obranu — pokračujte podľa plánu.",
+                    "then": [
+                      {
+                        "who": "user",
+                        "suggest": {
+                          "from": "c6",
+                          "to": "d7"
+                        },
+                        "wrong": "Týmto ťahom nedáte mat — skúste iný finiš.",
+                        "accept": "checkmate"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "subtitle": "Kniha č. 383 — väzba: Nxd7, Bb5+ a mat Qxd7#.",
+    "solution": "Nxd7 Qxd7 Bb5+ Ng8 Qxd7#"
+  },
+  {
+    "weekIndex": 7,
+    "difficulty": "hard",
+    "estimatedRating": 2177,
+    "fen": "r7/bp1n4/N1p3kr/q4ppp/3B1PPP/pPPQ2P1/P7/2KR3R w - - 0 1",
+    "win": "checkmate",
+    "maxMoves": 16,
+    "freePlay": true,
+    "play": [
+      {
+        "who": "user",
+        "suggest": {
+          "from": "g4",
+          "to": "f5"
+        },
+        "wrong": "Týmto ťahom nepostupujete správne — skúste iný biely ťah."
+      },
+      {
+        "who": "bot",
+        "pick": "main",
+        "choices": [
+          {
+            "move": {
+              "from": "g6",
+              "to": "f7"
+            },
+            "main": true,
+            "hint": "Počítač odohral hlavnú obranu — pokračujte podľa plánu.",
+            "then": [
+              {
+                "who": "user",
+                "suggest": {
+                  "from": "d4",
+                  "to": "c5"
+                },
+                "wrong": "Týmto ťahom nepostupujete správne — skúste iný biely ťah."
+              },
+              {
+                "who": "bot",
+                "pick": "main",
+                "choices": [
+                  {
+                    "move": {
+                      "from": "f7",
+                      "to": "e8"
+                    },
+                    "main": true,
+                    "hint": "Počítač odohral hlavnú obranu — pokračujte podľa plánu.",
+                    "then": [
+                      {
+                        "who": "user",
+                        "suggest": {
+                          "from": "d3",
+                          "to": "d7"
+                        },
+                        "wrong": "Týmto ťahom nedáte mat — skúste iný finiš.",
+                        "accept": "checkmate"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "subtitle": "Kniha č. 384 — väzba: gxf5+ a mat Qxd7#.",
+    "solution": "gxf5+ Kf7 Bc5 Ke8 Qxd7#"
+  },
+  {
+    "weekIndex": 8,
+    "difficulty": "easy",
+    "estimatedRating": 1573,
+    "fen": "n2q2k1/pr2b1B1/1p6/3pq3/P7/8/1P3RPP/5R1K w - - 0 1",
+    "win": "black_queen_captured",
+    "maxMoves": 8,
+    "freePlay": true,
+    "play": [
+      {
+        "who": "user",
+        "suggest": {
+          "from": "g7",
+          "to": "e5"
+        },
+        "wrong": "Týmto ťahom nepostupujete správne — skúste iný biely ťah."
+      },
+      {
+        "who": "bot",
+        "pick": "main",
+        "choices": [
+          {
+            "move": {
+              "from": "d8",
               "to": "b8"
             },
             "main": true,
@@ -943,54 +1178,8 @@ export const PUZZLE_CATALOG_ENTRIES = [
               {
                 "who": "user",
                 "suggest": {
-                  "from": "b3",
+                  "from": "e5",
                   "to": "b8"
-                },
-                "wrong": "Týmto ťahom nedáte mat — skúste iný finiš.",
-                "accept": "checkmate"
-              }
-            ]
-          }
-        ]
-      }
-    ],
-    "subtitle": "Mat po výmene — Drak pod Vliekom: Rb3+ Qb8 Rxb8#.",
-    "solution": "Rb3+ Qb8 Rxb8#"
-  },
-  {
-    "weekIndex": 7,
-    "difficulty": "hard",
-    "estimatedRating": 2177,
-    "fen": "6k1/8/8/4N3/4q3/8/8/2R3K1 w - - 0 1",
-    "win": "black_queen_captured",
-    "maxMoves": 14,
-    "freePlay": true,
-    "play": [
-      {
-        "who": "user",
-        "suggest": {
-          "from": "e5",
-          "to": "c6"
-        },
-        "wrong": "Týmto ťahom nepostupujete správne — skúste iný biely ťah."
-      },
-      {
-        "who": "bot",
-        "pick": "main",
-        "choices": [
-          {
-            "move": {
-              "from": "e4",
-              "to": "e5"
-            },
-            "main": true,
-            "hint": "Počítač odohral hlavnú obranu — pokračujte podľa plánu.",
-            "then": [
-              {
-                "who": "user",
-                "suggest": {
-                  "from": "c6",
-                  "to": "e5"
                 },
                 "wrong": "Týmto ťahom nezoberiete čiernu dámu.",
                 "accept": "black_queen_captured"
@@ -1000,117 +1189,23 @@ export const PUZZLE_CATALOG_ENTRIES = [
         ]
       }
     ],
-    "subtitle": "Jazdecká vidlička — Drak pod Vliekom: Nc6 Qe5 Nxe5.",
-    "solution": "Nc6 Qe5 Nxe5"
-  },
-  {
-    "weekIndex": 8,
-    "difficulty": "easy",
-    "estimatedRating": 1573,
-    "fen": "6k1/5ppp/8/8/8/8/6R1/4K3 w - - 0 1",
-    "win": "checkmate",
-    "maxMoves": 8,
-    "freePlay": true,
-    "play": [
-      {
-        "who": "user",
-        "suggest": {
-          "from": "g2",
-          "to": "e2"
-        },
-        "wrong": "Tento ťah nevedie k matu v dvoch — skúste iný úvod.",
-        "accept": "mate_in_2_opening"
-      },
-      {
-        "who": "bot",
-        "pick": "main",
-        "choices": [
-          {
-            "move": {
-              "from": "g8",
-              "to": "h8"
-            },
-            "main": true,
-            "hint": "Počítač odohral hlavnú obranu — pokračujte podľa plánu.",
-            "then": [
-              {
-                "who": "user",
-                "suggest": {
-                  "from": "e2",
-                  "to": "e8"
-                },
-                "wrong": "Týmto ťahom nedáte mat — skúste iný finiš.",
-                "accept": "checkmate"
-              }
-            ]
-          }
-        ]
-      }
-    ],
-    "subtitle": "Mat na e8 (aktívny kráľ) — Sparta Stropkov: Re2+ Kh8 Re8#.",
-    "solution": "Re2+ Kh8 Re8#"
+    "subtitle": "Kniha č. 382 — väzba: Bxe5 a Bxb8 (zisk dám).",
+    "solution": "Bxe5 Qb8 Bxb8"
   },
   {
     "weekIndex": 8,
     "difficulty": "medium",
     "estimatedRating": 1849,
-    "fen": "6k1/5pp1/8/6p1/8/8/6Q1/6K1 w - - 0 1",
-    "win": "checkmate",
+    "fen": "n2q2k1/pr2b1B1/1p6/3pq3/P7/8/1P3RPP/5R1K w - - 0 1",
+    "win": "decisive",
     "maxMoves": 10,
     "freePlay": true,
     "play": [
       {
         "who": "user",
         "suggest": {
-          "from": "g2",
-          "to": "d5"
-        },
-        "wrong": "Tento ťah nevedie k matu v dvoch — skúste iný úvod.",
-        "accept": "mate_in_2_opening"
-      },
-      {
-        "who": "bot",
-        "pick": "main",
-        "choices": [
-          {
-            "move": {
-              "from": "g8",
-              "to": "f8"
-            },
-            "main": true,
-            "hint": "Počítač odohral hlavnú obranu — pokračujte podľa plánu.",
-            "then": [
-              {
-                "who": "user",
-                "suggest": {
-                  "from": "d5",
-                  "to": "d8"
-                },
-                "wrong": "Týmto ťahom nedáte mat — skúste iný finiš.",
-                "accept": "checkmate"
-              }
-            ]
-          }
-        ]
-      }
-    ],
-    "subtitle": "Útok na d-file — Sparta Stropkov: Qd5+ Kf8 Qd8#.",
-    "solution": "Qd5+ Kf8 Qd8#"
-  },
-  {
-    "weekIndex": 8,
-    "difficulty": "hard",
-    "estimatedRating": 2232,
-    "fen": "6k1/8/8/4N3/4q3/8/8/2R3K1 w - - 0 1",
-    "win": "black_queen_captured",
-    "maxMoves": 14,
-    "freePlay": true,
-    "play": [
-      {
-        "who": "user",
-        "suggest": {
-          "from": "e5",
-          "to": "c6"
+          "from": "g7",
+          "to": "e5"
         },
         "wrong": "Týmto ťahom nepostupujete správne — skúste iný biely ťah."
       },
@@ -1120,8 +1215,8 @@ export const PUZZLE_CATALOG_ENTRIES = [
         "choices": [
           {
             "move": {
-              "from": "e4",
-              "to": "e5"
+              "from": "d8",
+              "to": "b8"
             },
             "main": true,
             "hint": "Počítač odohral hlavnú obranu — pokračujte podľa plánu.",
@@ -1129,25 +1224,264 @@ export const PUZZLE_CATALOG_ENTRIES = [
               {
                 "who": "user",
                 "suggest": {
-                  "from": "c6",
-                  "to": "e5"
+                  "from": "e5",
+                  "to": "b8"
                 },
-                "wrong": "Týmto ťahom nezoberiete čiernu dámu.",
-                "accept": "black_queen_captured"
+                "wrong": "Týmto ťahom nezískate rozhodujúcu výhodu — skúste taktický ťah z riešenia.",
+                "accept": "decisive"
+              },
+              {
+                "who": "bot",
+                "pick": "main",
+                "choices": [
+                  {
+                    "move": {
+                      "from": "b7",
+                      "to": "b8"
+                    },
+                    "main": true,
+                    "hint": "Počítač odohral hlavnú obranu — pokračujte podľa plánu.",
+                    "then": []
+                  }
+                ]
               }
             ]
           }
         ]
       }
     ],
-    "subtitle": "Jazdec na e5 — Sparta Stropkov: Nc6 Qe5 Nxe5.",
-    "solution": "Nc6 Qe5 Nxe5"
+    "subtitle": "Kniha č. 382 — Bxe5, výmena na b8, biely má prevahu.",
+    "solution": "Bxe5 Qb8 Bxb8 Rxb8"
+  },
+  {
+    "weekIndex": 8,
+    "difficulty": "hard",
+    "estimatedRating": 2232,
+    "fen": "r7/bp1n4/N1p3kr/q4ppp/3B1PPP/pPPQ2P1/P7/2KR3R w - - 0 1",
+    "win": "checkmate",
+    "maxMoves": 16,
+    "freePlay": true,
+    "play": [
+      {
+        "who": "user",
+        "suggest": {
+          "from": "g4",
+          "to": "f5"
+        },
+        "wrong": "Týmto ťahom nepostupujete správne — skúste iný biely ťah."
+      },
+      {
+        "who": "bot",
+        "pick": "main",
+        "choices": [
+          {
+            "move": {
+              "from": "g6",
+              "to": "f7"
+            },
+            "main": true,
+            "hint": "Počítač odohral hlavnú obranu — pokračujte podľa plánu.",
+            "then": [
+              {
+                "who": "user",
+                "suggest": {
+                  "from": "d4",
+                  "to": "c5"
+                },
+                "wrong": "Týmto ťahom nepostupujete správne — skúste iný biely ťah."
+              },
+              {
+                "who": "bot",
+                "pick": "main",
+                "choices": [
+                  {
+                    "move": {
+                      "from": "f7",
+                      "to": "e8"
+                    },
+                    "main": true,
+                    "hint": "Počítač odohral hlavnú obranu — pokračujte podľa plánu.",
+                    "then": [
+                      {
+                        "who": "user",
+                        "suggest": {
+                          "from": "d3",
+                          "to": "d7"
+                        },
+                        "wrong": "Týmto ťahom nedáte mat — skúste iný finiš.",
+                        "accept": "checkmate"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "subtitle": "Kniha č. 384 — gxf5+ a Qxd7# (ťažšia varianta).",
+    "solution": "gxf5+ Kf7 Bc5 Ke8 Qxd7#"
   },
   {
     "weekIndex": 9,
     "difficulty": "easy",
     "estimatedRating": 1605,
-    "fen": "3r1k2/5ppp/8/8/8/8/5Q2/6K1 w - - 0 1",
+    "fen": "2r1k3/1p4pp/p3pP2/2n3N1/4P3/5PP1/PP4KP/2R5 w - - 0 1",
+    "win": "decisive",
+    "maxMoves": 8,
+    "freePlay": true,
+    "play": [
+      {
+        "who": "user",
+        "suggest": {
+          "from": "c1",
+          "to": "c5"
+        },
+        "wrong": "Týmto ťahom nepostupujete správne — skúste iný biely ťah."
+      },
+      {
+        "who": "bot",
+        "pick": "main",
+        "choices": [
+          {
+            "move": {
+              "from": "c8",
+              "to": "c5"
+            },
+            "main": true,
+            "hint": "Počítač odohral hlavnú obranu — pokračujte podľa plánu.",
+            "then": [
+              {
+                "who": "user",
+                "suggest": {
+                  "from": "g5",
+                  "to": "e6"
+                },
+                "wrong": "Týmto ťahom nezískate rozhodujúcu výhodu — skúste taktický ťah z riešenia.",
+                "accept": "decisive"
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "subtitle": "Kniha č. 410 — dvojitý úder: Rxc5 a Nxe6+ (pešiak f7).",
+    "solution": "Rxc5 Rxc5 Nxe6+"
+  },
+  {
+    "weekIndex": 9,
+    "difficulty": "medium",
+    "estimatedRating": 1892,
+    "fen": "8/3P4/2P1k1p1/b3Bp2/6Pp/5K1P/p7/8 w - - 0 1",
+    "win": "decisive",
+    "maxMoves": 10,
+    "freePlay": true,
+    "play": [
+      {
+        "who": "user",
+        "suggest": {
+          "from": "c6",
+          "to": "c7"
+        },
+        "wrong": "Týmto ťahom nepostupujete správne — skúste iný biely ťah."
+      },
+      {
+        "who": "bot",
+        "pick": "main",
+        "choices": [
+          {
+            "move": {
+              "from": "e6",
+              "to": "d7"
+            },
+            "main": true,
+            "hint": "Počítač odohral hlavnú obranu — pokračujte podľa plánu.",
+            "then": [
+              {
+                "who": "user",
+                "suggest": {
+                  "from": "c7",
+                  "to": "c8",
+                  "promotion": "q"
+                },
+                "wrong": "Týmto ťahom nezískate rozhodujúcu výhodu — skúste taktický ťah z riešenia.",
+                "accept": "decisive"
+              },
+              {
+                "who": "bot",
+                "pick": "main",
+                "choices": [
+                  {
+                    "move": {
+                      "from": "d7",
+                      "to": "c8"
+                    },
+                    "main": true,
+                    "hint": "Počítač odohral hlavnú obranu — pokračujte podľa plánu.",
+                    "then": []
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "subtitle": "Kniha č. 411 — postup c7–c8 a zisk kvality.",
+    "solution": "c7 Kxd7 c8=Q Kxc8"
+  },
+  {
+    "weekIndex": 9,
+    "difficulty": "hard",
+    "estimatedRating": 2286,
+    "fen": "8/8/3r3k/p5rp/3N1N1R/PP6/1KP5/8 w - - 0 1",
+    "win": "decisive",
+    "maxMoves": 14,
+    "freePlay": true,
+    "play": [
+      {
+        "who": "user",
+        "suggest": {
+          "from": "d4",
+          "to": "f5"
+        },
+        "wrong": "Týmto ťahom nepostupujete správne — skúste iný biely ťah."
+      },
+      {
+        "who": "bot",
+        "pick": "main",
+        "choices": [
+          {
+            "move": {
+              "from": "h6",
+              "to": "h7"
+            },
+            "main": true,
+            "hint": "Počítač odohral hlavnú obranu — pokračujte podľa plánu.",
+            "then": [
+              {
+                "who": "user",
+                "suggest": {
+                  "from": "f4",
+                  "to": "g6"
+                },
+                "wrong": "Týmto ťahom nezískate rozhodujúcu výhodu — skúste taktický ťah z riešenia.",
+                "accept": "decisive"
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "subtitle": "Kniha č. 412 — Nf5+ a vidlička Ng6.",
+    "solution": "Nf5+ Kh7 Ng6"
+  },
+  {
+    "weekIndex": 10,
+    "difficulty": "easy",
+    "estimatedRating": 1636,
+    "fen": "6k1/4pppp/8/8/8/8/5Q2/6K1 w - - 0 1",
     "win": "checkmate",
     "maxMoves": 8,
     "freePlay": true,
@@ -1167,8 +1501,8 @@ export const PUZZLE_CATALOG_ENTRIES = [
         "choices": [
           {
             "move": {
-              "from": "f8",
-              "to": "g8"
+              "from": "g8",
+              "to": "h8"
             },
             "main": true,
             "hint": "Počítač odohral hlavnú obranu — pokračujte podľa plánu.",
@@ -1187,149 +1521,8 @@ export const PUZZLE_CATALOG_ENTRIES = [
         ]
       }
     ],
-    "subtitle": "Mat s čiernou vežou na d8 — Šachová bitka: Qd4+ Kg8 Qxd8#.",
-    "solution": "Qd4+ Kg8 Qxd8#"
-  },
-  {
-    "weekIndex": 9,
-    "difficulty": "medium",
-    "estimatedRating": 1892,
-    "fen": "6k1/5ppp/8/8/8/8/6Q1/5K2 w - - 0 1",
-    "win": "checkmate",
-    "maxMoves": 10,
-    "freePlay": true,
-    "play": [
-      {
-        "who": "user",
-        "suggest": {
-          "from": "g2",
-          "to": "f3"
-        },
-        "wrong": "Tento ťah nevedie k matu v dvoch — skúste iný úvod.",
-        "accept": "mate_in_2_opening"
-      },
-      {
-        "who": "bot",
-        "pick": "main",
-        "choices": [
-          {
-            "move": {
-              "from": "g8",
-              "to": "h8"
-            },
-            "main": true,
-            "hint": "Počítač odohral hlavnú obranu — pokračujte podľa plánu.",
-            "then": [
-              {
-                "who": "user",
-                "suggest": {
-                  "from": "f3",
-                  "to": "a8"
-                },
-                "wrong": "Týmto ťahom nedáte mat — skúste iný finiš.",
-                "accept": "checkmate"
-              }
-            ]
-          }
-        ]
-      }
-    ],
-    "subtitle": "Vzdialený mat — Šachová bitka: Qf3+ Kh8 Qa8#.",
-    "solution": "Qf3+ Kh8 Qa8#"
-  },
-  {
-    "weekIndex": 9,
-    "difficulty": "hard",
-    "estimatedRating": 2286,
-    "fen": "5qk1/5ppp/8/8/8/8/4Q3/6K1 w - - 0 1",
-    "win": "checkmate",
-    "maxMoves": 14,
-    "freePlay": true,
-    "play": [
-      {
-        "who": "user",
-        "suggest": {
-          "from": "e2",
-          "to": "d3"
-        },
-        "wrong": "Tento ťah nevedie k matu v dvoch — skúste iný úvod.",
-        "accept": "mate_in_2_opening"
-      },
-      {
-        "who": "bot",
-        "pick": "main",
-        "choices": [
-          {
-            "move": {
-              "from": "f8",
-              "to": "d8"
-            },
-            "main": true,
-            "hint": "Počítač odohral hlavnú obranu — pokračujte podľa plánu.",
-            "then": [
-              {
-                "who": "user",
-                "suggest": {
-                  "from": "d3",
-                  "to": "d8"
-                },
-                "wrong": "Týmto ťahom nedáte mat — skúste iný finiš.",
-                "accept": "checkmate"
-              }
-            ]
-          }
-        ]
-      }
-    ],
-    "subtitle": "Výměna s dámou — Šachová bitka: Qd3+ Qd8 Qxd8#.",
-    "solution": "Qd3+ Qd8 Qxd8#"
-  },
-  {
-    "weekIndex": 10,
-    "difficulty": "easy",
-    "estimatedRating": 1636,
-    "fen": "2r3k1/5ppp/8/8/8/8/6R1/6K1 w - - 0 1",
-    "win": "checkmate",
-    "maxMoves": 8,
-    "freePlay": true,
-    "play": [
-      {
-        "who": "user",
-        "suggest": {
-          "from": "g2",
-          "to": "e2"
-        },
-        "wrong": "Tento ťah nevedie k matu v dvoch — skúste iný úvod.",
-        "accept": "mate_in_2_opening"
-      },
-      {
-        "who": "bot",
-        "pick": "main",
-        "choices": [
-          {
-            "move": {
-              "from": "c8",
-              "to": "e8"
-            },
-            "main": true,
-            "hint": "Počítač odohral hlavnú obranu — pokračujte podľa plánu.",
-            "then": [
-              {
-                "who": "user",
-                "suggest": {
-                  "from": "e2",
-                  "to": "e8"
-                },
-                "wrong": "Týmto ťahom nedáte mat — skúste iný finiš.",
-                "accept": "checkmate"
-              }
-            ]
-          }
-        ]
-      }
-    ],
-    "subtitle": "Výměna s vežou — Kronika hlavolamu: Re2 Re8 Rxe8#.",
-    "solution": "Re2 Re8 Rxe8#"
+    "subtitle": "Mat v dvoch: Qd4+ pri oslabených pešiakoch.",
+    "solution": "Qd4+ Kh8 Qd8#"
   },
   {
     "weekIndex": 10,
@@ -1375,23 +1568,23 @@ export const PUZZLE_CATALOG_ENTRIES = [
         ]
       }
     ],
-    "subtitle": "Aktívny biely kráľ — Kronika hlavolamu: Qxf7+ Kh8 Qe8#.",
+    "subtitle": "Mat v dvoch: Qxf7+ a Qe8# (aktívny biely kráľ).",
     "solution": "Qxf7+ Kh8 Qe8#"
   },
   {
     "weekIndex": 10,
     "difficulty": "hard",
     "estimatedRating": 2341,
-    "fen": "5rk1/5ppp/8/8/8/8/5N2/6K1 w - - 0 1",
+    "fen": "5qk1/5ppp/8/8/8/8/6Q1/6K1 w - - 0 1",
     "win": "checkmate",
-    "maxMoves": 16,
+    "maxMoves": 14,
     "freePlay": true,
     "play": [
       {
         "who": "user",
         "suggest": {
-          "from": "f2",
-          "to": "d3"
+          "from": "g2",
+          "to": "f3"
         },
         "wrong": "Týmto ťahom nepostupujete správne — skúste iný biely ťah."
       },
@@ -1401,8 +1594,8 @@ export const PUZZLE_CATALOG_ENTRIES = [
         "choices": [
           {
             "move": {
-              "from": "g8",
-              "to": "h8"
+              "from": "f8",
+              "to": "a8"
             },
             "main": true,
             "hint": "Počítač odohral hlavnú obranu — pokračujte podľa plánu.",
@@ -1410,125 +1603,7 @@ export const PUZZLE_CATALOG_ENTRIES = [
               {
                 "who": "user",
                 "suggest": {
-                  "from": "d3",
-                  "to": "e5"
-                },
-                "wrong": "Týmto ťahom nepostupujete správne — skúste iný biely ťah."
-              },
-              {
-                "who": "bot",
-                "pick": "main",
-                "choices": [
-                  {
-                    "move": {
-                      "from": "f8",
-                      "to": "g8"
-                    },
-                    "main": true,
-                    "hint": "Počítač odohral hlavnú obranu — pokračujte podľa plánu.",
-                    "then": [
-                      {
-                        "who": "user",
-                        "suggest": {
-                          "from": "e5",
-                          "to": "f7"
-                        },
-                        "wrong": "Týmto ťahom nedáte mat — skúste iný finiš.",
-                        "accept": "checkmate"
-                      }
-                    ]
-                  }
-                ]
-              }
-            ]
-          }
-        ]
-      }
-    ],
-    "subtitle": "Lov kráľa jazdcom — Kronika hlavolamu: Nd3+ Kh8 Ne5 Rg8 Nxf7#.",
-    "solution": "Nd3+ Kh8 Ne5 Rg8 Nxf7#"
-  },
-  {
-    "weekIndex": 11,
-    "difficulty": "easy",
-    "estimatedRating": 1668,
-    "fen": "6k1/5ppp/8/8/8/8/3Q4/5K2 w - - 0 1",
-    "win": "checkmate",
-    "maxMoves": 8,
-    "freePlay": true,
-    "play": [
-      {
-        "who": "user",
-        "suggest": {
-          "from": "d2",
-          "to": "c3"
-        },
-        "wrong": "Tento ťah nevedie k matu v dvoch — skúste iný úvod.",
-        "accept": "mate_in_2_opening"
-      },
-      {
-        "who": "bot",
-        "pick": "main",
-        "choices": [
-          {
-            "move": {
-              "from": "g8",
-              "to": "h8"
-            },
-            "main": true,
-            "hint": "Počítač odohral hlavnú obranu — pokračujte podľa plánu.",
-            "then": [
-              {
-                "who": "user",
-                "suggest": {
-                  "from": "c3",
-                  "to": "c8"
-                },
-                "wrong": "Týmto ťahom nedáte mat — skúste iný finiš.",
-                "accept": "checkmate"
-              }
-            ]
-          }
-        ]
-      }
-    ],
-    "subtitle": "Mat po c-file — Investícia rytiera: Qc3+ Kh8 Qc8#.",
-    "solution": "Qc3+ Kh8 Qc8#"
-  },
-  {
-    "weekIndex": 11,
-    "difficulty": "medium",
-    "estimatedRating": 1977,
-    "fen": "6k1/5ppp/8/8/8/8/4Q2R/6K1 w - - 0 1",
-    "win": "checkmate",
-    "maxMoves": 10,
-    "freePlay": true,
-    "play": [
-      {
-        "who": "user",
-        "suggest": {
-          "from": "e2",
-          "to": "a6"
-        },
-        "wrong": "Tento ťah nevedie k matu v dvoch — skúste iný úvod.",
-        "accept": "mate_in_2_opening"
-      },
-      {
-        "who": "bot",
-        "pick": "main",
-        "choices": [
-          {
-            "move": {
-              "from": "g8",
-              "to": "h8"
-            },
-            "main": true,
-            "hint": "Počítač odohral hlavnú obranu — pokračujte podľa plánu.",
-            "then": [
-              {
-                "who": "user",
-                "suggest": {
-                  "from": "a6",
+                  "from": "f3",
                   "to": "a8"
                 },
                 "wrong": "Týmto ťahom nedáte mat — skúste iný finiš.",
@@ -1539,8 +1614,102 @@ export const PUZZLE_CATALOG_ENTRIES = [
         ]
       }
     ],
-    "subtitle": "Anderssen — Investícia rytiera: Qa6+ Kh8 Qa8#.",
-    "solution": "Qa6+ Kh8 Qa8#"
+    "subtitle": "Zničte čiernu dámu: Qf3+ a výměna Qxa8#.",
+    "solution": "Qf3+ Qa8 Qxa8#"
+  },
+  {
+    "weekIndex": 11,
+    "difficulty": "easy",
+    "estimatedRating": 1668,
+    "fen": "6k1/5ppp/8/8/8/8/5Q2/5K2 w - - 0 1",
+    "win": "checkmate",
+    "maxMoves": 8,
+    "freePlay": true,
+    "play": [
+      {
+        "who": "user",
+        "suggest": {
+          "from": "f2",
+          "to": "c5"
+        },
+        "wrong": "Tento ťah nevedie k matu v dvoch — skúste iný úvod.",
+        "accept": "mate_in_2_opening"
+      },
+      {
+        "who": "bot",
+        "pick": "main",
+        "choices": [
+          {
+            "move": {
+              "from": "g8",
+              "to": "h8"
+            },
+            "main": true,
+            "hint": "Počítač odohral hlavnú obranu — pokračujte podľa plánu.",
+            "then": [
+              {
+                "who": "user",
+                "suggest": {
+                  "from": "c5",
+                  "to": "c8"
+                },
+                "wrong": "Týmto ťahom nedáte mat — skúste iný finiš.",
+                "accept": "checkmate"
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "subtitle": "Mat v dvoch: Qc5+ a Qc8# po ustúpení kráľa.",
+    "solution": "Qc5+ Kh8 Qc8#"
+  },
+  {
+    "weekIndex": 11,
+    "difficulty": "medium",
+    "estimatedRating": 1977,
+    "fen": "6k1/5pp1/8/6p1/8/8/6Q1/5K2 w - - 0 1",
+    "win": "checkmate",
+    "maxMoves": 10,
+    "freePlay": true,
+    "play": [
+      {
+        "who": "user",
+        "suggest": {
+          "from": "g2",
+          "to": "d5"
+        },
+        "wrong": "Tento ťah nevedie k matu v dvoch — skúste iný úvod.",
+        "accept": "mate_in_2_opening"
+      },
+      {
+        "who": "bot",
+        "pick": "main",
+        "choices": [
+          {
+            "move": {
+              "from": "g8",
+              "to": "f8"
+            },
+            "main": true,
+            "hint": "Počítač odohral hlavnú obranu — pokračujte podľa plánu.",
+            "then": [
+              {
+                "who": "user",
+                "suggest": {
+                  "from": "d5",
+                  "to": "d8"
+                },
+                "wrong": "Týmto ťahom nedáte mat — skúste iný finiš.",
+                "accept": "checkmate"
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "subtitle": "Mat v troch: Qd5+ a Qd8# (kráľ na f5, g6-pešiak).",
+    "solution": "Qd5+ Kf8 Qd8#"
   },
   {
     "weekIndex": 11,
@@ -1633,7 +1802,7 @@ export const PUZZLE_CATALOG_ENTRIES = [
         ]
       }
     ],
-    "subtitle": "Šesťťahová kombinácia — Investícia rytiera: Rb4 Rd8 Rb5 Rd7 Rb7 Rd8 Qxf7#.",
+    "subtitle": "Šesťťahová vežová kombinácia: obíďte Rd7, finiš Qxf7#.",
     "solution": "Rb4 Rd8 Rb5 Rd7 Rb7 Rd8 Qxf7#"
   },
   {
@@ -1680,7 +1849,7 @@ export const PUZZLE_CATALOG_ENTRIES = [
         ]
       }
     ],
-    "subtitle": "Finále festivalu — Koruna festivalu: Qb7+ Kh8 Qb8#.",
+    "subtitle": "Záverečný týždeň: Qb7+ a mat dámou na b8.",
     "solution": "Qb7+ Kh8 Qb8#"
   },
   {
@@ -1727,7 +1896,7 @@ export const PUZZLE_CATALOG_ENTRIES = [
         ]
       }
     ],
-    "subtitle": "Mat po výmene — Koruna festivalu: Qb3+ Qb8 Qxb8#.",
+    "subtitle": "Mat v dvoch: Qb3+ a výměna s čiernou dámou Qxb8#.",
     "solution": "Qb3+ Qb8 Qxb8#"
   },
   {
@@ -1821,7 +1990,7 @@ export const PUZZLE_CATALOG_ENTRIES = [
         ]
       }
     ],
-    "subtitle": "Majstrovská kombinácia — Koruna festivalu: Rb4 Rd8 Rb5 Re8 Rb7 Re6 Qxf7#.",
+    "subtitle": "Finále festivalu: sedemťahová majstrovská kombinácia na dvoch vežiach.",
     "solution": "Rb4 Rd8 Rb5 Re8 Rb7 Re6 Qxf7#"
   }
 ];
