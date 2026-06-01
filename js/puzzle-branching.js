@@ -2,6 +2,7 @@ import { Chessground } from "./vendor/chessground/chessground.js";
 import { Chess } from "./vendor/chess.mjs";
 import { movesMatch } from "./puzzle-engine.js";
 import { createWrongMoveOverlay } from "./puzzle-wrong-move-ui.js";
+import { isPuzzleRewardUnlocked } from "./puzzle-rewards.js";
 
 function normalizeBranching(raw) {
   if (!raw) return null;
@@ -75,6 +76,7 @@ export function mountBranchingPuzzle(puzzle, helpers) {
   var activeBlack = null;
   var activeFinish = null;
   var wrongMoveUi = createWrongMoveOverlay(el);
+  var branchSolveNotified = isPuzzleRewardUnlocked(puzzle.id);
 
   function setSubtitle(extra) {
     if (!subtitle) return;
@@ -122,7 +124,10 @@ export function mountBranchingPuzzle(puzzle, helpers) {
     helpers.setCompletionUI(puzzle.id, solved);
     if (solved) {
       wrongMoveUi.hide();
-      helpers.notifyPuzzleSolved(puzzle.id, { firstTry: mistakes === 0 });
+      if (!branchSolveNotified) {
+        branchSolveNotified = true;
+        helpers.notifyPuzzleSolved(puzzle.id, { firstTry: mistakes === 0 });
+      }
     }
   }
 

@@ -80,11 +80,13 @@ function setCompletionUI(puzzleId, solvedNow) {
   var item = boardEl.closest(".sach-visual-item");
   if (!item) return;
   var hasReward = isPuzzleRewardUnlocked(puzzleId);
-  item.classList.toggle("is-completed", solvedNow);
+  /** Na doske práve mat / cieľ, alebo už uložené v localStorage (aj po remounte). */
+  var showWin = !!(solvedNow || hasReward);
+  item.classList.toggle("is-completed", showWin);
   item.classList.toggle("has-reward", hasReward);
 
   var banner = item.querySelector(".sach-success-banner");
-  if (solvedNow) {
+  if (showWin) {
     if (!banner) {
       banner = document.createElement("div");
       banner.className = "sach-success-banner";
@@ -95,23 +97,14 @@ function setCompletionUI(puzzleId, solvedNow) {
       banner.textContent =
         "🏆 Úloha splnená! Prispeli ste k " + meta.partLabel + " — pozrite investíciu vyššie.";
     } else {
-      banner.textContent = "🏆 Výborne! Úloha splnená proti počítaču.";
+      banner.textContent = "🏆 Výborne! Úloha splnená!";
     }
   } else if (banner) {
     banner.remove();
   }
 
   var badge = item.querySelector(".sach-reward-badge");
-  if (hasReward && !solvedNow) {
-    if (!badge) {
-      badge = document.createElement("p");
-      badge.className = "sach-reward-badge";
-      item.appendChild(badge);
-    }
-    badge.textContent = "✓ Úloha už splnená";
-  } else if (badge) {
-    badge.remove();
-  }
+  if (badge) badge.remove();
 }
 
 function appendSolveScoreBanner(puzzleId, options, scoreResult) {
@@ -177,9 +170,13 @@ function notifyPuzzleSolved(puzzleId, options) {
     }
     refreshScoreUI();
   }
-  if (wasNew || scoreResult) {
-    appendSolveScoreBanner(puzzleId, options, scoreResult);
-  }
+  setCompletionUI(puzzleId, true);
+  appendSolveScoreBanner(puzzleId, options, scoreResult);
+  window.dispatchEvent(
+    new CustomEvent("ptra-puzzle-solved", {
+      detail: { puzzleId: puzzleId, wasNew: wasNew, scoreResult: scoreResult },
+    })
+  );
 }
 
 function wirePuzzleControls(puzzle, ctx) {
@@ -363,6 +360,7 @@ function mountAllPlayablePuzzles() {
       setCompletionUI(pid, false);
     }
   }
+  refreshScoreUI();
 }
 
 function remountActiveWeek() {

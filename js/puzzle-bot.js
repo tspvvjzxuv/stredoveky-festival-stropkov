@@ -18,6 +18,7 @@ import {
 } from "./puzzle-engine.js";
 import { createWrongMoveOverlay } from "./puzzle-wrong-move-ui.js";
 import { syncChessBoardSize } from "./puzzle-board-size.js";
+import { isPuzzleRewardUnlocked } from "./puzzle-rewards.js";
 
 var DEFAULT_MAX_MISTAKES_OVERLAY = 8;
 
@@ -140,6 +141,8 @@ export function mountBotPuzzle(puzzle, helpers) {
   var positionHistory = [];
   var solutionBotMap = buildSolutionBotMap(puzzle);
   var wrongMoveUi = createWrongMoveOverlay(el);
+  /** Uloženie / banner len pri prvom dosiahnutí cieľa v tejto relácii dosky. */
+  var solveNotified = isPuzzleRewardUnlocked(puzzle.id);
 
   function snapshotNow() {
     return {
@@ -337,11 +340,14 @@ export function mountBotPuzzle(puzzle, helpers) {
     if (solved) {
       wrongMoveUi.hide();
       wrongMoveUi.hideBriefFeedback();
-      helpers.notifyPuzzleSolved(puzzle.id, {
-        firstTry: attemptCount === 0,
-        movesUsed: moveCount,
-        maxMoves: freePlay ? maxMoves : puzzle.maxMoves,
-      });
+      if (!solveNotified) {
+        solveNotified = true;
+        helpers.notifyPuzzleSolved(puzzle.id, {
+          firstTry: attemptCount === 0,
+          movesUsed: moveCount,
+          maxMoves: freePlay ? maxMoves : puzzle.maxMoves,
+        });
+      }
       return;
     }
 
@@ -761,6 +767,7 @@ export function mountBotPuzzle(puzzle, helpers) {
   function resetBoard() {
     busy = false;
     gameOver = false;
+    solveNotified = isPuzzleRewardUnlocked(puzzle.id);
     moveCount = 0;
     flexPlay = false;
     activeSteps = puzzle.play || [];
