@@ -4601,6 +4601,144 @@ body.home-page {
   color: var(--ds-text-on-dark) !important;
 }
 
+#sachove-hlavolamy .sach-score-card {
+  margin-top: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+#sachove-hlavolamy .sach-score__intro {
+  margin: 0 0 0.85rem;
+  font-size: 0.92rem;
+  line-height: 1.45;
+  color: rgba(255, 248, 232, 0.88);
+}
+
+#sachove-hlavolamy .sach-score-panel {
+  display: grid;
+  gap: 0.75rem;
+}
+
+#sachove-hlavolamy .sach-score__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.5rem 1.25rem;
+  padding: 0.85rem 1rem;
+  border-radius: 8px;
+  background: rgba(12, 16, 28, 0.55);
+  border: 1px solid rgba(212, 175, 95, 0.28);
+}
+
+#sachove-hlavolamy .sach-score__rank {
+  margin: 0;
+  font-family: var(--font-display, Cinzel, serif);
+  font-size: 1rem;
+  font-weight: 600;
+  color: #e8c878;
+}
+
+#sachove-hlavolamy .sach-score__total {
+  margin: 0;
+}
+
+#sachove-hlavolamy .sach-score__total-value {
+  font-size: 1.85rem;
+  font-weight: 700;
+  color: #fff5dc;
+  line-height: 1;
+}
+
+#sachove-hlavolamy .sach-score__total-label {
+  font-size: 0.9rem;
+  color: rgba(255, 248, 232, 0.75);
+}
+
+#sachove-hlavolamy .sach-score__meta {
+  margin: 0;
+  width: 100%;
+  font-size: 0.82rem;
+  color: rgba(255, 248, 232, 0.7);
+}
+
+#sachove-hlavolamy .sach-score__name-label {
+  font-size: 0.82rem;
+  font-weight: 600;
+}
+
+#sachove-hlavolamy .sach-score__name-input {
+  width: 100%;
+  max-width: 16rem;
+  padding: 0.45rem 0.6rem;
+  border-radius: 6px;
+  border: 1px solid rgba(212, 175, 95, 0.35);
+  background: rgba(8, 10, 18, 0.65);
+  color: #fff8e8;
+  font: inherit;
+}
+
+#sachove-hlavolamy .sach-score__sub {
+  margin: 0.35rem 0 0.25rem;
+  font-size: 0.95rem;
+  font-family: var(--font-display, Cinzel, serif);
+}
+
+#sachove-hlavolamy .sach-score__table-wrap {
+  overflow-x: auto;
+}
+
+#sachove-hlavolamy .sach-score__table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.82rem;
+}
+
+#sachove-hlavolamy .sach-score__table th,
+#sachove-hlavolamy .sach-score__table td {
+  padding: 0.4rem 0.5rem;
+  text-align: left;
+  border-bottom: 1px solid rgba(212, 175, 95, 0.15);
+}
+
+#sachove-hlavolamy .sach-score__table th {
+  color: rgba(255, 248, 232, 0.75);
+  font-weight: 600;
+}
+
+#sachove-hlavolamy .sach-score-num {
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+  white-space: nowrap;
+}
+
+#sachove-hlavolamy .sach-score-top {
+  margin: 0;
+  padding-left: 1.1rem;
+  font-size: 0.88rem;
+}
+
+#sachove-hlavolamy .sach-score-top li {
+  margin-bottom: 0.35rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem 0.75rem;
+  align-items: baseline;
+}
+
+#sachove-hlavolamy .sach-score-top strong {
+  margin-left: auto;
+  color: #e8c878;
+}
+
+#sachove-hlavolamy .sach-score-bonus {
+  font-size: 0.82em;
+  color: #9fd4a8;
+  font-weight: 600;
+}
+
+#sachove-hlavolamy .sach-score__note {
+  margin-top: 0.25rem;
+}
+
 #sachove-hlavolamy .sach-investicia {
   margin-bottom: 1.15rem;
   border-color: rgba(255, 203, 0, 0.38) !important;
@@ -5035,6 +5173,36 @@ body.home-page {
   display: none !important;
 }
 
+#sachove-hlavolamy .sach-wrong-move-overlay.is-game-over .sach-game-over-msg {
+  margin: 0 0 0.35rem;
+  max-width: 18rem;
+  font-size: 0.9rem;
+  line-height: 1.4;
+  text-align: center;
+  color: #ffe8c8;
+  font-weight: 600;
+}
+
+#sachove-hlavolamy .sach-wrong-move-overlay.is-game-draw {
+  background: rgba(18, 36, 52, 0.94);
+  border-color: rgba(140, 190, 230, 0.45);
+}
+
+#sachove-hlavolamy .sach-wrong-move-overlay.is-game-draw .sach-game-over-msg {
+  color: #d8ecff;
+}
+
+#sachove-hlavolamy .sach-wrong-move-overlay.is-game-loss,
+#sachove-hlavolamy .sach-wrong-move-overlay.is-game-limit {
+  background: rgba(52, 18, 18, 0.94);
+  border-color: rgba(255, 160, 120, 0.45);
+}
+
+#sachove-hlavolamy .sach-wrong-move-overlay.is-game-loss .sach-game-over-msg,
+#sachove-hlavolamy .sach-wrong-move-overlay.is-game-limit .sach-game-over-msg {
+  color: #ffd8c8;
+}
+
 #sachove-hlavolamy .sach-wrong-move-toast {
   position: absolute;
   left: 50%;
@@ -5090,6 +5258,18 @@ body.home-page {
 #sachove-hlavolamy .sach-attempt-counter {
   border-color: rgba(220, 160, 120, 0.45);
   color: #f5e6d8;
+}
+
+#sachove-hlavolamy .sach-move-counter--warn {
+  border-color: rgba(255, 180, 80, 0.65);
+  color: #ffe8b8;
+  background: rgba(48, 32, 8, 0.88);
+}
+
+#sachove-hlavolamy .sach-move-counter--danger {
+  border-color: rgba(255, 120, 100, 0.75);
+  color: #ffd4cc;
+  background: rgba(56, 16, 12, 0.92);
 }
 
 #sachove-hlavolamy .sach-wrong-move-btn {

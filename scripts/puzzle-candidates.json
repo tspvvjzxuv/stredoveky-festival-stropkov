@@ -1,0 +1,617 @@
+[
+  {
+    "fen": "6k1/5ppp/8/8/8/8/5Q2/6K1 w - - 0 1",
+    "line": [
+      [
+        "f2",
+        "e3"
+      ],
+      [
+        "g8",
+        "h8"
+      ],
+      [
+        "e3",
+        "e8"
+      ]
+    ],
+    "whiteMoves": 2,
+    "win": "checkmate",
+    "sans": "Qe3 Kh8 Qe8#",
+    "openingAccept": "mate_in_2_opening"
+  },
+  {
+    "fen": "6k1/5ppp/8/8/8/8/5Q2/6K1 w - - 0 1",
+    "line": [
+      [
+        "f2",
+        "e3"
+      ],
+      [
+        "g8",
+        "h8"
+      ],
+      [
+        "e3",
+        "d4"
+      ],
+      [
+        "h8",
+        "g8"
+      ],
+      [
+        "d4",
+        "d8"
+      ]
+    ],
+    "whiteMoves": 3,
+    "win": "checkmate",
+    "sans": "Qe3 Kh8 Qd4 Kg8 Qd8#"
+  },
+  {
+    "fen": "6k1/5ppp/8/8/8/8/6Q1/6K1 w - - 0 1",
+    "line": [
+      [
+        "g2",
+        "a8"
+      ]
+    ],
+    "whiteMoves": 1,
+    "win": "checkmate",
+    "sans": "Qa8#"
+  },
+  {
+    "fen": "6k1/5ppp/8/8/8/8/6Q1/6K1 w - - 0 1",
+    "line": [
+      [
+        "g2",
+        "f3"
+      ],
+      [
+        "g8",
+        "h8"
+      ],
+      [
+        "f3",
+        "a8"
+      ]
+    ],
+    "whiteMoves": 2,
+    "win": "checkmate",
+    "sans": "Qf3 Kh8 Qa8#",
+    "openingAccept": "mate_in_2_opening"
+  },
+  {
+    "fen": "6k1/5ppp/8/8/8/8/6Q1/6K1 w - - 0 1",
+    "line": [
+      [
+        "g2",
+        "f3"
+      ],
+      [
+        "g8",
+        "h8"
+      ],
+      [
+        "f3",
+        "e4"
+      ],
+      [
+        "h8",
+        "g8"
+      ],
+      [
+        "e4",
+        "a8"
+      ]
+    ],
+    "whiteMoves": 3,
+    "win": "checkmate",
+    "sans": "Qf3 Kh8 Qe4 Kg8 Qa8#"
+  },
+  {
+    "fen": "6k1/5ppp/8/8/8/8/1R6/6K1 w - - 0 1",
+    "line": [
+      [
+        "b2",
+        "b8"
+      ]
+    ],
+    "whiteMoves": 1,
+    "win": "checkmate",
+    "sans": "Rb8#"
+  },
+  {
+    "fen": "6k1/5ppp/8/8/8/8/1R6/6K1 w - - 0 1",
+    "line": [
+      [
+        "b2",
+        "b3"
+      ],
+      [
+        "g8",
+        "h8"
+      ],
+      [
+        "b3",
+        "b8"
+      ]
+    ],
+    "whiteMoves": 2,
+    "win": "checkmate",
+    "sans": "Rb3 Kh8 Rb8#",
+    "openingAccept": "mate_in_2_opening"
+  },
+  {
+    "fen": "6k1/5ppp/8/8/8/8/1R6/6K1 w - - 0 1",
+    "line": [
+      [
+        "b2",
+        "b3"
+      ],
+      [
+        "g8",
+        "h8"
+      ],
+      [
+        "b3",
+        "b4"
+      ],
+      [
+        "h8",
+        "g8"
+      ],
+      [
+        "b4",
+        "b8"
+      ]
+    ],
+    "whiteMoves": 3,
+    "win": "checkmate",
+    "sans": "Rb3 Kh8 Rb4 Kg8 Rb8#"
+  },
+  {
+    "fen": "6k1/5ppp/8/8/8/8/6R1/6K1 w - - 0 1",
+    "line": [
+      [
+        "g2",
+        "e2"
+      ],
+      [
+        "g8",
+        "h8"
+      ],
+      [
+        "e2",
+        "e8"
+      ]
+    ],
+    "whiteMoves": 2,
+    "win": "checkmate",
+    "sans": "Re2 Kh8 Re8#",
+    "openingAccept": "mate_in_2_opening"
+  },
+  {
+    "fen": "6k1/5ppp/8/8/8/8/6R1/6K1 w - - 0 1",
+    "line": [
+      [
+        "g2",
+        "g3"
+      ],
+      [
+        "g8",
+        "h8"
+      ],
+      [
+        "g3",
+        "e3"
+      ],
+      [
+        "h8",
+        "g8"
+      ],
+      [
+        "e3",
+        "e8"
+      ]
+    ],
+    "whiteMoves": 3,
+    "win": "checkmate",
+    "sans": "Rg3 Kh8 Re3 Kg8 Re8#"
+  },
+  {
+    "fen": "6k1/5ppp/8/8/8/8/R7/4K3 w - - 0 1",
+    "line": [
+      [
+        "a2",
+        "a8"
+      ]
+    ],
+    "whiteMoves": 1,
+    "win": "checkmate",
+    "sans": "Ra8#"
+  },
+  {
+    "fen": "6k1/5ppp/8/8/8/8/R7/4K3 w - - 0 1",
+    "line": [
+      [
+        "a2",
+        "a3"
+      ],
+      [
+        "g8",
+        "h8"
+      ],
+      [
+        "a3",
+        "a8"
+      ]
+    ],
+    "whiteMoves": 2,
+    "win": "checkmate",
+    "sans": "Ra3 Kh8 Ra8#",
+    "openingAccept": "mate_in_2_opening"
+  },
+  {
+    "fen": "6k1/5ppp/8/8/8/8/R7/4K3 w - - 0 1",
+    "line": [
+      [
+        "a2",
+        "a3"
+      ],
+      [
+        "g8",
+        "h8"
+      ],
+      [
+        "a3",
+        "a4"
+      ],
+      [
+        "h8",
+        "g8"
+      ],
+      [
+        "a4",
+        "a8"
+      ]
+    ],
+    "whiteMoves": 3,
+    "win": "checkmate",
+    "sans": "Ra3 Kh8 Ra4 Kg8 Ra8#"
+  },
+  {
+    "fen": "5qk1/5ppp/8/8/8/8/6Q1/6K1 w - - 0 1",
+    "line": [
+      [
+        "g2",
+        "f3"
+      ],
+      [
+        "f8",
+        "a8"
+      ],
+      [
+        "f3",
+        "a8"
+      ]
+    ],
+    "whiteMoves": 2,
+    "win": "checkmate",
+    "sans": "Qf3 Qa8 Qxa8#",
+    "openingAccept": "mate_in_2_opening"
+  },
+  {
+    "fen": "5qk1/5ppp/8/8/8/8/6Q1/6K1 w - - 0 1",
+    "line": [
+      [
+        "g2",
+        "f3"
+      ],
+      [
+        "f8",
+        "e7"
+      ],
+      [
+        "f3",
+        "e4"
+      ],
+      [
+        "e7",
+        "e8"
+      ],
+      [
+        "e4",
+        "e8"
+      ]
+    ],
+    "whiteMoves": 3,
+    "win": "checkmate",
+    "sans": "Qf3 Qe7 Qe4 Qe8 Qxe8#"
+  },
+  {
+    "fen": "6k1/5pp1/8/6p1/8/8/3Q4/6K1 w - - 0 1",
+    "line": [
+      [
+        "d2",
+        "a5"
+      ],
+      [
+        "g8",
+        "f8"
+      ],
+      [
+        "a5",
+        "d8"
+      ]
+    ],
+    "whiteMoves": 2,
+    "win": "checkmate",
+    "sans": "Qa5 Kf8 Qd8#",
+    "openingAccept": "mate_in_2_opening"
+  },
+  {
+    "fen": "6k1/5pp1/8/6p1/8/8/3Q4/6K1 w - - 0 1",
+    "line": [
+      [
+        "d2",
+        "c3"
+      ],
+      [
+        "g8",
+        "f8"
+      ],
+      [
+        "c3",
+        "a5"
+      ],
+      [
+        "g5",
+        "g4"
+      ],
+      [
+        "a5",
+        "d8"
+      ]
+    ],
+    "whiteMoves": 3,
+    "win": "checkmate",
+    "sans": "Qc3 Kf8 Qa5 g4 Qd8#"
+  },
+  {
+    "fen": "6k1/5ppp/8/8/8/5N2/5QPP/6K1 w - - 0 1",
+    "line": [
+      [
+        "f3",
+        "e5"
+      ],
+      [
+        "g8",
+        "f8"
+      ],
+      [
+        "f2",
+        "f7"
+      ]
+    ],
+    "whiteMoves": 2,
+    "win": "checkmate",
+    "sans": "Ne5 Kf8 Qxf7#",
+    "openingAccept": "mate_in_2_opening"
+  },
+  {
+    "fen": "6k1/5ppp/8/8/8/5N2/5QPP/6K1 w - - 0 1",
+    "line": [
+      [
+        "f3",
+        "d4"
+      ],
+      [
+        "g8",
+        "h8"
+      ],
+      [
+        "d4",
+        "e6"
+      ],
+      [
+        "f7",
+        "e6"
+      ],
+      [
+        "f2",
+        "f8"
+      ]
+    ],
+    "whiteMoves": 3,
+    "win": "checkmate",
+    "sans": "Nd4 Kh8 Ne6 fxe6 Qf8#"
+  },
+  {
+    "fen": "6k1/5ppp/8/8/8/8/2Q5/6K1 w - - 0 1",
+    "line": [
+      [
+        "c2",
+        "c8"
+      ]
+    ],
+    "whiteMoves": 1,
+    "win": "checkmate",
+    "sans": "Qc8#"
+  },
+  {
+    "fen": "6k1/5ppp/8/8/8/8/2Q5/6K1 w - - 0 1",
+    "line": [
+      [
+        "c2",
+        "b3"
+      ],
+      [
+        "g8",
+        "h8"
+      ],
+      [
+        "b3",
+        "b8"
+      ]
+    ],
+    "whiteMoves": 2,
+    "win": "checkmate",
+    "sans": "Qb3 Kh8 Qb8#",
+    "openingAccept": "mate_in_2_opening"
+  },
+  {
+    "fen": "6k1/5ppp/8/8/8/8/2Q5/6K1 w - - 0 1",
+    "line": [
+      [
+        "c2",
+        "b3"
+      ],
+      [
+        "g8",
+        "h8"
+      ],
+      [
+        "b3",
+        "a4"
+      ],
+      [
+        "h8",
+        "g8"
+      ],
+      [
+        "a4",
+        "a8"
+      ]
+    ],
+    "whiteMoves": 3,
+    "win": "checkmate",
+    "sans": "Qb3 Kh8 Qa4 Kg8 Qa8#"
+  },
+  {
+    "fen": "6k1/4pppp/8/8/8/8/5Q2/6K1 w - - 0 1",
+    "line": [
+      [
+        "f2",
+        "d4"
+      ],
+      [
+        "g8",
+        "h8"
+      ],
+      [
+        "d4",
+        "d8"
+      ]
+    ],
+    "whiteMoves": 2,
+    "win": "checkmate",
+    "sans": "Qd4 Kh8 Qd8#",
+    "openingAccept": "mate_in_2_opening"
+  },
+  {
+    "fen": "6k1/4pppp/8/8/8/8/5Q2/6K1 w - - 0 1",
+    "line": [
+      [
+        "f2",
+        "e3"
+      ],
+      [
+        "g8",
+        "h8"
+      ],
+      [
+        "e3",
+        "d4"
+      ],
+      [
+        "h8",
+        "g8"
+      ],
+      [
+        "d4",
+        "d8"
+      ]
+    ],
+    "whiteMoves": 3,
+    "win": "checkmate",
+    "sans": "Qe3 Kh8 Qd4 Kg8 Qd8#"
+  },
+  {
+    "fen": "6k1/5r2/8/8/8/8/5Q2/6K1 w - - 0 1",
+    "line": [
+      [
+        "f2",
+        "e3"
+      ],
+      [
+        "g8",
+        "h8"
+      ],
+      [
+        "e3",
+        "c5"
+      ],
+      [
+        "f7",
+        "h7"
+      ],
+      [
+        "c5",
+        "f8"
+      ]
+    ],
+    "whiteMoves": 3,
+    "win": "checkmate",
+    "sans": "Qe3 Kh8 Qc5 Rh7 Qf8#"
+  },
+  {
+    "fen": "6k1/5pp1/8/6p1/8/8/2Q5/6K1 w - - 0 1",
+    "line": [
+      [
+        "c2",
+        "c7"
+      ],
+      [
+        "g8",
+        "f8"
+      ],
+      [
+        "c7",
+        "d8"
+      ]
+    ],
+    "whiteMoves": 2,
+    "win": "checkmate",
+    "sans": "Qc7 Kf8 Qd8#",
+    "openingAccept": "mate_in_2_opening"
+  },
+  {
+    "fen": "6k1/5pp1/8/6p1/8/8/2Q5/6K1 w - - 0 1",
+    "line": [
+      [
+        "c2",
+        "b3"
+      ],
+      [
+        "g8",
+        "f8"
+      ],
+      [
+        "b3",
+        "b6"
+      ],
+      [
+        "g5",
+        "g4"
+      ],
+      [
+        "b6",
+        "d8"
+      ]
+    ],
+    "whiteMoves": 3,
+    "win": "checkmate",
+    "sans": "Qb3 Kf8 Qb6 g4 Qd8#"
+  }
+]

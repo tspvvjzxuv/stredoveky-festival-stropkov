@@ -7,6 +7,8 @@ export const PUZZLE_CATALOG_ENTRIES = [
     "estimatedRating": 1350,
     "fen": "6k1/5ppp/8/8/8/8/6Q1/6K1 w - - 0 1",
     "win": "checkmate",
+    "maxMoves": 8,
+    "freePlay": true,
     "play": [
       {
         "who": "user",
@@ -52,6 +54,8 @@ export const PUZZLE_CATALOG_ENTRIES = [
     "estimatedRating": 1550,
     "fen": "2r1k3/5ppp/8/8/8/1R6/5Q2/6K1 w - - 0 1",
     "win": "checkmate",
+    "maxMoves": 12,
+    "freePlay": true,
     "play": [
       {
         "who": "user",
@@ -120,6 +124,8 @@ export const PUZZLE_CATALOG_ENTRIES = [
     "estimatedRating": 1850,
     "fen": "6k1/8/8/4N3/5q2/8/8/2R3K1 w - - 0 1",
     "win": "black_queen_captured",
+    "maxMoves": 14,
+    "freePlay": true,
     "play": [
       {
         "who": "user",
@@ -165,6 +171,8 @@ export const PUZZLE_CATALOG_ENTRIES = [
     "estimatedRating": 1382,
     "fen": "6k1/5ppp/8/8/8/8/1R6/6K1 w - - 0 1",
     "win": "checkmate",
+    "maxMoves": 8,
+    "freePlay": true,
     "play": [
       {
         "who": "user",
@@ -210,6 +218,8 @@ export const PUZZLE_CATALOG_ENTRIES = [
     "estimatedRating": 1593,
     "fen": "6k1/5ppp/8/8/8/5N2/5QPP/6K1 w - - 0 1",
     "win": "checkmate",
+    "maxMoves": 10,
+    "freePlay": true,
     "play": [
       {
         "who": "user",
@@ -255,6 +265,8 @@ export const PUZZLE_CATALOG_ENTRIES = [
     "estimatedRating": 1905,
     "fen": "5rk1/5ppp/8/8/8/8/5N2/6K1 w - - 0 1",
     "win": "checkmate",
+    "maxMoves": 16,
+    "freePlay": true,
     "play": [
       {
         "who": "user",
@@ -323,6 +335,8 @@ export const PUZZLE_CATALOG_ENTRIES = [
     "estimatedRating": 1414,
     "fen": "6k1/5ppp/8/8/8/8/3Q4/6K1 w - - 0 1",
     "win": "checkmate",
+    "maxMoves": 8,
+    "freePlay": true,
     "play": [
       {
         "who": "user",
@@ -368,6 +382,8 @@ export const PUZZLE_CATALOG_ENTRIES = [
     "estimatedRating": 1635,
     "fen": "6k1/5pp1/8/6p1/8/8/3Q4/6K1 w - - 0 1",
     "win": "checkmate",
+    "maxMoves": 10,
+    "freePlay": true,
     "play": [
       {
         "who": "user",
@@ -413,6 +429,8 @@ export const PUZZLE_CATALOG_ENTRIES = [
     "estimatedRating": 1959,
     "fen": "6k1/8/8/8/8/5q2/8/2R3K1 w - - 0 1",
     "win": "black_queen_captured",
+    "maxMoves": 14,
+    "freePlay": true,
     "play": [
       {
         "who": "user",
@@ -457,6 +475,8 @@ export const PUZZLE_CATALOG_ENTRIES = [
     "estimatedRating": 1445,
     "fen": "6k1/5ppp/8/8/8/8/5Q2/6K1 w - - 0 1",
     "win": "checkmate",
+    "maxMoves": 8,
+    "freePlay": true,
     "play": [
       {
         "who": "user",
@@ -502,6 +522,8 @@ export const PUZZLE_CATALOG_ENTRIES = [
     "estimatedRating": 1678,
     "fen": "6k1/5ppp/8/8/8/8/4Q2R/6K1 w - - 0 1",
     "win": "checkmate",
+    "maxMoves": 10,
+    "freePlay": true,
     "play": [
       {
         "who": "user",
@@ -547,6 +569,8 @@ export const PUZZLE_CATALOG_ENTRIES = [
     "estimatedRating": 2014,
     "fen": "5rk1/5ppp/8/8/8/8/5Q2/6K1 w - - 0 1",
     "win": "checkmate",
+    "maxMoves": 18,
+    "freePlay": true,
     "play": [
       {
         "who": "user",
@@ -639,6 +663,8 @@ export const PUZZLE_CATALOG_ENTRIES = [
     "estimatedRating": 1477,
     "fen": "6k1/5ppp/8/8/8/8/6R1/6K1 w - - 0 1",
     "win": "checkmate",
+    "maxMoves": 8,
+    "freePlay": true,
     "play": [
       {
         "who": "user",
@@ -684,6 +710,8 @@ export const PUZZLE_CATALOG_ENTRIES = [
     "estimatedRating": 1721,
     "fen": "6k1/5ppp/8/8/8/8/2Q5/6K1 w - - 0 1",
     "win": "checkmate",
+    "maxMoves": 10,
+    "freePlay": true,
     "play": [
       {
         "who": "user",
@@ -729,6 +757,8 @@ export const PUZZLE_CATALOG_ENTRIES = [
     "estimatedRating": 2068,
     "fen": "5qk1/5ppp/8/8/8/8/6R1/6K1 w - - 0 1",
     "win": "checkmate",
+    "maxMoves": 14,
+    "freePlay": true,
     "play": [
       {
         "who": "user",
@@ -773,6 +803,8 @@ export const PUZZLE_CATALOG_ENTRIES = [
     "estimatedRating": 1509,
     "fen": "6k1/5ppp/8/8/8/8/R7/4K3 w - - 0 1",
     "win": "checkmate",
+    "maxMoves": 8,
+    "freePlay": true,
     "play": [
       {
         "who": "user",
@@ -818,6 +850,8 @@ export const PUZZLE_CATALOG_ENTRIES = [
     "estimatedRating": 1764,
     "fen": "6k1/4pppp/8/8/8/5N2/5Q2/6K1 w - - 0 1",
     "win": "checkmate",
+    "maxMoves": 10,
+    "freePlay": true,
     "play": [
       {
         "who": "user",
@@ -862,6 +896,8 @@ export const PUZZLE_CATALOG_ENTRIES = [
     "estimatedRating": 2123,
     "fen": "6k1/8/8/8/4q3/8/8/3R2K1 w - - 0 1",
     "win": "black_queen_captured",
+    "maxMoves": 14,
+    "freePlay": true,
     "play": [
       {
         "who": "user",
@@ -906,6 +942,8 @@ export const PUZZLE_CATALOG_ENTRIES = [
     "estimatedRating": 1541,
     "fen": "1rn5/kp3ppp/p1q5/N1Q5/8/7P/PP3PP1/3R2K1 w - - 0 1",
     "win": "checkmate",
+    "maxMoves": 10,
+    "freePlay": true,
     "play": [
       {
         "who": "user",
@@ -974,6 +1012,8 @@ export const PUZZLE_CATALOG_ENTRIES = [
     "estimatedRating": 1806,
     "fen": "2rqkb1r/pp1npppp/2Q2n2/2pPN3/1p6/8/PP3PPP/R3KB1R w KQkq - 0 1",
     "win": "checkmate",
+    "maxMoves": 12,
+    "freePlay": true,
     "play": [
       {
         "who": "user",
@@ -1042,6 +1082,8 @@ export const PUZZLE_CATALOG_ENTRIES = [
     "estimatedRating": 2177,
     "fen": "r7/bp1n4/N1p3kr/q4ppp/3B1PPP/pPPQ2P1/P7/2KR3R w - - 0 1",
     "win": "checkmate",
+    "maxMoves": 16,
+    "freePlay": true,
     "play": [
       {
         "who": "user",
@@ -1110,6 +1152,8 @@ export const PUZZLE_CATALOG_ENTRIES = [
     "estimatedRating": 1573,
     "fen": "n2q2k1/pr2b1B1/1p6/3pq3/P7/8/1P3RPP/5R1K w - - 0 1",
     "win": "black_queen_captured",
+    "maxMoves": 8,
+    "freePlay": true,
     "play": [
       {
         "who": "user",
@@ -1154,6 +1198,8 @@ export const PUZZLE_CATALOG_ENTRIES = [
     "estimatedRating": 1849,
     "fen": "n2q2k1/pr2b1B1/1p6/3pq3/P7/8/1P3RPP/5R1K w - - 0 1",
     "win": "decisive",
+    "maxMoves": 10,
+    "freePlay": true,
     "play": [
       {
         "who": "user",
@@ -1213,6 +1259,8 @@ export const PUZZLE_CATALOG_ENTRIES = [
     "estimatedRating": 2232,
     "fen": "r7/bp1n4/N1p3kr/q4ppp/3B1PPP/pPPQ2P1/P7/2KR3R w - - 0 1",
     "win": "checkmate",
+    "maxMoves": 16,
+    "freePlay": true,
     "play": [
       {
         "who": "user",
@@ -1281,6 +1329,8 @@ export const PUZZLE_CATALOG_ENTRIES = [
     "estimatedRating": 1605,
     "fen": "2r1k3/1p4pp/p3pP2/2n3N1/4P3/5PP1/PP4KP/2R5 w - - 0 1",
     "win": "decisive",
+    "maxMoves": 8,
+    "freePlay": true,
     "play": [
       {
         "who": "user",
@@ -1325,6 +1375,8 @@ export const PUZZLE_CATALOG_ENTRIES = [
     "estimatedRating": 1892,
     "fen": "8/3P4/2P1k1p1/b3Bp2/6Pp/5K1P/p7/8 w - - 0 1",
     "win": "decisive",
+    "maxMoves": 10,
+    "freePlay": true,
     "play": [
       {
         "who": "user",
@@ -1385,6 +1437,8 @@ export const PUZZLE_CATALOG_ENTRIES = [
     "estimatedRating": 2286,
     "fen": "8/8/3r3k/p5rp/3N1N1R/PP6/1KP5/8 w - - 0 1",
     "win": "decisive",
+    "maxMoves": 14,
+    "freePlay": true,
     "play": [
       {
         "who": "user",
@@ -1429,6 +1483,8 @@ export const PUZZLE_CATALOG_ENTRIES = [
     "estimatedRating": 1636,
     "fen": "6k1/4pppp/8/8/8/8/5Q2/6K1 w - - 0 1",
     "win": "checkmate",
+    "maxMoves": 8,
+    "freePlay": true,
     "play": [
       {
         "who": "user",
@@ -1474,6 +1530,8 @@ export const PUZZLE_CATALOG_ENTRIES = [
     "estimatedRating": 1935,
     "fen": "6k1/5ppp/8/8/8/8/5Q2/4K3 w - - 0 1",
     "win": "checkmate",
+    "maxMoves": 10,
+    "freePlay": true,
     "play": [
       {
         "who": "user",
@@ -1519,6 +1577,8 @@ export const PUZZLE_CATALOG_ENTRIES = [
     "estimatedRating": 2341,
     "fen": "5qk1/5ppp/8/8/8/8/6Q1/6K1 w - - 0 1",
     "win": "checkmate",
+    "maxMoves": 14,
+    "freePlay": true,
     "play": [
       {
         "who": "user",
@@ -1563,6 +1623,8 @@ export const PUZZLE_CATALOG_ENTRIES = [
     "estimatedRating": 1668,
     "fen": "6k1/5ppp/8/8/8/8/5Q2/5K2 w - - 0 1",
     "win": "checkmate",
+    "maxMoves": 8,
+    "freePlay": true,
     "play": [
       {
         "who": "user",
@@ -1608,6 +1670,8 @@ export const PUZZLE_CATALOG_ENTRIES = [
     "estimatedRating": 1977,
     "fen": "6k1/5pp1/8/6p1/8/8/6Q1/5K2 w - - 0 1",
     "win": "checkmate",
+    "maxMoves": 10,
+    "freePlay": true,
     "play": [
       {
         "who": "user",
@@ -1653,6 +1717,8 @@ export const PUZZLE_CATALOG_ENTRIES = [
     "estimatedRating": 2395,
     "fen": "2r1k3/5ppp/8/8/8/1R6/5Q2/6K1 w - - 0 1",
     "win": "checkmate",
+    "maxMoves": 18,
+    "freePlay": true,
     "play": [
       {
         "who": "user",
@@ -1745,6 +1811,8 @@ export const PUZZLE_CATALOG_ENTRIES = [
     "estimatedRating": 1700,
     "fen": "6k1/5ppp/8/8/8/8/1Q6/5K2 w - - 0 1",
     "win": "checkmate",
+    "maxMoves": 8,
+    "freePlay": true,
     "play": [
       {
         "who": "user",
@@ -1790,6 +1858,8 @@ export const PUZZLE_CATALOG_ENTRIES = [
     "estimatedRating": 2020,
     "fen": "5qk1/5ppp/8/8/8/8/2Q5/6K1 w - - 0 1",
     "win": "checkmate",
+    "maxMoves": 10,
+    "freePlay": true,
     "play": [
       {
         "who": "user",
@@ -1835,6 +1905,8 @@ export const PUZZLE_CATALOG_ENTRIES = [
     "estimatedRating": 2450,
     "fen": "2r2k2/5ppp/8/8/8/1R6/5Q2/6K1 w - - 0 1",
     "win": "checkmate",
+    "maxMoves": 18,
+    "freePlay": true,
     "play": [
       {
         "who": "user",

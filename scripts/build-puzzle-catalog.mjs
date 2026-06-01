@@ -99,9 +99,20 @@ function countWhiteMovesInLine(line, fen) {
   let n = 0;
   for (const [f, t] of line) {
     if (c.turn() === "w") n++;
-    c.move({ from: f, to: t });
+    moveFromPair(c, f, t);
   }
   return n;
+}
+
+/** Maximálny počet bielych ťahov (voľná hra — prehra len po prekročení). */
+function maxMovesFor(spec) {
+  const wm = countWhiteMovesInLine(spec.line, spec.fen);
+  const slack =
+    spec.difficulty === "easy" ? 4 : spec.difficulty === "medium" ? 6 : 10;
+  return Math.max(
+    spec.difficulty === "easy" ? 6 : spec.difficulty === "medium" ? 10 : 14,
+    wm * 2 + slack
+  );
 }
 
 function userAcceptForStep(wIdx, totalWhite, spec, win) {
@@ -244,12 +255,15 @@ for (const entry of ENTRIES) {
     continue;
   }
   const play = buildPlay(entry);
+  const maxMoves = maxMovesFor(entry);
   built.push({
     weekIndex: entry.week,
     difficulty: entry.difficulty,
     estimatedRating: entry.estimatedRating,
     fen: entry.fen,
     win: entry.win || "checkmate",
+    maxMoves,
+    freePlay: true,
     play,
     subtitle: entry.subtitle,
     solution: entry.solution,
