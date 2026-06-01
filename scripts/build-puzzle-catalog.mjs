@@ -61,52 +61,71 @@ function materialScore(chess) {
   return s;
 }
 
-function isDecisiveForWhite(chess) {
+function whiteQueenOnBoard(chess) {
+  for (const row of chess.board()) {
+    for (const p of row) {
+      if (p && p.type === "q" && p.color === "w") return true;
+    }
+  }
+  return false;
+}
+
+function opponentColor(pc) {
+  return pc === "b" ? "w" : "b";
+}
+
+function playerColorFromSpec(spec) {
+  if (spec.playerColor === "w" || spec.playerColor === "b") return spec.playerColor;
+  const turn = String(spec.fen || "").split(" ")[1];
+  return turn === "b" ? "b" : "w";
+}
+
+function isDecisiveForPlayer(chess, playerColor) {
+  if (playerColor === "b") {
+    if (chess.isCheckmate() && chess.turn() === "w") return true;
+    if (!whiteQueenOnBoard(chess)) return true;
+    return materialScore(chess) <= -5;
+  }
   if (chess.isCheckmate() && chess.turn() === "b") return true;
   if (!blackQueenOnBoard(chess)) return true;
   return materialScore(chess) >= 5;
 }
 
-function whiteCanReachGoal(chess, win) {
-  if (chess.turn() !== "w" || chess.isGameOver()) return false;
+function playerCanReachGoal(chess, win, playerColor) {
+  const pc = playerColor || "w";
+  const opp = opponentColor(pc);
+  if (chess.turn() !== pc || chess.isGameOver()) return false;
   if (win === "black_queen_captured") {
     if (!blackQueenOnBoard(chess)) return true;
   } else if (win === "decisive") {
-    if (isDecisiveForWhite(chess)) return true;
-  } else if (win === "decisive") {
-    if (isDecisiveForWhite(chess)) return true;
-  } else if (chess.isCheckmate() && chess.turn() === "b") return true;
+    if (isDecisiveForPlayer(chess, pc)) return true;
+  } else if (chess.isCheckmate() && chess.turn() === opp) return true;
   for (const m of chess.moves({ verbose: true })) {
     const c2 = new Chess(chess.fen());
     c2.move({ from: m.from, to: m.to, promotion: m.promotion });
     if (win === "black_queen_captured") {
       if (!blackQueenOnBoard(c2)) return true;
     } else if (win === "decisive") {
-      if (isDecisiveForWhite(c2)) return true;
-    } else if (c2.isCheckmate() && c2.turn() === "b") return true;
+      if (isDecisiveForPlayer(c2, pc)) return true;
+    } else if (c2.isCheckmate() && c2.turn() === opp) return true;
   }
   return false;
 }
 
-function isSoundBlackMove(fen, from, to, win) {
-  const c = new Chess(fen);
-  if (!c.move({ from, to })) return false;
-  return whiteCanReachGoal(c, win);
-}
-
-function countWhiteMovesInLine(line, fen) {
+function countPlayerMovesInLine(line, fen, playerColor) {
   const c = new Chess(fen);
   let n = 0;
   for (const [f, t] of line) {
-    if (c.turn() === "w") n++;
+    if (c.turn() === playerColor) n++;
     moveFromPair(c, f, t);
   }
   return n;
 }
 
-/** Maximálny počet bielych ťahov (voľná hra — prehra len po prekročení). */
+/** Maximálny počet ťahov hráča (voľná hra — prehra len po prekročení). */
 function maxMovesFor(spec) {
-  const wm = countWhiteMovesInLine(spec.line, spec.fen);
+  const pc = playerColorFromSpec(spec);
+  const wm = countPlayerMovesInLine(spec.line, spec.fen, pc);
   const slack =
     spec.difficulty === "easy" ? 4 : spec.difficulty === "medium" ? 6 : 10;
   return Math.max(
@@ -115,12 +134,12 @@ function maxMovesFor(spec) {
   );
 }
 
-function userAcceptForStep(wIdx, totalWhite, spec, win) {
+function userAcceptForStep(wIdx, totalPlayer, spec, win) {
   if (spec.userAccepts && spec.userAccepts[wIdx] !== undefined) {
     return spec.userAccepts[wIdx];
   }
   if (wIdx === 0 && spec.openingAccept) return spec.openingAccept;
-  if (wIdx === totalWhite - 1) {
+  if (wIdx === totalPlayer - 1) {
     if (win === "black_queen_captured") return "black_queen_captured";
     if (win === "decisive") return "decisive";
     return "checkmate";
@@ -149,7 +168,7 @@ function buildUserStep(move, accept, win, fenBefore) {
             ? "Týmto ťahom nezískate rozhodujúcu výhodu — skúste taktický ťah z riešenia."
             : accept === "checkmate"
               ? "Týmto ťahom nedáte mat — skúste iný finiš."
-              : "Týmto ťahom nepostupujete správne — skúste iný biely ťah.",
+              : "Týmto ťahom nepostupujete správne — skúste iný ťah.",
   };
   if (accept) step.accept = accept;
   return step;
@@ -188,13 +207,14 @@ function moveFromPair(chess, from, to) {
 function buildPlay(spec) {
   const win = spec.win || "checkmate";
   const line = spec.line;
-  const whiteIndices = [];
+  const pc = playerColorFromSpec(spec);
+  const playerIndices = [];
   for (let i = 0; i < line.length; i++) {
     const probe = new Chess(spec.fen);
     for (let j = 0; j < i; j++) moveFromPair(probe, line[j][0], line[j][1]);
-    if (probe.turn() === "w") whiteIndices.push(i);
+    if (probe.turn() === pc) playerIndices.push(i);
   }
-  const totalWhite = whiteIndices.length;
+  const totalPlayer = playerIndices.length;
   const chess = new Chess(spec.fen);
 
   function recurse(lineIdx) {
@@ -203,9 +223,9 @@ function buildPlay(spec) {
     const [from, to] = line[lineIdx];
     const fenBefore = chess.fen();
 
-    if (chess.turn() === "w") {
-      const wNum = whiteIndices.indexOf(lineIdx);
-      const accept = userAcceptForStep(wNum, totalWhite, spec, win);
+    if (chess.turn() === pc) {
+      const pNum = playerIndices.indexOf(lineIdx);
+      const accept = userAcceptForStep(pNum, totalPlayer, spec, win);
       moveFromPair(chess, from, to);
       const then = recurse(lineIdx + 1);
       return [buildUserStep({ from, to }, accept, win, fenBefore), ...then];
@@ -226,6 +246,8 @@ function buildPlay(spec) {
 }
 
 function verifyEntry(spec) {
+  const pc = playerColorFromSpec(spec);
+  const opp = opponentColor(pc);
   const chess = new Chess(spec.fen);
   const sans = [];
   for (const [from, to] of spec.line) {
@@ -237,8 +259,8 @@ function verifyEntry(spec) {
   if (win === "black_queen_captured") {
     if (blackQueenOnBoard(chess)) return { ok: false, err: "black queen remains" };
   } else if (win === "decisive") {
-    if (!isDecisiveForWhite(chess)) return { ok: false, err: "not decisive" };
-  } else if (!chess.isCheckmate() || chess.turn() !== "b") {
+    if (!isDecisiveForPlayer(chess, pc)) return { ok: false, err: "not decisive" };
+  } else if (!chess.isCheckmate() || chess.turn() !== opp) {
     return { ok: false, err: "not checkmate" };
   }
   return { ok: true, sans };
@@ -261,6 +283,7 @@ for (const entry of ENTRIES) {
     difficulty: entry.difficulty,
     estimatedRating: entry.estimatedRating,
     fen: entry.fen,
+    playerColor: playerColorFromSpec(entry),
     win: entry.win || "checkmate",
     maxMoves,
     freePlay: true,

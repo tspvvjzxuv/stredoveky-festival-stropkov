@@ -6,19 +6,22 @@ import {
   isPuzzleWinPosition,
   filterSoundBotChoices,
   pickFlexSoundBotMove,
-  pickEngagedBlackMove,
+  pickEngagedOpponentMove,
   pickMostEngagedBotChoice,
   detectTerminalOutcome,
   terminalOutcomeMessage,
   buildSolutionBotMap,
-  pickCatalogBlackMove,
+  pickCatalogOpponentMove,
+  playerColorFromPuzzle,
+  opponentColor,
+  groundColor,
 } from "./puzzle-engine.js";
 import { createWrongMoveOverlay } from "./puzzle-wrong-move-ui.js";
 
 var DEFAULT_MAX_MISTAKES_OVERLAY = 8;
 
-function isPuzzleWin(chess, winType) {
-  return isPuzzleWinPosition(chess, winType);
+function isPuzzleWin(chess, winType, playerColor) {
+  return isPuzzleWinPosition(chess, winType, playerColor);
 }
 
 function pickBotChoice(step, chess, puzzle) {
@@ -52,10 +55,14 @@ function pickBotChoice(step, chess, puzzle) {
   return pickMostEngagedBotChoice(chess, choices, puzzle) || choices[0];
 }
 
-function statusForTurn(chess, botThinking) {
+function statusForTurn(chess, botThinking, playerColor) {
+  var pc = playerColor || "w";
+  var opp = opponentColor(pc);
   if (botThinking) return "Počítač premýšľa…";
   if (chess.isCheckmate()) {
-    return chess.turn() === "b" ? "Mat — hlavolam je vyriešený." : "Prehra — váš kráľ je v mat.";
+    return chess.turn() === opp
+      ? "Mat — hlavolam je vyriešený."
+      : "Prehra — váš kráľ je v mat.";
   }
   if (chess.isDraw()) {
     if (chess.isInsufficientMaterial()) return "Remíza — nedostatočný materiál.";
@@ -64,12 +71,19 @@ function statusForTurn(chess, botThinking) {
   }
   if (chess.isGameOver()) return "Koniec partie.";
   if (chess.isCheck()) return "Šach!";
-  return chess.turn() === "w" ? "Na ťahu ste ako biely." : "Ťah počítača…";
+  if (chess.turn() === pc) {
+    return pc === "b" ? "Na ťahu ste ako čierny." : "Na ťahu ste ako biely.";
+  }
+  return "Ťah počítača…";
 }
 
 export function mountBotPuzzle(puzzle, helpers) {
   var el = document.getElementById(puzzle.id);
   if (!el) return;
+
+  var playerColor = playerColorFromPuzzle(puzzle);
+  var opponent = opponentColor(playerColor);
+  var boardOrientation = groundColor(playerColor);
 
   var subtitle = document.getElementById(puzzle.id + "-subtitle");
   var moveCounterEl = document.getElementById(puzzle.id + "-move-count");
@@ -150,7 +164,7 @@ export function mountBotPuzzle(puzzle, helpers) {
       return;
     }
 
-    var pops = chess.turn() === "w" ? 2 : 1;
+    var pops = chess.turn() === playerColor ? 2 : 1;
     while (pops > 0 && positionHistory.length > 1) {
       positionHistory.pop();
       pops -= 1;
@@ -177,7 +191,7 @@ export function mountBotPuzzle(puzzle, helpers) {
       wrong:
         win === "black_queen_captured"
           ? "Týmto ťahom nezoberiete dámu — skúste iný víťazný ťah."
-          : "Týmto ťahom nedosiahnete cieľ — skúste iný biely ťah (mat alebo pokračovanie úlohy).",
+          : "Týmto ťahom nedosiahnete cieľ — skúste iný ťah (mat alebo pokračovanie úlohy).",
     };
   }
 
@@ -191,12 +205,12 @@ export function mountBotPuzzle(puzzle, helpers) {
   }
 
   function syncFlexSteps() {
-    if (isPuzzleWin(chess, puzzle.win)) {
+    if (isPuzzleWin(chess, puzzle.win, playerColor)) {
       activeSteps = [];
       stepIdx = 0;
       return;
     }
-    activeSteps = chess.turn() === "b" ? [flexBotStep()] : [flexUserStep()];
+    activeSteps = chess.turn() === opponent ? [flexBotStep()] : [flexUserStep()];
     stepIdx = 0;
   }
 
@@ -232,7 +246,9 @@ export function mountBotPuzzle(puzzle, helpers) {
         }
       } else {
         var turnHint =
-          chess.turn() === "w" && !busy && !checkSolved() && !gameOver ? " · váš ťah" : "";
+          chess.turn() === playerColor && !busy && !checkSolved() && !gameOver
+            ? " · váš ťah"
+            : "";
         moveCounterEl.textContent = "Ťahy: " + moveCount + turnHint;
         moveCounterEl.setAttribute("aria-label", "Počet vašich ťahov v tejto partii: " + moveCount);
       }
@@ -250,7 +266,7 @@ export function mountBotPuzzle(puzzle, helpers) {
 
   function setSubtitle(extra) {
     if (!subtitle) return;
-    var status = statusForTurn(chess, busy);
+    var status = statusForTurn(chess, busy, playerColor);
     var parts = [baseSubtitle, status];
     if (extra) parts.push(extra);
     subtitle.textContent = parts.join(" | ");
@@ -260,20 +276,20 @@ export function mountBotPuzzle(puzzle, helpers) {
     if (gameOver) return null;
     if (freePlay) {
       if (busy || chess.isGameOver() || checkSolved()) return null;
-      if (chess.turn() !== "w") return null;
+      if (chess.turn() !== playerColor) return null;
       if (moveCount >= maxMoves) return null;
-      return "white";
+      return boardOrientation;
     }
     if (busy || chess.isGameOver() || stepsDone()) return null;
     var step = currentStep();
     if (!step || step.who !== "user") return null;
-    return "white";
+    return boardOrientation;
   }
 
   function checkSolved() {
-    if (isPuzzleWin(chess, puzzle.win)) return true;
+    if (isPuzzleWin(chess, puzzle.win, playerColor)) return true;
     if (!stepsDone()) return false;
-    return isPuzzleWin(chess, puzzle.win);
+    return isPuzzleWin(chess, puzzle.win, playerColor);
   }
 
   function finishSolved(ground, extra) {
@@ -355,7 +371,7 @@ export function mountBotPuzzle(puzzle, helpers) {
   }
 
   function tryAlternateWinAfterMove(ground) {
-    if (!isPuzzleWin(chess, puzzle.win)) return false;
+    if (!isPuzzleWin(chess, puzzle.win, playerColor)) return false;
     finishSolved(ground, "Cieľ splnený — výborne!");
     return true;
   }
@@ -426,12 +442,12 @@ export function mountBotPuzzle(puzzle, helpers) {
     showSoftWrong(ground, step);
   }
 
-  function pickBlackMoveForFreePlay() {
-    var catalog = pickCatalogBlackMove(chess, puzzle, solutionBotMap);
+  function pickOpponentMoveForFreePlay() {
+    var catalog = pickCatalogOpponentMove(chess, puzzle, solutionBotMap);
     if (catalog && catalog.move) {
       return { move: catalog.move, hint: catalog.hint };
     }
-    var engaged = pickEngagedBlackMove(chess, puzzle);
+    var engaged = pickEngagedOpponentMove(chess, puzzle);
     if (engaged && engaged.move) {
       return { move: engaged.move, hint: engaged };
     }
@@ -441,11 +457,11 @@ export function mountBotPuzzle(puzzle, helpers) {
   }
 
   function runFlexBotTurn(ground) {
-    if (chess.turn() !== "b" || chess.isGameOver()) {
+    if (chess.turn() !== opponent || chess.isGameOver()) {
       applyState(ground);
       return;
     }
-    var picked = pickBlackMoveForFreePlay();
+    var picked = pickOpponentMoveForFreePlay();
     if (!picked || !picked.move) {
       applyState(ground);
       return;
@@ -477,7 +493,12 @@ export function mountBotPuzzle(puzzle, helpers) {
         triggerGameOver(ground);
         return;
       }
-      applyState(ground, "Pokračujte bielym — máte voľný ťah.");
+      applyState(
+        ground,
+        playerColor === "b"
+          ? "Pokračujte čiernym — máte voľný ťah."
+          : "Pokračujte bielym — máte voľný ťah."
+      );
     }, 420);
   }
 
@@ -539,7 +560,7 @@ export function mountBotPuzzle(puzzle, helpers) {
     var msg =
       "Prehra — prekročili ste limit " +
       maxMoves +
-      " bielych ťahov. Cieľ úlohy ste nesplnili včas.";
+      " vašich ťahov. Cieľ úlohy ste nesplnili včas.";
     applyState(ground, msg);
     showEndOverlay(ground, {
       kind: "limit",
@@ -553,7 +574,7 @@ export function mountBotPuzzle(puzzle, helpers) {
       applyState(ground);
       return;
     }
-    if (chess.turn() !== "w") {
+    if (chess.turn() !== playerColor) {
       revertChessground(ground);
       applyState(ground);
       return;
@@ -592,7 +613,7 @@ export function mountBotPuzzle(puzzle, helpers) {
 
     applyState(ground, "Ťah prijatý — pokračujte.");
 
-    if (chess.turn() === "b") {
+    if (chess.turn() === opponent) {
       runFlexBotTurn(ground);
     }
   }
@@ -631,7 +652,13 @@ export function mountBotPuzzle(puzzle, helpers) {
         pushPositionHistory();
         saveRetrySnapshot();
         if (resolveTerminalPosition(ground)) return;
-        applyState(ground, botHint || "Počítač odohral ťah — pokračujte bielym.");
+        applyState(
+          ground,
+          botHint ||
+            (playerColor === "b"
+              ? "Počítač odohral ťah — pokračujte čiernym."
+              : "Počítač odohral ťah — pokračujte bielym.")
+        );
         runBotTurns(ground);
       }, 460);
       return;
@@ -693,14 +720,14 @@ export function mountBotPuzzle(puzzle, helpers) {
 
   var ground = Chessground(el, {
     fen: chess.fen(),
-    orientation: "white",
+    orientation: boardOrientation,
     coordinates: true,
     viewOnly: false,
     selectable: { enabled: true },
     draggable: { enabled: true, showGhost: true },
     movable: {
       free: false,
-      color: "white",
+      color: boardOrientation,
       showDests: true,
       dests: helpers.buildDests(chess),
       events: { after: afterMove },
@@ -763,8 +790,16 @@ export function mountBotPuzzle(puzzle, helpers) {
   saveRetrySnapshot();
   updateCounters();
   if (freePlay) {
-    setSubtitle("Voľná hra: pohybujte bielymi figúrami. Prehra len po prekročení limitu ťahov.");
+    setSubtitle(
+      playerColor === "b"
+        ? "Voľná hra: pohybujte čiernymi figúrami. Prehra len po prekročení limitu ťahov."
+        : "Voľná hra: pohybujte bielymi figúrami. Prehra len po prekročení limitu ťahov."
+    );
   }
   applyState(ground);
+  var step0 = (puzzle.play || [])[0];
+  if (step0 && step0.who === "bot" && chess.turn() === opponent) {
+    runBotTurns(ground);
+  }
   helpers.wireControls(puzzle, { resetBoard: resetBoard });
 }

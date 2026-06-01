@@ -6,6 +6,7 @@ export const PUZZLE_CATALOG_ENTRIES = [
     "difficulty": "easy",
     "estimatedRating": 1350,
     "fen": "r2qk2r/2p1nB1p/p2p1p2/bp2N3/4P3/2PPB3/PP4PP/R1Bb1RK1 w - - 0 1",
+    "playerColor": "w",
     "win": "checkmate",
     "maxMoves": 6,
     "freePlay": true,
@@ -28,6 +29,7 @@ export const PUZZLE_CATALOG_ENTRIES = [
     "difficulty": "medium",
     "estimatedRating": 1550,
     "fen": "r1b1k2r/p2p1pNp/n2B1n2/1p2N2P/6P1/3P4/P1P1K3/q2Q2B1 w - - 0 1",
+    "playerColor": "w",
     "win": "checkmate",
     "maxMoves": 10,
     "freePlay": true,
@@ -50,6 +52,7 @@ export const PUZZLE_CATALOG_ENTRIES = [
     "difficulty": "hard",
     "estimatedRating": 1850,
     "fen": "r1b1k2r/p2p1pNp/n2B1n2/1p2N2P/6P1/3P4/P1P1K3/q2Q2B1 w - - 0 1",
+    "playerColor": "w",
     "win": "checkmate",
     "maxMoves": 14,
     "freePlay": true,
@@ -72,6 +75,7 @@ export const PUZZLE_CATALOG_ENTRIES = [
     "difficulty": "easy",
     "estimatedRating": 1382,
     "fen": "r2qk2r/2p1nB1p/p2p1p2/bp2N3/4P3/2PPB3/PP4PP/R1Bb1RK1 w - - 0 1",
+    "playerColor": "w",
     "win": "checkmate",
     "maxMoves": 6,
     "freePlay": true,
@@ -94,6 +98,7 @@ export const PUZZLE_CATALOG_ENTRIES = [
     "difficulty": "medium",
     "estimatedRating": 1593,
     "fen": "r1b1k2r/p2p1pNp/n2B1n2/1p2N2P/6P1/3P4/P1P1K3/q2Q2B1 w - - 0 1",
+    "playerColor": "w",
     "win": "checkmate",
     "maxMoves": 10,
     "freePlay": true,
@@ -116,6 +121,7 @@ export const PUZZLE_CATALOG_ENTRIES = [
     "difficulty": "hard",
     "estimatedRating": 1905,
     "fen": "r1b1k2r/p2p1pNp/n2B1n2/1p2N2P/6P1/3P4/P1P1K3/q2Q2B1 w - - 0 1",
+    "playerColor": "w",
     "win": "checkmate",
     "maxMoves": 14,
     "freePlay": true,
@@ -138,6 +144,7 @@ export const PUZZLE_CATALOG_ENTRIES = [
     "difficulty": "easy",
     "estimatedRating": 1414,
     "fen": "6k1/5ppp/8/8/8/8/6Q1/6K1 w - - 0 1",
+    "playerColor": "w",
     "win": "checkmate",
     "maxMoves": 6,
     "freePlay": true,
@@ -160,6 +167,7 @@ export const PUZZLE_CATALOG_ENTRIES = [
     "difficulty": "medium",
     "estimatedRating": 1635,
     "fen": "6k1/5ppp/8/8/8/8/2Q5/6K1 w - - 0 1",
+    "playerColor": "w",
     "win": "checkmate",
     "maxMoves": 10,
     "freePlay": true,
@@ -182,6 +190,7 @@ export const PUZZLE_CATALOG_ENTRIES = [
     "difficulty": "hard",
     "estimatedRating": 1959,
     "fen": "6k1/5ppp/8/8/8/8/3Q4/6K1 w - - 0 1",
+    "playerColor": "w",
     "win": "checkmate",
     "maxMoves": 14,
     "freePlay": true,
@@ -204,6 +213,7 @@ export const PUZZLE_CATALOG_ENTRIES = [
     "difficulty": "easy",
     "estimatedRating": 1445,
     "fen": "5r1k/ppR5/2n2qpb/6Np/8/1B6/P4PPP/3R2K1 w - - 0 1",
+    "playerColor": "w",
     "win": "checkmate",
     "maxMoves": 6,
     "freePlay": true,
@@ -226,6 +236,7 @@ export const PUZZLE_CATALOG_ENTRIES = [
     "difficulty": "medium",
     "estimatedRating": 1678,
     "fen": "5r1k/ppR5/2n2qpb/6Np/8/1B6/P4PPP/3R2K1 w - - 0 1",
+    "playerColor": "w",
     "win": "checkmate",
     "maxMoves": 10,
     "freePlay": true,
@@ -248,6 +259,7 @@ export const PUZZLE_CATALOG_ENTRIES = [
     "difficulty": "hard",
     "estimatedRating": 2014,
     "fen": "6k1/5ppp/8/8/8/8/3Q4/6K1 w - - 0 1",
+    "playerColor": "w",
     "win": "checkmate",
     "maxMoves": 14,
     "freePlay": true,
@@ -270,6 +282,7 @@ export const PUZZLE_CATALOG_ENTRIES = [
     "difficulty": "easy",
     "estimatedRating": 1477,
     "fen": "r4rbk/6Np/3p1Pq1/p3p1N1/1p6/7Q/PPP4P/1K1R4 w - - 0 1",
+    "playerColor": "w",
     "win": "checkmate",
     "maxMoves": 8,
     "freePlay": true,
@@ -317,6 +330,7 @@ export const PUZZLE_CATALOG_ENTRIES = [
     "difficulty": "medium",
     "estimatedRating": 1721,
     "fen": "1r6/7p/2R3p1/pp2p3/k3B2r/P7/1PP3P1/6K1 w - - 0 1",
+    "playerColor": "w",
     "win": "checkmate",
     "maxMoves": 10,
     "freePlay": true,
@@ -364,6 +378,7 @@ export const PUZZLE_CATALOG_ENTRIES = [
     "difficulty": "hard",
     "estimatedRating": 2068,
     "fen": "2r4k/2qb1qb1/p3pN1p/1p2PpN1/5P1P/8/PPP5/2K3RR w - - 0 1",
+    "playerColor": "w",
     "win": "checkmate",
     "maxMoves": 14,
     "freePlay": true,
@@ -411,6 +426,7 @@ export const PUZZLE_CATALOG_ENTRIES = [
     "difficulty": "easy",
     "estimatedRating": 1509,
     "fen": "7k/1n4Bp/7R/8/8/8/B7/B6K w - - 0 1",
+    "playerColor": "w",
     "win": "checkmate",
     "maxMoves": 8,
     "freePlay": true,
@@ -458,6 +474,7 @@ export const PUZZLE_CATALOG_ENTRIES = [
     "difficulty": "medium",
     "estimatedRating": 1764,
     "fen": "1r5r/pbn1n1k1/3p1ppp/3B1B2/2P2P2/1R2B3/PQ4PP/1R4K1 w - - 0 1",
+    "playerColor": "w",
     "win": "checkmate",
     "maxMoves": 10,
     "freePlay": true,
@@ -505,6 +522,7 @@ export const PUZZLE_CATALOG_ENTRIES = [
     "difficulty": "hard",
     "estimatedRating": 2123,
     "fen": "8/r3Bpkp/4q1p1/8/5Q1K/8/8/8 w - - 0 1",
+    "playerColor": "w",
     "win": "checkmate",
     "maxMoves": 14,
     "freePlay": true,
@@ -552,6 +570,7 @@ export const PUZZLE_CATALOG_ENTRIES = [
     "difficulty": "easy",
     "estimatedRating": 1541,
     "fen": "1rn5/kp3ppp/p1q5/N1Q5/8/7P/PP3PP1/3R2K1 w - - 0 1",
+    "playerColor": "w",
     "win": "checkmate",
     "maxMoves": 10,
     "freePlay": true,
@@ -562,7 +581,7 @@ export const PUZZLE_CATALOG_ENTRIES = [
           "from": "a5",
           "to": "c6"
         },
-        "wrong": "Týmto ťahom nepostupujete správne — skúste iný biely ťah."
+        "wrong": "Týmto ťahom nepostupujete správne — skúste iný ťah."
       },
       {
         "who": "bot",
@@ -582,7 +601,7 @@ export const PUZZLE_CATALOG_ENTRIES = [
                   "from": "c5",
                   "to": "b6"
                 },
-                "wrong": "Týmto ťahom nepostupujete správne — skúste iný biely ťah."
+                "wrong": "Týmto ťahom nepostupujete správne — skúste iný ťah."
               },
               {
                 "who": "bot",
@@ -622,6 +641,7 @@ export const PUZZLE_CATALOG_ENTRIES = [
     "difficulty": "medium",
     "estimatedRating": 1806,
     "fen": "2rqkb1r/pp1npppp/2Q2n2/2pPN3/1p6/8/PP3PPP/R3KB1R w KQkq - 0 1",
+    "playerColor": "w",
     "win": "checkmate",
     "maxMoves": 12,
     "freePlay": true,
@@ -632,7 +652,7 @@ export const PUZZLE_CATALOG_ENTRIES = [
           "from": "e5",
           "to": "d7"
         },
-        "wrong": "Týmto ťahom nepostupujete správne — skúste iný biely ťah."
+        "wrong": "Týmto ťahom nepostupujete správne — skúste iný ťah."
       },
       {
         "who": "bot",
@@ -652,7 +672,7 @@ export const PUZZLE_CATALOG_ENTRIES = [
                   "from": "f1",
                   "to": "b5"
                 },
-                "wrong": "Týmto ťahom nepostupujete správne — skúste iný biely ťah."
+                "wrong": "Týmto ťahom nepostupujete správne — skúste iný ťah."
               },
               {
                 "who": "bot",
@@ -692,6 +712,7 @@ export const PUZZLE_CATALOG_ENTRIES = [
     "difficulty": "hard",
     "estimatedRating": 2177,
     "fen": "r7/bp1n4/N1p3kr/q4ppp/3B1PPP/pPPQ2P1/P7/2KR3R w - - 0 1",
+    "playerColor": "w",
     "win": "checkmate",
     "maxMoves": 16,
     "freePlay": true,
@@ -702,7 +723,7 @@ export const PUZZLE_CATALOG_ENTRIES = [
           "from": "g4",
           "to": "f5"
         },
-        "wrong": "Týmto ťahom nepostupujete správne — skúste iný biely ťah."
+        "wrong": "Týmto ťahom nepostupujete správne — skúste iný ťah."
       },
       {
         "who": "bot",
@@ -722,7 +743,7 @@ export const PUZZLE_CATALOG_ENTRIES = [
                   "from": "d4",
                   "to": "c5"
                 },
-                "wrong": "Týmto ťahom nepostupujete správne — skúste iný biely ťah."
+                "wrong": "Týmto ťahom nepostupujete správne — skúste iný ťah."
               },
               {
                 "who": "bot",
@@ -762,6 +783,7 @@ export const PUZZLE_CATALOG_ENTRIES = [
     "difficulty": "easy",
     "estimatedRating": 1573,
     "fen": "n2q2k1/pr2b1B1/1p6/3pq3/P7/8/1P3RPP/5R1K w - - 0 1",
+    "playerColor": "w",
     "win": "black_queen_captured",
     "maxMoves": 8,
     "freePlay": true,
@@ -772,7 +794,7 @@ export const PUZZLE_CATALOG_ENTRIES = [
           "from": "g7",
           "to": "e5"
         },
-        "wrong": "Týmto ťahom nepostupujete správne — skúste iný biely ťah."
+        "wrong": "Týmto ťahom nepostupujete správne — skúste iný ťah."
       },
       {
         "who": "bot",
@@ -808,6 +830,7 @@ export const PUZZLE_CATALOG_ENTRIES = [
     "difficulty": "medium",
     "estimatedRating": 1849,
     "fen": "n2q2k1/pr2b1B1/1p6/3pq3/P7/8/1P3RPP/5R1K w - - 0 1",
+    "playerColor": "w",
     "win": "decisive",
     "maxMoves": 10,
     "freePlay": true,
@@ -818,7 +841,7 @@ export const PUZZLE_CATALOG_ENTRIES = [
           "from": "g7",
           "to": "e5"
         },
-        "wrong": "Týmto ťahom nepostupujete správne — skúste iný biely ťah."
+        "wrong": "Týmto ťahom nepostupujete správne — skúste iný ťah."
       },
       {
         "who": "bot",
@@ -869,6 +892,7 @@ export const PUZZLE_CATALOG_ENTRIES = [
     "difficulty": "hard",
     "estimatedRating": 2232,
     "fen": "r7/bp1n4/N1p3kr/q4ppp/3B1PPP/pPPQ2P1/P7/2KR3R w - - 0 1",
+    "playerColor": "w",
     "win": "checkmate",
     "maxMoves": 16,
     "freePlay": true,
@@ -879,7 +903,7 @@ export const PUZZLE_CATALOG_ENTRIES = [
           "from": "g4",
           "to": "f5"
         },
-        "wrong": "Týmto ťahom nepostupujete správne — skúste iný biely ťah."
+        "wrong": "Týmto ťahom nepostupujete správne — skúste iný ťah."
       },
       {
         "who": "bot",
@@ -899,7 +923,7 @@ export const PUZZLE_CATALOG_ENTRIES = [
                   "from": "d4",
                   "to": "c5"
                 },
-                "wrong": "Týmto ťahom nepostupujete správne — skúste iný biely ťah."
+                "wrong": "Týmto ťahom nepostupujete správne — skúste iný ťah."
               },
               {
                 "who": "bot",
@@ -939,6 +963,7 @@ export const PUZZLE_CATALOG_ENTRIES = [
     "difficulty": "easy",
     "estimatedRating": 1605,
     "fen": "2r1k3/1p4pp/p3pP2/2n3N1/4P3/5PP1/PP4KP/2R5 w - - 0 1",
+    "playerColor": "w",
     "win": "decisive",
     "maxMoves": 8,
     "freePlay": true,
@@ -949,7 +974,7 @@ export const PUZZLE_CATALOG_ENTRIES = [
           "from": "c1",
           "to": "c5"
         },
-        "wrong": "Týmto ťahom nepostupujete správne — skúste iný biely ťah."
+        "wrong": "Týmto ťahom nepostupujete správne — skúste iný ťah."
       },
       {
         "who": "bot",
@@ -985,6 +1010,7 @@ export const PUZZLE_CATALOG_ENTRIES = [
     "difficulty": "medium",
     "estimatedRating": 1892,
     "fen": "8/3P4/2P1k1p1/b3Bp2/6Pp/5K1P/p7/8 w - - 0 1",
+    "playerColor": "w",
     "win": "decisive",
     "maxMoves": 10,
     "freePlay": true,
@@ -995,7 +1021,7 @@ export const PUZZLE_CATALOG_ENTRIES = [
           "from": "c6",
           "to": "c7"
         },
-        "wrong": "Týmto ťahom nepostupujete správne — skúste iný biely ťah."
+        "wrong": "Týmto ťahom nepostupujete správne — skúste iný ťah."
       },
       {
         "who": "bot",
@@ -1047,6 +1073,7 @@ export const PUZZLE_CATALOG_ENTRIES = [
     "difficulty": "hard",
     "estimatedRating": 2286,
     "fen": "8/8/3r3k/p5rp/3N1N1R/PP6/1KP5/8 w - - 0 1",
+    "playerColor": "w",
     "win": "decisive",
     "maxMoves": 14,
     "freePlay": true,
@@ -1057,7 +1084,7 @@ export const PUZZLE_CATALOG_ENTRIES = [
           "from": "d4",
           "to": "f5"
         },
-        "wrong": "Týmto ťahom nepostupujete správne — skúste iný biely ťah."
+        "wrong": "Týmto ťahom nepostupujete správne — skúste iný ťah."
       },
       {
         "who": "bot",
@@ -1093,6 +1120,7 @@ export const PUZZLE_CATALOG_ENTRIES = [
     "difficulty": "easy",
     "estimatedRating": 1636,
     "fen": "5r2/ppR2Nkp/2n1pq2/1B5p/8/1B6/P2Q1PPP/3R2K1 w - - 0 1",
+    "playerColor": "w",
     "win": "checkmate",
     "maxMoves": 10,
     "freePlay": true,
@@ -1103,7 +1131,7 @@ export const PUZZLE_CATALOG_ENTRIES = [
           "from": "c7",
           "to": "c6"
         },
-        "wrong": "Týmto ťahom nepostupujete správne — skúste iný biely ťah."
+        "wrong": "Týmto ťahom nepostupujete správne — skúste iný ťah."
       },
       {
         "who": "bot",
@@ -1123,7 +1151,7 @@ export const PUZZLE_CATALOG_ENTRIES = [
                   "from": "b3",
                   "to": "e6"
                 },
-                "wrong": "Týmto ťahom nepostupujete správne — skúste iný biely ťah."
+                "wrong": "Týmto ťahom nepostupujete správne — skúste iný ťah."
               },
               {
                 "who": "bot",
@@ -1163,6 +1191,7 @@ export const PUZZLE_CATALOG_ENTRIES = [
     "difficulty": "medium",
     "estimatedRating": 1935,
     "fen": "6k1/5pp1/5b2/7Q/7N/1P1q4/P1P5/1K5R w - - 0 1",
+    "playerColor": "w",
     "win": "checkmate",
     "maxMoves": 12,
     "freePlay": true,
@@ -1173,7 +1202,7 @@ export const PUZZLE_CATALOG_ENTRIES = [
           "from": "h5",
           "to": "g6"
         },
-        "wrong": "Týmto ťahom nepostupujete správne — skúste iný biely ťah."
+        "wrong": "Týmto ťahom nepostupujete správne — skúste iný ťah."
       },
       {
         "who": "bot",
@@ -1193,7 +1222,7 @@ export const PUZZLE_CATALOG_ENTRIES = [
                   "from": "g6",
                   "to": "f7"
                 },
-                "wrong": "Týmto ťahom nepostupujete správne — skúste iný biely ťah."
+                "wrong": "Týmto ťahom nepostupujete správne — skúste iný ťah."
               },
               {
                 "who": "bot",
@@ -1233,6 +1262,7 @@ export const PUZZLE_CATALOG_ENTRIES = [
     "difficulty": "hard",
     "estimatedRating": 2341,
     "fen": "6k1/5pp1/5b2/7Q/7N/1P1q4/P1P5/1K5R w - - 0 1",
+    "playerColor": "w",
     "win": "checkmate",
     "maxMoves": 16,
     "freePlay": true,
@@ -1243,7 +1273,7 @@ export const PUZZLE_CATALOG_ENTRIES = [
           "from": "h5",
           "to": "g6"
         },
-        "wrong": "Týmto ťahom nepostupujete správne — skúste iný biely ťah."
+        "wrong": "Týmto ťahom nepostupujete správne — skúste iný ťah."
       },
       {
         "who": "bot",
@@ -1263,7 +1293,7 @@ export const PUZZLE_CATALOG_ENTRIES = [
                   "from": "g6",
                   "to": "f7"
                 },
-                "wrong": "Týmto ťahom nepostupujete správne — skúste iný biely ťah."
+                "wrong": "Týmto ťahom nepostupujete správne — skúste iný ťah."
               },
               {
                 "who": "bot",
@@ -1303,6 +1333,7 @@ export const PUZZLE_CATALOG_ENTRIES = [
     "difficulty": "easy",
     "estimatedRating": 1668,
     "fen": "6k1/5pp1/5b2/7Q/7N/1P1q4/P1P5/1K5R w - - 0 1",
+    "playerColor": "w",
     "win": "checkmate",
     "maxMoves": 10,
     "freePlay": true,
@@ -1313,7 +1344,7 @@ export const PUZZLE_CATALOG_ENTRIES = [
           "from": "h5",
           "to": "g6"
         },
-        "wrong": "Týmto ťahom nepostupujete správne — skúste iný biely ťah."
+        "wrong": "Týmto ťahom nepostupujete správne — skúste iný ťah."
       },
       {
         "who": "bot",
@@ -1333,7 +1364,7 @@ export const PUZZLE_CATALOG_ENTRIES = [
                   "from": "g6",
                   "to": "f7"
                 },
-                "wrong": "Týmto ťahom nepostupujete správne — skúste iný biely ťah."
+                "wrong": "Týmto ťahom nepostupujete správne — skúste iný ťah."
               },
               {
                 "who": "bot",
@@ -1373,6 +1404,7 @@ export const PUZZLE_CATALOG_ENTRIES = [
     "difficulty": "medium",
     "estimatedRating": 1977,
     "fen": "6k1/5pp1/5b2/7Q/7N/1P1q4/P1P5/1K5R w - - 0 1",
+    "playerColor": "w",
     "win": "checkmate",
     "maxMoves": 12,
     "freePlay": true,
@@ -1383,7 +1415,7 @@ export const PUZZLE_CATALOG_ENTRIES = [
           "from": "h5",
           "to": "g6"
         },
-        "wrong": "Týmto ťahom nepostupujete správne — skúste iný biely ťah."
+        "wrong": "Týmto ťahom nepostupujete správne — skúste iný ťah."
       },
       {
         "who": "bot",
@@ -1403,7 +1435,7 @@ export const PUZZLE_CATALOG_ENTRIES = [
                   "from": "g6",
                   "to": "f7"
                 },
-                "wrong": "Týmto ťahom nepostupujete správne — skúste iný biely ťah."
+                "wrong": "Týmto ťahom nepostupujete správne — skúste iný ťah."
               },
               {
                 "who": "bot",
@@ -1443,6 +1475,7 @@ export const PUZZLE_CATALOG_ENTRIES = [
     "difficulty": "hard",
     "estimatedRating": 2395,
     "fen": "6k1/5pp1/5b2/7Q/7N/1P1q4/P1P5/1K5R w - - 0 1",
+    "playerColor": "w",
     "win": "checkmate",
     "maxMoves": 16,
     "freePlay": true,
@@ -1453,7 +1486,7 @@ export const PUZZLE_CATALOG_ENTRIES = [
           "from": "h5",
           "to": "g6"
         },
-        "wrong": "Týmto ťahom nepostupujete správne — skúste iný biely ťah."
+        "wrong": "Týmto ťahom nepostupujete správne — skúste iný ťah."
       },
       {
         "who": "bot",
@@ -1473,7 +1506,7 @@ export const PUZZLE_CATALOG_ENTRIES = [
                   "from": "g6",
                   "to": "f7"
                 },
-                "wrong": "Týmto ťahom nepostupujete správne — skúste iný biely ťah."
+                "wrong": "Týmto ťahom nepostupujete správne — skúste iný ťah."
               },
               {
                 "who": "bot",
@@ -1513,6 +1546,7 @@ export const PUZZLE_CATALOG_ENTRIES = [
     "difficulty": "easy",
     "estimatedRating": 1700,
     "fen": "5r2/ppR2Nkp/2n1pq2/1B5p/8/1B6/P2Q1PPP/3R2K1 w - - 0 1",
+    "playerColor": "w",
     "win": "checkmate",
     "maxMoves": 10,
     "freePlay": true,
@@ -1523,7 +1557,7 @@ export const PUZZLE_CATALOG_ENTRIES = [
           "from": "c7",
           "to": "c6"
         },
-        "wrong": "Týmto ťahom nepostupujete správne — skúste iný biely ťah."
+        "wrong": "Týmto ťahom nepostupujete správne — skúste iný ťah."
       },
       {
         "who": "bot",
@@ -1543,7 +1577,7 @@ export const PUZZLE_CATALOG_ENTRIES = [
                   "from": "b3",
                   "to": "e6"
                 },
-                "wrong": "Týmto ťahom nepostupujete správne — skúste iný biely ťah."
+                "wrong": "Týmto ťahom nepostupujete správne — skúste iný ťah."
               },
               {
                 "who": "bot",
@@ -1583,6 +1617,7 @@ export const PUZZLE_CATALOG_ENTRIES = [
     "difficulty": "medium",
     "estimatedRating": 2020,
     "fen": "5r2/ppR2Nkp/2n1pq2/1B5p/8/1B6/P2Q1PPP/3R2K1 w - - 0 1",
+    "playerColor": "w",
     "win": "checkmate",
     "maxMoves": 12,
     "freePlay": true,
@@ -1593,7 +1628,7 @@ export const PUZZLE_CATALOG_ENTRIES = [
           "from": "c7",
           "to": "c6"
         },
-        "wrong": "Týmto ťahom nepostupujete správne — skúste iný biely ťah."
+        "wrong": "Týmto ťahom nepostupujete správne — skúste iný ťah."
       },
       {
         "who": "bot",
@@ -1613,7 +1648,7 @@ export const PUZZLE_CATALOG_ENTRIES = [
                   "from": "b3",
                   "to": "e6"
                 },
-                "wrong": "Týmto ťahom nepostupujete správne — skúste iný biely ťah."
+                "wrong": "Týmto ťahom nepostupujete správne — skúste iný ťah."
               },
               {
                 "who": "bot",
@@ -1653,6 +1688,7 @@ export const PUZZLE_CATALOG_ENTRIES = [
     "difficulty": "hard",
     "estimatedRating": 2450,
     "fen": "6k1/5pp1/5b2/7Q/7N/1P1q4/P1P5/1K5R w - - 0 1",
+    "playerColor": "w",
     "win": "checkmate",
     "maxMoves": 16,
     "freePlay": true,
@@ -1663,7 +1699,7 @@ export const PUZZLE_CATALOG_ENTRIES = [
           "from": "h5",
           "to": "g6"
         },
-        "wrong": "Týmto ťahom nepostupujete správne — skúste iný biely ťah."
+        "wrong": "Týmto ťahom nepostupujete správne — skúste iný ťah."
       },
       {
         "who": "bot",
@@ -1683,7 +1719,7 @@ export const PUZZLE_CATALOG_ENTRIES = [
                   "from": "g6",
                   "to": "f7"
                 },
-                "wrong": "Týmto ťahom nepostupujete správne — skúste iný biely ťah."
+                "wrong": "Týmto ťahom nepostupujete správne — skúste iný ťah."
               },
               {
                 "who": "bot",

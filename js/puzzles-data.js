@@ -1,6 +1,6 @@
 /**
  * 12 týždňov × 3 úlohy (ľahšia / stredná / najťažšia).
- * Hráč je vždy biely proti počítaču (čierny).
+ * Hráč je biely alebo čierny podľa úlohy (playerColor / FEN).
  */
 import { PUZZLE_CATALOG_ENTRIES } from "./puzzle-catalog.js";
 
@@ -44,6 +44,7 @@ function buildFestivalPuzzle(entry) {
     title: "Týždeň " + entry.weekIndex + " · " + diffLabel + " — " + theme.title,
     ariaLabel: "Týždeň " + entry.weekIndex + ", " + diffLabel + ", " + theme.title,
     fen: entry.fen,
+    playerColor: entry.playerColor || "w",
     win: entry.win,
     play: entry.play,
     subtitle: entry.subtitle,

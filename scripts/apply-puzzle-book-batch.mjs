@@ -56,6 +56,7 @@ function fmtSpec(s) {
   lines.push(`    week: ${s.week},`);
   lines.push(`    difficulty: "${s.difficulty}",`);
   lines.push(`    fen: "${s.fen}",`);
+  if (s.playerColor === "b") lines.push(`    playerColor: "b",`);
   if (s.win) lines.push(`    win: "${s.win}",`);
   lines.push(`    line: [${s.line.map((l) => fmtPair(l)).join(",")}],`);
   if (s.openingAccept)

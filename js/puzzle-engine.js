@@ -66,29 +66,68 @@ function materialScore(chess) {
   return s;
 }
 
+export function opponentColor(playerColor) {
+  return playerColor === "b" ? "w" : "b";
+}
+
+export function playerColorFromPuzzle(puzzle) {
+  if (puzzle && (puzzle.playerColor === "w" || puzzle.playerColor === "b")) {
+    return puzzle.playerColor;
+  }
+  var parts = String((puzzle && puzzle.fen) || "").split(" ");
+  return parts[1] === "b" ? "b" : "w";
+}
+
+export function groundColor(chessColor) {
+  return chessColor === "b" ? "black" : "white";
+}
+
+function whiteQueenOnBoard(chess) {
+  var board = chess.board();
+  for (var r = 0; r < board.length; r++) {
+    for (var c = 0; c < board[r].length; c++) {
+      var piece = board[r][c];
+      if (piece && piece.type === "q" && piece.color === "w") return true;
+    }
+  }
+  return false;
+}
+
 function isDecisiveForWhite(chess) {
   if (chess.isCheckmate() && chess.turn() === "b") return true;
   if (!blackQueenOnBoard(chess)) return true;
   return materialScore(chess) >= 5;
 }
 
-export function isPuzzleWinPosition(chess, winType) {
+function isDecisiveForBlack(chess) {
+  if (chess.isCheckmate() && chess.turn() === "w") return true;
+  if (!whiteQueenOnBoard(chess)) return true;
+  return materialScore(chess) <= -5;
+}
+
+export function isDecisiveForPlayer(chess, playerColor) {
+  return playerColor === "b" ? isDecisiveForBlack(chess) : isDecisiveForWhite(chess);
+}
+
+export function isPuzzleWinPosition(chess, winType, playerColor) {
+  var pc = playerColor || "w";
   if (winType === "black_queen_captured") return !blackQueenOnBoard(chess);
-  if (winType === "decisive") return isDecisiveForWhite(chess);
-  return chess.isCheckmate() && chess.turn() === "b";
+  if (winType === "decisive") return isDecisiveForPlayer(chess, pc);
+  return chess.isCheckmate() && chess.turn() === opponentColor(pc);
 }
 
 /** Výsledok partie mimo skriptu (voľná hra / flex): výhra, remíza alebo prehra. */
 export function detectTerminalOutcome(chess, puzzle) {
   if (!chess || !puzzle) return null;
-  if (isPuzzleWinPosition(chess, puzzle.win)) {
+  var pc = playerColorFromPuzzle(puzzle);
+  if (isPuzzleWinPosition(chess, puzzle.win, pc)) {
     return { type: "win" };
   }
   if (!chess.isGameOver()) return null;
 
   if (chess.isCheckmate()) {
-    if (chess.turn() === "w") {
-      return { type: "loss", reason: "white_mated" };
+    if (chess.turn() === pc) {
+      return { type: "loss", reason: "player_mated" };
     }
     return { type: "loss", reason: "unexpected_mate" };
   }
@@ -112,7 +151,7 @@ export function terminalOutcomeMessage(outcome) {
   if (!outcome) return "Koniec partie.";
   if (outcome.type === "win") return "Hlavolam je vyriešený.";
   if (outcome.type === "loss") {
-    if (outcome.reason === "white_mated") {
+    if (outcome.reason === "player_mated" || outcome.reason === "white_mated") {
       return "Prehra — váš kráľ je v mat. Cieľ úlohy ste nesplnili.";
     }
     return "Prehra — mat na doske, ale cieľ úlohy nie je splnený.";
@@ -132,8 +171,9 @@ export function terminalOutcomeMessage(outcome) {
   return "Remíza — partie skončila remízou. Cieľ úlohy nie je splnený.";
 }
 
-export function hasWhiteMateInOne(chess) {
-  if (chess.turn() !== "w" || chess.isGameOver()) return false;
+export function hasPlayerMateInOne(chess, playerColor) {
+  var pc = playerColor || "w";
+  if (chess.turn() !== pc || chess.isGameOver()) return false;
   var moves = chess.moves({ verbose: true });
   for (var i = 0; i < moves.length; i++) {
     var clone = new Chess(chess.fen());
@@ -147,10 +187,15 @@ export function hasWhiteMateInOne(chess) {
   return false;
 }
 
-/** Môže biely jedným ťahom splniť cieľ úlohy z aktuálnej pozície? */
-export function whiteCanReachGoal(chess, winType) {
-  if (chess.turn() !== "w" || chess.isGameOver()) return false;
-  if (isPuzzleWinPosition(chess, winType)) return true;
+export function hasWhiteMateInOne(chess) {
+  return hasPlayerMateInOne(chess, "w");
+}
+
+/** Môže hráč jedným ťahom splniť cieľ úlohy z aktuálnej pozície? */
+export function playerCanReachGoal(chess, winType, playerColor) {
+  var pc = playerColor || "w";
+  if (chess.turn() !== pc || chess.isGameOver()) return false;
+  if (isPuzzleWinPosition(chess, winType, pc)) return true;
   var moves = chess.moves({ verbose: true });
   for (var i = 0; i < moves.length; i++) {
     var clone = new Chess(chess.fen());
@@ -159,9 +204,14 @@ export function whiteCanReachGoal(chess, winType) {
       to: moves[i].to,
       promotion: moves[i].promotion,
     });
-    if (isPuzzleWinPosition(clone, winType)) return true;
+    if (isPuzzleWinPosition(clone, winType, pc)) return true;
   }
   return false;
+}
+
+/** @deprecated Použite playerCanReachGoal — zachované pre skripty. */
+export function whiteCanReachGoal(chess, winType) {
+  return playerCanReachGoal(chess, winType, "w");
 }
 
 function applyChoiceMove(chess, choice) {
@@ -171,7 +221,7 @@ function applyChoiceMove(chess, choice) {
   return !!chess.move(bm);
 }
 
-function applyScriptUserStep(chess, step, winType) {
+function applyScriptUserStep(chess, step, winType, playerColor) {
   if (!step || step.fail) return false;
   if (
     step.accept === "checkmate" ||
@@ -186,7 +236,7 @@ function applyScriptUserStep(chess, step, winType) {
         to: moves[i].to,
         promotion: moves[i].promotion,
       });
-      if (isPuzzleWinPosition(clone, winType)) {
+      if (isPuzzleWinPosition(clone, winType, playerColor)) {
         return !!chess.move({
           from: moves[i].from,
           to: moves[i].to,
@@ -205,12 +255,13 @@ function applyScriptUserStep(chess, step, winType) {
 }
 
 /** Preverí, či vetva `then` po obrane bota vedie k cieľu (viacťahové kombinácie). */
-export function walkScriptToWin(chess, steps, winType) {
-  if (!steps || !steps.length) return isPuzzleWinPosition(chess, winType);
+export function walkScriptToWin(chess, steps, winType, playerColor) {
+  var pc = playerColor || "w";
+  if (!steps || !steps.length) return isPuzzleWinPosition(chess, winType, pc);
   for (var i = 0; i < steps.length; i++) {
     var step = steps[i];
     if (step.who === "user") {
-      if (!applyScriptUserStep(chess, step, winType)) return false;
+      if (!applyScriptUserStep(chess, step, winType, pc)) return false;
       continue;
     }
     if (step.who === "bot") {
@@ -224,22 +275,23 @@ export function walkScriptToWin(chess, steps, winType) {
       }
       if (!pick) pick = choices[0];
       if (!pick || !applyChoiceMove(chess, pick)) return false;
-      return walkScriptToWin(chess, pick.then || [], winType);
+      return walkScriptToWin(chess, pick.then || [], winType, pc);
     }
     return false;
   }
-  return isPuzzleWinPosition(chess, winType);
+  return isPuzzleWinPosition(chess, winType, pc);
 }
 
-/** Po tomto čiernom ťahu môže biely dosiahnuť cieľ (hned alebo podľa skriptu v `then`). */
+/** Po ťahu súpera môže hráč dosiahnuť cieľ (hned alebo podľa skriptu v `then`). */
 export function isSoundBotChoice(chess, choice, puzzle) {
   if (!choice || choice.fail) return false;
+  var pc = playerColorFromPuzzle(puzzle);
   var probe = new Chess(chess.fen());
   if (!applyChoiceMove(probe, choice)) return false;
   if (choice.then && choice.then.length) {
-    return walkScriptToWin(probe, choice.then, puzzle.win);
+    return walkScriptToWin(probe, choice.then, puzzle.win, pc);
   }
-  return whiteCanReachGoal(probe, puzzle.win);
+  return playerCanReachGoal(probe, puzzle.win, pc);
 }
 
 /** Legálne obrany z dát, po ktorých biely stále vyhráva (nie Kf8 / h6 pri Qe1). */
@@ -307,9 +359,10 @@ export function buildSolutionBotMap(puzzle) {
   return map;
 }
 
-/** Na pozícii z hlavnej línie zahrá obranu zo skriptu (nie náhodný super-bot). */
-export function pickCatalogBlackMove(chess, puzzle, botMap) {
-  if (!chess || chess.turn() !== "b") return null;
+/** Na pozícii z hlavnej línie zahrá ťah súpera zo skriptu (nie náhodný super-bot). */
+export function pickCatalogOpponentMove(chess, puzzle, botMap) {
+  var pc = playerColorFromPuzzle(puzzle);
+  if (!chess || chess.turn() !== opponentColor(pc)) return null;
   botMap = botMap || buildSolutionBotMap(puzzle);
   var step = botMap[positionKey(chess.fen())];
   if (!step) return null;
@@ -335,6 +388,11 @@ export function pickCatalogBlackMove(chess, puzzle, botMap) {
   };
 }
 
+/** @deprecated alias */
+export function pickCatalogBlackMove(chess, puzzle, botMap) {
+  return pickCatalogOpponentMove(chess, puzzle, botMap);
+}
+
 function probeBlackMove(chess, move) {
   var probe = new Chess(chess.fen());
   var applied = probe.move({
@@ -348,8 +406,9 @@ function probeBlackMove(chess, move) {
 
 var CAPTURE_SCORE = { q: 90, r: 55, n: 35, b: 35, p: 12, k: 0 };
 
-/** Bodovanie čierneho ťahu: super-bot — šach a útok majú absolútnu prioritu. */
-export function scoreBlackMoveAggression(chess, move, winType) {
+/** Bodovanie ťahu súpera: šach a útok majú prioritu, ak hráč stále vyhráva. */
+export function scoreOpponentMoveAggression(chess, move, winType, playerColor) {
+  var pc = playerColor || "w";
   var probe = probeBlackMove(chess, move);
   if (!probe) return -1000;
 
@@ -369,11 +428,15 @@ export function scoreBlackMoveAggression(chess, move, winType) {
     score -= 35;
   }
 
-  if (whiteCanReachGoal(probe, winType)) score += 60;
-  else if (hasWhiteMateInOne(probe)) score += 25;
+  if (playerCanReachGoal(probe, winType, pc)) score += 60;
+  else if (hasPlayerMateInOne(probe, pc)) score += 25;
   else score -= 800;
 
   return score;
+}
+
+export function scoreBlackMoveAggression(chess, move, winType) {
+  return scoreOpponentMoveAggression(chess, move, winType, "w");
 }
 
 function moveGivesCheck(chess, move) {
@@ -381,9 +444,11 @@ function moveGivesCheck(chess, move) {
   return probe ? probe.isCheck() : false;
 }
 
-/** Najsilnejší legálny čierny ťah — vždy šach, ak existuje a biely môže stále vyhrať. */
-export function pickEngagedBlackMove(chess, puzzle) {
+/** Najsilnejší legálny ťah súpera — šach má prednosť, ak hráč stále dosiahne cieľ. */
+export function pickEngagedOpponentMove(chess, puzzle) {
   var win = puzzle.win;
+  var pc = playerColorFromPuzzle(puzzle);
+  if (chess.turn() !== opponentColor(pc)) return null;
   var moves = chess.moves({ verbose: true });
   if (!moves.length) return null;
 
@@ -391,7 +456,7 @@ export function pickEngagedBlackMove(chess, puzzle) {
     .map(function (m) {
       return {
         move: m,
-        score: scoreBlackMoveAggression(chess, m, win),
+        score: scoreOpponentMoveAggression(chess, m, win, pc),
         isCheck: moveGivesCheck(chess, m),
       };
     })
@@ -426,20 +491,22 @@ export function pickEngagedBlackMove(chess, puzzle) {
   };
 }
 
-function engagedBotHint(result) {
-  if (!result) return "Počítač odohral ťah — pokračujte bielym.";
+function engagedBotHint(result, playerColor) {
+  var side = playerColor === "b" ? "čiernym" : "bielym";
+  if (!result) return "Počítač odohral ťah — pokračujte " + side + ".";
   if (result.isCheck && result.captured) {
-    return "♟ Šach! Počítač berie figúru — bráňte kráľa bielym.";
+    return "♟ Šach! Počítač berie figúru — bráňte kráľa (" + side + ").";
   }
-  if (result.isCheck) return "♟ Šach! Počítač tlačí na vášho kráľa — pokračujte bielym.";
-  if (result.captured) return "Počítač zobral figúru — pokračujte bielym.";
-  if (result.aggressive) return "Počítač útočí — pokračujte bielym.";
-  return "Počítač odohral ťah — pokračujte bielym.";
+  if (result.isCheck) return "♟ Šach! Počítač tlačí na kráľa — pokračujte " + side + ".";
+  if (result.captured) return "Počítač zobral figúru — pokračujte " + side + ".";
+  if (result.aggressive) return "Počítač útočí — pokračujte " + side + ".";
+  return "Počítač odohral ťah — pokračujte " + side + ".";
 }
 
-/** Záloha / flex: aktívna čierna odpoveď, po ktorej biely stále dosiahne cieľ. */
+/** Záloha / flex: aktívna odpoveď súpera, po ktorej hráč stále dosiahne cieľ. */
 export function pickFlexSoundBotMove(chess, puzzle) {
-  var engaged = pickEngagedBlackMove(chess, puzzle);
+  var pc = playerColorFromPuzzle(puzzle);
+  var engaged = pickEngagedOpponentMove(chess, puzzle);
   if (!engaged) return null;
 
   var thenStep = {
@@ -451,8 +518,12 @@ export function pickFlexSoundBotMove(chess, puzzle) {
   return {
     move: engaged.move,
     then: [thenStep],
-    hint: engagedBotHint(engaged),
+    hint: engagedBotHint(engaged, pc),
   };
+}
+
+export function pickEngagedBlackMove(chess, puzzle) {
+  return pickEngagedOpponentMove(chess, puzzle);
 }
 
 /** Z viacerých zvukových vetiev v dátach vyberie najagresívnejšiu (šach má prednosť). */
@@ -484,7 +555,12 @@ export function pickMostEngagedBotChoice(chess, choices, puzzle) {
       captured: ch.move.captured,
       san: ch.move.san || "",
     };
-    var score = scoreBlackMoveAggression(chess, fakeMove, puzzle.win);
+    var score = scoreOpponentMoveAggression(
+      chess,
+      fakeMove,
+      puzzle.win,
+      playerColorFromPuzzle(puzzle)
+    );
     if (ch.main) score += 5;
     if (score > bestScore) {
       bestScore = score;
@@ -498,19 +574,22 @@ export function pickMostEngagedBotChoice(chess, choices, puzzle) {
  * Úvod k matu v 2: aspoň jedna čierna odpoveď ponechá bielemu mat na najbližší ťah
  * (nie je to plný „vynútený mat v 2“, ale vylúči beznádejné úvody).
  */
-export function isMateInTwoOpening(fen, moveShape) {
+export function isMateInTwoOpening(fen, moveShape, playerColor) {
+  var pc = playerColor || "w";
+  var opp = opponentColor(pc);
   var start = new Chess(fen);
+  if (start.turn() !== pc) return false;
   var applied = start.move({
     from: moveShape.from,
     to: moveShape.to,
     promotion: moveShape.promotion,
   });
   if (!applied) return false;
-  var blackMoves = start.moves();
-  for (var i = 0; i < blackMoves.length; i++) {
-    var afterBlack = new Chess(start.fen());
-    afterBlack.move(blackMoves[i]);
-    if (hasWhiteMateInOne(afterBlack)) return true;
+  var oppMoves = start.moves();
+  for (var i = 0; i < oppMoves.length; i++) {
+    var afterOpp = new Chess(start.fen());
+    afterOpp.move(oppMoves[i]);
+    if (hasPlayerMateInOne(afterOpp, pc)) return true;
   }
   return false;
 }
@@ -536,6 +615,8 @@ function matchesListedMove(step, attempted) {
  */
 export function evaluateUserStep(fen, step, attempted, puzzle) {
   if (!step || step.who !== "user" || step.fail) return { ok: false };
+  var pc = playerColorFromPuzzle(puzzle);
+  var opp = opponentColor(pc);
 
   var trial = new Chess(fen);
   var applied = trial.move({
@@ -549,33 +630,33 @@ export function evaluateUserStep(fen, step, attempted, puzzle) {
     return { ok: true, mode: "script" };
   }
 
-  if (isPuzzleWinPosition(trial, puzzle.win)) {
+  if (isPuzzleWinPosition(trial, puzzle.win, pc)) {
     return { ok: true, mode: "goal", goal: "win" };
   }
 
   var accept = step.accept;
-  if (accept === "checkmate" && trial.isCheckmate() && trial.turn() === "b") {
+  if (accept === "checkmate" && trial.isCheckmate() && trial.turn() === opp) {
     return { ok: true, mode: "goal", goal: "checkmate" };
   }
   if (accept === "check" && trial.isCheck()) {
     return { ok: true, mode: "goal", goal: "check" };
   }
-  if (accept === "mate_in_2_opening" && isMateInTwoOpening(fen, attempted)) {
+  if (accept === "mate_in_2_opening" && isMateInTwoOpening(fen, attempted, pc)) {
     return { ok: true, mode: "goal", goal: "mate_in_2_opening" };
   }
   if (accept === "black_queen_captured" && !blackQueenOnBoard(trial)) {
     return { ok: true, mode: "goal", goal: "black_queen_captured" };
   }
-  if (accept === "decisive" && isDecisiveForWhite(trial)) {
+  if (accept === "decisive" && isDecisiveForPlayer(trial, pc)) {
     return { ok: true, mode: "goal", goal: "decisive" };
   }
 
-  if (step.allowMaintainWin && whiteCanReachGoal(trial, puzzle.win)) {
+  if (step.allowMaintainWin && playerCanReachGoal(trial, puzzle.win, pc)) {
     return { ok: true, mode: "goal", goal: "maintain_win" };
   }
 
   if (!accept && !step.move && puzzle.win === "checkmate") {
-    if (trial.isCheckmate() && trial.turn() === "b") {
+    if (trial.isCheckmate() && trial.turn() === opp) {
       return { ok: true, mode: "goal", goal: "checkmate" };
     }
   }

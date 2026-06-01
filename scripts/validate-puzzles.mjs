@@ -140,16 +140,41 @@ function materialScore(chess) {
   return s;
 }
 
-function puzzleSolved(chess, winType) {
+function playerColorFromPuzzle(puzzle) {
+  if (puzzle.playerColor === "w" || puzzle.playerColor === "b") return puzzle.playerColor;
+  const turn = String(puzzle.fen || "").split(" ")[1];
+  return turn === "b" ? "b" : "w";
+}
+
+function opponentColor(pc) {
+  return pc === "b" ? "w" : "b";
+}
+
+function puzzleSolved(chess, winType, playerColor) {
+  const pc = playerColor || "w";
+  const opp = opponentColor(pc);
   if (winType === "black_queen_captured") {
     return !blackQueenOnBoard(chess);
   }
   if (winType === "decisive") {
-    if (chess.isCheckmate() && chess.turn() === "b") return true;
+    if (chess.isCheckmate() && chess.turn() === opp) return true;
+    if (pc === "b") {
+      if (!whiteQueenOnBoard(chess)) return true;
+      return materialScore(chess) <= -5;
+    }
     if (!blackQueenOnBoard(chess)) return true;
     return materialScore(chess) >= 5;
   }
-  return chess.isCheckmate() && chess.turn() === "b";
+  return chess.isCheckmate() && chess.turn() === opp;
+}
+
+function whiteQueenOnBoard(chess) {
+  for (const row of chess.board()) {
+    for (const p of row) {
+      if (p && p.type === "q" && p.color === "w") return true;
+    }
+  }
+  return false;
 }
 
 function solveMainLine(puzzle) {
@@ -182,7 +207,7 @@ function solveMainLine(puzzle) {
     return { ok: false, line, err: "neznámy krok" };
   }
 
-  if (!puzzleSolved(chess, puzzle.win)) {
+  if (!puzzleSolved(chess, puzzle.win, playerColorFromPuzzle(puzzle))) {
     return { ok: false, line, err: "cieľ nie je splnený (win=" + puzzle.win + ")" };
   }
   return { ok: true, line };
