@@ -154,28 +154,90 @@ export function renderPuzzleGrid() {
 
   var initialWeek = PUZZLE_WEEKS[getDefaultWeekIndex()];
   if (initialWeek) setPuzzleWeekVisible(initialWeek.weekIndex, { scroll: false });
+  renderMobileWeekNav(initialWeek ? initialWeek.weekIndex : 1);
+}
+
+function isMobilePuzzleLayout() {
+  if (typeof window === "undefined" || !window.matchMedia) return false;
+  return window.matchMedia("(max-width: 900px)").matches;
+}
+
+function syncTimelineSliderToWeek(weekIndex) {
+  var slider = document.getElementById("sach-puzzle-timeline-range");
+  if (!slider) return;
+  for (var wi = 0; wi < PUZZLE_WEEKS.length; wi++) {
+    if (PUZZLE_WEEKS[wi].weekIndex === weekIndex) {
+      slider.value = String(wi);
+      break;
+    }
+  }
+}
+
+export function renderMobileWeekNav(activeWeekIndex) {
+  var nav = document.getElementById("sach-mobile-week-nav");
+  if (!nav) return;
+  nav.hidden = false;
+  nav.innerHTML = "";
+  for (var w = 0; w < PUZZLE_WEEKS.length; w++) {
+    var week = PUZZLE_WEEKS[w];
+    var btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "sach-mobile-week-btn";
+    if (week.weekIndex === activeWeekIndex) btn.classList.add("is-active");
+    btn.textContent = "T" + week.weekIndex;
+    btn.setAttribute("aria-label", "Týždeň " + week.weekIndex + " — " + week.theme.title);
+    btn.dataset.weekIndex = String(week.weekIndex);
+    btn.addEventListener("click", function () {
+      var wNum = parseInt(this.dataset.weekIndex, 10);
+      setPuzzleWeekVisible(wNum, { scroll: false });
+      syncTimelineSliderToWeek(wNum);
+    });
+    nav.appendChild(btn);
+  }
 }
 
 export function setPuzzleWeekVisible(weekIndex, options) {
   var grid = document.getElementById("sach-puzzle-grid");
   if (!grid) return;
-  var scroll = !options || options.scroll !== false;
+
+  weekIndex = parseInt(weekIndex, 10);
+  if (isNaN(weekIndex) || weekIndex < 1) weekIndex = 1;
+
+  var scroll =
+    options && options.scroll === true
+      ? true
+      : options && options.scroll === false
+        ? false
+        : !isMobilePuzzleLayout();
+
   var sections = grid.querySelectorAll(".sach-puzzle-week");
   var anyActive = false;
+
   for (var s = 0; s < sections.length; s++) {
     var wIdx = parseInt(sections[s].dataset.weekIndex, 10);
     var active = wIdx === weekIndex;
     sections[s].classList.toggle("is-week-active", active);
-    sections[s].hidden = !active;
+    sections[s].removeAttribute("hidden");
     if (active) anyActive = true;
   }
+
   if (!anyActive && sections.length) {
-    sections[0].classList.add("is-week-active");
     weekIndex = parseInt(sections[0].dataset.weekIndex, 10) || 1;
+    sections[0].classList.add("is-week-active");
+    for (var f = 1; f < sections.length; f++) {
+      sections[f].classList.remove("is-week-active");
+    }
   }
+
   var target = document.getElementById("sach-week-" + weekIndex);
-  if (target && scroll) target.scrollIntoView({ behavior: "smooth", block: "start" });
+  if (target && scroll) {
+    target.scrollIntoView({ behavior: "smooth", block: "nearest" });
+  }
+
   grid.dataset.activeWeek = String(weekIndex);
+  renderMobileWeekNav(weekIndex);
+  syncTimelineSliderToWeek(weekIndex);
+
   window.dispatchEvent(
     new CustomEvent("ptra-puzzle-week-visible", { detail: { weekIndex: weekIndex } })
   );

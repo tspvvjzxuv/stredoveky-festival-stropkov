@@ -164,8 +164,17 @@
             <p id="sach-puzzle-timeline-dev" class="sach-timeline__dev note" hidden></p>
           </div>
         </div>
-        <div class="card">
+        <div class="card sach-ulohy-card">
           <h2>Úlohy</h2>
+          <p class="note sach-ulohy-hint sach-ulohy-hint--desktop">
+            Zobrazuje sa jeden týždeň naraz — vyberte ho na časovej osi vyššie.
+          </p>
+          <div
+            class="sach-mobile-week-nav"
+            id="sach-mobile-week-nav"
+            aria-label="Výber týždňa"
+            hidden
+          ></div>
           <div
             class="sach-visual-grid"
             id="sach-puzzle-grid"
@@ -174,9 +183,8 @@
           >
             <p class="note" id="sach-loading">Načítavam úlohy…</p>
           </div>
-          <p class="note">
-            Zobrazuje sa jeden týždeň naraz — vyberte ho na časovej osi vyššie. Predchádzajúce
-            týždne zostávajú hrateľné po prepnutí.
+          <p class="note sach-ulohy-hint sach-ulohy-hint--mobile">
+            Klepnite na týždeň (T1–T12) a pod ním vyriešte tri úlohy. Posuvník harmonogramu je vyššie.
           </p>
         </div>
         <div class="card sach-score-card" id="sach-score-card" aria-labelledby="sach-score-heading">
@@ -216,6 +224,6 @@
       </p>
       <p>© <span id="footer-year">2026</span></p>
     </footer>
-    <script src="js/sach.bundle.js?v=20260601i" defer></script>
+    <script src="js/sach.bundle.js?v=20260601j" defer></script>
   </body>
 </html>

@@ -37,10 +37,32 @@ export function getChessBoardMaxWidth(boardEl) {
   return Math.max(200, Math.min(best - 8, cap, 720));
 }
 
+function isMobileBoardLayout() {
+  if (typeof window === "undefined" || !window.matchMedia) return false;
+  return window.matchMedia("(max-width: 900px)").matches;
+}
+
 export function syncChessBoardSize(boardEl) {
   if (!boardEl) return 0;
   var host = boardEl.closest(".chessground-host");
   var w = getChessBoardMaxWidth(boardEl);
+
+  if (isMobileBoardLayout()) {
+    var size = "min(100%, " + w + "px)";
+    if (host) {
+      host.style.setProperty("--cg-board-size", size);
+      host.style.width = "100%";
+      host.style.maxWidth = "100%";
+      host.style.minHeight = "0";
+    }
+    boardEl.style.width = "100%";
+    boardEl.style.maxWidth = size;
+    boardEl.style.height = "auto";
+    boardEl.style.aspectRatio = "1 / 1";
+    boardEl.style.boxSizing = "border-box";
+    return w;
+  }
+
   var px = w + "px";
   if (host) {
     host.style.setProperty("--cg-board-size", px);
