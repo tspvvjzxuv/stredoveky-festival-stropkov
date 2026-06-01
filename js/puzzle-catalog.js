@@ -268,19 +268,20 @@ export const PUZZLE_CATALOG_ENTRIES = [
     "weekIndex": 2,
     "difficulty": "hard",
     "estimatedRating": 1905,
-    "fen": "5rk1/5ppp/8/8/8/8/5N2/6K1 w - - 0 1",
+    "fen": "6k1/5ppp/8/8/8/8/1Q6/6K1 w - - 0 1",
     "playerColor": "w",
     "win": "checkmate",
-    "maxMoves": 16,
+    "maxMoves": 14,
     "freePlay": false,
     "play": [
       {
         "who": "user",
         "suggest": {
-          "from": "f2",
-          "to": "d3"
+          "from": "b2",
+          "to": "b3"
         },
-        "wrong": "Týmto ťahom nepostupujete správne — skúste iný ťah."
+        "wrong": "Tento ťah nevedie k matu v dvoch — skúste iný úvod.",
+        "accept": "mate_in_2_opening"
       },
       {
         "who": "bot",
@@ -297,43 +298,19 @@ export const PUZZLE_CATALOG_ENTRIES = [
               {
                 "who": "user",
                 "suggest": {
-                  "from": "d3",
-                  "to": "e5"
+                  "from": "b3",
+                  "to": "b8"
                 },
-                "wrong": "Týmto ťahom nepostupujete správne — skúste iný ťah."
-              },
-              {
-                "who": "bot",
-                "pick": "main",
-                "choices": [
-                  {
-                    "move": {
-                      "from": "f8",
-                      "to": "g8"
-                    },
-                    "main": true,
-                    "hint": "Počítač odohral hlavnú obranu — pokračujte podľa plánu.",
-                    "then": [
-                      {
-                        "who": "user",
-                        "suggest": {
-                          "from": "e5",
-                          "to": "f7"
-                        },
-                        "wrong": "Týmto ťahom nedáte mat — skúste iný finiš.",
-                        "accept": "checkmate"
-                      }
-                    ]
-                  }
-                ]
+                "wrong": "Týmto ťahom nedáte mat — skúste iný finiš.",
+                "accept": "checkmate"
               }
             ]
           }
         ]
       }
     ],
-    "subtitle": "Mat v troch: jazdec cez d3–e5 na f7.",
-    "solution": "Nd3+ Kh8 Ne5 Rg8 Nxf7#"
+    "subtitle": "Mat v dvoch: Qb3+ a doraz Qb8# (kráľ na h8).",
+    "solution": "Qb3+ Kh8 Qb8#"
   },
   {
     "weekIndex": 3,

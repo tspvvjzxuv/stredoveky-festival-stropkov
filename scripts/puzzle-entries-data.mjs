@@ -51,10 +51,11 @@ export const PUZZLE_SPECS = [
   {
     week: 2,
     difficulty: "hard",
-    fen: "5rk1/5ppp/8/8/8/8/5N2/6K1 w - - 0 1",
-    line: [["f2","d3"],["g8","h8"],["d3","e5"],["f8","g8"],["e5","f7"]],
-    subtitle: "Mat v troch: jazdec cez d3–e5 na f7.",
-    solution: "Nd3+ Kh8 Ne5 Rg8 Nxf7#",
+    fen: "6k1/5ppp/8/8/8/8/1Q6/6K1 w - - 0 1",
+    line: [["b2","b3"],["g8","h8"],["b3","b8"]],
+    openingAccept: "mate_in_2_opening",
+    subtitle: "Mat v dvoch: Qb3+ a doraz Qb8# (kráľ na h8).",
+    solution: "Qb3+ Kh8 Qb8#",
   },
   {
     week: 3,
