@@ -5171,8 +5171,8 @@ body.home-page {
   border-radius: 7px;
   background: linear-gradient(180deg, rgba(8, 10, 14, 0.72) 0%, rgba(20, 12, 8, 0.58) 100%);
   border: 1px solid rgba(255, 212, 140, 0.25);
-  --cg-board-size: min(100%, 85vw);
-  min-height: var(--cg-board-size, 280px);
+  --cg-board-size: 280px;
+  min-height: 0;
 }
 
 #sachove-hlavolamy .sach-wrong-move-overlay {
@@ -5302,13 +5302,13 @@ body.home-page {
 #sachove-hlavolamy .cg-board {
   position: relative;
   box-sizing: border-box;
-  width: var(--cg-board-size, 100%);
-  height: var(--cg-board-size, auto);
+  width: var(--cg-board-size, 280px);
+  height: var(--cg-board-size, 280px);
   max-width: 100%;
   min-width: 200px;
   min-height: 200px;
   margin-inline: auto;
-  aspect-ratio: 1 / 1;
+  flex-shrink: 0;
   border-radius: 6px;
   border: 1px solid rgba(242, 204, 140, 0.5);
   overflow: hidden;
@@ -5418,20 +5418,31 @@ body.home-page {
     width: 100%;
     max-width: 100%;
     padding: 0.25rem;
-    min-height: 0;
+    min-height: 0 !important;
     box-sizing: border-box;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    --cg-board-size: 280px;
   }
 
-  #sachove-hlavolamy .cg-board {
-    max-width: 100%;
+  #sachove-hlavolamy .cg-board,
+  #sachove-hlavolamy .cg-board.cg-wrap {
     touch-action: none;
+    -webkit-touch-callout: none;
     -webkit-user-select: none;
     user-select: none;
+    -webkit-tap-highlight-color: transparent;
   }
 
-  #sachove-hlavolamy .cg-board cg-container {
+  #sachove-hlavolamy .cg-board cg-container,
+  #sachove-hlavolamy .cg-board cg-board {
     width: 100% !important;
     height: 100% !important;
+  }
+
+  #sachove-hlavolamy .cg-board piece {
+    pointer-events: auto;
   }
 }
 

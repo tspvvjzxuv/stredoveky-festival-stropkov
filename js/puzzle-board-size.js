@@ -16,9 +16,19 @@ function viewportWidth() {
 
 /** Najužší zmysluplný limit šírky dosky v px. */
 export function getChessBoardMaxWidth(boardEl) {
-  var pad = 28;
+  var pad = 32;
   var cap = Math.floor(viewportWidth() - pad);
   if (!boardEl) return Math.max(200, Math.min(cap, 720));
+
+  if (isMobileBoardLayout()) {
+    var item = boardEl.closest(".sach-visual-item");
+    var card = boardEl.closest(".sach-ulohy-card") || boardEl.closest(".card");
+    var itemW = item && item.clientWidth > 20 ? item.clientWidth : 0;
+    var cardW = card && card.clientWidth > 20 ? card.clientWidth : 0;
+    var base = Math.max(itemW, cardW, 0);
+    if (base > 20) return Math.max(200, Math.min(base - 16, cap, 420));
+    return Math.max(200, Math.min(cap - 8, 360));
+  }
 
   var item = boardEl.closest(".sach-visual-item");
   var week = boardEl.closest(".sach-puzzle-week");
@@ -47,16 +57,35 @@ export function syncChessBoardSize(boardEl) {
   var host = boardEl.closest(".chessground-host");
   var w = getChessBoardMaxWidth(boardEl);
   var px = w + "px";
+
   if (host) {
     host.style.setProperty("--cg-board-size", px);
     host.style.width = "100%";
-    host.style.maxWidth = "100%";
+    host.style.maxWidth = px;
     host.style.minHeight = px;
+    host.style.height = "auto";
+    host.style.display = "flex";
+    host.style.justifyContent = "center";
+    host.style.alignItems = "flex-start";
   }
-  boardEl.style.width = px;
-  boardEl.style.height = px;
-  boardEl.style.maxWidth = "100%";
+
+  boardEl.style.setProperty("width", px, "important");
+  boardEl.style.setProperty("height", px, "important");
+  boardEl.style.setProperty("max-width", "100%", "important");
+  boardEl.style.setProperty("min-width", px, "important");
+  boardEl.style.setProperty("min-height", px, "important");
   boardEl.style.boxSizing = "border-box";
+  boardEl.style.flexShrink = "0";
+
+  var ground = boardEl._ptraChessground;
+  if (ground && typeof ground.redrawAll === "function") {
+    requestAnimationFrame(function () {
+      try {
+        ground.redrawAll();
+      } catch (e) {}
+    });
+  }
+
   return w;
 }
 
