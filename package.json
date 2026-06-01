@@ -6,7 +6,7 @@
     "start": "npm run dev",
     "build": "node scripts/build.mjs",
     "vendor:copy": "node scripts/copy-vendor.mjs",
-    "prebuild": "node scripts/copy-vendor.mjs",
+    "prebuild": "node scripts/copy-vendor.mjs && node scripts/build-sach-bundle.mjs",
     "test:puzzles": "node scripts/validate-puzzles.mjs",
     "test:puzzles:soundness": "node scripts/audit-puzzle-soundness.mjs",
     "test:puzzles:alt": "node scripts/test-puzzle-alternatives.mjs",
@@ -14,6 +14,7 @@
     "postspec:gen": "npm run generated:normalize"
   },
   "devDependencies": {
+    "esbuild": "^0.28.0",
     "live-server": "^1.2.2"
   },
   "dependencies": {

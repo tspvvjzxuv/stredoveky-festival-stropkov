@@ -396,7 +396,30 @@ function scrollToPuzzle(puzzleId) {
   if (weekSection && !item) weekSection.scrollIntoView({ behavior: "smooth", block: "start" });
 }
 
+function showPageInitError(err) {
+  var msg =
+    "Šachové úlohy sa nepodarilo spustiť. Obnovte stránku (potiahnutie nadol v Safari) alebo vypnite blokovanie skriptov pre ptra.sk.";
+  console.error("PTRA šach init:", err);
+  var grid = document.getElementById("sach-puzzle-grid");
+  if (grid) {
+    grid.innerHTML =
+      '<p class="note sach-module-fail" role="alert">' +
+      msg +
+      "</p>";
+  }
+  var loading = document.getElementById("sach-loading");
+  if (loading) loading.hidden = true;
+}
+
 function initChessgroundPuzzles() {
+  try {
+    initChessgroundPuzzlesCore();
+  } catch (err) {
+    showPageInitError(err);
+  }
+}
+
+function initChessgroundPuzzlesCore() {
   syncPermanentFromSchedule();
 
   window.addEventListener("ptra-puzzle-week-visible", function (ev) {
@@ -453,6 +476,9 @@ function initChessgroundPuzzles() {
       mountWeekPuzzles(weekIndex);
     });
   }
+
+  var loading = document.getElementById("sach-loading");
+  if (loading) loading.hidden = true;
 }
 
 if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", initChessgroundPuzzles);

@@ -40,15 +40,6 @@
     <link rel="stylesheet" href="css/style.css" />
     <script src="js/config.js" defer></script>
     <script src="js/main.js" defer></script>
-    <script type="module">
-      import("./js/chessground-puzzles.js?v=20260601h").catch(function () {
-        var grid = document.getElementById("sach-puzzle-grid");
-        if (grid && !grid.children.length) {
-          grid.innerHTML =
-            '<p class="note sach-module-fail" role="alert">Úlohy sa nepodarilo načítať. Obnovte stránku (potiahnutie nadol) alebo skúste iný prehliadač bez blokovania skriptov.</p>';
-        }
-      });
-    </script>
   </head>
   <body class="home-page">
     <a class="skip-link" href="#sachove-hlavolamy">Preskočiť na obsah</a>
@@ -179,7 +170,10 @@
             class="sach-visual-grid"
             id="sach-puzzle-grid"
             aria-label="Šachové úlohy"
-          ></div>
+            data-active-week="1"
+          >
+            <p class="note" id="sach-loading">Načítavam úlohy…</p>
+          </div>
           <p class="note">
             Zobrazuje sa jeden týždeň naraz — vyberte ho na časovej osi vyššie. Predchádzajúce
             týždne zostávajú hrateľné po prepnutí.
@@ -222,5 +216,6 @@
       </p>
       <p>© <span id="footer-year">2026</span></p>
     </footer>
+    <script src="js/sach.bundle.js?v=20260601i" defer></script>
   </body>
 </html>

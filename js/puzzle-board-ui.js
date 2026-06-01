@@ -166,6 +166,7 @@ export function setPuzzleWeekVisible(weekIndex, options) {
     var wIdx = parseInt(sections[s].dataset.weekIndex, 10);
     var active = wIdx === weekIndex;
     sections[s].classList.toggle("is-week-active", active);
+    sections[s].hidden = !active;
     if (active) anyActive = true;
   }
   if (!anyActive && sections.length) {
