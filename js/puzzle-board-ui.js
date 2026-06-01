@@ -151,27 +151,6 @@ function buildWeekSection(week) {
   return section;
 }
 
-function getMobileActiveMount() {
-  return document.getElementById("sach-puzzle-active");
-}
-
-function renderMobileActiveWeek(weekIndex) {
-  var mount = getMobileActiveMount();
-  if (!mount) return;
-
-  var week = null;
-  for (var w = 0; w < PUZZLE_WEEKS.length; w++) {
-    if (PUZZLE_WEEKS[w].weekIndex === weekIndex) {
-      week = PUZZLE_WEEKS[w];
-      break;
-    }
-  }
-  if (!week) return;
-
-  mount.innerHTML = "";
-  mount.appendChild(buildWeekSection(week));
-}
-
 function renderDesktopPuzzleGrid(grid) {
   grid.innerHTML = "";
   for (var w = 0; w < PUZZLE_WEEKS.length; w++) {
@@ -186,12 +165,7 @@ export function renderPuzzleGrid() {
   var grid = document.getElementById("sach-puzzle-grid");
   if (!grid) return;
 
-  if (isMobilePuzzleLayout()) {
-    grid.innerHTML =
-      '<div id="sach-puzzle-active" class="sach-puzzle-active-week" data-week-index=""></div>';
-  } else {
-    renderDesktopPuzzleGrid(grid);
-  }
+  renderDesktopPuzzleGrid(grid);
 
   var initialWeek = PUZZLE_WEEKS[getDefaultWeekIndex()];
   var weekNum = initialWeek ? initialWeek.weekIndex : 1;
@@ -206,28 +180,6 @@ function syncTimelineSliderToWeek(weekIndex) {
       slider.value = String(wi);
       break;
     }
-  }
-}
-
-export function renderMobileWeekNav(activeWeekIndex) {
-  var nav = document.getElementById("sach-mobile-week-nav");
-  if (!nav) return;
-  nav.hidden = false;
-  nav.innerHTML = "";
-  for (var w = 0; w < PUZZLE_WEEKS.length; w++) {
-    var week = PUZZLE_WEEKS[w];
-    var btn = document.createElement("button");
-    btn.type = "button";
-    btn.className = "sach-mobile-week-btn";
-    if (week.weekIndex === activeWeekIndex) btn.classList.add("is-active");
-    btn.textContent = "T" + week.weekIndex;
-    btn.setAttribute("aria-label", "Týždeň " + week.weekIndex + " — " + week.theme.title);
-    btn.dataset.weekIndex = String(week.weekIndex);
-    btn.addEventListener("click", function () {
-      var wNum = parseInt(this.dataset.weekIndex, 10);
-      setPuzzleWeekVisible(wNum, { scroll: false });
-    });
-    nav.appendChild(btn);
   }
 }
 
@@ -273,16 +225,9 @@ export function setPuzzleWeekVisible(weekIndex, options) {
         ? false
         : !isMobilePuzzleLayout();
 
-  if (isMobilePuzzleLayout()) {
-    renderMobileActiveWeek(weekIndex);
-    var mount = getMobileActiveMount();
-    if (mount) mount.dataset.weekIndex = String(weekIndex);
-  } else {
-    setDesktopWeekVisible(weekIndex, scroll);
-  }
+  setDesktopWeekVisible(weekIndex, scroll);
 
   grid.dataset.activeWeek = String(weekIndex);
-  renderMobileWeekNav(weekIndex);
   syncTimelineSliderToWeek(weekIndex);
 
   window.dispatchEvent(
@@ -297,13 +242,8 @@ export function getActivePuzzleWeekIndex() {
   return isNaN(n) ? null : n;
 }
 
-/** Na mobile je aktívny týždeň v #sach-puzzle-active, nie v skrytom .sach-puzzle-week */
 export function isPuzzleBoardInActiveView(boardEl) {
   if (!boardEl) return false;
-  if (isMobilePuzzleLayout()) {
-    var mount = getMobileActiveMount();
-    return !!(mount && mount.contains(boardEl));
-  }
   var week = boardEl.closest(".sach-puzzle-week");
   return !week || week.classList.contains("is-week-active");
 }
