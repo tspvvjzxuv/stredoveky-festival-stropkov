@@ -233,6 +233,18 @@ export function setPuzzleWeekVisible(weekIndex, options) {
   window.dispatchEvent(
     new CustomEvent("ptra-puzzle-week-visible", { detail: { weekIndex: weekIndex } })
   );
+
+  if (isMobilePuzzleLayout()) {
+    requestAnimationFrame(function () {
+      var weekEl = document.getElementById("sach-week-" + weekIndex);
+      var firstBoard = weekEl && weekEl.querySelector(".cg-board");
+      if (firstBoard) {
+        firstBoard.scrollIntoView({ behavior: "smooth", block: "center" });
+      } else if (weekEl) {
+        weekEl.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+    });
+  }
 }
 
 export function getActivePuzzleWeekIndex() {

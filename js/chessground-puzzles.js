@@ -303,7 +303,11 @@ function schedulePuzzleMount(puzzle, attempt) {
     return;
   }
 
-  if (attempt < 20) {
+  var maxAttempts = 40;
+  if (typeof window !== "undefined" && window.matchMedia && window.matchMedia("(max-width: 900px)").matches) {
+    maxAttempts = 50;
+  }
+  if (attempt < maxAttempts) {
     setTimeout(function () {
       schedulePuzzleMount(puzzle, attempt + 1);
     }, 35 + attempt * 40);
@@ -336,6 +340,26 @@ function layoutWeekBoardSizes(weekIndex) {
   if (!section) return;
   var boards = section.querySelectorAll(".cg-board");
   for (var i = 0; i < boards.length; i++) syncChessBoardSize(boards[i]);
+}
+
+/** Po zmene viewportu len prekresliť / zmeniť veľkosť — bez destroy (kritické na mobile Safari). */
+function refreshWeekBoardGraphics(weekIndex) {
+  for (var i = 0; i < FESTIVAL_PUZZLES.length; i++) {
+    var p = FESTIVAL_PUZZLES[i];
+    if (!p || p.weekIndex !== weekIndex) continue;
+    var el = document.getElementById(p.id);
+    if (!el || !isBoardWeekVisible(el)) continue;
+    syncChessBoardSize(el);
+    var ground = el._ptraChessground;
+    if (ground && typeof ground.redrawAll === "function") {
+      try {
+        ground.redrawAll();
+      } catch (e) {}
+    } else if (!boardHasPieces(el) && isPuzzleAccessUnlocked(p.id)) {
+      clearMountedIfEmpty(p);
+      schedulePuzzleMount(p, 0);
+    }
+  }
 }
 
 function mountWeekPuzzles(weekIndex) {
@@ -474,7 +498,14 @@ function initChessgroundPuzzlesCore() {
   });
 
   window.addEventListener("orientationchange", function () {
-    setTimeout(remountActiveWeek, 250);
+    setTimeout(function () {
+      var weekIndex = getActivePuzzleWeekIndex();
+      if (weekIndex != null) {
+        layoutWeekBoardSizes(weekIndex);
+        refreshWeekBoardGraphics(weekIndex);
+      }
+      remountActiveWeek();
+    }, 350);
   });
 
   window.addEventListener("pageshow", function (ev) {
@@ -485,17 +516,41 @@ function initChessgroundPuzzlesCore() {
     scheduleRemountBurst();
   });
 
-  if (window.visualViewport) {
-    window.visualViewport.addEventListener("resize", function () {
-      var weekIndex = getActivePuzzleWeekIndex();
-      if (weekIndex == null) return;
+  var viewportLayoutTimer = null;
+  function onVisualViewportLayout() {
+    var weekIndex = getActivePuzzleWeekIndex();
+    if (weekIndex == null) return;
+    clearTimeout(viewportLayoutTimer);
+    viewportLayoutTimer = setTimeout(function () {
       layoutWeekBoardSizes(weekIndex);
-      for (var i = 0; i < FESTIVAL_PUZZLES.length; i++) {
-        var p = FESTIVAL_PUZZLES[i];
-        if (p && p.weekIndex === weekIndex) unmountPuzzleBoard(p);
-      }
-      mountWeekPuzzles(weekIndex);
-    });
+      refreshWeekBoardGraphics(weekIndex);
+    }, 150);
+  }
+
+  if (window.visualViewport) {
+    window.visualViewport.addEventListener("resize", onVisualViewportLayout);
+    window.visualViewport.addEventListener("scroll", onVisualViewportLayout);
+  }
+
+  var ulohyCard = document.querySelector(".sach-ulohy-card");
+  if (ulohyCard && typeof IntersectionObserver !== "undefined") {
+    var ulohyVisibleTimer = null;
+    var ulohyObserver = new IntersectionObserver(
+      function (entries) {
+        for (var i = 0; i < entries.length; i++) {
+          if (!entries[i].isIntersecting) continue;
+          clearTimeout(ulohyVisibleTimer);
+          ulohyVisibleTimer = setTimeout(function () {
+            var weekIndex = getActivePuzzleWeekIndex();
+            if (weekIndex == null) return;
+            layoutWeekBoardSizes(weekIndex);
+            refreshWeekBoardGraphics(weekIndex);
+          }, 80);
+        }
+      },
+      { root: null, rootMargin: "64px", threshold: 0.08 }
+    );
+    ulohyObserver.observe(ulohyCard);
   }
 
   var loading = document.getElementById("sach-loading");

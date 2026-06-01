@@ -800,8 +800,12 @@ export function mountBotPuzzle(puzzle, helpers) {
   }
 
   if (typeof ResizeObserver !== "undefined") {
+    var resizeDebounce = null;
     var resizeObserver = new ResizeObserver(function () {
-      ensureBoardLayout(0);
+      clearTimeout(resizeDebounce);
+      resizeDebounce = setTimeout(function () {
+        ensureBoardLayout(0);
+      }, 60);
     });
     resizeObserver.observe(el);
     var host = el.closest(".chessground-host");
