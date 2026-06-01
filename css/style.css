@@ -5056,6 +5056,21 @@ body.home-page {
   flex-direction: column;
   gap: 0.5rem;
   margin-top: 0.85rem;
+  min-height: 4rem;
+}
+
+#sachove-hlavolamy #sach-loading {
+  margin: 0.5rem 0;
+  text-align: center;
+}
+
+#sachove-hlavolamy .sach-module-fail {
+  margin: 0.75rem 0;
+  padding: 0.65rem 0.75rem;
+  border-radius: 6px;
+  border: 1px solid rgba(255, 140, 100, 0.5);
+  background: rgba(80, 24, 24, 0.45);
+  color: #ffe8dc;
 }
 
 #sachove-hlavolamy .sach-visual-item {
