@@ -4919,17 +4919,26 @@ body.home-page {
   border-bottom: 1px solid rgba(255, 203, 0, 0.12);
 }
 
-#sachove-hlavolamy .sach-puzzle-week:not(.is-week-active) {
-  display: none !important;
+#sachove-hlavolamy .sach-puzzle-active-week {
+  display: block !important;
+  width: 100%;
+  min-height: 8rem;
+  overflow: visible !important;
 }
 
 #sachove-hlavolamy .sach-puzzle-week.is-week-active {
-  display: block !important;
-  visibility: visible !important;
-  height: auto !important;
-  overflow: visible !important;
   border-color: rgba(255, 203, 0, 0.35);
   box-shadow: inset 0 0 0 1px rgba(255, 203, 0, 0.18);
+}
+
+@media (min-width: 901px) {
+  #sachove-hlavolamy .sach-puzzle-week:not(.is-week-active) {
+    display: none !important;
+  }
+
+  #sachove-hlavolamy .sach-puzzle-week.is-week-active {
+    display: block !important;
+  }
 }
 
 #sachove-hlavolamy .sach-puzzle-week:last-child {
@@ -5438,10 +5447,13 @@ body.home-page {
     width: 100%;
   }
 
-  #sachove-hlavolamy .sach-puzzle-week.is-week-active {
+  #sachove-hlavolamy .sach-puzzle-active-week,
+  #sachove-hlavolamy .sach-puzzle-active-week .sach-puzzle-week {
     display: block !important;
     width: 100%;
     min-height: 8rem;
+    visibility: visible !important;
+    overflow: visible !important;
   }
 
   #sachove-hlavolamy .sach-week-puzzles {

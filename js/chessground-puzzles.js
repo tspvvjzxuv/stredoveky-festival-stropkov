@@ -40,6 +40,7 @@ import {
   renderPuzzleGrid,
   applyPuzzleAccessUI,
   getActivePuzzleWeekIndex,
+  isPuzzleBoardInActiveView,
 } from "./puzzle-board-ui.js";
 import { isPuzzleAccessUnlocked, syncPermanentFromSchedule, isDevUnlockAll } from "./puzzle-unlock.js";
 import { initPuzzleTimeline, bindPuzzleUnlockPrompts } from "./puzzle-timeline-ui.js";
@@ -200,8 +201,7 @@ function boardHasPieces(el) {
 }
 
 function isBoardWeekVisible(el) {
-  var week = el && el.closest(".sach-puzzle-week");
-  return !week || week.classList.contains("is-week-active");
+  return isPuzzleBoardInActiveView(el);
 }
 
 function clearMountedIfEmpty(puzzle) {
@@ -433,6 +433,29 @@ function initChessgroundPuzzlesCore() {
       });
     });
   });
+
+  var layoutIsMobile = null;
+
+  function onLayoutModeMaybeChanged() {
+    var nowMobile =
+      typeof window !== "undefined" &&
+      window.matchMedia &&
+      window.matchMedia("(max-width: 900px)").matches;
+    if (layoutIsMobile === nowMobile) return;
+    layoutIsMobile = nowMobile;
+    renderPuzzleGrid();
+    applyPuzzleAccessUI();
+    remountActiveWeek();
+  }
+
+  if (typeof window !== "undefined") {
+    layoutIsMobile =
+      window.matchMedia && window.matchMedia("(max-width: 900px)").matches;
+    window.addEventListener("resize", onLayoutModeMaybeChanged);
+    if (window.visualViewport) {
+      window.visualViewport.addEventListener("resize", onLayoutModeMaybeChanged);
+    }
+  }
 
   renderInvesticiaGrid();
   renderPuzzleGrid();
