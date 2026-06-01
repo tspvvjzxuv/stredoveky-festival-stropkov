@@ -473,10 +473,8 @@ function initChessgroundPuzzlesCore() {
   if (typeof window !== "undefined") {
     layoutIsMobile =
       window.matchMedia && window.matchMedia("(max-width: 900px)").matches;
+    /** Len šírka okna — nie visualViewport (Safari adresný riadok spúšťa destroy gridu). */
     window.addEventListener("resize", onLayoutModeMaybeChanged);
-    if (window.visualViewport) {
-      window.visualViewport.addEventListener("resize", onLayoutModeMaybeChanged);
-    }
   }
 
   renderInvesticiaGrid();
@@ -500,11 +498,18 @@ function initChessgroundPuzzlesCore() {
   window.addEventListener("orientationchange", function () {
     setTimeout(function () {
       var weekIndex = getActivePuzzleWeekIndex();
-      if (weekIndex != null) {
-        layoutWeekBoardSizes(weekIndex);
-        refreshWeekBoardGraphics(weekIndex);
+      if (weekIndex == null) return;
+      layoutWeekBoardSizes(weekIndex);
+      refreshWeekBoardGraphics(weekIndex);
+      for (var i = 0; i < FESTIVAL_PUZZLES.length; i++) {
+        var p = FESTIVAL_PUZZLES[i];
+        if (!p || p.weekIndex !== weekIndex) continue;
+        var el = document.getElementById(p.id);
+        if (el && !boardHasPieces(el) && isPuzzleAccessUnlocked(p.id)) {
+          clearMountedIfEmpty(p);
+          schedulePuzzleMount(p, 0);
+        }
       }
-      remountActiveWeek();
     }, 350);
   });
 

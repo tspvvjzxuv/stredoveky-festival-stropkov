@@ -10,12 +10,14 @@
     "test:puzzles": "node scripts/validate-puzzles.mjs",
     "test:puzzles:soundness": "node scripts/audit-puzzle-soundness.mjs",
     "test:puzzles:alt": "node scripts/test-puzzle-alternatives.mjs",
+    "test:mobile-chess": "node scripts/test-mobile-chess.mjs",
     "generated:normalize": "node normalize-generated-files.mjs",
     "postspec:gen": "npm run generated:normalize"
   },
   "devDependencies": {
     "esbuild": "^0.28.0",
-    "live-server": "^1.2.2"
+    "live-server": "^1.2.2",
+    "playwright": "^1.60.0"
   },
   "dependencies": {
     "@lichess-org/chessground": "^10.1.1",

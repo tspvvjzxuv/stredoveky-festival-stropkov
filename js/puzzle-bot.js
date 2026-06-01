@@ -743,13 +743,19 @@ export function mountBotPuzzle(puzzle, helpers) {
 
   syncChessBoardSize(el);
 
+  var isCoarsePointer =
+    typeof window !== "undefined" &&
+    window.matchMedia &&
+    window.matchMedia("(hover: none) and (pointer: coarse)").matches;
+
   var ground = Chessground(el, {
     fen: chess.fen(),
     orientation: boardOrientation,
     coordinates: true,
     viewOnly: false,
+    touchIgnoreRadius: isCoarsePointer ? 2.5 : 1,
     selectable: { enabled: true },
-    draggable: { enabled: true, showGhost: true },
+    draggable: { enabled: true, showGhost: true, distance: isCoarsePointer ? 3 : 10 },
     movable: {
       free: false,
       color: boardOrientation,

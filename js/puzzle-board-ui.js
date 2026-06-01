@@ -230,9 +230,18 @@ export function setPuzzleWeekVisible(weekIndex, options) {
   grid.dataset.activeWeek = String(weekIndex);
   syncTimelineSliderToWeek(weekIndex);
 
-  window.dispatchEvent(
-    new CustomEvent("ptra-puzzle-week-visible", { detail: { weekIndex: weekIndex } })
-  );
+  function emitWeekVisible() {
+    window.dispatchEvent(
+      new CustomEvent("ptra-puzzle-week-visible", { detail: { weekIndex: weekIndex } })
+    );
+  }
+
+  emitWeekVisible();
+  if (isMobilePuzzleLayout()) {
+    requestAnimationFrame(function () {
+      requestAnimationFrame(emitWeekVisible);
+    });
+  }
 
   if (isMobilePuzzleLayout()) {
     requestAnimationFrame(function () {
