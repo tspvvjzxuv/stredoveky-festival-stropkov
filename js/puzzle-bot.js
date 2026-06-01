@@ -17,6 +17,7 @@ import {
   groundColor,
 } from "./puzzle-engine.js";
 import { createWrongMoveOverlay } from "./puzzle-wrong-move-ui.js";
+import { syncChessBoardSize } from "./puzzle-board-size.js";
 
 var DEFAULT_MAX_MISTAKES_OVERLAY = 8;
 
@@ -718,6 +719,8 @@ export function mountBotPuzzle(puzzle, helpers) {
     applyCorrectUserMove(ground, step, attempted, verdict);
   }
 
+  syncChessBoardSize(el);
+
   var ground = Chessground(el, {
     fen: chess.fen(),
     orientation: boardOrientation,
@@ -757,6 +760,7 @@ export function mountBotPuzzle(puzzle, helpers) {
 
   function ensureBoardLayout(attempt) {
     attempt = attempt == null ? 0 : attempt;
+    syncChessBoardSize(el);
     var rect = el.getBoundingClientRect();
     if (rect.width < 2 || rect.height < 2) {
       if (attempt < 24) {

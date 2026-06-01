@@ -14,6 +14,7 @@ var required = [
   "js/puzzle-schedule.js",
   "js/puzzle-unlock.js",
   "js/puzzle-board-ui.js",
+  "js/puzzle-board-size.js",
   "js/puzzle-timeline-ui.js",
   "js/puzzle-wrong-move-ui.js",
   "js/puzzle-engine.js",

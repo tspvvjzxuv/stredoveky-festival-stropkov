@@ -20,6 +20,7 @@ import {
 } from "./puzzle-board-ui.js";
 import { isPuzzleAccessUnlocked, syncPermanentFromSchedule, isDevUnlockAll } from "./puzzle-unlock.js";
 import { initPuzzleTimeline, bindPuzzleUnlockPrompts } from "./puzzle-timeline-ui.js";
+import { syncChessBoardSize, boardHasLayout } from "./puzzle-board-size.js";
 
 var ALL_SQUARES = [
   "a1","b1","c1","d1","e1","f1","g1","h1",
@@ -171,12 +172,6 @@ function createPuzzleHelpers() {
   };
 }
 
-function boardHasLayout(el) {
-  if (!el) return false;
-  var rect = el.getBoundingClientRect();
-  return rect.width > 20 && rect.height > 20;
-}
-
 function boardHasPieces(el) {
   return !!(el && el.querySelector("piece"));
 }
@@ -202,6 +197,7 @@ function mountPuzzleBoard(puzzle, options) {
   var el = document.getElementById(puzzle.id);
   if (!el || !isBoardWeekVisible(el)) return;
 
+  syncChessBoardSize(el);
   if (!force && !boardHasLayout(el)) return;
 
   try {
@@ -252,6 +248,7 @@ function schedulePuzzleMount(puzzle, attempt) {
   var el = document.getElementById(puzzle.id);
   if (!el || !isBoardWeekVisible(el)) return;
 
+  syncChessBoardSize(el);
   if (boardHasLayout(el)) {
     mountPuzzleBoard(puzzle);
     return;
@@ -283,6 +280,13 @@ function schedulePuzzleMount(puzzle, attempt) {
     { root: null, rootMargin: "120px", threshold: 0.01 }
   );
   mountObservers[puzzle.id].observe(el);
+}
+
+function layoutWeekBoardSizes(weekIndex) {
+  var section = document.getElementById("sach-week-" + weekIndex);
+  if (!section) return;
+  var boards = section.querySelectorAll(".cg-board");
+  for (var i = 0; i < boards.length; i++) syncChessBoardSize(boards[i]);
 }
 
 function mountWeekPuzzles(weekIndex) {
@@ -345,7 +349,13 @@ function initChessgroundPuzzles() {
 
   window.addEventListener("ptra-puzzle-week-visible", function (ev) {
     var weekIndex = ev.detail && ev.detail.weekIndex;
-    if (weekIndex != null) mountWeekPuzzles(weekIndex);
+    if (weekIndex == null) return;
+    requestAnimationFrame(function () {
+      requestAnimationFrame(function () {
+        layoutWeekBoardSizes(weekIndex);
+        mountWeekPuzzles(weekIndex);
+      });
+    });
   });
 
   renderInvesticiaGrid();
@@ -356,6 +366,8 @@ function initChessgroundPuzzles() {
   refreshScoreUI();
   bindPuzzleUnlockPrompts();
   initPuzzleTimeline(scrollToPuzzle);
+  var initialWeek = getActivePuzzleWeekIndex();
+  if (initialWeek != null) layoutWeekBoardSizes(initialWeek);
   mountAllPlayablePuzzles();
   remountActiveWeek();
   scheduleRemountBurst();
