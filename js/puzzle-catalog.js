@@ -281,7 +281,7 @@ export const PUZZLE_CATALOG_ENTRIES = [
     "weekIndex": 5,
     "difficulty": "easy",
     "estimatedRating": 1477,
-    "fen": "r4rbk/6Np/3p1Pq1/p3p1N1/1p6/7Q/PPP4P/1K1R4 w - - 0 1",
+    "fen": "2r1r1k1/ppp2Npp/2p1Pq2/2b3N1/2p5/7Q/PPP3P1/2KR1R2 w - - 0 1",
     "playerColor": "w",
     "win": "checkmate",
     "maxMoves": 8,
@@ -290,8 +290,8 @@ export const PUZZLE_CATALOG_ENTRIES = [
       {
         "who": "user",
         "suggest": {
-          "from": "g7",
-          "to": "e8"
+          "from": "f7",
+          "to": "d8"
         },
         "wrong": "Tento ťah nevedie k matu v dvoch — skúste iný úvod.",
         "accept": "mate_in_2_opening"
@@ -302,8 +302,8 @@ export const PUZZLE_CATALOG_ENTRIES = [
         "choices": [
           {
             "move": {
-              "from": "g6",
-              "to": "g7"
+              "from": "e8",
+              "to": "f8"
             },
             "main": true,
             "hint": "Počítač odohral hlavnú obranu — pokračujte podľa plánu.",
@@ -311,8 +311,8 @@ export const PUZZLE_CATALOG_ENTRIES = [
               {
                 "who": "user",
                 "suggest": {
-                  "from": "f6",
-                  "to": "g7"
+                  "from": "h3",
+                  "to": "h7"
                 },
                 "wrong": "Týmto ťahom nedáte mat — skúste iný finiš.",
                 "accept": "checkmate"
@@ -322,8 +322,8 @@ export const PUZZLE_CATALOG_ENTRIES = [
         ]
       }
     ],
-    "subtitle": "Kniha č. 175 — Ne8 a po Qg7 mat po fxg7#.",
-    "solution": "Ne8 Qg7 fxg7#"
+    "subtitle": "Kniha č. 175 — Nd8 a mat Qxh7# (FEN z databázy, opravený diagram).",
+    "solution": "Nd8 Rf8 Qxh7#"
   },
   {
     "weekIndex": 5,

@@ -114,12 +114,12 @@ export const PUZZLE_SPECS = [
   {
     week: 5,
     difficulty: "easy",
-    fen: "r4rbk/6Np/3p1Pq1/p3p1N1/1p6/7Q/PPP4P/1K1R4 w - - 0 1",
+    fen: "2r1r1k1/ppp2Npp/2p1Pq2/2b3N1/2p5/7Q/PPP3P1/2KR1R2 w - - 0 1",
     win: "checkmate",
-    line: [["g7","e8"],["g6","g7"],["f6","g7"]],
+    line: [["f7","d8"],["e8","f8"],["h3","h7"]],
     openingAccept: "mate_in_2_opening",
-    subtitle: "Kniha č. 175 — Ne8 a po Qg7 mat po fxg7#.",
-    solution: "Ne8 Qg7 fxg7#",
+    subtitle: "Kniha č. 175 — Nd8 a mat Qxh7# (FEN z databázy, opravený diagram).",
+    solution: "Nd8 Rf8 Qxh7#",
   },
   {
     week: 5,
