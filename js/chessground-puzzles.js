@@ -1,16 +1,5 @@
 import { FESTIVAL_PUZZLES, getPuzzleById } from "./puzzles-data.js";
-/** Načítané až pri mounte dosky — UI (grid, harmonogram) funguje aj keď modul zlyhá. */
-var botModulePromise = null;
-
-function loadBotModule() {
-  if (!botModulePromise) {
-    botModulePromise = import("./puzzle-bot.js").catch(function (err) {
-      console.error("PTRA šach: puzzle-bot", err);
-      return null;
-    });
-  }
-  return botModulePromise;
-}
+import { mountBotPuzzle } from "./puzzle-bot.js";
 
 function destroyPuzzleGround(el) {
   if (!el) return;
@@ -241,32 +230,24 @@ function mountPuzzleBoard(puzzle, options) {
   syncChessBoardSize(el);
   if (!force && !boardHasLayout(el)) return;
 
-  loadBotModule().then(function (mod) {
-    if (!mod || !mod.mountBotPuzzle) {
-      delete mountedIds[puzzle.id];
-      el.classList.remove("cg-board--mounted");
-      showBoardLoadError(el, puzzle.id);
-      return;
-    }
-    try {
-      mountedIds[puzzle.id] = true;
-      el.classList.add("cg-board--mounted");
-      mod.mountBotPuzzle(puzzle, createPuzzleHelpers());
+  try {
+    mountedIds[puzzle.id] = true;
+    el.classList.add("cg-board--mounted");
+    mountBotPuzzle(puzzle, createPuzzleHelpers());
+    requestAnimationFrame(function () {
       requestAnimationFrame(function () {
-        requestAnimationFrame(function () {
-          if (!boardHasPieces(el)) {
-            clearMountedIfEmpty(puzzle);
-            schedulePuzzleMount(puzzle, 0);
-          }
-        });
+        if (!boardHasPieces(el)) {
+          clearMountedIfEmpty(puzzle);
+          schedulePuzzleMount(puzzle, 0);
+        }
       });
-    } catch (err) {
-      delete mountedIds[puzzle.id];
-      el.classList.remove("cg-board--mounted");
-      console.error("PTRA šach:", puzzle.id, err);
-      showBoardLoadError(el, puzzle.id);
-    }
-  });
+    });
+  } catch (err) {
+    delete mountedIds[puzzle.id];
+    el.classList.remove("cg-board--mounted");
+    console.error("PTRA šach:", puzzle.id, err);
+    showBoardLoadError(el, puzzle.id);
+  }
 }
 
 function showBoardLoadError(el, puzzleId) {
@@ -556,6 +537,25 @@ function initChessgroundPuzzlesCore() {
       { root: null, rootMargin: "64px", threshold: 0.08 }
     );
     ulohyObserver.observe(ulohyCard);
+  }
+
+  if (typeof window !== "undefined" && window.matchMedia && window.matchMedia("(max-width: 900px)").matches) {
+    var grid = document.getElementById("sach-puzzle-grid");
+    if (grid) {
+      grid.addEventListener(
+        "touchstart",
+        function (ev) {
+          var board = ev.target && ev.target.closest && ev.target.closest(".cg-board");
+          if (!board || !board.id) return;
+          if (boardHasPieces(board)) return;
+          var puzzle = getPuzzleById(board.id);
+          if (puzzle && isPuzzleAccessUnlocked(puzzle.id)) {
+            schedulePuzzleMount(puzzle, 0);
+          }
+        },
+        { passive: true, capture: true }
+      );
+    }
   }
 
   var loading = document.getElementById("sach-loading");

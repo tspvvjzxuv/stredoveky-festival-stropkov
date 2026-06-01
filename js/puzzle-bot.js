@@ -753,9 +753,17 @@ export function mountBotPuzzle(puzzle, helpers) {
     orientation: boardOrientation,
     coordinates: true,
     viewOnly: false,
+    disableContextMenu: true,
+    blockTouchScroll: isCoarsePointer,
+    trustAllEvents: isCoarsePointer,
     touchIgnoreRadius: isCoarsePointer ? 2.5 : 1,
     selectable: { enabled: true },
-    draggable: { enabled: true, showGhost: true, distance: isCoarsePointer ? 3 : 10 },
+    draggable: {
+      enabled: true,
+      showGhost: true,
+      distance: isCoarsePointer ? 3 : 10,
+      autoDistance: isCoarsePointer,
+    },
     movable: {
       free: false,
       color: boardOrientation,
