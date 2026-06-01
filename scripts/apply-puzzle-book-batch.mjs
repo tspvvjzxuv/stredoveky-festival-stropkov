@@ -8,14 +8,21 @@ import { fileURLToPath } from "url";
 import { PUZZLE_SPECS } from "./puzzle-entries-data.mjs";
 import { PUZZLE_BOOK_BATCH_1 } from "./puzzle-book-batch-1.mjs";
 import { PUZZLE_BOOK_BATCH_2 } from "./puzzle-book-batch-2.mjs";
+import { PUZZLE_BOOK_BATCH_3 } from "./puzzle-book-batch-3.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
-const batchNum = parseInt(process.argv[2] || "2", 10);
+const batchNum = parseInt(process.argv[2] || "3", 10);
 const batch =
-  batchNum === 1 ? PUZZLE_BOOK_BATCH_1 : batchNum === 2 ? PUZZLE_BOOK_BATCH_2 : null;
+  batchNum === 1
+    ? PUZZLE_BOOK_BATCH_1
+    : batchNum === 2
+      ? PUZZLE_BOOK_BATCH_2
+      : batchNum === 3
+        ? PUZZLE_BOOK_BATCH_3
+        : null;
 
 if (!batch) {
-  console.error("Usage: node scripts/apply-puzzle-book-batch.mjs <1|2>");
+  console.error("Usage: node scripts/apply-puzzle-book-batch.mjs <1|2|3>");
   process.exit(1);
 }
 
@@ -34,12 +41,10 @@ for (const entry of batch) {
   console.log("Replaced w" + week, difficulty, bookId ? "#" + bookId : "");
 }
 
-function fmtLine(line) {
-  return (
-    "[" +
-    line.map((p) => `["${p[0]}","${p[1]}"]`).join(",") +
-    "]"
-  );
+function fmtPair(pair) {
+  const from = typeof pair[0] === "string" ? pair[0] : pair[0].join("");
+  const to = typeof pair[1] === "string" ? pair[1] : pair[1].join("");
+  return `["${from}","${to}"]`;
 }
 
 function fmtSpec(s) {
@@ -49,7 +54,7 @@ function fmtSpec(s) {
   lines.push(`    difficulty: "${s.difficulty}",`);
   lines.push(`    fen: "${s.fen}",`);
   if (s.win) lines.push(`    win: "${s.win}",`);
-  lines.push(`    line: [${s.line.map((l) => fmtLine(l)).join(",")}],`);
+  lines.push(`    line: [${s.line.map((l) => fmtPair(l)).join(",")}],`);
   if (s.openingAccept)
     lines.push(`    openingAccept: "${s.openingAccept}",`);
   if (s.userAccepts)
@@ -63,9 +68,11 @@ function fmtSpec(s) {
 }
 
 const batchesNote =
-  batchNum >= 2
-    ? "scripts/puzzle-book-batch-1.mjs, puzzle-book-batch-2.mjs"
-    : "scripts/puzzle-book-batch-1.mjs";
+  batchNum >= 3
+    ? "scripts/puzzle-book-batch-1.mjs, puzzle-book-batch-2.mjs, puzzle-book-batch-3.mjs"
+    : batchNum >= 2
+      ? "scripts/puzzle-book-batch-1.mjs, puzzle-book-batch-2.mjs"
+      : "scripts/puzzle-book-batch-1.mjs";
 
 const header = `/**
  * 36 úloh — týždne 1–2, 7–9, 10–12 z knihy; ostatné podľa motívu.
