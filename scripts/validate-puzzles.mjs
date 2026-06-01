@@ -18,11 +18,11 @@ function applyMove(chess, move) {
   if (!isLegalMove(chess, move.from, move.to, move.promotion)) {
     return { ok: false, err: "nelégálny podľa chess.js: " + JSON.stringify(move) };
   }
-  const m = chess.move({
-    from: move.from,
-    to: move.to,
-    ...(move.promotion ? { promotion: move.promotion } : {}),
-  });
+  const piece = chess.get(move.from);
+  const opts = { from: move.from, to: move.to };
+  if (move.promotion) opts.promotion = move.promotion;
+  else if (piece && piece.type === "p" && (move.to[1] === "8" || move.to[1] === "1")) opts.promotion = "q";
+  const m = chess.move(opts);
   if (!m) return { ok: false, err: "chess.move zlyhal" };
   return { ok: true, san: m.san };
 }
@@ -119,15 +119,35 @@ function walkSteps(chess, steps, path, fenAtStep) {
   return null;
 }
 
+function blackQueenOnBoard(chess) {
+  const board = chess.board();
+  for (const row of board) {
+    for (const p of row) {
+      if (p && p.type === "q" && p.color === "b") return true;
+    }
+  }
+  return false;
+}
+
+function materialScore(chess) {
+  const v = { p: 1, n: 3, b: 3, r: 5, q: 9 };
+  let s = 0;
+  for (const row of chess.board()) {
+    for (const p of row) {
+      if (p) s += (p.color === "w" ? 1 : -1) * v[p.type];
+    }
+  }
+  return s;
+}
+
 function puzzleSolved(chess, winType) {
   if (winType === "black_queen_captured") {
-    const board = chess.board();
-    for (const row of board) {
-      for (const p of row) {
-        if (p && p.type === "q" && p.color === "b") return false;
-      }
-    }
-    return true;
+    return !blackQueenOnBoard(chess);
+  }
+  if (winType === "decisive") {
+    if (chess.isCheckmate() && chess.turn() === "b") return true;
+    if (!blackQueenOnBoard(chess)) return true;
+    return materialScore(chess) >= 5;
   }
   return chess.isCheckmate() && chess.turn() === "b";
 }
