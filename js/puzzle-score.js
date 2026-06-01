@@ -326,7 +326,7 @@ export function renderScorePanel() {
     "</tbody></table></div>" +
     '<h3 class="sach-score__sub">Najlepšie úlohy</h3>' +
     topHtml +
-    '<p class="note sach-score__note">Základ podľa obtiažnosti (ľahká 100, stredná 250, ťažká 500). K tomu až +60&nbsp;% základu ako bonus, ak spotrebujete menej bielych ťahov v rámci limitu úlohy (1 ťah = maximum bonusu). Ukladá sa len váš najlepší výsledok na úlohu. Dáta sú len v localStorage tohto prehliadača.</p>';
+    '<p class="note sach-score__note">Základ podľa obtiažnosti (ľahká 100, stredná 250, ťažká 500). K tomu až +60&nbsp;% základu ako bonus, ak spotrebujete menej vlastných ťahov v rámci limitu úlohy (1 ťah = maximum bonusu). Ukladá sa len váš najlepší výsledok na úlohu. Dáta sú len v localStorage tohto prehliadača.</p>';
 
   var input = root.querySelector("#sach-score-name");
   if (input) {
