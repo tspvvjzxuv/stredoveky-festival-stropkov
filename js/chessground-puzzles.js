@@ -1,5 +1,5 @@
 import { FESTIVAL_PUZZLES, getPuzzleById } from "./puzzles-data.js";
-import { mountBotPuzzle } from "./puzzle-bot.js";
+import { mountBotPuzzle, destroyPuzzleGround } from "./puzzle-bot.js";
 import {
   unlockPuzzleReward,
   getRewardMeta,
@@ -189,6 +189,25 @@ function clearMountedIfEmpty(puzzle) {
   el.classList.remove("cg-board--mounted");
 }
 
+function unmountPuzzleBoard(puzzle) {
+  if (!puzzle || !puzzle.id) return;
+  clearPuzzleMountWatch(puzzle.id);
+  var el = document.getElementById(puzzle.id);
+  if (el) {
+    destroyPuzzleGround(el);
+    el.classList.remove("cg-board--mounted");
+  }
+  delete mountedIds[puzzle.id];
+}
+
+function unmountInactiveWeeks(activeWeekIndex) {
+  for (var i = 0; i < FESTIVAL_PUZZLES.length; i++) {
+    var p = FESTIVAL_PUZZLES[i];
+    if (!p || p.weekIndex === activeWeekIndex) continue;
+    unmountPuzzleBoard(p);
+  }
+}
+
 function mountPuzzleBoard(puzzle, options) {
   var force = options && options.force;
   if (!isPuzzleAccessUnlocked(puzzle.id)) return;
@@ -196,6 +215,8 @@ function mountPuzzleBoard(puzzle, options) {
   if (!puzzle.play || !puzzle.fen) return;
   var el = document.getElementById(puzzle.id);
   if (!el || !isBoardWeekVisible(el)) return;
+
+  if (force) unmountPuzzleBoard(puzzle);
 
   syncChessBoardSize(el);
   if (!force && !boardHasLayout(el)) return;
@@ -350,6 +371,7 @@ function initChessgroundPuzzles() {
   window.addEventListener("ptra-puzzle-week-visible", function (ev) {
     var weekIndex = ev.detail && ev.detail.weekIndex;
     if (weekIndex == null) return;
+    unmountInactiveWeeks(weekIndex);
     requestAnimationFrame(function () {
       requestAnimationFrame(function () {
         layoutWeekBoardSizes(weekIndex);
@@ -390,7 +412,14 @@ function initChessgroundPuzzles() {
 
   if (window.visualViewport) {
     window.visualViewport.addEventListener("resize", function () {
-      remountActiveWeek();
+      var weekIndex = getActivePuzzleWeekIndex();
+      if (weekIndex == null) return;
+      layoutWeekBoardSizes(weekIndex);
+      for (var i = 0; i < FESTIVAL_PUZZLES.length; i++) {
+        var p = FESTIVAL_PUZZLES[i];
+        if (p && p.weekIndex === weekIndex) unmountPuzzleBoard(p);
+      }
+      mountWeekPuzzles(weekIndex);
     });
   }
 }

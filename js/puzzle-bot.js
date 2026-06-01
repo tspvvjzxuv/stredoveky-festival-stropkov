@@ -78,9 +78,25 @@ function statusForTurn(chess, botThinking, playerColor) {
   return "Ťah počítača…";
 }
 
+export function destroyPuzzleGround(boardEl) {
+  if (!boardEl) return;
+  var ground = boardEl._ptraChessground;
+  if (ground && typeof ground.destroy === "function") {
+    try {
+      ground.destroy();
+    } catch (e) {}
+  }
+  delete boardEl._ptraChessground;
+  boardEl.classList.remove("cg-wrap", "orientation-white", "orientation-black", "manipulable");
+  boardEl.innerHTML = "";
+}
+
 export function mountBotPuzzle(puzzle, helpers) {
   var el = document.getElementById(puzzle.id);
   if (!el) return;
+
+  destroyPuzzleGround(el);
+  syncChessBoardSize(el);
 
   var playerColor = playerColorFromPuzzle(puzzle);
   var opponent = opponentColor(playerColor);
@@ -740,6 +756,7 @@ export function mountBotPuzzle(puzzle, helpers) {
     highlight: { lastMove: true, check: true },
     animation: { enabled: true },
   });
+  el._ptraChessground = ground;
 
   function resetBoard() {
     busy = false;
