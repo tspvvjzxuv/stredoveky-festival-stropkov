@@ -15,8 +15,8 @@ export const DIFFICULTY_LABELS = {
 };
 
 export const WEEK_THEMES = [
-  { title: "Brána pod Vliekom", tagline: "Prvá stráž brány" },
-  { title: "Rytier Andreas", tagline: "Pasovanie v areáli" },
+  { title: "Mat jedným ťahom", tagline: "Úlohy z knihy — mat v 1 ťahu" },
+  { title: "Mat jedným ťahom II", tagline: "Pokračovanie — strelci a jazdci" },
   { title: "Stredoveký festival", tagline: "Hradné nádvorie" },
   { title: "Pasovanie rytierov", tagline: "Rytiersky ceremoniál" },
   { title: "Lukostreľba", tagline: "Terč na nádvorí" },
@@ -24,9 +24,9 @@ export const WEEK_THEMES = [
   { title: "Väzba", tagline: "Taktika z knihy — väzba" },
   { title: "Väzba II", tagline: "Pokračovanie motívu väzby" },
   { title: "Dvojitý úder", tagline: "Taktika z knihy" },
-  { title: "Kronika hlavolamu", tagline: "Zápisník mága" },
-  { title: "Investícia rytiera", tagline: "Tajomná peňaženka" },
-  { title: "Koruna festivalu", tagline: "Posledný týždeň pred festivalom" },
+  { title: "Mat troma ťahmi", tagline: "Úlohy z knihy — mat v 3 ťahoch" },
+  { title: "Mat troma ťahmi II", tagline: "Dámsko-jazdecké kombinácie" },
+  { title: "Koruna festivalu", tagline: "Záverečné maty z knihy" },
 ];
 
 export function puzzleId(weekIndex, difficulty) {

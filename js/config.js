@@ -4,7 +4,7 @@
  */
 window.FESTIVAL_CONFIG = {
   /** Zmeňte pri deployi — vynúti obnovu cache modulov šachu v prehliadači. */
-  assetsVersion: "20260529c",
+  assetsVersion: "20260601a",
   rok: 2026,
   miesto: "Stropkov",
 
