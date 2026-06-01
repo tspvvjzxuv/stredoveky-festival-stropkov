@@ -46,23 +46,6 @@ export function syncChessBoardSize(boardEl) {
   if (!boardEl) return 0;
   var host = boardEl.closest(".chessground-host");
   var w = getChessBoardMaxWidth(boardEl);
-
-  if (isMobileBoardLayout()) {
-    var size = "min(100%, " + w + "px)";
-    if (host) {
-      host.style.setProperty("--cg-board-size", size);
-      host.style.width = "100%";
-      host.style.maxWidth = "100%";
-      host.style.minHeight = "0";
-    }
-    boardEl.style.width = "100%";
-    boardEl.style.maxWidth = size;
-    boardEl.style.height = "auto";
-    boardEl.style.aspectRatio = "1 / 1";
-    boardEl.style.boxSizing = "border-box";
-    return w;
-  }
-
   var px = w + "px";
   if (host) {
     host.style.setProperty("--cg-board-size", px);
@@ -81,6 +64,8 @@ export function boardHasLayout(boardEl) {
   if (!boardEl) return false;
   syncChessBoardSize(boardEl);
   var rect = boardEl.getBoundingClientRect();
+  if (rect.width <= 20 || rect.height <= 20) return false;
+  if (isMobileBoardLayout()) return true;
   var maxW = getChessBoardMaxWidth(boardEl) + 4;
-  return rect.width > 20 && rect.height > 20 && rect.width <= maxW;
+  return rect.width <= maxW;
 }

@@ -4919,26 +4919,17 @@ body.home-page {
   border-bottom: 1px solid rgba(255, 203, 0, 0.12);
 }
 
-#sachove-hlavolamy .sach-puzzle-active-week {
-  display: block !important;
-  width: 100%;
-  min-height: 8rem;
-  overflow: visible !important;
-}
-
 #sachove-hlavolamy .sach-puzzle-week.is-week-active {
   border-color: rgba(255, 203, 0, 0.35);
   box-shadow: inset 0 0 0 1px rgba(255, 203, 0, 0.18);
 }
 
-@media (min-width: 901px) {
-  #sachove-hlavolamy .sach-puzzle-week:not(.is-week-active) {
-    display: none !important;
-  }
+#sachove-hlavolamy .sach-puzzle-week:not(.is-week-active) {
+  display: none !important;
+}
 
-  #sachove-hlavolamy .sach-puzzle-week.is-week-active {
-    display: block !important;
-  }
+#sachove-hlavolamy .sach-puzzle-week.is-week-active {
+  display: block !important;
 }
 
 #sachove-hlavolamy .sach-puzzle-week:last-child {
@@ -5070,10 +5061,6 @@ body.home-page {
   gap: 0.5rem;
   margin-top: 0.85rem;
   min-height: 4rem;
-}
-
-#sachove-hlavolamy .sach-ulohy-hint--mobile {
-  display: none;
 }
 
 #sachove-hlavolamy #sach-loading {
@@ -5385,17 +5372,8 @@ body.home-page {
   }
 }
 
-/* Mobil / úzky displej — jeden stĺpec, prepínač týždňov pri úlohách */
+/* Mobil / úzky displej — jeden stĺpec, týždeň cez harmonogram */
 @media (max-width: 900px) {
-  #sachove-hlavolamy .sach-ulohy-hint--desktop {
-    display: none;
-  }
-
-  #sachove-hlavolamy .sach-ulohy-hint--mobile {
-    display: block;
-    margin-top: 0.65rem;
-  }
-
   #sachove-hlavolamy .sach-ulohy-card,
   #sachove-hlavolamy .sach-ulohy-card .sach-visual-grid,
   #sachove-hlavolamy .sach-puzzle-week.is-week-active,
@@ -5405,55 +5383,9 @@ body.home-page {
     overflow: visible !important;
   }
 
-  #sachove-hlavolamy .sach-mobile-week-nav {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.35rem;
-    margin: 0.65rem 0 0.85rem;
-    padding: 0.35rem 0;
-  }
-
-  #sachove-hlavolamy .sach-mobile-week-nav[hidden] {
-    display: none !important;
-  }
-
-  #sachove-hlavolamy .sach-mobile-week-btn {
-    flex: 0 0 auto;
-    min-width: 2.35rem;
-    min-height: 2.35rem;
-    padding: 0.35rem 0.5rem;
-    border-radius: 6px;
-    border: 1px solid rgba(255, 203, 0, 0.35);
-    background: rgba(12, 16, 24, 0.9);
-    color: #f0d39e;
-    font-family: var(--font-ui, "Montserrat", sans-serif);
-    font-size: 0.78rem;
-    font-weight: 700;
-    letter-spacing: 0.04em;
-    cursor: pointer;
-    -webkit-tap-highlight-color: transparent;
-    touch-action: manipulation;
-  }
-
-  #sachove-hlavolamy .sach-mobile-week-btn.is-active {
-    border-color: rgba(255, 203, 0, 0.85);
-    background: rgba(48, 40, 12, 0.95);
-    color: #ffe066;
-    box-shadow: 0 0 0 1px rgba(255, 203, 0, 0.35);
-  }
-
   #sachove-hlavolamy .sach-visual-grid {
     min-height: 12rem;
     width: 100%;
-  }
-
-  #sachove-hlavolamy .sach-puzzle-active-week,
-  #sachove-hlavolamy .sach-puzzle-active-week .sach-puzzle-week {
-    display: block !important;
-    width: 100%;
-    min-height: 8rem;
-    visibility: visible !important;
-    overflow: visible !important;
   }
 
   #sachove-hlavolamy .sach-week-puzzles {
@@ -5491,12 +5423,7 @@ body.home-page {
   }
 
   #sachove-hlavolamy .cg-board {
-    width: 100% !important;
-    max-width: 100% !important;
-    height: auto !important;
-    min-width: 0 !important;
-    min-height: 12rem;
-    aspect-ratio: 1 / 1;
+    max-width: 100%;
     touch-action: none;
     -webkit-user-select: none;
     user-select: none;
@@ -5505,17 +5432,6 @@ body.home-page {
   #sachove-hlavolamy .cg-board cg-container {
     width: 100% !important;
     height: 100% !important;
-    max-width: 100%;
-  }
-}
-
-@media (min-width: 901px) {
-  #sachove-hlavolamy .sach-ulohy-hint--mobile {
-    display: none;
-  }
-
-  #sachove-hlavolamy .sach-mobile-week-nav {
-    display: none !important;
   }
 }
 
