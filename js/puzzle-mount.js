@@ -139,7 +139,9 @@ export function mountActiveWeek(weekIndex) {
   }
 
   if (isMobilePuzzleLayout()) {
-    setTimeout(remountActiveWeekIfEmpty, 800);
+    setTimeout(remountActiveWeekIfEmpty, 400);
+    setTimeout(remountActiveWeekIfEmpty, 1200);
+    setTimeout(remountActiveWeekIfEmpty, 2500);
   }
 }
 
