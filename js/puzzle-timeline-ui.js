@@ -3,10 +3,9 @@ import { DIFFICULTY_LABELS } from "./puzzles-data.js";
 import {
   isPuzzleAccessUnlocked,
   isDevUnlockAll,
-  tryUnlockWithPassword,
   getDefaultWeekIndex,
 } from "./puzzle-unlock.js";
-import { isPuzzleRewardUnlocked } from "./puzzle-rewards.js";
+import { isPuzzleRewardUnlocked, getWeekSolveProgress } from "./puzzle-rewards.js";
 import { setPuzzleWeekVisible } from "./puzzle-board-ui.js";
 
 function formatFestivalLabel() {
@@ -20,21 +19,27 @@ function weekFullyUnlocked(week) {
   return true;
 }
 
+function weekIndexToArrayIndex(weekIndex) {
+  for (var i = 0; i < PUZZLE_WEEKS.length; i++) {
+    if (PUZZLE_WEEKS[i].weekIndex === weekIndex) return i;
+  }
+  return 0;
+}
+
 export function initPuzzleTimeline(onSelectPuzzle) {
   var root = document.getElementById("sach-puzzle-timeline");
-  if (!root || !PUZZLE_WEEKS.length) return;
+  if (!root || !PUZZLE_WEEKS.length) return null;
 
-  var slider = document.getElementById("sach-puzzle-timeline-range");
   var track = document.getElementById("sach-puzzle-timeline-track");
   var label = document.getElementById("sach-puzzle-timeline-label");
   var devNote = document.getElementById("sach-puzzle-timeline-dev");
-  if (!slider || !track) return;
+  if (!track) return null;
 
-  slider.min = "0";
-  slider.max = String(PUZZLE_WEEKS.length - 1);
-  slider.step = "1";
+  var activeIndex = getDefaultWeekIndex();
 
   track.innerHTML = "";
+  track.removeAttribute("aria-hidden");
+
   for (var i = 0; i < PUZZLE_WEEKS.length; i++) {
     var week = PUZZLE_WEEKS[i];
     var group = document.createElement("div");
@@ -44,6 +49,8 @@ export function initPuzzleTimeline(onSelectPuzzle) {
     var head = document.createElement("button");
     head.type = "button";
     head.className = "sach-timeline__week-head";
+    head.setAttribute("role", "tab");
+    head.setAttribute("aria-selected", "false");
     var unlocked = weekFullyUnlocked(week);
     head.classList.toggle("is-unlocked", unlocked);
     head.classList.toggle("is-locked", !unlocked);
@@ -51,6 +58,7 @@ export function initPuzzleTimeline(onSelectPuzzle) {
       '<span class="sach-timeline__marker-week">T' +
       week.weekIndex +
       "</span>" +
+      '<span class="sach-timeline__marker-progress" hidden></span>' +
       '<span class="sach-timeline__marker-date">' +
       formatUnlockDateSk(week.unlockDate) +
       "</span>";
@@ -62,7 +70,6 @@ export function initPuzzleTimeline(onSelectPuzzle) {
     );
     head.addEventListener("click", function () {
       var idx = parseInt(this.closest(".sach-timeline__week-group").dataset.weekIndex, 10);
-      slider.value = String(idx);
       updateFromIndex(idx, null);
     });
     group.appendChild(head);
@@ -77,6 +84,7 @@ export function initPuzzleTimeline(onSelectPuzzle) {
       slotBtn.className = "sach-timeline__slot";
       slotBtn.dataset.puzzleId = pid;
       slotBtn.dataset.weekIndex = String(i);
+      slotBtn.tabIndex = -1;
       var slotOpen = isPuzzleAccessUnlocked(pid);
       var slotDone = isPuzzleRewardUnlocked(pid);
       slotBtn.classList.toggle("is-unlocked", slotOpen);
@@ -90,7 +98,6 @@ export function initPuzzleTimeline(onSelectPuzzle) {
         ev.stopPropagation();
         var wIdx = parseInt(this.dataset.weekIndex, 10);
         var puzzleId = this.dataset.puzzleId;
-        slider.value = String(wIdx);
         updateFromIndex(wIdx, puzzleId);
         if (typeof onSelectPuzzle === "function") onSelectPuzzle(puzzleId);
       });
@@ -105,13 +112,43 @@ export function initPuzzleTimeline(onSelectPuzzle) {
   festivalEl.textContent = "Festival " + formatFestivalLabel();
   track.appendChild(festivalEl);
 
+  function updateWeekHeadProgress(head, week) {
+    if (!head || !week) return;
+    var progEl = head.querySelector(".sach-timeline__marker-progress");
+    if (!progEl) return;
+
+    var prog = getWeekSolveProgress(week.weekIndex);
+    var open = weekFullyUnlocked(week);
+
+    if (prog.solved > 0 || open) {
+      progEl.textContent = prog.solved + "/" + prog.total;
+      progEl.hidden = false;
+    } else {
+      progEl.textContent = "";
+      progEl.hidden = true;
+    }
+
+    head.classList.toggle("is-week-complete", prog.solved >= prog.total && prog.total > 0);
+    head.classList.toggle("is-week-partial", prog.solved > 0 && prog.solved < prog.total);
+
+    var ariaBits = ["Týždeň " + week.weekIndex];
+    if (prog.solved > 0) ariaBits.push(prog.solved + " z " + prog.total + " úloh splnených");
+    if (!open) ariaBits.push("odomkne sa " + formatUnlockDateSk(week.unlockDate));
+    head.setAttribute("aria-label", ariaBits.join(", "));
+  }
+
   function syncTimelineUI(idx) {
     var week = PUZZLE_WEEKS[idx];
     if (!week) return;
     var unlocked = weekFullyUnlocked(week);
     var groups = track.querySelectorAll(".sach-timeline__week-group");
     for (var m = 0; m < groups.length; m++) {
-      groups[m].classList.toggle("is-active", parseInt(groups[m].dataset.weekIndex, 10) === idx);
+      var gIdx = parseInt(groups[m].dataset.weekIndex, 10);
+      var isActive = gIdx === idx;
+      groups[m].classList.toggle("is-active", isActive);
+      var headEl = groups[m].querySelector(".sach-timeline__week-head");
+      if (headEl) headEl.setAttribute("aria-selected", isActive ? "true" : "false");
+      if (headEl && PUZZLE_WEEKS[gIdx]) updateWeekHeadProgress(headEl, PUZZLE_WEEKS[gIdx]);
     }
     if (label) {
       label.textContent = unlocked
@@ -134,6 +171,7 @@ export function initPuzzleTimeline(onSelectPuzzle) {
   function updateFromIndex(idx, focusPuzzleId) {
     var week = PUZZLE_WEEKS[idx];
     if (!week) return;
+    activeIndex = idx;
     syncTimelineUI(idx);
     setPuzzleWeekVisible(week.weekIndex, { scroll: true });
     var targetId = focusPuzzleId || week.puzzleIds[0];
@@ -145,11 +183,13 @@ export function initPuzzleTimeline(onSelectPuzzle) {
     for (var g = 0; g < groups.length; g++) {
       var wIdx = parseInt(groups[g].dataset.weekIndex, 10);
       var week = PUZZLE_WEEKS[wIdx];
+      if (!week) continue;
       var open = weekFullyUnlocked(week);
       var head = groups[g].querySelector(".sach-timeline__week-head");
       if (head) {
         head.classList.toggle("is-unlocked", open);
         head.classList.toggle("is-locked", !open);
+        updateWeekHeadProgress(head, week);
       }
       var slots = groups[g].querySelectorAll(".sach-timeline__slot");
       for (var s = 0; s < slots.length; s++) {
@@ -159,16 +199,14 @@ export function initPuzzleTimeline(onSelectPuzzle) {
         slots[s].classList.toggle("is-solved", isPuzzleRewardUnlocked(pid));
       }
     }
-    syncTimelineUI(parseInt(slider.value, 10) || 0);
+    syncTimelineUI(activeIndex);
   }
 
-  slider.addEventListener("input", function () {
-    updateFromIndex(parseInt(slider.value, 10) || 0, null);
-  });
+  function selectWeekNumber(weekIndex) {
+    updateFromIndex(weekIndexToArrayIndex(weekIndex), null);
+  }
 
-  var currentIdx = getDefaultWeekIndex();
-  slider.value = String(currentIdx);
-  updateFromIndex(currentIdx, null);
+  updateFromIndex(activeIndex, null);
 
   if (devNote) {
     devNote.hidden = !isDevUnlockAll();
@@ -179,6 +217,11 @@ export function initPuzzleTimeline(onSelectPuzzle) {
 
   window.addEventListener("ptra-puzzle-access-changed", refreshMarkers);
   window.addEventListener("ptra-puzzle-solved", refreshMarkers);
+  window.addEventListener("ptra-timeline-refresh", refreshMarkers);
+  window.addEventListener("ptra-timeline-go-week", function (ev) {
+    var weekIndex = ev.detail && ev.detail.weekIndex;
+    if (typeof weekIndex === "number") selectWeekNumber(weekIndex);
+  });
 
-  return { refresh: refreshMarkers };
+  return { refresh: refreshMarkers, selectWeekNumber: selectWeekNumber };
 }

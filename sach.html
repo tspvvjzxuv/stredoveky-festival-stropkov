@@ -153,20 +153,12 @@
         <div class="card sach-puzzle-timeline-card">
           <h2>Harmonogram odomykania</h2>
           <p class="note">
-            Posúvajte časovú os alebo kliknite na týždeň. Zamknuté úlohy môžete otvoriť skôr heslom
+            Kliknite na týždeň v harmonograme. Zamknuté úlohy môžete otvoriť skôr heslom
             (tlačidlo „Mám heslo“ pri úlohe).
           </p>
           <div class="sach-puzzle-timeline" id="sach-puzzle-timeline">
-            <label class="visually-hidden" for="sach-puzzle-timeline-range">Týždeň hlavolamu</label>
-            <input
-              type="range"
-              id="sach-puzzle-timeline-range"
-              class="sach-timeline__range"
-              value="0"
-              aria-describedby="sach-puzzle-timeline-label"
-            />
             <p id="sach-puzzle-timeline-label" class="sach-timeline__label"></p>
-            <div id="sach-puzzle-timeline-track" class="sach-timeline__track" aria-hidden="true"></div>
+            <div id="sach-puzzle-timeline-track" class="sach-timeline__track" role="tablist" aria-label="Týždne hlavolamov"></div>
             <p id="sach-puzzle-timeline-dev" class="sach-timeline__dev note" hidden></p>
           </div>
         </div>
@@ -224,6 +216,6 @@
       </p>
       <p>© <span id="footer-year">2026</span></p>
     </footer>
-    <script src="js/sach.bundle.js?v=20260602o" defer></script>
+    <script src="js/sach.bundle.js?v=20260602p" defer></script>
   </body>
 </html>

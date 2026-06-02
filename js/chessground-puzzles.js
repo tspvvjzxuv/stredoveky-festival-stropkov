@@ -21,6 +21,7 @@ function syncProgressUI() {
   initPuzzleRewards();
   syncScoresFromRewards();
   refreshScoreUI();
+  window.dispatchEvent(new CustomEvent("ptra-timeline-refresh"));
 }
 
 function scrollToPuzzle(puzzleId) {

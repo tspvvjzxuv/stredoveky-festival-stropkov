@@ -5053,8 +5053,29 @@ body.home-page {
   border-color: rgba(92, 201, 122, 0.5);
 }
 
+#sachove-hlavolamy .sach-timeline__week-head.is-week-complete {
+  border-color: rgba(92, 201, 122, 0.72);
+  background: rgba(24, 48, 34, 0.72);
+}
+
+#sachove-hlavolamy .sach-timeline__week-head.is-week-partial {
+  border-color: rgba(255, 203, 0, 0.55);
+}
+
+#sachove-hlavolamy .sach-timeline__marker-progress {
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--ds-tertiary-bright, #ffe066);
+}
+
+#sachove-hlavolamy .sach-timeline__week-head.is-week-complete .sach-timeline__marker-progress {
+  color: #b8f0c8;
+}
+
 #sachove-hlavolamy .sach-timeline__slot.is-solved {
-  background: rgba(92, 201, 122, 0.35);
+  background: rgba(92, 201, 122, 0.45);
+  border-color: rgba(92, 201, 122, 0.75);
+  color: #eaffef;
 }
 
 @media (max-width: 1100px) {
@@ -5576,12 +5597,6 @@ body.sach-page-body .page-main.sach-page {
 
 #sachove-hlavolamy .sach-puzzle-timeline {
   margin-top: 0.75rem;
-}
-
-#sachove-hlavolamy .sach-timeline__range {
-  width: 100%;
-  margin: 0.5rem 0 0.75rem;
-  accent-color: var(--ds-tertiary, #ffcb00);
 }
 
 #sachove-hlavolamy .sach-timeline__label {

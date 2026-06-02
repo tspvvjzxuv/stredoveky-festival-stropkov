@@ -177,14 +177,9 @@ function emitPuzzleWeekVisible(weekIndex) {
 }
 
 function syncTimelineSliderToWeek(weekIndex) {
-  var slider = document.getElementById("sach-puzzle-timeline-range");
-  if (!slider) return;
-  for (var wi = 0; wi < PUZZLE_WEEKS.length; wi++) {
-    if (PUZZLE_WEEKS[wi].weekIndex === weekIndex) {
-      slider.value = String(wi);
-      break;
-    }
-  }
+  window.dispatchEvent(
+    new CustomEvent("ptra-timeline-go-week", { detail: { weekIndex: weekIndex } })
+  );
 }
 
 export function renderPuzzleGrid() {

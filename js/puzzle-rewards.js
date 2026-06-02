@@ -230,6 +230,11 @@ function updateInvesticiaUI() {
 export function initPuzzleRewards() {
   migrateLegacy();
   updateInvesticiaUI();
+  for (var i = 0; i < FESTIVAL_PUZZLES.length; i++) {
+    if (isPuzzleRewardUnlocked(FESTIVAL_PUZZLES[i].id)) {
+      syncCompletionUI(FESTIVAL_PUZZLES[i].id, false);
+    }
+  }
 }
 
 export function getRewardMeta(puzzleId) {
