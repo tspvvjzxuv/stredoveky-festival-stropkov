@@ -5432,6 +5432,15 @@ body.sach-page-body .page-main.sach-page {
 }
 
 @media (hover: none) and (pointer: coarse) {
+  #sachove-hlavolamy .sach-visual-grid {
+    min-height: 8rem;
+    width: 100%;
+  }
+
+  #sachove-hlavolamy .sach-week-puzzles {
+    grid-template-columns: 1fr;
+  }
+
   #sachove-hlavolamy .cg-board,
   #sachove-hlavolamy .cg-board.cg-wrap {
     touch-action: none;

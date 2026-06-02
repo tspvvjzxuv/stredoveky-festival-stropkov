@@ -6,6 +6,8 @@ import {
   applyPuzzleAccessUI,
   presetGridBoardSizes,
   getActivePuzzleWeekIndex,
+  puzzleGridHasContent,
+  useSingleWeekDom,
 } from "./puzzle-board-ui.js";
 import { syncPermanentFromSchedule, isDevUnlockAll, bindPuzzleUnlockPrompts } from "./puzzle-unlock.js";
 import { initPuzzleTimeline } from "./puzzle-timeline-ui.js";
@@ -57,7 +59,8 @@ function initSachPage() {
     bindPuzzleUnlockPrompts();
     initPuzzleTimeline(scrollToPuzzle);
     mountActiveWeekWithMarkers(null);
-    hideLoadingIndicator();
+
+    if (puzzleGridHasContent()) hideLoadingIndicator();
 
     window.addEventListener("ptra-puzzle-access-changed", function () {
       syncProgressUI();
@@ -69,9 +72,17 @@ function initSachPage() {
     });
 
     window.addEventListener("load", function () {
+      if (!puzzleGridHasContent()) renderPuzzleGrid();
       presetGridBoardSizes(document.getElementById("sach-puzzle-grid"));
       mountActiveWeekWithMarkers(getActivePuzzleWeekIndex());
+      hideLoadingIndicator();
     });
+
+    if (useSingleWeekDom()) {
+      setTimeout(function () {
+        mountActiveWeekWithMarkers(getActivePuzzleWeekIndex());
+      }, 800);
+    }
   } catch (err) {
     showPageInitError(err);
   }

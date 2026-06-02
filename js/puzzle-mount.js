@@ -8,6 +8,7 @@ import { isPuzzleAccessUnlocked } from "./puzzle-unlock.js";
 import {
   getActivePuzzleWeekIndex,
   isPuzzleBoardInActiveView,
+  useSingleWeekDom,
   syncChessBoardSize,
   boardHasLayout,
 } from "./puzzle-board-ui.js";
@@ -68,7 +69,7 @@ function mountBoardNow(puzzle, force) {
   if (force) unmountBoard(puzzle);
 
   syncChessBoardSize(el, { skipRedraw: true });
-  if (!force && !boardHasLayout(el)) return;
+  if (!force && !useSingleWeekDom() && !boardHasLayout(el)) return;
 
   try {
     mountedIds[puzzle.id] = true;
@@ -97,12 +98,13 @@ function waitThenMount(puzzle, attempt) {
   var el = document.getElementById(puzzle.id);
   if (!el || !isPuzzleBoardInActiveView(el)) return;
 
-  if (boardHasLayout(el)) {
+  if (boardHasLayout(el) || useSingleWeekDom()) {
     mountBoardNow(puzzle, false);
     return;
   }
 
-  if (attempt < 8) {
+  var maxAttempts = useSingleWeekDom() ? 20 : 8;
+  if (attempt < maxAttempts) {
     setTimeout(function () {
       waitThenMount(puzzle, attempt + 1);
     }, 50 + attempt * 35);
@@ -135,6 +137,11 @@ export function mountActiveWeek(weekIndex) {
     clearMountFlag(p);
     waitThenMount(p, 0);
   }
+
+  if (useSingleWeekDom()) {
+    setTimeout(remountActiveWeekIfEmpty, 500);
+    setTimeout(remountActiveWeekIfEmpty, 1500);
+  }
 }
 
 export function refreshSolvedBoardMarkers() {
@@ -149,6 +156,24 @@ export function mountActiveWeekWithMarkers(weekIndex) {
   if (weekIndex == null) return;
   mountActiveWeek(weekIndex);
   refreshSolvedBoardMarkers();
+}
+
+function activeWeekHasPieces() {
+  var weekIndex = getActivePuzzleWeekIndex();
+  if (weekIndex == null) return false;
+  var section = document.getElementById("sach-week-" + weekIndex);
+  if (!section) return false;
+  var boards = section.querySelectorAll(".cg-board");
+  for (var i = 0; i < boards.length; i++) {
+    if (boardHasPieces(boards[i])) return true;
+  }
+  return false;
+}
+
+function remountActiveWeekIfEmpty() {
+  if (activeWeekHasPieces()) return;
+  var weekIndex = getActivePuzzleWeekIndex();
+  if (weekIndex != null) mountActiveWeek(weekIndex);
 }
 
 export function syncActiveWeekBoards() {
@@ -180,9 +205,16 @@ function scheduleViewportSync() {
 
 function onWeekVisible(weekIndex) {
   unmountOtherWeeks(weekIndex);
-  requestAnimationFrame(function () {
+  var run = function () {
     mountActiveWeekWithMarkers(weekIndex);
-  });
+  };
+  if (useSingleWeekDom()) {
+    requestAnimationFrame(function () {
+      requestAnimationFrame(run);
+    });
+  } else {
+    requestAnimationFrame(run);
+  }
 }
 
 export function initPuzzleMount() {
@@ -222,5 +254,17 @@ export function initPuzzleMount() {
       },
       { passive: true, capture: true }
     );
+  }
+
+  if (useSingleWeekDom()) {
+    function scheduleInitialMountCheck() {
+      setTimeout(remountActiveWeekIfEmpty, 400);
+      setTimeout(remountActiveWeekIfEmpty, 2000);
+    }
+    if (document.readyState === "complete") {
+      scheduleInitialMountCheck();
+    } else {
+      window.addEventListener("load", scheduleInitialMountCheck);
+    }
   }
 }
