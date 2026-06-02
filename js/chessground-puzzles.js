@@ -6,6 +6,8 @@ import {
   applyPuzzleAccessUI,
   presetGridBoardSizes,
   isMobilePuzzleLayout,
+  puzzleGridHasContent,
+  getActivePuzzleWeekIndex,
 } from "./puzzle-board-ui.js";
 import { syncPermanentFromSchedule, isDevUnlockAll, bindPuzzleUnlockPrompts } from "./puzzle-unlock.js";
 import { initPuzzleTimeline } from "./puzzle-timeline-ui.js";
@@ -26,6 +28,11 @@ function scrollToPuzzle(puzzleId) {
   if (item) item.scrollIntoView({ behavior: "smooth", block: "nearest" });
 }
 
+function hideLoadingIndicator() {
+  var loading = document.getElementById("sach-loading");
+  if (loading) loading.hidden = true;
+}
+
 function showPageInitError(err) {
   console.error("PTRA šach init:", err);
   var grid = document.getElementById("sach-puzzle-grid");
@@ -35,12 +42,63 @@ function showPageInitError(err) {
       "Šachové úlohy sa nepodarilo spustiť. Obnovte stránku alebo vypnite blokovanie skriptov pre ptra.sk." +
       "</p>";
   }
-  var loading = document.getElementById("sach-loading");
-  if (loading) loading.hidden = true;
+  hideLoadingIndicator();
+}
+
+function showGridEmptyFallback() {
+  var grid = document.getElementById("sach-puzzle-grid");
+  if (!grid || puzzleGridHasContent()) return;
+  grid.innerHTML =
+    '<div class="sach-grid-retry" role="alert">' +
+    '<p class="note">Úlohy sa nepodarilo zobraziť. Skúste obnoviť stránku alebo tlačidlo nižšie.</p>' +
+    '<button type="button" class="btn btn-outline" id="sach-grid-retry">Načítať úlohy</button>' +
+    "</div>";
+  var retry = document.getElementById("sach-grid-retry");
+  if (retry) {
+    retry.addEventListener("click", function () {
+      recoverPuzzleGrid();
+    });
+  }
+}
+
+function recoverPuzzleGrid() {
+  try {
+    if (!renderPuzzleGrid()) {
+      showGridEmptyFallback();
+      return false;
+    }
+    presetGridBoardSizes(document.getElementById("sach-puzzle-grid"));
+    syncProgressUI();
+    mountActiveWeekWithMarkers(getActivePuzzleWeekIndex());
+    hideLoadingIndicator();
+    return true;
+  } catch (err) {
+    showPageInitError(err);
+    return false;
+  }
+}
+
+function scheduleMobileGridRecovery() {
+  if (!isMobilePuzzleLayout()) return;
+  var delays = [400, 1200, 2800];
+  for (var i = 0; i < delays.length; i++) {
+    (function (ms) {
+      setTimeout(function () {
+        if (puzzleGridHasContent()) {
+          mountActiveWeekWithMarkers(getActivePuzzleWeekIndex());
+          return;
+        }
+        recoverPuzzleGrid();
+      }, ms);
+    })(delays[i]);
+  }
 }
 
 function onBreakpointCross() {
-  renderPuzzleGrid();
+  if (!renderPuzzleGrid()) {
+    showGridEmptyFallback();
+    return;
+  }
   presetGridBoardSizes(document.getElementById("sach-puzzle-grid"));
   syncProgressUI();
   mountActiveWeekWithMarkers(null);
@@ -61,20 +119,35 @@ function initSachPage() {
     initPuzzleMount();
 
     renderInvesticiaGrid();
-    renderPuzzleGrid();
-    presetGridBoardSizes(document.getElementById("sach-puzzle-grid"));
-    syncProgressUI();
+    var gridOk = renderPuzzleGrid();
+    if (gridOk) {
+      presetGridBoardSizes(document.getElementById("sach-puzzle-grid"));
+      syncProgressUI();
+      mountActiveWeekWithMarkers(null);
+      hideLoadingIndicator();
+    } else {
+      showGridEmptyFallback();
+    }
+
     bindPuzzleUnlockPrompts();
     initPuzzleTimeline(scrollToPuzzle);
-    mountActiveWeekWithMarkers(null);
 
     window.addEventListener("ptra-puzzle-access-changed", function () {
       syncProgressUI();
       mountActiveWeekWithMarkers(null);
     });
 
-    var loading = document.getElementById("sach-loading");
-    if (loading) loading.hidden = true;
+    window.addEventListener("pageshow", function (ev) {
+      if (!ev.persisted) return;
+      recoverPuzzleGrid();
+    });
+
+    window.addEventListener("load", function () {
+      if (!puzzleGridHasContent()) recoverPuzzleGrid();
+      else mountActiveWeekWithMarkers(getActivePuzzleWeekIndex());
+    });
+
+    scheduleMobileGridRecovery();
   } catch (err) {
     showPageInitError(err);
   }

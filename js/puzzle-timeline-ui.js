@@ -168,7 +168,7 @@ export function initPuzzleTimeline(onSelectPuzzle) {
 
   var currentIdx = getDefaultWeekIndex();
   slider.value = String(currentIdx);
-  syncTimelineUI(currentIdx);
+  updateFromIndex(currentIdx, null);
 
   if (devNote) {
     devNote.hidden = !isDevUnlockAll();

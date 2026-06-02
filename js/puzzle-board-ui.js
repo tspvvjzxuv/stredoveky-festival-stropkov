@@ -10,8 +10,22 @@ import {
 import { isPuzzleAccessUnlocked, getDefaultWeekIndex } from "./puzzle-unlock.js";
 
 export function isMobilePuzzleLayout() {
-  if (typeof window === "undefined" || !window.matchMedia) return false;
-  return window.matchMedia("(max-width: 900px)").matches;
+  if (typeof window === "undefined") return false;
+  var w = window.innerWidth || 0;
+  var h = window.innerHeight || 0;
+  if (w > 0 && w <= 900) return true;
+  if (h > 0 && h <= 900 && w > 0 && w <= 1200) return true;
+  if (window.matchMedia) {
+    if (window.matchMedia("(max-width: 900px)").matches) return true;
+    // iPhone landscape: šírka >900 px, ale stále dotykové zariadenie — Safari zlyháva pri 12× display:none.
+    if (window.matchMedia("(hover: none) and (pointer: coarse)").matches) return true;
+  }
+  return false;
+}
+
+export function puzzleGridHasContent() {
+  var grid = document.getElementById("sach-puzzle-grid");
+  return !!(grid && grid.querySelector(".sach-puzzle-week"));
 }
 
 export function renderInvesticiaGrid() {
@@ -173,31 +187,42 @@ function renderDesktopPuzzleGrid(grid) {
 
 /** Mobil: len jeden týždeň v DOM (Safari zlyháva pri 12× display:none sekciách). */
 function renderMobilePuzzleGrid(grid, weekIndex) {
-  notifyGridRebuilt();
-  grid.innerHTML = "";
   var week = findWeekMeta(weekIndex);
-  if (!week) return;
+  if (!week) return false;
   var section = buildWeekSection(week);
   section.classList.add("is-week-active");
-  grid.appendChild(section);
+  notifyGridRebuilt();
+  if (typeof grid.replaceChildren === "function") {
+    grid.replaceChildren(section);
+  } else {
+    grid.innerHTML = "";
+    grid.appendChild(section);
+  }
+  return true;
 }
 
 export function renderPuzzleGrid() {
   var grid = document.getElementById("sach-puzzle-grid");
-  if (!grid) return;
+  if (!grid) return false;
 
   var initialWeek = PUZZLE_WEEKS[getDefaultWeekIndex()];
   var weekNum = initialWeek ? initialWeek.weekIndex : 1;
+  var ok = false;
 
   if (isMobilePuzzleLayout()) {
-    renderMobilePuzzleGrid(grid, weekNum);
-    grid.dataset.activeWeek = String(weekNum);
-    syncTimelineSliderToWeek(weekNum);
-    emitPuzzleWeekVisible(weekNum);
+    ok = renderMobilePuzzleGrid(grid, weekNum);
+    if (ok) {
+      grid.dataset.activeWeek = String(weekNum);
+      syncTimelineSliderToWeek(weekNum);
+      emitPuzzleWeekVisible(weekNum);
+    }
   } else {
     renderDesktopPuzzleGrid(grid);
     setPuzzleWeekVisible(weekNum, { scroll: false });
+    ok = puzzleGridHasContent();
   }
+
+  return ok;
 }
 
 function emitPuzzleWeekVisible(weekIndex) {
@@ -253,10 +278,11 @@ export function setPuzzleWeekVisible(weekIndex, options) {
   if (isNaN(weekIndex) || weekIndex < 1) weekIndex = 1;
 
   if (isMobilePuzzleLayout()) {
-    renderMobilePuzzleGrid(grid, weekIndex);
-    grid.dataset.activeWeek = String(weekIndex);
-    syncTimelineSliderToWeek(weekIndex);
-    emitPuzzleWeekVisible(weekIndex);
+    if (renderMobilePuzzleGrid(grid, weekIndex)) {
+      grid.dataset.activeWeek = String(weekIndex);
+      syncTimelineSliderToWeek(weekIndex);
+      emitPuzzleWeekVisible(weekIndex);
+    }
     return;
   }
 
