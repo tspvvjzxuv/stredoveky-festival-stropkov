@@ -1,17 +1,5 @@
 import { FESTIVAL_PUZZLES, getPuzzleById } from "./puzzles-data.js";
-import { mountBotPuzzle } from "./puzzle-bot.js";
-
-function destroyPuzzleGround(el) {
-  if (!el) return;
-  if (el._ptraChessground && typeof el._ptraChessground.destroy === "function") {
-    try {
-      el._ptraChessground.destroy();
-    } catch (e) {}
-  }
-  delete el._ptraChessground;
-  el.classList.remove("cg-wrap", "orientation-white", "orientation-black", "manipulable");
-  el.innerHTML = "";
-}
+import { mountBotPuzzle, destroyPuzzleGround } from "./puzzle-bot.js";
 import {
   unlockPuzzleReward,
   getRewardMeta,
@@ -34,7 +22,7 @@ import {
 } from "./puzzle-board-ui.js";
 import { isPuzzleAccessUnlocked, syncPermanentFromSchedule, isDevUnlockAll } from "./puzzle-unlock.js";
 import { initPuzzleTimeline, bindPuzzleUnlockPrompts } from "./puzzle-timeline-ui.js";
-import { syncChessBoardSize, boardHasLayout } from "./puzzle-board-size.js";
+import { syncChessBoardSize, boardHasLayout, presetGridBoardSizes } from "./puzzle-board-size.js";
 
 var ALL_SQUARES = [
   "a1","b1","c1","d1","e1","f1","g1","h1",
@@ -48,8 +36,6 @@ var ALL_SQUARES = [
 ];
 
 var mountedIds = {};
-var mountObservers = {};
-var remountBurstTimerIds = [];
 
 function buildDests(chess) {
   var dests = new Map();
@@ -70,7 +56,6 @@ function setCompletionUI(puzzleId, solvedNow) {
   var item = boardEl.closest(".sach-visual-item");
   if (!item) return;
   var hasReward = isPuzzleRewardUnlocked(puzzleId);
-  /** Na doske práve mat / cieľ, alebo už uložené v localStorage (aj po remounte). */
   var showWin = !!(solvedNow || hasReward);
   item.classList.toggle("is-completed", showWin);
   item.classList.toggle("has-reward", hasReward);
@@ -201,7 +186,6 @@ function clearMountedIfEmpty(puzzle) {
 
 function unmountPuzzleBoard(puzzle) {
   if (!puzzle || !puzzle.id) return;
-  clearPuzzleMountWatch(puzzle.id);
   var el = document.getElementById(puzzle.id);
   if (el) {
     destroyPuzzleGround(el);
@@ -228,21 +212,13 @@ function mountPuzzleBoard(puzzle, options) {
 
   if (force) unmountPuzzleBoard(puzzle);
 
-  syncChessBoardSize(el);
+  syncChessBoardSize(el, { skipRedraw: true });
   if (!force && !boardHasLayout(el)) return;
 
   try {
     mountedIds[puzzle.id] = true;
     el.classList.add("cg-board--mounted");
     mountBotPuzzle(puzzle, createPuzzleHelpers());
-    requestAnimationFrame(function () {
-      requestAnimationFrame(function () {
-        if (!boardHasPieces(el)) {
-          clearMountedIfEmpty(puzzle);
-          schedulePuzzleMount(puzzle, 0);
-        }
-      });
-    });
   } catch (err) {
     delete mountedIds[puzzle.id];
     el.classList.remove("cg-board--mounted");
@@ -263,13 +239,6 @@ function showBoardLoadError(el, puzzleId) {
   host.appendChild(msg);
 }
 
-function clearPuzzleMountWatch(puzzleId) {
-  if (mountObservers[puzzleId]) {
-    mountObservers[puzzleId].disconnect();
-    delete mountObservers[puzzleId];
-  }
-}
-
 function schedulePuzzleMount(puzzle, attempt) {
   attempt = attempt == null ? 0 : attempt;
   if (!isPuzzleAccessUnlocked(puzzle.id)) return;
@@ -279,52 +248,29 @@ function schedulePuzzleMount(puzzle, attempt) {
   var el = document.getElementById(puzzle.id);
   if (!el || !isBoardWeekVisible(el)) return;
 
-  syncChessBoardSize(el);
+  syncChessBoardSize(el, { skipRedraw: true });
   if (boardHasLayout(el)) {
     mountPuzzleBoard(puzzle);
     return;
   }
 
-  var maxAttempts = 40;
-  if (typeof window !== "undefined" && window.matchMedia && window.matchMedia("(max-width: 900px)").matches) {
-    maxAttempts = 50;
-  }
-  if (attempt < maxAttempts) {
+  if (attempt < 8) {
     setTimeout(function () {
       schedulePuzzleMount(puzzle, attempt + 1);
-    }, 35 + attempt * 40);
+    }, 50 + attempt * 40);
     return;
   }
 
-  clearPuzzleMountWatch(puzzle.id);
   mountPuzzleBoard(puzzle, { force: true });
-
-  if (typeof IntersectionObserver === "undefined") return;
-
-  mountObservers[puzzle.id] = new IntersectionObserver(
-    function (entries) {
-      for (var i = 0; i < entries.length; i++) {
-        if (entries[i].isIntersecting && isBoardWeekVisible(el)) {
-          clearMountedIfEmpty(puzzle);
-          if (!mountedIds[puzzle.id] || !boardHasPieces(el)) {
-            mountPuzzleBoard(puzzle, { force: true });
-          }
-        }
-      }
-    },
-    { root: null, rootMargin: "120px", threshold: 0.01 }
-  );
-  mountObservers[puzzle.id].observe(el);
 }
 
 function layoutWeekBoardSizes(weekIndex) {
   var section = document.getElementById("sach-week-" + weekIndex);
   if (!section) return;
   var boards = section.querySelectorAll(".cg-board");
-  for (var i = 0; i < boards.length; i++) syncChessBoardSize(boards[i]);
+  for (var i = 0; i < boards.length; i++) syncChessBoardSize(boards[i], { skipRedraw: true });
 }
 
-/** Po zmene viewportu len prekresliť / zmeniť veľkosť — bez destroy (kritické na mobile Safari). */
 function refreshWeekBoardGraphics(weekIndex) {
   for (var i = 0; i < FESTIVAL_PUZZLES.length; i++) {
     var p = FESTIVAL_PUZZLES[i];
@@ -349,22 +295,14 @@ function mountWeekPuzzles(weekIndex) {
     var p = FESTIVAL_PUZZLES[i];
     if (!p || p.weekIndex !== weekIndex || !p.fen) continue;
     if (!isPuzzleAccessUnlocked(p.id)) continue;
-    clearPuzzleMountWatch(p.id);
     clearMountedIfEmpty(p);
     schedulePuzzleMount(p, 0);
   }
 }
 
-function mountAllPlayablePuzzles() {
-  if (isMobilePuzzleLayout()) {
-    var weekIndex = getActivePuzzleWeekIndex();
-    if (weekIndex != null) mountWeekPuzzles(weekIndex);
-  } else {
-    for (var i = 0; i < FESTIVAL_PUZZLES.length; i++) {
-      var p = FESTIVAL_PUZZLES[i];
-      if (p && p.id && p.fen && isPuzzleAccessUnlocked(p.id)) schedulePuzzleMount(p, 0);
-    }
-  }
+function mountActiveWeekOnly() {
+  var weekIndex = getActivePuzzleWeekIndex();
+  if (weekIndex != null) mountWeekPuzzles(weekIndex);
   for (var j = 0; j < FESTIVAL_PUZZLES.length; j++) {
     var pid = FESTIVAL_PUZZLES[j].id;
     if (isPuzzleRewardUnlocked(pid)) {
@@ -375,87 +313,15 @@ function mountAllPlayablePuzzles() {
 }
 
 function clearAllMountedIds() {
-  for (var id in mountedIds) {
-    if (Object.prototype.hasOwnProperty.call(mountedIds, id)) {
-      clearPuzzleMountWatch(id);
-    }
-  }
   mountedIds = {};
-}
-
-function activeWeekHasVisiblePieces() {
-  var weekIndex = getActivePuzzleWeekIndex();
-  if (weekIndex == null) return false;
-  var section = document.getElementById("sach-week-" + weekIndex);
-  if (!section) return false;
-  var boards = section.querySelectorAll(".cg-board");
-  for (var i = 0; i < boards.length; i++) {
-    if (boardHasPieces(boards[i])) return true;
-  }
-  return false;
-}
-
-function showMobileBoardHelp() {
-  var card = document.querySelector(".sach-ulohy-card");
-  if (!card || card.querySelector(".sach-mobile-help")) return;
-  var help = document.createElement("div");
-  help.className = "sach-mobile-help sach-module-fail";
-  help.setAttribute("role", "alert");
-  help.innerHTML =
-    "<p><strong>Šachovnica sa nenačítala.</strong> Skúste obnoviť stránku (potiahnutie nadol v Safari) alebo stlačte tlačidlo nižšie.</p>" +
-    '<button type="button" class="btn btn-primary sach-mobile-help__retry">Načítať znova</button>';
-  var grid = document.getElementById("sach-puzzle-grid");
-  if (grid && grid.parentNode) {
-    grid.parentNode.insertBefore(help, grid);
-  } else {
-    card.appendChild(help);
-  }
-  help.querySelector(".sach-mobile-help__retry").addEventListener("click", function () {
-    help.remove();
-    clearAllMountedIds();
-    remountActiveWeek();
-  });
-}
-
-function startMobileBoardWatchdog() {
-  if (!isMobilePuzzleLayout()) return;
-  var attempts = 0;
-  var timer = window.setInterval(function () {
-    attempts += 1;
-    if (activeWeekHasVisiblePieces()) {
-      window.clearInterval(timer);
-      var help = document.querySelector(".sach-mobile-help");
-      if (help) help.remove();
-      return;
-    }
-    remountActiveWeek();
-    if (attempts >= 8) {
-      window.clearInterval(timer);
-      showMobileBoardHelp();
-    }
-  }, 1500);
-}
-
-function remountActiveWeek() {
-  var weekIndex = getActivePuzzleWeekIndex();
-  if (weekIndex != null) mountWeekPuzzles(weekIndex);
-}
-
-function scheduleRemountBurst() {
-  var delays = isMobilePuzzleLayout() ? [0, 200, 800, 2000] : [0, 80, 200, 500, 1200, 2500];
-  for (var d = 0; d < delays.length; d++) {
-    var timerId = setTimeout(remountActiveWeek, delays[d]);
-    remountBurstTimerIds.push(timerId);
-  }
 }
 
 function refreshAfterAccessChange() {
   applyPuzzleAccessUI();
-  mountAllPlayablePuzzles();
   initPuzzleRewards();
   syncScoresFromRewards();
   refreshScoreUI();
-  remountActiveWeek();
+  mountActiveWeekOnly();
 }
 
 function scrollToPuzzle(puzzleId) {
@@ -482,6 +348,19 @@ function showPageInitError(err) {
   if (loading) loading.hidden = true;
 }
 
+function debouncedMobileViewportRefresh() {
+  var timer = null;
+  return function () {
+    var weekIndex = getActivePuzzleWeekIndex();
+    if (weekIndex == null) return;
+    clearTimeout(timer);
+    timer = setTimeout(function () {
+      layoutWeekBoardSizes(weekIndex);
+      refreshWeekBoardGraphics(weekIndex);
+    }, 150);
+  };
+}
+
 function initChessgroundPuzzles() {
   try {
     initChessgroundPuzzlesCore();
@@ -502,10 +381,8 @@ function initChessgroundPuzzlesCore() {
     if (weekIndex == null) return;
     unmountInactiveWeeks(weekIndex);
     requestAnimationFrame(function () {
-      requestAnimationFrame(function () {
-        layoutWeekBoardSizes(weekIndex);
-        mountWeekPuzzles(weekIndex);
-      });
+      layoutWeekBoardSizes(weekIndex);
+      mountWeekPuzzles(weekIndex);
     });
   });
 
@@ -519,31 +396,26 @@ function initChessgroundPuzzlesCore() {
     if (layoutIsMobile === nowMobile) return;
     layoutIsMobile = nowMobile;
     renderPuzzleGrid();
+    presetGridBoardSizes(document.getElementById("sach-puzzle-grid"));
     applyPuzzleAccessUI();
-    remountActiveWeek();
+    mountActiveWeekOnly();
   }
 
   if (typeof window !== "undefined") {
     layoutIsMobile =
       window.matchMedia && window.matchMedia("(max-width: 900px)").matches;
-    /** Len šírka okna — nie visualViewport (Safari adresný riadok spúšťa destroy gridu). */
     window.addEventListener("resize", onLayoutModeMaybeChanged);
   }
 
   renderInvesticiaGrid();
   renderPuzzleGrid();
+  presetGridBoardSizes(document.getElementById("sach-puzzle-grid"));
   applyPuzzleAccessUI();
   initPuzzleRewards();
   syncScoresFromRewards();
   refreshScoreUI();
   bindPuzzleUnlockPrompts();
   initPuzzleTimeline(scrollToPuzzle);
-  var initialWeek = getActivePuzzleWeekIndex();
-  if (initialWeek != null) layoutWeekBoardSizes(initialWeek);
-  mountAllPlayablePuzzles();
-  remountActiveWeek();
-  scheduleRemountBurst();
-  startMobileBoardWatchdog();
 
   window.addEventListener("ptra-puzzle-access-changed", function () {
     refreshAfterAccessChange();
@@ -555,64 +427,19 @@ function initChessgroundPuzzlesCore() {
       if (weekIndex == null) return;
       layoutWeekBoardSizes(weekIndex);
       refreshWeekBoardGraphics(weekIndex);
-      for (var i = 0; i < FESTIVAL_PUZZLES.length; i++) {
-        var p = FESTIVAL_PUZZLES[i];
-        if (!p || p.weekIndex !== weekIndex) continue;
-        var el = document.getElementById(p.id);
-        if (el && !boardHasPieces(el) && isPuzzleAccessUnlocked(p.id)) {
-          clearMountedIfEmpty(p);
-          schedulePuzzleMount(p, 0);
-        }
-      }
     }, 350);
   });
 
   window.addEventListener("pageshow", function (ev) {
-    if (ev.persisted) setTimeout(remountActiveWeek, 100);
+    if (ev.persisted) setTimeout(mountActiveWeekOnly, 100);
   });
 
-  window.addEventListener("load", function () {
-    scheduleRemountBurst();
-  });
-
-  var viewportLayoutTimer = null;
-  function onVisualViewportLayout() {
-    var weekIndex = getActivePuzzleWeekIndex();
-    if (weekIndex == null) return;
-    clearTimeout(viewportLayoutTimer);
-    viewportLayoutTimer = setTimeout(function () {
-      layoutWeekBoardSizes(weekIndex);
-      refreshWeekBoardGraphics(weekIndex);
-    }, 150);
-  }
-
-  if (window.visualViewport) {
+  if (isMobilePuzzleLayout() && window.visualViewport) {
+    var onVisualViewportLayout = debouncedMobileViewportRefresh();
     window.visualViewport.addEventListener("resize", onVisualViewportLayout);
-    window.visualViewport.addEventListener("scroll", onVisualViewportLayout);
   }
 
-  var ulohyCard = document.querySelector(".sach-ulohy-card");
-  if (ulohyCard && typeof IntersectionObserver !== "undefined") {
-    var ulohyVisibleTimer = null;
-    var ulohyObserver = new IntersectionObserver(
-      function (entries) {
-        for (var i = 0; i < entries.length; i++) {
-          if (!entries[i].isIntersecting) continue;
-          clearTimeout(ulohyVisibleTimer);
-          ulohyVisibleTimer = setTimeout(function () {
-            var weekIndex = getActivePuzzleWeekIndex();
-            if (weekIndex == null) return;
-            layoutWeekBoardSizes(weekIndex);
-            refreshWeekBoardGraphics(weekIndex);
-          }, 80);
-        }
-      },
-      { root: null, rootMargin: "64px", threshold: 0.08 }
-    );
-    ulohyObserver.observe(ulohyCard);
-  }
-
-  if (typeof window !== "undefined" && window.matchMedia && window.matchMedia("(max-width: 900px)").matches) {
+  if (isMobilePuzzleLayout()) {
     var grid = document.getElementById("sach-puzzle-grid");
     if (grid) {
       grid.addEventListener(

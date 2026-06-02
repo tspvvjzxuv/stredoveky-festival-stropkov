@@ -105,7 +105,7 @@ export function initPuzzleTimeline(onSelectPuzzle) {
   festivalEl.textContent = "Festival " + formatFestivalLabel();
   track.appendChild(festivalEl);
 
-  function updateFromIndex(idx, focusPuzzleId) {
+  function syncTimelineUI(idx) {
     var week = PUZZLE_WEEKS[idx];
     if (!week) return;
     var unlocked = weekFullyUnlocked(week);
@@ -129,6 +129,12 @@ export function initPuzzleTimeline(onSelectPuzzle) {
           " — " +
           week.theme.title;
     }
+  }
+
+  function updateFromIndex(idx, focusPuzzleId) {
+    var week = PUZZLE_WEEKS[idx];
+    if (!week) return;
+    syncTimelineUI(idx);
     setPuzzleWeekVisible(week.weekIndex, { scroll: !isMobilePuzzleLayout() });
     var targetId = focusPuzzleId || week.puzzleIds[0];
     if (typeof onSelectPuzzle === "function") onSelectPuzzle(targetId);
@@ -153,7 +159,7 @@ export function initPuzzleTimeline(onSelectPuzzle) {
         slots[s].classList.toggle("is-solved", isPuzzleRewardUnlocked(pid));
       }
     }
-    updateFromIndex(parseInt(slider.value, 10) || 0, null);
+    syncTimelineUI(parseInt(slider.value, 10) || 0);
   }
 
   slider.addEventListener("input", function () {
@@ -162,7 +168,7 @@ export function initPuzzleTimeline(onSelectPuzzle) {
 
   var currentIdx = getDefaultWeekIndex();
   slider.value = String(currentIdx);
-  updateFromIndex(currentIdx, null);
+  syncTimelineUI(currentIdx);
 
   if (devNote) {
     devNote.hidden = !isDevUnlockAll();
