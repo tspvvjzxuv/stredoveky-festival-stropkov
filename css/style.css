@@ -4929,6 +4929,9 @@ body.home-page {
   margin-bottom: 2rem;
   padding-bottom: 1.25rem;
   border-bottom: 1px solid rgba(255, 203, 0, 0.12);
+  min-width: 0;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
 #sachove-hlavolamy .sach-puzzle-week.is-week-active {
@@ -5056,35 +5059,37 @@ body.home-page {
 
 @media (max-width: 1100px) {
   #sachove-hlavolamy .sach-visual-item {
-    align-items: center;
-    padding-left: 0.5rem;
-    padding-right: 0.5rem;
-  }
-
-  #sachove-hlavolamy .sach-visual-item > :not(.chessground-host) {
-    width: 100%;
-    max-width: 100%;
-    align-self: stretch;
+    align-items: stretch;
+    padding: 1rem;
   }
 
   #sachove-hlavolamy .sach-week-puzzles {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
   }
 
+  /* DESIGN.md: doska v jednom zlatom ráme, bez vnoreného tmavého boxu */
   #sachove-hlavolamy .chessground-host {
     width: 100%;
     max-width: 100%;
-    display: grid;
-    place-items: center;
-    padding: 0.35rem;
-    margin-inline: auto;
+    margin: 0;
+    padding: 0;
+    border: none;
+    border-radius: 0;
+    background: none;
+    box-shadow: none;
+    display: block;
+    z-index: auto;
   }
 
   #sachove-hlavolamy .cg-board {
-    border: none;
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    border: 1px solid rgba(174, 136, 76, 0.55);
+    border-radius: 6px;
     box-shadow: none;
-    margin-left: 0 !important;
-    margin-right: 0 !important;
+    box-sizing: border-box;
+    overflow: hidden;
   }
 }
 
@@ -5105,6 +5110,8 @@ body.js-ready #sachove-hlavolamy .cg-board {
   gap: 0.5rem;
   margin-top: 0.85rem;
   min-height: 4rem;
+  min-width: 0;
+  max-width: 100%;
 }
 
 #sachove-hlavolamy #sach-loading {
@@ -5128,6 +5135,10 @@ body.js-ready #sachove-hlavolamy .cg-board {
   border: 1px solid rgba(196, 156, 90, 0.45);
   border-radius: 8px;
   padding: 0.75rem;
+  min-width: 0;
+  max-width: 100%;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 #sachove-hlavolamy .sach-visual-item h4 {
@@ -5235,6 +5246,12 @@ body.js-ready #sachove-hlavolamy .cg-board {
   border-radius: 6px;
   background: rgba(8, 10, 16, 0.78);
   backdrop-filter: blur(2px);
+}
+
+@media (max-width: 1100px) {
+  #sachove-hlavolamy .sach-wrong-move-overlay {
+    inset: 0;
+  }
 }
 
 #sachove-hlavolamy .sach-wrong-move-overlay[hidden] {
@@ -5489,18 +5506,21 @@ body.sach-page-body .page-main.sach-page {
   #sachove-hlavolamy .sach-visual-grid {
     min-height: 8rem;
     width: 100%;
+    min-width: 0;
   }
 
   #sachove-hlavolamy .sach-week-puzzles {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
   }
 
   #sachove-hlavolamy .chessground-host {
     width: 100%;
     max-width: 100%;
-    display: grid;
-    place-items: center;
-    margin-inline: auto;
+    margin: 0;
+    padding: 0;
+    border: none;
+    background: none;
+    display: block;
   }
 
   #sachove-hlavolamy .cg-wrap coords.ranks,

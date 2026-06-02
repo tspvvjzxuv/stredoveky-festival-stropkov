@@ -289,8 +289,13 @@ export function getChessBoardMaxWidth(boardEl) {
   var cap = Math.max(200, Math.floor(viewportWidth() - 32));
   var item = boardEl.closest(".sach-visual-item");
   if (item && item.clientWidth > 48) {
-    var inset = isMobilePuzzleLayout() ? 20 : 12;
-    return Math.max(200, Math.min(item.clientWidth - inset, cap, 300));
+    var styles = typeof getComputedStyle !== "undefined" ? getComputedStyle(item) : null;
+    var pad =
+      (styles ? parseFloat(styles.paddingLeft) + parseFloat(styles.paddingRight) : 0) || 24;
+    var border =
+      (styles ? parseFloat(styles.borderLeftWidth) + parseFloat(styles.borderRightWidth) : 0) || 2;
+    var inset = isMobilePuzzleLayout() ? pad + border : 12;
+    return Math.max(200, Math.min(Math.floor(item.clientWidth - inset), cap, 300));
   }
 
   var row = boardEl.closest(".sach-week-puzzles");
@@ -318,46 +323,46 @@ export function syncChessBoardSize(boardEl, options) {
   var host = boardEl.closest(".chessground-host");
   var px = w + "px";
 
-  var coarse = isCoarsePointer();
   var mobileLayout = isMobilePuzzleLayout();
 
   if (host) {
     host.style.setProperty("--cg-board-size", px);
     host.style.maxWidth = "100%";
-    host.style.minHeight = px;
-    host.style.height = "auto";
-    host.style.marginLeft = "auto";
-    host.style.marginRight = "auto";
+    host.style.marginLeft = "0";
+    host.style.marginRight = "0";
 
     if (mobileLayout) {
       host.style.width = "100%";
-      host.style.display = "grid";
-      host.style.placeItems = "center";
-      host.style.justifyContent = "";
-      host.style.alignItems = "";
+      host.style.minHeight = "0";
+      host.style.height = "auto";
+      host.style.padding = "0";
+      host.style.border = "none";
+      host.style.background = "none";
+      host.style.display = "block";
+      host.style.removeProperty("place-items");
+      host.style.removeProperty("justify-content");
+      host.style.removeProperty("align-items");
     } else {
       host.style.width = "fit-content";
+      host.style.minHeight = px;
+      host.style.height = "auto";
       host.style.display = "flex";
       host.style.justifyContent = "center";
       host.style.alignItems = "flex-start";
-      host.style.placeItems = "";
+      host.style.removeProperty("padding");
+      host.style.removeProperty("border");
+      host.style.removeProperty("background");
     }
   }
 
-  boardEl.style.setProperty("width", px, "important");
+  boardEl.style.setProperty("width", mobileLayout ? "100%" : px, "important");
   boardEl.style.setProperty("height", px, "important");
   boardEl.style.setProperty("max-width", "100%", "important");
   boardEl.style.setProperty("min-height", px, "important");
-  if (coarse || mobileLayout) {
-    boardEl.style.setProperty("min-width", "0", "important");
-    boardEl.style.setProperty("margin-left", "0", "important");
-    boardEl.style.setProperty("margin-right", "0", "important");
-  } else {
-    boardEl.style.setProperty("min-width", px, "important");
-    boardEl.style.setProperty("margin-left", "auto", "important");
-    boardEl.style.setProperty("margin-right", "auto", "important");
-  }
-  boardEl.style.boxSizing = "content-box";
+  boardEl.style.setProperty("min-width", "0", "important");
+  boardEl.style.setProperty("margin-left", "0", "important");
+  boardEl.style.setProperty("margin-right", "0", "important");
+  boardEl.style.boxSizing = mobileLayout ? "border-box" : "content-box";
   boardEl.style.flexShrink = "0";
 
   if (!options.skipRedraw) {
