@@ -5054,8 +5054,18 @@ body.home-page {
 }
 
 #sachove-hlavolamy .sach-timeline__week-head.is-week-complete {
-  border-color: rgba(92, 201, 122, 0.72);
-  background: rgba(24, 48, 34, 0.72);
+  border-color: rgba(130, 235, 170, 0.95);
+  background: linear-gradient(180deg, rgba(36, 88, 56, 0.96) 0%, rgba(20, 52, 34, 0.98) 100%);
+  color: #efffef;
+  box-shadow:
+    0 0 0 1px rgba(150, 245, 185, 0.5),
+    0 0 12px rgba(92, 201, 122, 0.62),
+    0 0 24px rgba(92, 201, 122, 0.34);
+}
+
+#sachove-hlavolamy .sach-timeline__week-head.is-week-complete .sach-timeline__marker-week,
+#sachove-hlavolamy .sach-timeline__week-head.is-week-complete .sach-timeline__marker-date {
+  color: #efffef;
 }
 
 #sachove-hlavolamy .sach-timeline__week-head.is-week-partial {
@@ -5069,13 +5079,19 @@ body.home-page {
 }
 
 #sachove-hlavolamy .sach-timeline__week-head.is-week-complete .sach-timeline__marker-progress {
-  color: #b8f0c8;
+  color: #d8ffe4;
+  text-shadow: 0 0 8px rgba(160, 255, 195, 0.45);
 }
 
 #sachove-hlavolamy .sach-timeline__slot.is-solved {
-  background: rgba(92, 201, 122, 0.45);
-  border-color: rgba(92, 201, 122, 0.75);
-  color: #eaffef;
+  background: linear-gradient(180deg, rgba(44, 108, 68, 0.96) 0%, rgba(24, 58, 38, 0.98) 100%);
+  border-color: rgba(130, 235, 170, 0.9);
+  color: #f2fff6;
+  box-shadow:
+    0 0 0 1px rgba(150, 245, 185, 0.42),
+    0 0 7px rgba(92, 201, 122, 0.72),
+    0 0 14px rgba(92, 201, 122, 0.38);
+  text-shadow: 0 0 6px rgba(180, 255, 210, 0.35);
 }
 
 @media (max-width: 1100px) {
