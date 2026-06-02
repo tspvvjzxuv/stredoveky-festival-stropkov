@@ -8,7 +8,6 @@ import { isPuzzleAccessUnlocked } from "./puzzle-unlock.js";
 import {
   getActivePuzzleWeekIndex,
   isPuzzleBoardInActiveView,
-  isMobilePuzzleLayout,
   syncChessBoardSize,
   boardHasLayout,
 } from "./puzzle-board-ui.js";
@@ -54,7 +53,7 @@ function showBoardLoadError(el) {
   msg.className = "sach-board-load-error note";
   msg.setAttribute("role", "alert");
   msg.textContent =
-    "Šachovnicu sa nepodarilo načítať. Obnovte stránku (potiahnutie nadol v Safari) alebo vypnite blokovanie skriptov.";
+    "Šachovnicu sa nepodarilo načítať. Obnovte stránku alebo vypnite blokovanie skriptov.";
   host.appendChild(msg);
 }
 
@@ -69,7 +68,7 @@ function mountBoardNow(puzzle, force) {
   if (force) unmountBoard(puzzle);
 
   syncChessBoardSize(el, { skipRedraw: true });
-  if (!force && !isMobilePuzzleLayout() && !boardHasLayout(el)) return;
+  if (!force && !boardHasLayout(el)) return;
 
   try {
     mountedIds[puzzle.id] = true;
@@ -98,13 +97,12 @@ function waitThenMount(puzzle, attempt) {
   var el = document.getElementById(puzzle.id);
   if (!el || !isPuzzleBoardInActiveView(el)) return;
 
-  if (boardHasLayout(el) || isMobilePuzzleLayout()) {
+  if (boardHasLayout(el)) {
     mountBoardNow(puzzle, false);
     return;
   }
 
-  var maxAttempts = isMobilePuzzleLayout() ? 20 : 8;
-  if (attempt < maxAttempts) {
+  if (attempt < 8) {
     setTimeout(function () {
       waitThenMount(puzzle, attempt + 1);
     }, 50 + attempt * 35);
@@ -137,12 +135,6 @@ export function mountActiveWeek(weekIndex) {
     clearMountFlag(p);
     waitThenMount(p, 0);
   }
-
-  if (isMobilePuzzleLayout()) {
-    setTimeout(remountActiveWeekIfEmpty, 400);
-    setTimeout(remountActiveWeekIfEmpty, 1200);
-    setTimeout(remountActiveWeekIfEmpty, 2500);
-  }
 }
 
 export function refreshSolvedBoardMarkers() {
@@ -157,24 +149,6 @@ export function mountActiveWeekWithMarkers(weekIndex) {
   if (weekIndex == null) return;
   mountActiveWeek(weekIndex);
   refreshSolvedBoardMarkers();
-}
-
-function activeWeekHasPieces() {
-  var weekIndex = getActivePuzzleWeekIndex();
-  if (weekIndex == null) return false;
-  var section = document.getElementById("sach-week-" + weekIndex);
-  if (!section) return false;
-  var boards = section.querySelectorAll(".cg-board");
-  for (var i = 0; i < boards.length; i++) {
-    if (boardHasPieces(boards[i])) return true;
-  }
-  return false;
-}
-
-function remountActiveWeekIfEmpty() {
-  if (activeWeekHasPieces()) return;
-  var weekIndex = getActivePuzzleWeekIndex();
-  if (weekIndex != null) mountActiveWeek(weekIndex);
 }
 
 export function syncActiveWeekBoards() {
@@ -206,16 +180,9 @@ function scheduleViewportSync() {
 
 function onWeekVisible(weekIndex) {
   unmountOtherWeeks(weekIndex);
-  var run = function () {
+  requestAnimationFrame(function () {
     mountActiveWeekWithMarkers(weekIndex);
-  };
-  if (isMobilePuzzleLayout()) {
-    requestAnimationFrame(function () {
-      requestAnimationFrame(run);
-    });
-  } else {
-    requestAnimationFrame(run);
-  }
+  });
 }
 
 export function initPuzzleMount() {
@@ -243,44 +210,17 @@ export function initPuzzleMount() {
     window.visualViewport.addEventListener("resize", scheduleViewportSync);
   }
 
-  if (isMobilePuzzleLayout()) {
-    function scheduleInitialMountCheck() {
-      setTimeout(remountActiveWeekIfEmpty, 400);
-      setTimeout(remountActiveWeekIfEmpty, 1500);
-    }
-    if (document.readyState === "complete") {
-      scheduleInitialMountCheck();
-    } else {
-      window.addEventListener("load", scheduleInitialMountCheck);
-    }
-
-    var ulohyCard = document.querySelector(".sach-ulohy-card");
-    if (ulohyCard && typeof IntersectionObserver !== "undefined") {
-      var ulohyTimer = null;
-      new IntersectionObserver(
-        function (entries) {
-          for (var i = 0; i < entries.length; i++) {
-            if (!entries[i].isIntersecting) continue;
-            clearTimeout(ulohyTimer);
-            ulohyTimer = setTimeout(remountActiveWeekIfEmpty, 120);
-          }
-        },
-        { root: null, rootMargin: "48px", threshold: 0.05 }
-      ).observe(ulohyCard);
-    }
-
-    var grid = document.getElementById("sach-puzzle-grid");
-    if (grid) {
-      grid.addEventListener(
-        "touchstart",
-        function (ev) {
-          var board = ev.target && ev.target.closest && ev.target.closest(".cg-board");
-          if (!board || !board.id || boardHasPieces(board)) return;
-          var puzzle = getPuzzleById(board.id);
-          if (puzzle && isPuzzleAccessUnlocked(puzzle.id)) waitThenMount(puzzle, 0);
-        },
-        { passive: true, capture: true }
-      );
-    }
+  var grid = document.getElementById("sach-puzzle-grid");
+  if (grid) {
+    grid.addEventListener(
+      "touchstart",
+      function (ev) {
+        var board = ev.target && ev.target.closest && ev.target.closest(".cg-board");
+        if (!board || !board.id || boardHasPieces(board)) return;
+        var puzzle = getPuzzleById(board.id);
+        if (puzzle && isPuzzleAccessUnlocked(puzzle.id)) waitThenMount(puzzle, 0);
+      },
+      { passive: true, capture: true }
+    );
   }
 }

@@ -5063,19 +5063,6 @@ body.home-page {
   min-height: 4rem;
 }
 
-#sachove-hlavolamy .sach-grid-retry {
-  margin: 0.75rem 0;
-  padding: 0.85rem;
-  text-align: center;
-  border-radius: 8px;
-  border: 1px dashed rgba(255, 203, 0, 0.35);
-  background: rgba(8, 10, 16, 0.55);
-}
-
-#sachove-hlavolamy .sach-grid-retry .btn {
-  margin-top: 0.65rem;
-}
-
 #sachove-hlavolamy #sach-loading {
   margin: 0.5rem 0;
   text-align: center;
@@ -5428,60 +5415,23 @@ body.sach-page-body .page-main.sach-page {
   }
 }
 
-/* Mobil / úzky displej — jeden stĺpec, týždeň cez harmonogram */
-@media (max-width: 900px) {
-  #sachove-hlavolamy .sach-ulohy-card,
-  #sachove-hlavolamy .sach-ulohy-card .sach-visual-grid,
-  #sachove-hlavolamy .sach-puzzle-week.is-week-active,
-  #sachove-hlavolamy .sach-week-puzzles,
-  #sachove-hlavolamy .sach-visual-item,
-  #sachove-hlavolamy .chessground-host {
-    overflow: visible !important;
+@media (max-width: 600px) {
+  .page-main.sach-page {
+    padding-left: max(0.35rem, env(safe-area-inset-left, 0px));
+    padding-right: max(0.35rem, env(safe-area-inset-right, 0px));
   }
 
-  #sachove-hlavolamy .sach-visual-grid {
-    min-height: 12rem;
-    width: 100%;
+  #sachove-hlavolamy .sach-ulohy-card {
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
   }
+}
 
-  #sachove-hlavolamy .sach-week-puzzles {
-    display: flex !important;
-    flex-direction: column;
-    gap: 1.15rem;
-    grid-template-columns: none !important;
-    width: 100%;
-  }
+#sachove-hlavolamy .sach-timeline__week-group {
+  flex: 0 0 auto;
+}
 
-  #sachove-hlavolamy .sach-visual-item {
-    width: 100%;
-    max-width: 100%;
-    padding: 0.65rem 0.5rem;
-    box-sizing: border-box;
-  }
-
-  #sachove-hlavolamy .sach-puzzle-heading {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  #sachove-hlavolamy .sach-puzzle-stats {
-    width: 100%;
-    justify-content: flex-start;
-    margin-top: 0.25rem;
-  }
-
-  #sachove-hlavolamy .chessground-host {
-    width: 100%;
-    max-width: 100%;
-    padding: 0.25rem;
-    min-height: var(--cg-board-size, 260px) !important;
-    box-sizing: border-box;
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
-    --cg-board-size: 280px;
-  }
-
+@media (hover: none) and (pointer: coarse) {
   #sachove-hlavolamy .cg-board,
   #sachove-hlavolamy .cg-board.cg-wrap {
     touch-action: none;
@@ -5499,31 +5449,12 @@ body.sach-page-body .page-main.sach-page {
     touch-action: none;
   }
 
-  /* Chessground: ťahy rieši cg-board, nie piece (auto blokuje dotyk na iOS). */
   #sachove-hlavolamy .cg-board piece {
     pointer-events: none;
   }
 
   #sachove-hlavolamy .cg-board square.move-dest {
     pointer-events: auto;
-  }
-}
-
-@media (max-width: 600px) {
-  .page-main.sach-page {
-    padding-left: max(0.35rem, env(safe-area-inset-left, 0px));
-    padding-right: max(0.35rem, env(safe-area-inset-right, 0px));
-  }
-
-  #sachove-hlavolamy .sach-ulohy-card {
-    padding-left: 0.5rem;
-    padding-right: 0.5rem;
-  }
-}
-
-@media (max-width: 900px) {
-  #sachove-hlavolamy .sach-week-puzzles {
-    grid-template-columns: 1fr;
   }
 }
 
@@ -5567,11 +5498,12 @@ body.sach-page-body .page-main.sach-page {
 
 #sachove-hlavolamy .sach-timeline__track {
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   align-items: flex-end;
   gap: 0.35rem 0.5rem;
   padding-bottom: 0.25rem;
   overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 #sachove-hlavolamy .sach-timeline__marker-week {

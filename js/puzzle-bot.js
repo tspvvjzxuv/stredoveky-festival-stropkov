@@ -16,7 +16,7 @@ import {
   groundColor,
 } from "./puzzle-engine.js";
 import { createWrongMoveOverlay } from "./puzzle-wrong-move-ui.js";
-import { syncChessBoardSize, isMobilePuzzleLayout } from "./puzzle-board-ui.js";
+import { syncChessBoardSize } from "./puzzle-board-ui.js";
 import { isPuzzleRewardUnlocked } from "./puzzle-rewards.js";
 
 var DEFAULT_MAX_MISTAKES_OVERLAY = 8;
@@ -705,8 +705,6 @@ export function mountBotPuzzle(puzzle, helpers) {
     applyCorrectUserMove(ground, step, attempted, verdict);
   }
 
-  var isMobileBoard = isMobilePuzzleLayout();
-
   var isCoarsePointer =
     typeof window !== "undefined" &&
     window.matchMedia &&
@@ -738,7 +736,7 @@ export function mountBotPuzzle(puzzle, helpers) {
     premovable: { enabled: false },
     drawable: { enabled: true, visible: true },
     highlight: { lastMove: true, check: true },
-    animation: { enabled: isMobileBoard, duration: isMobileBoard ? 200 : 0 },
+    animation: { enabled: isCoarsePointer, duration: isCoarsePointer ? 200 : 0 },
   });
   el._ptraChessground = ground;
 
@@ -776,7 +774,7 @@ export function mountBotPuzzle(puzzle, helpers) {
   }
 
   requestAnimationFrame(function () {
-    if (isMobileBoard) {
+    if (isCoarsePointer) {
       requestAnimationFrame(function () {
         ensureBoardLayout(0);
       });

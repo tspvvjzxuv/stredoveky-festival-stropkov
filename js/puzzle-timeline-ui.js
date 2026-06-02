@@ -7,7 +7,7 @@ import {
   getDefaultWeekIndex,
 } from "./puzzle-unlock.js";
 import { isPuzzleRewardUnlocked } from "./puzzle-rewards.js";
-import { setPuzzleWeekVisible, isMobilePuzzleLayout } from "./puzzle-board-ui.js";
+import { setPuzzleWeekVisible } from "./puzzle-board-ui.js";
 
 function formatFestivalLabel() {
   return formatUnlockDateSk(FESTIVAL_DATE);
@@ -135,7 +135,7 @@ export function initPuzzleTimeline(onSelectPuzzle) {
     var week = PUZZLE_WEEKS[idx];
     if (!week) return;
     syncTimelineUI(idx);
-    setPuzzleWeekVisible(week.weekIndex, { scroll: !isMobilePuzzleLayout() });
+    setPuzzleWeekVisible(week.weekIndex, { scroll: true });
     var targetId = focusPuzzleId || week.puzzleIds[0];
     if (typeof onSelectPuzzle === "function") onSelectPuzzle(targetId);
   }
