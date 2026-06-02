@@ -213,12 +213,20 @@ function mountPuzzleBoard(puzzle, options) {
   if (force) unmountPuzzleBoard(puzzle);
 
   syncChessBoardSize(el, { skipRedraw: true });
-  if (!force && !boardHasLayout(el)) return;
+  if (!force && !isMobilePuzzleLayout() && !boardHasLayout(el)) return;
 
   try {
     mountedIds[puzzle.id] = true;
     el.classList.add("cg-board--mounted");
     mountBotPuzzle(puzzle, createPuzzleHelpers());
+    requestAnimationFrame(function () {
+      requestAnimationFrame(function () {
+        if (!boardHasPieces(el)) {
+          clearMountedIfEmpty(puzzle);
+          mountPuzzleBoard(puzzle, { force: true });
+        }
+      });
+    });
   } catch (err) {
     delete mountedIds[puzzle.id];
     el.classList.remove("cg-board--mounted");
@@ -254,7 +262,7 @@ function schedulePuzzleMount(puzzle, attempt) {
     return;
   }
 
-  if (attempt < 8) {
+  if (attempt < (isMobilePuzzleLayout() ? 25 : 8)) {
     setTimeout(function () {
       schedulePuzzleMount(puzzle, attempt + 1);
     }, 50 + attempt * 40);
@@ -262,6 +270,32 @@ function schedulePuzzleMount(puzzle, attempt) {
   }
 
   mountPuzzleBoard(puzzle, { force: true });
+}
+
+function activeWeekHasVisiblePieces() {
+  var weekIndex = getActivePuzzleWeekIndex();
+  if (weekIndex == null) return false;
+  var section = document.getElementById("sach-week-" + weekIndex);
+  if (!section) return false;
+  var boards = section.querySelectorAll(".cg-board");
+  for (var i = 0; i < boards.length; i++) {
+    if (boardHasPieces(boards[i])) return true;
+  }
+  return false;
+}
+
+function remountActiveWeekIfEmpty() {
+  if (activeWeekHasVisiblePieces()) return;
+  var weekIndex = getActivePuzzleWeekIndex();
+  if (weekIndex != null) mountWeekPuzzles(weekIndex);
+}
+
+function runWeekMount(weekIndex) {
+  layoutWeekBoardSizes(weekIndex);
+  mountWeekPuzzles(weekIndex);
+  if (!isMobilePuzzleLayout()) return;
+  setTimeout(remountActiveWeekIfEmpty, 700);
+  setTimeout(remountActiveWeekIfEmpty, 1800);
 }
 
 function layoutWeekBoardSizes(weekIndex) {
@@ -380,10 +414,17 @@ function initChessgroundPuzzlesCore() {
     var weekIndex = ev.detail && ev.detail.weekIndex;
     if (weekIndex == null) return;
     unmountInactiveWeeks(weekIndex);
-    requestAnimationFrame(function () {
-      layoutWeekBoardSizes(weekIndex);
-      mountWeekPuzzles(weekIndex);
-    });
+    if (isMobilePuzzleLayout()) {
+      requestAnimationFrame(function () {
+        requestAnimationFrame(function () {
+          runWeekMount(weekIndex);
+        });
+      });
+    } else {
+      requestAnimationFrame(function () {
+        runWeekMount(weekIndex);
+      });
+    }
   });
 
   var layoutIsMobile = null;
@@ -416,6 +457,27 @@ function initChessgroundPuzzlesCore() {
   refreshScoreUI();
   bindPuzzleUnlockPrompts();
   initPuzzleTimeline(scrollToPuzzle);
+
+  if (isMobilePuzzleLayout()) {
+    window.addEventListener("load", function () {
+      setTimeout(remountActiveWeekIfEmpty, 500);
+    });
+    var ulohyCard = document.querySelector(".sach-ulohy-card");
+    if (ulohyCard && typeof IntersectionObserver !== "undefined") {
+      var ulohyTimer = null;
+      var ulohyObserver = new IntersectionObserver(
+        function (entries) {
+          for (var i = 0; i < entries.length; i++) {
+            if (!entries[i].isIntersecting) continue;
+            clearTimeout(ulohyTimer);
+            ulohyTimer = setTimeout(remountActiveWeekIfEmpty, 120);
+          }
+        },
+        { root: null, rootMargin: "48px", threshold: 0.05 }
+      );
+      ulohyObserver.observe(ulohyCard);
+    }
+  }
 
   window.addEventListener("ptra-puzzle-access-changed", function () {
     refreshAfterAccessChange();
