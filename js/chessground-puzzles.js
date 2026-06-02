@@ -58,13 +58,15 @@ function initSachPage() {
       onBreakpointCross();
     });
 
+    initPuzzleMount();
+
     renderInvesticiaGrid();
     renderPuzzleGrid();
     presetGridBoardSizes(document.getElementById("sach-puzzle-grid"));
     syncProgressUI();
     bindPuzzleUnlockPrompts();
     initPuzzleTimeline(scrollToPuzzle);
-    initPuzzleMount();
+    mountActiveWeekWithMarkers(null);
 
     window.addEventListener("ptra-puzzle-access-changed", function () {
       syncProgressUI();

@@ -242,9 +242,15 @@ export function initPuzzleMount() {
   }
 
   if (isMobilePuzzleLayout()) {
-    window.addEventListener("load", function () {
-      setTimeout(remountActiveWeekIfEmpty, 500);
-    });
+    function scheduleInitialMountCheck() {
+      setTimeout(remountActiveWeekIfEmpty, 400);
+      setTimeout(remountActiveWeekIfEmpty, 1500);
+    }
+    if (document.readyState === "complete") {
+      scheduleInitialMountCheck();
+    } else {
+      window.addEventListener("load", scheduleInitialMountCheck);
+    }
 
     var ulohyCard = document.querySelector(".sach-ulohy-card");
     if (ulohyCard && typeof IntersectionObserver !== "undefined") {
