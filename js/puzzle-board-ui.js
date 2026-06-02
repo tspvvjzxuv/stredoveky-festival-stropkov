@@ -303,9 +303,13 @@ export function syncChessBoardSize(boardEl, options) {
 
   if (host) {
     host.style.setProperty("--cg-board-size", px);
+    host.style.width = "100%";
     host.style.maxWidth = "100%";
     host.style.minHeight = px;
     host.style.height = "auto";
+    host.style.display = "flex";
+    host.style.justifyContent = "center";
+    host.style.alignItems = "flex-start";
   }
 
   boardEl.style.setProperty("width", px, "important");
@@ -313,6 +317,8 @@ export function syncChessBoardSize(boardEl, options) {
   boardEl.style.setProperty("max-width", "100%", "important");
   boardEl.style.setProperty("min-width", px, "important");
   boardEl.style.setProperty("min-height", px, "important");
+  boardEl.style.setProperty("margin-left", "auto", "important");
+  boardEl.style.setProperty("margin-right", "auto", "important");
   boardEl.style.boxSizing = "border-box";
   boardEl.style.flexShrink = "0";
 

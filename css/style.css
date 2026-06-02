@@ -5177,6 +5177,9 @@ body.js-ready #sachove-hlavolamy .cg-board {
   border: 1px solid rgba(255, 212, 140, 0.25);
   --cg-board-size: 280px;
   min-height: 0;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
 }
 
 #sachove-hlavolamy .sach-wrong-move-overlay {
