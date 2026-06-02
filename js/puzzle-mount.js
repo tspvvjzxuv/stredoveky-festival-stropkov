@@ -1,5 +1,5 @@
 /**
- * Mount lifecycle pre Chessground dosky — jedna cesta, bez duplicitných remountov.
+ * Mount lifecycle pre Chessground dosky.
  */
 import { FESTIVAL_PUZZLES, getPuzzleById } from "./puzzles-data.js";
 import { mountBotPuzzle, destroyPuzzleGround } from "./puzzle-bot.js";
@@ -7,8 +7,6 @@ import { createPuzzleBoardCallbacks, isPuzzleRewardUnlocked, syncCompletionUI } 
 import { isPuzzleAccessUnlocked } from "./puzzle-unlock.js";
 import {
   getActivePuzzleWeekIndex,
-  isPuzzleBoardInActiveView,
-  useSingleWeekDom,
   syncChessBoardSize,
   boardHasLayout,
 } from "./puzzle-board-ui.js";
@@ -38,14 +36,6 @@ function unmountBoard(puzzle) {
   delete mountedIds[puzzle.id];
 }
 
-function unmountOtherWeeks(activeWeekIndex) {
-  for (var i = 0; i < FESTIVAL_PUZZLES.length; i++) {
-    var p = FESTIVAL_PUZZLES[i];
-    if (!p || p.weekIndex === activeWeekIndex) continue;
-    unmountBoard(p);
-  }
-}
-
 function showBoardLoadError(el) {
   if (!el || el.querySelector(".sach-board-load-error")) return;
   var host = el.closest(".chessground-host") || el.parentElement;
@@ -53,8 +43,7 @@ function showBoardLoadError(el) {
   var msg = document.createElement("p");
   msg.className = "sach-board-load-error note";
   msg.setAttribute("role", "alert");
-  msg.textContent =
-    "Šachovnicu sa nepodarilo načítať. Obnovte stránku alebo vypnite blokovanie skriptov.";
+  msg.textContent = "Šachovnicu sa nepodarilo načítať. Obnovte stránku.";
   host.appendChild(msg);
 }
 
@@ -64,12 +53,11 @@ function mountBoardNow(puzzle, force) {
   if (mountedIds[puzzle.id] && !force) return;
 
   var el = document.getElementById(puzzle.id);
-  if (!el || !isPuzzleBoardInActiveView(el)) return;
+  if (!el) return;
 
   if (force) unmountBoard(puzzle);
 
   syncChessBoardSize(el, { skipRedraw: true });
-  if (!force && !useSingleWeekDom() && !boardHasLayout(el)) return;
 
   try {
     mountedIds[puzzle.id] = true;
@@ -96,22 +84,18 @@ function waitThenMount(puzzle, attempt) {
   if (mountedIds[puzzle.id] && boardHasPieces(document.getElementById(puzzle.id))) return;
 
   var el = document.getElementById(puzzle.id);
-  if (!el || !isPuzzleBoardInActiveView(el)) return;
+  if (!el) return;
 
-  if (boardHasLayout(el) || useSingleWeekDom()) {
-    mountBoardNow(puzzle, false);
+  if (boardHasLayout(el) || attempt >= 3) {
+    mountBoardNow(puzzle, attempt >= 8);
     return;
   }
 
-  var maxAttempts = useSingleWeekDom() ? 20 : 8;
-  if (attempt < maxAttempts) {
+  if (attempt < 20) {
     setTimeout(function () {
       waitThenMount(puzzle, attempt + 1);
-    }, 50 + attempt * 35);
-    return;
+    }, 50 + attempt * 40);
   }
-
-  mountBoardNow(puzzle, true);
 }
 
 export function resetMountState() {
@@ -120,7 +104,6 @@ export function resetMountState() {
 
 export function mountActiveWeek(weekIndex) {
   if (weekIndex == null) return;
-  unmountOtherWeeks(weekIndex);
 
   var section = document.getElementById("sach-week-" + weekIndex);
   if (section) {
@@ -136,11 +119,6 @@ export function mountActiveWeek(weekIndex) {
     if (!isPuzzleAccessUnlocked(p.id)) continue;
     clearMountFlag(p);
     waitThenMount(p, 0);
-  }
-
-  if (useSingleWeekDom()) {
-    setTimeout(remountActiveWeekIfEmpty, 500);
-    setTimeout(remountActiveWeekIfEmpty, 1500);
   }
 }
 
@@ -158,24 +136,6 @@ export function mountActiveWeekWithMarkers(weekIndex) {
   refreshSolvedBoardMarkers();
 }
 
-function activeWeekHasPieces() {
-  var weekIndex = getActivePuzzleWeekIndex();
-  if (weekIndex == null) return false;
-  var section = document.getElementById("sach-week-" + weekIndex);
-  if (!section) return false;
-  var boards = section.querySelectorAll(".cg-board");
-  for (var i = 0; i < boards.length; i++) {
-    if (boardHasPieces(boards[i])) return true;
-  }
-  return false;
-}
-
-function remountActiveWeekIfEmpty() {
-  if (activeWeekHasPieces()) return;
-  var weekIndex = getActivePuzzleWeekIndex();
-  if (weekIndex != null) mountActiveWeek(weekIndex);
-}
-
 export function syncActiveWeekBoards() {
   var weekIndex = getActivePuzzleWeekIndex();
   if (weekIndex == null) return;
@@ -184,7 +144,7 @@ export function syncActiveWeekBoards() {
     var p = FESTIVAL_PUZZLES[i];
     if (!p || p.weekIndex !== weekIndex) continue;
     var el = document.getElementById(p.id);
-    if (!el || !isPuzzleBoardInActiveView(el)) continue;
+    if (!el) continue;
     syncChessBoardSize(el);
     var ground = el._ptraChessground;
     if (ground && typeof ground.redrawAll === "function") {
@@ -204,17 +164,11 @@ function scheduleViewportSync() {
 }
 
 function onWeekVisible(weekIndex) {
-  unmountOtherWeeks(weekIndex);
-  var run = function () {
-    mountActiveWeekWithMarkers(weekIndex);
-  };
-  if (useSingleWeekDom()) {
+  requestAnimationFrame(function () {
     requestAnimationFrame(function () {
-      requestAnimationFrame(run);
+      mountActiveWeekWithMarkers(weekIndex);
     });
-  } else {
-    requestAnimationFrame(run);
-  }
+  });
 }
 
 export function initPuzzleMount() {
@@ -254,17 +208,5 @@ export function initPuzzleMount() {
       },
       { passive: true, capture: true }
     );
-  }
-
-  if (useSingleWeekDom()) {
-    function scheduleInitialMountCheck() {
-      setTimeout(remountActiveWeekIfEmpty, 400);
-      setTimeout(remountActiveWeekIfEmpty, 2000);
-    }
-    if (document.readyState === "complete") {
-      scheduleInitialMountCheck();
-    } else {
-      window.addEventListener("load", scheduleInitialMountCheck);
-    }
   }
 }

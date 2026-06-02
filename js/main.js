@@ -245,6 +245,9 @@
     var sections = document.querySelectorAll("main section");
     if (!sections.length) return;
 
+    var sachSection = document.getElementById("sachove-hlavolamy");
+    if (sachSection) sachSection.classList.add("is-visible");
+
     var reduceMotion =
       window.matchMedia &&
       window.matchMedia("(prefers-reduced-motion: reduce)").matches;

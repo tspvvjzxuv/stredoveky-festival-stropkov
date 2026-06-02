@@ -9,19 +9,9 @@ import {
 } from "./puzzle-schedule.js";
 import { isPuzzleAccessUnlocked, getDefaultWeekIndex } from "./puzzle-unlock.js";
 
-/** iPhone/Safari: 12× display:none sekcií nezobrazí ani aktívny týždeň — len 1 týždeň v DOM. */
-export function useSingleWeekDom() {
-  if (typeof window === "undefined" || !window.matchMedia) return false;
-  try {
-    return window.matchMedia("(hover: none) and (pointer: coarse)").matches;
-  } catch (e) {
-    return false;
-  }
-}
-
 export function puzzleGridHasContent() {
   var grid = document.getElementById("sach-puzzle-grid");
-  return !!(grid && grid.querySelector(".sach-puzzle-week"));
+  return !!(grid && grid.querySelector(".sach-visual-item"));
 }
 
 export function renderInvesticiaGrid() {
@@ -170,29 +160,13 @@ function findWeekMeta(weekIndex) {
   return getWeekSchedule(weekIndex) || PUZZLE_WEEKS[0] || null;
 }
 
-function renderAllWeeks(grid) {
-  notifyGridRebuilt();
-  grid.innerHTML = "";
-  for (var w = 0; w < PUZZLE_WEEKS.length; w++) {
-    var week = PUZZLE_WEEKS[w];
-    var section = buildWeekSection(week);
-    if (w !== 0) section.classList.remove("is-week-active");
-    grid.appendChild(section);
-  }
-}
-
-function renderSingleWeek(grid, weekIndex) {
+function renderActiveWeek(grid, weekIndex) {
   var week = findWeekMeta(weekIndex);
   if (!week) return false;
   var section = buildWeekSection(week);
-  section.classList.add("is-week-active");
   notifyGridRebuilt();
-  if (typeof grid.replaceChildren === "function") {
-    grid.replaceChildren(section);
-  } else {
-    grid.innerHTML = "";
-    grid.appendChild(section);
-  }
+  grid.innerHTML = "";
+  grid.appendChild(section);
   return true;
 }
 
@@ -213,34 +187,6 @@ function syncTimelineSliderToWeek(weekIndex) {
   }
 }
 
-function setWeekVisible(weekIndex, scroll) {
-  var grid = document.getElementById("sach-puzzle-grid");
-  if (!grid) return;
-
-  var sections = grid.querySelectorAll(".sach-puzzle-week");
-  var anyActive = false;
-
-  for (var s = 0; s < sections.length; s++) {
-    var wIdx = parseInt(sections[s].dataset.weekIndex, 10);
-    var active = wIdx === weekIndex;
-    sections[s].classList.toggle("is-week-active", active);
-    if (active) anyActive = true;
-  }
-
-  if (!anyActive && sections.length) {
-    weekIndex = parseInt(sections[0].dataset.weekIndex, 10) || 1;
-    sections[0].classList.add("is-week-active");
-    for (var f = 1; f < sections.length; f++) {
-      sections[f].classList.remove("is-week-active");
-    }
-  }
-
-  var target = document.getElementById("sach-week-" + weekIndex);
-  if (target && scroll) {
-    target.scrollIntoView({ behavior: "smooth", block: "nearest" });
-  }
-}
-
 export function renderPuzzleGrid() {
   var grid = document.getElementById("sach-puzzle-grid");
   if (!grid) return false;
@@ -248,16 +194,10 @@ export function renderPuzzleGrid() {
   var initialWeek = PUZZLE_WEEKS[getDefaultWeekIndex()];
   var weekNum = initialWeek ? initialWeek.weekIndex : 1;
 
-  if (useSingleWeekDom()) {
-    if (!renderSingleWeek(grid, weekNum)) return false;
-    grid.dataset.activeWeek = String(weekNum);
-    syncTimelineSliderToWeek(weekNum);
-    emitPuzzleWeekVisible(weekNum);
-    return puzzleGridHasContent();
-  }
-
-  renderAllWeeks(grid);
-  setPuzzleWeekVisible(weekNum, { scroll: false });
+  if (!renderActiveWeek(grid, weekNum)) return false;
+  grid.dataset.activeWeek = String(weekNum);
+  syncTimelineSliderToWeek(weekNum);
+  emitPuzzleWeekVisible(weekNum);
   return puzzleGridHasContent();
 }
 
@@ -268,26 +208,17 @@ export function setPuzzleWeekVisible(weekIndex, options) {
   weekIndex = parseInt(weekIndex, 10);
   if (isNaN(weekIndex) || weekIndex < 1) weekIndex = 1;
 
-  if (useSingleWeekDom()) {
-    if (renderSingleWeek(grid, weekIndex)) {
-      grid.dataset.activeWeek = String(weekIndex);
-      syncTimelineSliderToWeek(weekIndex);
-      emitPuzzleWeekVisible(weekIndex);
-    }
-    return;
-  }
+  if (!renderActiveWeek(grid, weekIndex)) return;
 
-  var scroll =
-    options && options.scroll === true
-      ? true
-      : options && options.scroll === false
-        ? false
-        : true;
-
-  setWeekVisible(weekIndex, scroll);
   grid.dataset.activeWeek = String(weekIndex);
   syncTimelineSliderToWeek(weekIndex);
   emitPuzzleWeekVisible(weekIndex);
+
+  var scroll = options && options.scroll === true;
+  if (scroll) {
+    var target = document.getElementById("sach-week-" + weekIndex);
+    if (target) target.scrollIntoView({ behavior: "smooth", block: "nearest" });
+  }
 }
 
 export function getActivePuzzleWeekIndex() {
@@ -298,9 +229,7 @@ export function getActivePuzzleWeekIndex() {
 }
 
 export function isPuzzleBoardInActiveView(boardEl) {
-  if (!boardEl) return false;
-  var week = boardEl.closest(".sach-puzzle-week");
-  return !week || week.classList.contains("is-week-active");
+  return !!boardEl;
 }
 
 export function applyPuzzleAccessUI() {
@@ -324,12 +253,6 @@ export function applyPuzzleAccessUI() {
 
 var boardSizeCache = typeof WeakMap !== "undefined" ? new WeakMap() : null;
 
-function desktopColumnCount() {
-  if (typeof window === "undefined" || !window.matchMedia) return 3;
-  if (window.matchMedia("(max-width: 1100px)").matches) return 1;
-  return 3;
-}
-
 function viewportWidth() {
   if (typeof window === "undefined") return 360;
   if (document.documentElement && document.documentElement.clientWidth > 0) {
@@ -338,20 +261,19 @@ function viewportWidth() {
   return window.innerWidth || 360;
 }
 
+function desktopColumnCount() {
+  if (typeof window === "undefined" || !window.matchMedia) return 3;
+  if (window.matchMedia("(max-width: 1100px)").matches) return 1;
+  return 3;
+}
+
 export function getChessBoardMaxWidth(boardEl) {
   if (!boardEl) return 280;
 
-  if (useSingleWeekDom()) {
-    var cap = Math.max(200, Math.floor(viewportWidth() - 32));
-    var item = boardEl.closest(".sach-visual-item");
-    var itemW = item && item.clientWidth > 20 ? item.clientWidth : 0;
-    if (itemW > 20) return Math.max(200, Math.min(itemW - 12, cap, 360));
-    return Math.max(200, Math.min(cap, 360));
-  }
-
+  var cap = Math.max(200, Math.floor(viewportWidth() - 32));
   var item = boardEl.closest(".sach-visual-item");
   if (item && item.clientWidth > 48) {
-    return Math.max(200, Math.min(item.clientWidth - 12, 300));
+    return Math.max(200, Math.min(item.clientWidth - 12, cap, 300));
   }
 
   var row = boardEl.closest(".sach-week-puzzles");
@@ -359,10 +281,10 @@ export function getChessBoardMaxWidth(boardEl) {
     var cols = desktopColumnCount();
     var gap = cols === 3 ? 22 : 18;
     var colW = Math.floor((row.clientWidth - gap * (cols - 1)) / cols);
-    return Math.max(200, Math.min(colW - 12, 300));
+    return Math.max(200, Math.min(colW - 12, cap, 300));
   }
 
-  return 280;
+  return Math.max(200, Math.min(cap, 280));
 }
 
 export function syncChessBoardSize(boardEl, options) {
@@ -381,12 +303,8 @@ export function syncChessBoardSize(boardEl, options) {
 
   if (host) {
     host.style.setProperty("--cg-board-size", px);
-    host.style.width = "";
     host.style.maxWidth = "100%";
     host.style.minHeight = px;
-    host.style.display = "";
-    host.style.justifyContent = "";
-    host.style.alignItems = "";
     host.style.height = "auto";
   }
 

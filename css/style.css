@@ -4922,13 +4922,6 @@ body.home-page {
 #sachove-hlavolamy .sach-puzzle-week.is-week-active {
   border-color: rgba(255, 203, 0, 0.35);
   box-shadow: inset 0 0 0 1px rgba(255, 203, 0, 0.18);
-}
-
-#sachove-hlavolamy .sach-puzzle-week:not(.is-week-active) {
-  display: none !important;
-}
-
-#sachove-hlavolamy .sach-puzzle-week.is-week-active {
   display: block !important;
 }
 
@@ -5053,6 +5046,17 @@ body.home-page {
   #sachove-hlavolamy .sach-week-puzzles {
     grid-template-columns: 1fr;
   }
+}
+
+body.js-ready #sachove-hlavolamy,
+body.js-ready #sachove-hlavolamy .sach-visual-grid,
+body.js-ready #sachove-hlavolamy .sach-visual-item,
+body.js-ready #sachove-hlavolamy .sach-puzzle-week,
+body.js-ready #sachove-hlavolamy .chessground-host,
+body.js-ready #sachove-hlavolamy .cg-board {
+  opacity: 1 !important;
+  transform: none !important;
+  visibility: visible !important;
 }
 
 #sachove-hlavolamy .sach-visual-grid {
