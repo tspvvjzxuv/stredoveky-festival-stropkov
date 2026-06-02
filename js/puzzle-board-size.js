@@ -111,6 +111,8 @@ export function syncChessBoardSize(boardEl, options) {
 
 export function boardHasLayout(boardEl) {
   if (!boardEl) return false;
+  syncChessBoardSize(boardEl, { skipRedraw: true });
+  if (boardEl.offsetWidth > 20 && boardEl.offsetHeight > 20) return true;
   var rect = boardEl.getBoundingClientRect();
   return rect.width > 20 && rect.height > 20;
 }

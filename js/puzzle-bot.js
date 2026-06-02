@@ -813,7 +813,13 @@ export function mountBotPuzzle(puzzle, helpers) {
   }
 
   requestAnimationFrame(function () {
-    ensureBoardLayout(0);
+    if (isMobileBoard) {
+      requestAnimationFrame(function () {
+        ensureBoardLayout(0);
+      });
+    } else {
+      ensureBoardLayout(0);
+    }
   });
 
   positionHistory = [snapshotNow()];
