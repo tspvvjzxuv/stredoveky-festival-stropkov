@@ -679,3 +679,59 @@ export function moveFromBoard(chess, orig, dest) {
   }
   return move;
 }
+
+var ALL_SQUARES = [
+  "a1","b1","c1","d1","e1","f1","g1","h1",
+  "a2","b2","c2","d2","e2","f2","g2","h2",
+  "a3","b3","c3","d3","e3","f3","g3","h3",
+  "a4","b4","c4","d4","e4","f4","g4","h4",
+  "a5","b5","c5","d5","e5","f5","g5","h5",
+  "a6","b6","c6","d6","e6","f6","g6","h6",
+  "a7","b7","c7","d7","e7","f7","g7","h7",
+  "a8","b8","c8","d8","e8","f8","g8","h8",
+];
+
+export function buildChessgroundDests(chess) {
+  var dests = new Map();
+  for (var i = 0; i < ALL_SQUARES.length; i++) {
+    var sq = ALL_SQUARES[i];
+    var moves = chess.moves({ square: sq, verbose: true });
+    if (!moves || !moves.length) continue;
+    var to = [];
+    for (var j = 0; j < moves.length; j++) to.push(moves[j].to);
+    dests.set(sq, to);
+  }
+  return dests;
+}
+
+export function pickBotStepChoice(step, chess, puzzle) {
+  var choices = filterSoundBotChoices(chess, step, puzzle);
+  if (!choices.length) {
+    var flex = pickFlexSoundBotMove(chess, puzzle);
+    if (flex) return flex;
+    if (step.pick === "main" || step.pick === "preferred") {
+      for (var j = 0; j < (step.choices || []).length; j++) {
+        if (step.choices[j].main || step.choices[j].preferred) return step.choices[j];
+      }
+    }
+    return (step.choices && step.choices[0]) || null;
+  }
+
+  if (step.pick === "flex") return pickFlexSoundBotMove(chess, puzzle);
+
+  if (step.pick === "main" || step.pick === "preferred") {
+    for (var m = 0; m < choices.length; m++) {
+      if (choices[m].main || choices[m].preferred) return choices[m];
+    }
+    return pickMostEngagedBotChoice(chess, choices, puzzle) || choices[0];
+  }
+
+  if (step.pick === "random") {
+    return (
+      pickMostEngagedBotChoice(chess, choices, puzzle) ||
+      choices[Math.floor(Math.random() * choices.length)]
+    );
+  }
+
+  return pickMostEngagedBotChoice(chess, choices, puzzle) || choices[0];
+}

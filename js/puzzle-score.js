@@ -60,10 +60,6 @@ export function computeScoreBreakdown(puzzle, movesUsed, maxMoves) {
   };
 }
 
-export function computePointsForSolve(puzzle, movesUsed, maxMoves) {
-  return computeScoreBreakdown(puzzle, movesUsed, maxMoves).total;
-}
-
 export function formatPuzzleSolvePointsMessage(result) {
   if (!result || result.total == null) return "";
   var total = result.total;

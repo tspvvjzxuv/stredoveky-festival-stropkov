@@ -4,59 +4,22 @@ import {
   moveFromBoard,
   evaluateUserStep,
   isPuzzleWinPosition,
-  filterSoundBotChoices,
   pickFlexSoundBotMove,
   pickEngagedOpponentMove,
-  pickMostEngagedBotChoice,
   detectTerminalOutcome,
   terminalOutcomeMessage,
   buildSolutionBotMap,
   pickCatalogOpponentMove,
+  pickBotStepChoice,
   playerColorFromPuzzle,
   opponentColor,
   groundColor,
 } from "./puzzle-engine.js";
 import { createWrongMoveOverlay } from "./puzzle-wrong-move-ui.js";
-import { syncChessBoardSize } from "./puzzle-board-size.js";
-import { isMobilePuzzleLayout } from "./puzzle-board-ui.js";
+import { syncChessBoardSize, isMobilePuzzleLayout } from "./puzzle-board-ui.js";
 import { isPuzzleRewardUnlocked } from "./puzzle-rewards.js";
 
 var DEFAULT_MAX_MISTAKES_OVERLAY = 8;
-
-function isPuzzleWin(chess, winType, playerColor) {
-  return isPuzzleWinPosition(chess, winType, playerColor);
-}
-
-function pickBotChoice(step, chess, puzzle) {
-  var choices = filterSoundBotChoices(chess, step, puzzle);
-  if (!choices.length) {
-    var flex = pickFlexSoundBotMove(chess, puzzle);
-    if (flex) return flex;
-    if (step.pick === "main" || step.pick === "preferred") {
-      for (var j = 0; j < (step.choices || []).length; j++) {
-        if (step.choices[j].main || step.choices[j].preferred) return step.choices[j];
-      }
-    }
-    return (step.choices && step.choices[0]) || null;
-  }
-
-  if (step.pick === "flex") {
-    return pickFlexSoundBotMove(chess, puzzle);
-  }
-
-  if (step.pick === "main" || step.pick === "preferred") {
-    for (var m = 0; m < choices.length; m++) {
-      if (choices[m].main || choices[m].preferred) return choices[m];
-    }
-    return pickMostEngagedBotChoice(chess, choices, puzzle) || choices[0];
-  }
-
-  if (step.pick === "random") {
-    return pickMostEngagedBotChoice(chess, choices, puzzle) || choices[Math.floor(Math.random() * choices.length)];
-  }
-
-  return pickMostEngagedBotChoice(chess, choices, puzzle) || choices[0];
-}
 
 function statusForTurn(chess, botThinking, playerColor) {
   var pc = playerColor || "w";
@@ -226,7 +189,7 @@ export function mountBotPuzzle(puzzle, helpers) {
   }
 
   function syncFlexSteps() {
-    if (isPuzzleWin(chess, puzzle.win, playerColor)) {
+    if (isPuzzleWinPosition(chess, puzzle.win, playerColor)) {
       activeSteps = [];
       stepIdx = 0;
       return;
@@ -308,9 +271,9 @@ export function mountBotPuzzle(puzzle, helpers) {
   }
 
   function checkSolved() {
-    if (isPuzzleWin(chess, puzzle.win, playerColor)) return true;
+    if (isPuzzleWinPosition(chess, puzzle.win, playerColor)) return true;
     if (!stepsDone()) return false;
-    return isPuzzleWin(chess, puzzle.win, playerColor);
+    return isPuzzleWinPosition(chess, puzzle.win, playerColor);
   }
 
   function finishSolved(ground, extra) {
@@ -395,7 +358,7 @@ export function mountBotPuzzle(puzzle, helpers) {
   }
 
   function tryAlternateWinAfterMove(ground) {
-    if (!isPuzzleWin(chess, puzzle.win, playerColor)) return false;
+    if (!isPuzzleWinPosition(chess, puzzle.win, playerColor)) return false;
     finishSolved(ground, "Cieľ splnený — výborne!");
     return true;
   }
@@ -647,7 +610,7 @@ export function mountBotPuzzle(puzzle, helpers) {
       var step = currentStep();
       if (!step || step.who !== "bot") break;
 
-      var choice = pickBotChoice(step, chess, puzzle);
+      var choice = pickBotStepChoice(step, chess, puzzle);
       if (!choice || !choice.move) {
         stepIdx += 1;
         continue;

@@ -194,18 +194,25 @@ export function getDefaultWeekIndex(atMs) {
   return 0;
 }
 
-export function getUnlockStatus(puzzleId, atMs) {
-  var entry = null;
-  for (var i = 0; i < PUZZLE_SCHEDULE.length; i++) {
-    if (PUZZLE_SCHEDULE[i].id === puzzleId) {
-      entry = PUZZLE_SCHEDULE[i];
-      break;
+export function bindPuzzleUnlockPrompts() {
+  document.addEventListener("click", function (ev) {
+    var btn = ev.target.closest("[data-unlock-puzzle]");
+    if (!btn) return;
+    var puzzleId = btn.getAttribute("data-unlock-puzzle");
+    if (!puzzleId) return;
+    var pwd = window.prompt(
+      "Zadajte heslo pre skorý prístup (heslo úlohy alebo celého týždňa):"
+    );
+    if (pwd == null) return;
+    var result = tryUnlockWithPassword(puzzleId, pwd);
+    if (result.ok) {
+      window.dispatchEvent(
+        new CustomEvent("ptra-puzzle-access-changed", { detail: { puzzleId: puzzleId } })
+      );
+      var item = document.querySelector('.sach-visual-item[data-puzzle-id="' + puzzleId + '"]');
+      if (item) item.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    } else {
+      window.alert("Heslo nie je správne. Skúste znova alebo počkajte na dátum odomknutia.");
     }
-  }
-  if (!entry) return { playable: false, reason: "missing" };
-  if (isDevUnlockAll()) return { playable: true, reason: "dev" };
-  if (isPuzzleAccessUnlocked(puzzleId, atMs)) {
-    return { playable: true, reason: isDateUnlocked(entry.unlockDate, atMs) ? "date" : "password" };
-  }
-  return { playable: false, reason: "locked", unlockDate: entry.unlockDate };
+  });
 }

@@ -1,5 +1,11 @@
-import { FESTIVAL_PUZZLES, DIFFICULTIES, puzzleId } from "./puzzles-data.js";
+import { FESTIVAL_PUZZLES, DIFFICULTIES, puzzleId, getPuzzleById } from "./puzzles-data.js";
 import { PUZZLE_REWARD_META, weekRewardId } from "./puzzle-schedule.js";
+import {
+  recordPuzzleSolve,
+  refreshScoreUI,
+  formatPuzzleSolvePointsMessage,
+} from "./puzzle-score.js";
+import { buildChessgroundDests } from "./puzzle-engine.js";
 
 var STORAGE_KEY = "ptra-puzzle-rewards-v3";
 var LEGACY_V2 = "ptra-puzzle-rewards-v2";
@@ -227,13 +233,7 @@ export function initPuzzleRewards() {
 }
 
 export function getRewardMeta(puzzleId) {
-  var puzzle = null;
-  for (var i = 0; i < FESTIVAL_PUZZLES.length; i++) {
-    if (FESTIVAL_PUZZLES[i].id === puzzleId) {
-      puzzle = FESTIVAL_PUZZLES[i];
-      break;
-    }
-  }
+  var puzzle = getPuzzleById(puzzleId);
   if (!puzzle) return null;
   var meta = REWARD_BY_ID[weekRewardId(puzzle.weekIndex)];
   if (!meta) return null;
@@ -248,6 +248,118 @@ export function getRewardMeta(puzzleId) {
     };
   }
   return meta;
+}
+
+export function syncCompletionUI(puzzleId, solvedNow) {
+  var boardEl = document.getElementById(puzzleId);
+  if (!boardEl) return;
+  var item = boardEl.closest(".sach-visual-item");
+  if (!item) return;
+  var hasReward = isPuzzleRewardUnlocked(puzzleId);
+  var showWin = !!(solvedNow || hasReward);
+  item.classList.toggle("is-completed", showWin);
+  item.classList.toggle("has-reward", hasReward);
+
+  var banner = item.querySelector(".sach-success-banner");
+  if (!showWin) {
+    if (banner) banner.remove();
+    return;
+  }
+
+  if (!banner) {
+    banner = document.createElement("div");
+    banner.className = "sach-success-banner";
+    item.appendChild(banner);
+  }
+
+  var meta = getRewardMeta(puzzleId);
+  if (hasReward && meta) {
+    banner.textContent =
+      "🏆 Úloha splnená! Prispeli ste k " + meta.partLabel + " — pozrite investíciu vyššie.";
+  } else {
+    banner.textContent = "🏆 Výborne! Úloha splnená!";
+  }
+}
+
+function buildSolveBannerText(puzzleId, options, scoreResult) {
+  var ptsMsg = scoreResult ? formatPuzzleSolvePointsMessage(scoreResult) : "";
+  var meta = getRewardMeta(puzzleId);
+  var partial =
+    options.firstTry === false ? " (boli chyby v riešení — body za ťahy platia rovnako)" : "";
+  var recordNote = "";
+  if (scoreResult && !scoreResult.recorded && scoreResult.bestPoints != null) {
+    recordNote =
+      " Tento pokus: " +
+      formatPuzzleSolvePointsMessage(scoreResult) +
+      ". V skóre ostáva rekord +" +
+      scoreResult.bestPoints +
+      ".";
+  } else if (scoreResult && scoreResult.recorded && scoreResult.bonus > 0) {
+    recordNote = " Nový rekord v skóre!";
+  }
+
+  if (meta) {
+    return (
+      "🎁 " +
+      meta.icon +
+      " " +
+      meta.title +
+      " — pokrok v investícii." +
+      (ptsMsg ? " " + ptsMsg + "." : "") +
+      partial +
+      recordNote
+    );
+  }
+  return "🏆 Úloha splnená!" + (ptsMsg ? " " + ptsMsg + "." : "") + partial + recordNote;
+}
+
+export function handlePuzzleSolve(puzzleId, options) {
+  options = options || {};
+  var wasNew = unlockPuzzleReward(puzzleId, options);
+  var puzzle = getPuzzleById(puzzleId);
+  var scoreResult = null;
+  if (puzzle) {
+    scoreResult = recordPuzzleSolve(puzzle, {
+      movesUsed: options.movesUsed,
+      maxMoves: options.maxMoves,
+    });
+    if (scoreResult) {
+      options.points = scoreResult.recorded ? scoreResult.points : scoreResult.total;
+      options.scoreResult = scoreResult;
+    }
+    refreshScoreUI();
+  }
+
+  syncCompletionUI(puzzleId, true);
+  var boardEl = document.getElementById(puzzleId);
+  var item = boardEl && boardEl.closest(".sach-visual-item");
+  if (item) {
+    var banner = item.querySelector(".sach-success-banner");
+    if (!banner) {
+      banner = document.createElement("div");
+      banner.className = "sach-success-banner";
+      item.appendChild(banner);
+    }
+    banner.textContent = buildSolveBannerText(puzzleId, options, scoreResult);
+  }
+
+  window.dispatchEvent(
+    new CustomEvent("ptra-puzzle-solved", {
+      detail: { puzzleId: puzzleId, wasNew: wasNew, scoreResult: scoreResult },
+    })
+  );
+}
+
+export function createPuzzleBoardCallbacks() {
+  return {
+    buildDests: buildChessgroundDests,
+    setCompletionUI: syncCompletionUI,
+    notifyPuzzleSolved: handlePuzzleSolve,
+    wireControls: function (puzzle, ctx) {
+      var resetBtn = document.querySelector('[data-reset-puzzle="' + puzzle.id + '"]');
+      if (resetBtn) resetBtn.addEventListener("click", ctx.resetBoard);
+    },
+  };
 }
 
 export function getFullReward() {

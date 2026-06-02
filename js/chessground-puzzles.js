@@ -1,530 +1,84 @@
-import { FESTIVAL_PUZZLES, getPuzzleById } from "./puzzles-data.js";
-import { mountBotPuzzle, destroyPuzzleGround } from "./puzzle-bot.js";
-import {
-  unlockPuzzleReward,
-  getRewardMeta,
-  isPuzzleRewardUnlocked,
-  initPuzzleRewards,
-} from "./puzzle-rewards.js";
-import {
-  recordPuzzleSolve,
-  syncScoresFromRewards,
-  refreshScoreUI,
-  formatPuzzleSolvePointsMessage,
-} from "./puzzle-score.js";
+import { initPuzzleRewards } from "./puzzle-rewards.js";
+import { refreshScoreUI, syncScoresFromRewards } from "./puzzle-score.js";
 import {
   renderInvesticiaGrid,
   renderPuzzleGrid,
   applyPuzzleAccessUI,
-  getActivePuzzleWeekIndex,
-  isPuzzleBoardInActiveView,
+  presetGridBoardSizes,
   isMobilePuzzleLayout,
 } from "./puzzle-board-ui.js";
-import { isPuzzleAccessUnlocked, syncPermanentFromSchedule, isDevUnlockAll } from "./puzzle-unlock.js";
-import { initPuzzleTimeline, bindPuzzleUnlockPrompts } from "./puzzle-timeline-ui.js";
-import { syncChessBoardSize, boardHasLayout, presetGridBoardSizes } from "./puzzle-board-size.js";
+import { syncPermanentFromSchedule, isDevUnlockAll, bindPuzzleUnlockPrompts } from "./puzzle-unlock.js";
+import { initPuzzleTimeline } from "./puzzle-timeline-ui.js";
+import {
+  initPuzzleMount,
+  mountActiveWeekWithMarkers,
+} from "./puzzle-mount.js";
 
-var ALL_SQUARES = [
-  "a1","b1","c1","d1","e1","f1","g1","h1",
-  "a2","b2","c2","d2","e2","f2","g2","h2",
-  "a3","b3","c3","d3","e3","f3","g3","h3",
-  "a4","b4","c4","d4","e4","f4","g4","h4",
-  "a5","b5","c5","d5","e5","f5","g5","h5",
-  "a6","b6","c6","d6","e6","f6","g6","h6",
-  "a7","b7","c7","d7","e7","f7","g7","h7",
-  "a8","b8","c8","d8","e8","f8","g8","h8",
-];
-
-var mountedIds = {};
-
-function buildDests(chess) {
-  var dests = new Map();
-  for (var i = 0; i < ALL_SQUARES.length; i++) {
-    var sq = ALL_SQUARES[i];
-    var moves = chess.moves({ square: sq, verbose: true });
-    if (!moves || !moves.length) continue;
-    var to = [];
-    for (var j = 0; j < moves.length; j++) to.push(moves[j].to);
-    dests.set(sq, to);
-  }
-  return dests;
-}
-
-function setCompletionUI(puzzleId, solvedNow) {
-  var boardEl = document.getElementById(puzzleId);
-  if (!boardEl) return;
-  var item = boardEl.closest(".sach-visual-item");
-  if (!item) return;
-  var hasReward = isPuzzleRewardUnlocked(puzzleId);
-  var showWin = !!(solvedNow || hasReward);
-  item.classList.toggle("is-completed", showWin);
-  item.classList.toggle("has-reward", hasReward);
-
-  var banner = item.querySelector(".sach-success-banner");
-  if (showWin) {
-    if (!banner) {
-      banner = document.createElement("div");
-      banner.className = "sach-success-banner";
-      item.appendChild(banner);
-    }
-    var meta = getRewardMeta(puzzleId);
-    if (hasReward && meta) {
-      banner.textContent =
-        "🏆 Úloha splnená! Prispeli ste k " + meta.partLabel + " — pozrite investíciu vyššie.";
-    } else {
-      banner.textContent = "🏆 Výborne! Úloha splnená!";
-    }
-  } else if (banner) {
-    banner.remove();
-  }
-
-  var badge = item.querySelector(".sach-reward-badge");
-  if (badge) badge.remove();
-}
-
-function appendSolveScoreBanner(puzzleId, options, scoreResult) {
-  var boardEl = document.getElementById(puzzleId);
-  var item = boardEl && boardEl.closest(".sach-visual-item");
-  if (!item) return;
-
-  var banner = item.querySelector(".sach-success-banner");
-  if (!banner) {
-    banner = document.createElement("div");
-    banner.className = "sach-success-banner";
-    item.appendChild(banner);
-  }
-
-  var ptsMsg = scoreResult ? formatPuzzleSolvePointsMessage(scoreResult) : "";
-  var meta = getRewardMeta(puzzleId);
-  var partial =
-    options.firstTry === false ? " (boli chyby v riešení — body za ťahy platia rovnako)" : "";
-  var recordNote = "";
-  if (scoreResult && !scoreResult.recorded && scoreResult.bestPoints != null) {
-    recordNote =
-      " Tento pokus: " +
-      formatPuzzleSolvePointsMessage(scoreResult) +
-      ". V skóre ostáva rekord +" +
-      scoreResult.bestPoints +
-      ".";
-  } else if (scoreResult && scoreResult.recorded && scoreResult.bonus > 0) {
-    recordNote = " Nový rekord v skóre!";
-  }
-
-  if (meta) {
-    banner.textContent =
-      "🎁 " +
-      meta.icon +
-      " " +
-      meta.title +
-      " — pokrok v investícii." +
-      (ptsMsg ? " " + ptsMsg + "." : "") +
-      partial +
-      recordNote;
-  } else {
-    banner.textContent =
-      "🏆 Úloha splnená!" +
-      (ptsMsg ? " " + ptsMsg + "." : "") +
-      partial +
-      recordNote;
-  }
-}
-
-function notifyPuzzleSolved(puzzleId, options) {
-  options = options || {};
-  var wasNew = unlockPuzzleReward(puzzleId, options);
-  var puzzle = getPuzzleById(puzzleId);
-  var scoreResult = null;
-  if (puzzle) {
-    scoreResult = recordPuzzleSolve(puzzle, {
-      movesUsed: options.movesUsed,
-      maxMoves: options.maxMoves,
-    });
-    if (scoreResult) {
-      options.points = scoreResult.recorded ? scoreResult.points : scoreResult.total;
-      options.scoreResult = scoreResult;
-    }
-    refreshScoreUI();
-  }
-  setCompletionUI(puzzleId, true);
-  appendSolveScoreBanner(puzzleId, options, scoreResult);
-  window.dispatchEvent(
-    new CustomEvent("ptra-puzzle-solved", {
-      detail: { puzzleId: puzzleId, wasNew: wasNew, scoreResult: scoreResult },
-    })
-  );
-}
-
-function wirePuzzleControls(puzzle, ctx) {
-  var resetBtn = document.querySelector('[data-reset-puzzle="' + puzzle.id + '"]');
-  if (resetBtn) resetBtn.addEventListener("click", ctx.resetBoard);
-}
-
-function createPuzzleHelpers() {
-  return {
-    buildDests: buildDests,
-    setCompletionUI: setCompletionUI,
-    notifyPuzzleSolved: notifyPuzzleSolved,
-    wireControls: wirePuzzleControls,
-  };
-}
-
-function boardHasPieces(el) {
-  return !!(el && el.querySelector("piece"));
-}
-
-function isBoardWeekVisible(el) {
-  return isPuzzleBoardInActiveView(el);
-}
-
-function clearMountedIfEmpty(puzzle) {
-  var el = document.getElementById(puzzle.id);
-  if (!el || !mountedIds[puzzle.id]) return;
-  if (boardHasPieces(el)) return;
-  delete mountedIds[puzzle.id];
-  el.classList.remove("cg-board--mounted");
-}
-
-function unmountPuzzleBoard(puzzle) {
-  if (!puzzle || !puzzle.id) return;
-  var el = document.getElementById(puzzle.id);
-  if (el) {
-    destroyPuzzleGround(el);
-    el.classList.remove("cg-board--mounted");
-  }
-  delete mountedIds[puzzle.id];
-}
-
-function unmountInactiveWeeks(activeWeekIndex) {
-  for (var i = 0; i < FESTIVAL_PUZZLES.length; i++) {
-    var p = FESTIVAL_PUZZLES[i];
-    if (!p || p.weekIndex === activeWeekIndex) continue;
-    unmountPuzzleBoard(p);
-  }
-}
-
-function mountPuzzleBoard(puzzle, options) {
-  var force = options && options.force;
-  if (!isPuzzleAccessUnlocked(puzzle.id)) return;
-  if (mountedIds[puzzle.id] && !force) return;
-  if (!puzzle.play || !puzzle.fen) return;
-  var el = document.getElementById(puzzle.id);
-  if (!el || !isBoardWeekVisible(el)) return;
-
-  if (force) unmountPuzzleBoard(puzzle);
-
-  syncChessBoardSize(el, { skipRedraw: true });
-  if (!force && !isMobilePuzzleLayout() && !boardHasLayout(el)) return;
-
-  try {
-    mountedIds[puzzle.id] = true;
-    el.classList.add("cg-board--mounted");
-    mountBotPuzzle(puzzle, createPuzzleHelpers());
-    requestAnimationFrame(function () {
-      requestAnimationFrame(function () {
-        if (!boardHasPieces(el)) {
-          clearMountedIfEmpty(puzzle);
-          mountPuzzleBoard(puzzle, { force: true });
-        }
-      });
-    });
-  } catch (err) {
-    delete mountedIds[puzzle.id];
-    el.classList.remove("cg-board--mounted");
-    console.error("PTRA šach:", puzzle.id, err);
-    showBoardLoadError(el, puzzle.id);
-  }
-}
-
-function showBoardLoadError(el, puzzleId) {
-  if (!el || el.querySelector(".sach-board-load-error")) return;
-  var host = el.closest(".chessground-host") || el.parentElement;
-  if (!host) return;
-  var msg = document.createElement("p");
-  msg.className = "sach-board-load-error note";
-  msg.setAttribute("role", "alert");
-  msg.textContent =
-    "Šachovnicu sa nepodarilo načítať. Skontrolujte pripojenie, obnovte stránku (potiahnutie nadol) alebo vypnite blokovanie skriptov.";
-  host.appendChild(msg);
-}
-
-function schedulePuzzleMount(puzzle, attempt) {
-  attempt = attempt == null ? 0 : attempt;
-  if (!isPuzzleAccessUnlocked(puzzle.id)) return;
-  clearMountedIfEmpty(puzzle);
-  if (mountedIds[puzzle.id] && boardHasPieces(document.getElementById(puzzle.id))) return;
-
-  var el = document.getElementById(puzzle.id);
-  if (!el || !isBoardWeekVisible(el)) return;
-
-  syncChessBoardSize(el, { skipRedraw: true });
-  if (boardHasLayout(el)) {
-    mountPuzzleBoard(puzzle);
-    return;
-  }
-
-  if (attempt < (isMobilePuzzleLayout() ? 25 : 8)) {
-    setTimeout(function () {
-      schedulePuzzleMount(puzzle, attempt + 1);
-    }, 50 + attempt * 40);
-    return;
-  }
-
-  mountPuzzleBoard(puzzle, { force: true });
-}
-
-function activeWeekHasVisiblePieces() {
-  var weekIndex = getActivePuzzleWeekIndex();
-  if (weekIndex == null) return false;
-  var section = document.getElementById("sach-week-" + weekIndex);
-  if (!section) return false;
-  var boards = section.querySelectorAll(".cg-board");
-  for (var i = 0; i < boards.length; i++) {
-    if (boardHasPieces(boards[i])) return true;
-  }
-  return false;
-}
-
-function remountActiveWeekIfEmpty() {
-  if (activeWeekHasVisiblePieces()) return;
-  var weekIndex = getActivePuzzleWeekIndex();
-  if (weekIndex != null) mountWeekPuzzles(weekIndex);
-}
-
-function runWeekMount(weekIndex) {
-  layoutWeekBoardSizes(weekIndex);
-  mountWeekPuzzles(weekIndex);
-  if (!isMobilePuzzleLayout()) return;
-  setTimeout(remountActiveWeekIfEmpty, 700);
-  setTimeout(remountActiveWeekIfEmpty, 1800);
-}
-
-function layoutWeekBoardSizes(weekIndex) {
-  var section = document.getElementById("sach-week-" + weekIndex);
-  if (!section) return;
-  var boards = section.querySelectorAll(".cg-board");
-  for (var i = 0; i < boards.length; i++) syncChessBoardSize(boards[i], { skipRedraw: true });
-}
-
-function refreshWeekBoardGraphics(weekIndex) {
-  for (var i = 0; i < FESTIVAL_PUZZLES.length; i++) {
-    var p = FESTIVAL_PUZZLES[i];
-    if (!p || p.weekIndex !== weekIndex) continue;
-    var el = document.getElementById(p.id);
-    if (!el || !isBoardWeekVisible(el)) continue;
-    syncChessBoardSize(el);
-    var ground = el._ptraChessground;
-    if (ground && typeof ground.redrawAll === "function") {
-      try {
-        ground.redrawAll();
-      } catch (e) {}
-    } else if (!boardHasPieces(el) && isPuzzleAccessUnlocked(p.id)) {
-      clearMountedIfEmpty(p);
-      schedulePuzzleMount(p, 0);
-    }
-  }
-}
-
-function mountWeekPuzzles(weekIndex) {
-  for (var i = 0; i < FESTIVAL_PUZZLES.length; i++) {
-    var p = FESTIVAL_PUZZLES[i];
-    if (!p || p.weekIndex !== weekIndex || !p.fen) continue;
-    if (!isPuzzleAccessUnlocked(p.id)) continue;
-    clearMountedIfEmpty(p);
-    schedulePuzzleMount(p, 0);
-  }
-}
-
-function mountActiveWeekOnly() {
-  var weekIndex = getActivePuzzleWeekIndex();
-  if (weekIndex != null) mountWeekPuzzles(weekIndex);
-  for (var j = 0; j < FESTIVAL_PUZZLES.length; j++) {
-    var pid = FESTIVAL_PUZZLES[j].id;
-    if (isPuzzleRewardUnlocked(pid)) {
-      setCompletionUI(pid, false);
-    }
-  }
-  refreshScoreUI();
-}
-
-function clearAllMountedIds() {
-  mountedIds = {};
-}
-
-function refreshAfterAccessChange() {
+function syncProgressUI() {
   applyPuzzleAccessUI();
   initPuzzleRewards();
   syncScoresFromRewards();
   refreshScoreUI();
-  mountActiveWeekOnly();
 }
 
 function scrollToPuzzle(puzzleId) {
   var item = document.querySelector('.sach-visual-item[data-puzzle-id="' + puzzleId + '"]');
   if (item) item.scrollIntoView({ behavior: "smooth", block: "nearest" });
-  var weekSection = document.getElementById(
-    "sach-week-" + (item && item.dataset.weekIndex ? item.dataset.weekIndex : "")
-  );
-  if (weekSection && !item) weekSection.scrollIntoView({ behavior: "smooth", block: "start" });
 }
 
 function showPageInitError(err) {
-  var msg =
-    "Šachové úlohy sa nepodarilo spustiť. Obnovte stránku (potiahnutie nadol v Safari) alebo vypnite blokovanie skriptov pre ptra.sk.";
   console.error("PTRA šach init:", err);
   var grid = document.getElementById("sach-puzzle-grid");
   if (grid) {
     grid.innerHTML =
       '<p class="note sach-module-fail" role="alert">' +
-      msg +
+      "Šachové úlohy sa nepodarilo spustiť. Obnovte stránku alebo vypnite blokovanie skriptov pre ptra.sk." +
       "</p>";
   }
   var loading = document.getElementById("sach-loading");
   if (loading) loading.hidden = true;
 }
 
-function debouncedMobileViewportRefresh() {
-  var timer = null;
-  return function () {
-    var weekIndex = getActivePuzzleWeekIndex();
-    if (weekIndex == null) return;
-    clearTimeout(timer);
-    timer = setTimeout(function () {
-      layoutWeekBoardSizes(weekIndex);
-      refreshWeekBoardGraphics(weekIndex);
-    }, 150);
-  };
+function onBreakpointCross() {
+  renderPuzzleGrid();
+  presetGridBoardSizes(document.getElementById("sach-puzzle-grid"));
+  syncProgressUI();
+  mountActiveWeekWithMarkers(null);
 }
 
-function initChessgroundPuzzles() {
+function initSachPage() {
   try {
-    initChessgroundPuzzlesCore();
+    syncPermanentFromSchedule();
+
+    var layoutIsMobile = isMobilePuzzleLayout();
+    window.addEventListener("resize", function () {
+      var nowMobile = isMobilePuzzleLayout();
+      if (nowMobile === layoutIsMobile) return;
+      layoutIsMobile = nowMobile;
+      onBreakpointCross();
+    });
+
+    renderInvesticiaGrid();
+    renderPuzzleGrid();
+    presetGridBoardSizes(document.getElementById("sach-puzzle-grid"));
+    syncProgressUI();
+    bindPuzzleUnlockPrompts();
+    initPuzzleTimeline(scrollToPuzzle);
+    initPuzzleMount();
+
+    window.addEventListener("ptra-puzzle-access-changed", function () {
+      syncProgressUI();
+      mountActiveWeekWithMarkers(null);
+    });
+
+    var loading = document.getElementById("sach-loading");
+    if (loading) loading.hidden = true;
   } catch (err) {
     showPageInitError(err);
   }
 }
 
-function initChessgroundPuzzlesCore() {
-  syncPermanentFromSchedule();
-
-  window.addEventListener("ptra-puzzle-grid-rebuilt", function () {
-    clearAllMountedIds();
-  });
-
-  window.addEventListener("ptra-puzzle-week-visible", function (ev) {
-    var weekIndex = ev.detail && ev.detail.weekIndex;
-    if (weekIndex == null) return;
-    unmountInactiveWeeks(weekIndex);
-    if (isMobilePuzzleLayout()) {
-      requestAnimationFrame(function () {
-        requestAnimationFrame(function () {
-          runWeekMount(weekIndex);
-        });
-      });
-    } else {
-      requestAnimationFrame(function () {
-        runWeekMount(weekIndex);
-      });
-    }
-  });
-
-  var layoutIsMobile = null;
-
-  function onLayoutModeMaybeChanged() {
-    var nowMobile =
-      typeof window !== "undefined" &&
-      window.matchMedia &&
-      window.matchMedia("(max-width: 900px)").matches;
-    if (layoutIsMobile === nowMobile) return;
-    layoutIsMobile = nowMobile;
-    renderPuzzleGrid();
-    presetGridBoardSizes(document.getElementById("sach-puzzle-grid"));
-    applyPuzzleAccessUI();
-    mountActiveWeekOnly();
-  }
-
-  if (typeof window !== "undefined") {
-    layoutIsMobile =
-      window.matchMedia && window.matchMedia("(max-width: 900px)").matches;
-    window.addEventListener("resize", onLayoutModeMaybeChanged);
-  }
-
-  renderInvesticiaGrid();
-  renderPuzzleGrid();
-  presetGridBoardSizes(document.getElementById("sach-puzzle-grid"));
-  applyPuzzleAccessUI();
-  initPuzzleRewards();
-  syncScoresFromRewards();
-  refreshScoreUI();
-  bindPuzzleUnlockPrompts();
-  initPuzzleTimeline(scrollToPuzzle);
-
-  if (isMobilePuzzleLayout()) {
-    window.addEventListener("load", function () {
-      setTimeout(remountActiveWeekIfEmpty, 500);
-    });
-    var ulohyCard = document.querySelector(".sach-ulohy-card");
-    if (ulohyCard && typeof IntersectionObserver !== "undefined") {
-      var ulohyTimer = null;
-      var ulohyObserver = new IntersectionObserver(
-        function (entries) {
-          for (var i = 0; i < entries.length; i++) {
-            if (!entries[i].isIntersecting) continue;
-            clearTimeout(ulohyTimer);
-            ulohyTimer = setTimeout(remountActiveWeekIfEmpty, 120);
-          }
-        },
-        { root: null, rootMargin: "48px", threshold: 0.05 }
-      );
-      ulohyObserver.observe(ulohyCard);
-    }
-  }
-
-  window.addEventListener("ptra-puzzle-access-changed", function () {
-    refreshAfterAccessChange();
-  });
-
-  window.addEventListener("orientationchange", function () {
-    setTimeout(function () {
-      var weekIndex = getActivePuzzleWeekIndex();
-      if (weekIndex == null) return;
-      layoutWeekBoardSizes(weekIndex);
-      refreshWeekBoardGraphics(weekIndex);
-    }, 350);
-  });
-
-  window.addEventListener("pageshow", function (ev) {
-    if (ev.persisted) setTimeout(mountActiveWeekOnly, 100);
-  });
-
-  if (isMobilePuzzleLayout() && window.visualViewport) {
-    var onVisualViewportLayout = debouncedMobileViewportRefresh();
-    window.visualViewport.addEventListener("resize", onVisualViewportLayout);
-  }
-
-  if (isMobilePuzzleLayout()) {
-    var grid = document.getElementById("sach-puzzle-grid");
-    if (grid) {
-      grid.addEventListener(
-        "touchstart",
-        function (ev) {
-          var board = ev.target && ev.target.closest && ev.target.closest(".cg-board");
-          if (!board || !board.id) return;
-          if (boardHasPieces(board)) return;
-          var puzzle = getPuzzleById(board.id);
-          if (puzzle && isPuzzleAccessUnlocked(puzzle.id)) {
-            schedulePuzzleMount(puzzle, 0);
-          }
-        },
-        { passive: true, capture: true }
-      );
-    }
-  }
-
-  var loading = document.getElementById("sach-loading");
-  if (loading) loading.hidden = true;
-}
-
-if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", initChessgroundPuzzles);
-else initChessgroundPuzzles();
+if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", initSachPage);
+else initSachPage();
 
 export { isDevUnlockAll };
