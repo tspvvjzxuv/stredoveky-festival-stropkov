@@ -4791,8 +4791,8 @@ body.home-page {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  min-height: 7.5rem;
-  padding: 0.85rem 0.75rem;
+  min-height: 5.25rem;
+  padding: 0.5rem 0.45rem;
   border-radius: 8px;
   border: 1px dashed rgba(255, 203, 0, 0.28);
   background: rgba(8, 10, 16, 0.55);
@@ -4826,7 +4826,7 @@ body.home-page {
 
 #sachove-hlavolamy .sach-investicia__lock {
   margin: 0;
-  font-size: 1.75rem;
+  font-size: 1.15rem;
   line-height: 1;
   opacity: 0.55;
   flex: 0 0 auto;
@@ -4838,27 +4838,27 @@ body.home-page {
 }
 
 #sachove-hlavolamy .sach-investicia__body h3 {
-  margin: 0.35rem 0 0.4rem;
-  font-size: 0.92rem;
+  margin: 0.25rem 0 0.3rem;
+  font-size: 0.78rem;
   color: #f0d39e !important;
 }
 
 #sachove-hlavolamy .sach-investicia__body p {
-  margin: 0 0 0.35rem;
-  font-size: 0.84rem;
+  margin: 0 0 0.25rem;
+  font-size: 0.72rem;
   line-height: 1.45;
   color: rgba(238, 231, 218, 0.88) !important;
 }
 
 #sachove-hlavolamy .sach-investicia__icon {
   display: block;
-  font-size: 1.6rem;
+  font-size: 1.1rem;
   line-height: 1;
 }
 
 #sachove-hlavolamy .sach-investicia__clue {
-  margin-top: 0.45rem !important;
-  font-size: 0.8rem !important;
+  margin-top: 0.3rem !important;
+  font-size: 0.68rem !important;
 }
 
 #sachove-hlavolamy .sach-investicia__clue strong {
@@ -4909,7 +4909,19 @@ body.home-page {
 
 @media (max-width: 720px) {
   #sachove-hlavolamy .sach-investicia__grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.45rem;
+  }
+
+  #sachove-hlavolamy .sach-investicia__part {
+    min-height: 4.75rem;
+    padding: 0.4rem 0.35rem;
+  }
+}
+
+@media (max-width: 400px) {
+  #sachove-hlavolamy .sach-investicia__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 
@@ -5043,8 +5055,36 @@ body.home-page {
 }
 
 @media (max-width: 1100px) {
+  #sachove-hlavolamy .sach-visual-item {
+    align-items: center;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+  }
+
+  #sachove-hlavolamy .sach-visual-item > :not(.chessground-host) {
+    width: 100%;
+    max-width: 100%;
+    align-self: stretch;
+  }
+
   #sachove-hlavolamy .sach-week-puzzles {
     grid-template-columns: 1fr;
+  }
+
+  #sachove-hlavolamy .chessground-host {
+    width: 100%;
+    max-width: 100%;
+    display: grid;
+    place-items: center;
+    padding: 0.35rem;
+    margin-inline: auto;
+  }
+
+  #sachove-hlavolamy .cg-board {
+    border: none;
+    box-shadow: none;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
   }
 }
 
@@ -5456,8 +5496,10 @@ body.sach-page-body .page-main.sach-page {
   }
 
   #sachove-hlavolamy .chessground-host {
-    width: fit-content;
+    width: 100%;
     max-width: 100%;
+    display: grid;
+    place-items: center;
     margin-inline: auto;
   }
 

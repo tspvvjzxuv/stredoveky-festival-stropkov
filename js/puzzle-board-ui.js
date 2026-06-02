@@ -275,13 +275,22 @@ function isCoarsePointer() {
   );
 }
 
+function isMobilePuzzleLayout() {
+  return (
+    typeof window !== "undefined" &&
+    window.matchMedia &&
+    window.matchMedia("(max-width: 1100px)").matches
+  );
+}
+
 export function getChessBoardMaxWidth(boardEl) {
   if (!boardEl) return 280;
 
   var cap = Math.max(200, Math.floor(viewportWidth() - 32));
   var item = boardEl.closest(".sach-visual-item");
   if (item && item.clientWidth > 48) {
-    return Math.max(200, Math.min(item.clientWidth - 12, cap, 300));
+    var inset = isMobilePuzzleLayout() ? 20 : 12;
+    return Math.max(200, Math.min(item.clientWidth - inset, cap, 300));
   }
 
   var row = boardEl.closest(".sach-week-puzzles");
@@ -310,31 +319,44 @@ export function syncChessBoardSize(boardEl, options) {
   var px = w + "px";
 
   var coarse = isCoarsePointer();
+  var mobileLayout = isMobilePuzzleLayout();
 
   if (host) {
     host.style.setProperty("--cg-board-size", px);
-    host.style.width = "fit-content";
     host.style.maxWidth = "100%";
     host.style.minHeight = px;
     host.style.height = "auto";
-    host.style.display = "flex";
-    host.style.justifyContent = "center";
-    host.style.alignItems = "flex-start";
     host.style.marginLeft = "auto";
     host.style.marginRight = "auto";
+
+    if (mobileLayout) {
+      host.style.width = "100%";
+      host.style.display = "grid";
+      host.style.placeItems = "center";
+      host.style.justifyContent = "";
+      host.style.alignItems = "";
+    } else {
+      host.style.width = "fit-content";
+      host.style.display = "flex";
+      host.style.justifyContent = "center";
+      host.style.alignItems = "flex-start";
+      host.style.placeItems = "";
+    }
   }
 
   boardEl.style.setProperty("width", px, "important");
   boardEl.style.setProperty("height", px, "important");
   boardEl.style.setProperty("max-width", "100%", "important");
   boardEl.style.setProperty("min-height", px, "important");
-  if (coarse) {
+  if (coarse || mobileLayout) {
     boardEl.style.setProperty("min-width", "0", "important");
+    boardEl.style.setProperty("margin-left", "0", "important");
+    boardEl.style.setProperty("margin-right", "0", "important");
   } else {
     boardEl.style.setProperty("min-width", px, "important");
+    boardEl.style.setProperty("margin-left", "auto", "important");
+    boardEl.style.setProperty("margin-right", "auto", "important");
   }
-  boardEl.style.setProperty("margin-left", "auto", "important");
-  boardEl.style.setProperty("margin-right", "auto", "important");
   boardEl.style.boxSizing = "content-box";
   boardEl.style.flexShrink = "0";
 

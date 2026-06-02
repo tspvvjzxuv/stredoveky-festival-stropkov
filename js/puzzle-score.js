@@ -245,54 +245,6 @@ export function renderScorePanel() {
   if (!root) return;
 
   var s = getScoreSummary();
-  var name = s.displayName || "Hráč";
-
-  var weeksHtml = s.weeks
-    .map(function (w) {
-      var pct = w.total ? Math.round((w.solved / w.total) * 100) : 0;
-      return (
-        '<tr><th scope="row">T' +
-        w.weekIndex +
-        " · " +
-        escapeHtml(w.title) +
-        '</th><td class="sach-score-num">' +
-        w.points +
-        '</td><td class="sach-score-num">' +
-        w.solved +
-        "/" +
-        w.total +
-        " (" +
-        pct +
-        "%)</td></tr>"
-      );
-    })
-    .join("");
-
-  var topHtml =
-    s.topPuzzles.length === 0
-      ? '<p class="note">Zatiaľ žiadne bodované úlohy — vyriešte hlavolam a body sa pripíšu.</p>'
-      : "<ol class=\"sach-score-top\">" +
-        s.topPuzzles
-          .map(function (t) {
-            var moves =
-              t.movesUsed != null && t.maxMoves != null
-                ? " · " + t.movesUsed + "/" + t.maxMoves + " ťahov"
-                : "";
-            var bonus =
-              t.bonus > 0 ? ' <span class="sach-score-bonus">(+' + t.bonus + " bonus)</span>" : "";
-            return (
-              "<li><span>" +
-              escapeHtml(t.title) +
-              '</span><strong class="sach-score-num">+' +
-              t.points +
-              "</strong>" +
-              bonus +
-              moves +
-              "</li>"
-            );
-          })
-          .join("") +
-        "</ol>";
 
   root.innerHTML =
     '<div class="sach-score__head">' +
@@ -305,39 +257,12 @@ export function renderScorePanel() {
     s.totalPoints +
     '</span> <span class="sach-score__total-label">bodov</span></p>' +
     '<p class="sach-score__meta">' +
-    escapeHtml(name) +
-    " · " +
     s.solvedCount +
     " / " +
     s.totalPuzzles +
-    " úloh</p>" +
+    " vyriešených úloh</p>" +
     "</div>" +
-    '<label class="sach-score__name-label" for="sach-score-name">Prezývka (len pre vás, lokálne)</label>' +
-    '<input type="text" id="sach-score-name" class="sach-score__name-input" maxlength="32" placeholder="napr. Andreas" value="' +
-    escapeAttr(s.displayName) +
-    '" />' +
-    '<h3 class="sach-score__sub">Body podľa týždňa</h3>' +
-    '<div class="sach-score__table-wrap">' +
-    '<table class="sach-score__table"><thead><tr><th>Týždeň</th><th>Body</th><th>Úlohy</th></tr></thead><tbody>' +
-    weeksHtml +
-    "</tbody></table></div>" +
-    '<h3 class="sach-score__sub">Najlepšie úlohy</h3>' +
-    topHtml +
-    '<p class="note sach-score__note">Základ podľa obtiažnosti (ľahká 100, stredná 250, ťažká 500). K tomu až +60&nbsp;% základu ako bonus, ak spotrebujete menej vlastných ťahov v rámci limitu úlohy (1 ťah = maximum bonusu). Ukladá sa len váš najlepší výsledok na úlohu. Dáta sú len v localStorage tohto prehliadača.</p>';
-
-  var input = root.querySelector("#sach-score-name");
-  if (input) {
-    input.addEventListener("change", function () {
-      setScoreDisplayName(input.value);
-      renderScorePanel();
-    });
-    input.addEventListener("keydown", function (ev) {
-      if (ev.key === "Enter") {
-        setScoreDisplayName(input.value);
-        renderScorePanel();
-      }
-    });
-  }
+    '<p class="note sach-score__note">Ľahká 100 · Stredná 250 · Ťažká 500 bodov. Menej ťahov = vyšší bonus. Ukladá sa len v tomto prehliadači.</p>';
 }
 
 function escapeHtml(s) {
