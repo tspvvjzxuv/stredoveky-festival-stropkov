@@ -126,6 +126,19 @@ function countPlayerMovesInLine(line, fen, playerColor) {
 function maxMovesFor(spec) {
   const pc = playerColorFromSpec(spec);
   const wm = countPlayerMovesInLine(spec.line, spec.fen, pc);
+  if (typeof spec.maxMoves === "number" && spec.maxMoves > 0) return spec.maxMoves;
+  // Mat jedným ťahom — krátky limit, aby sedel s témou úlohy
+  if (wm <= 1) {
+    return spec.difficulty === "easy" ? 3 : spec.difficulty === "medium" ? 4 : 5;
+  }
+  if (wm <= 2) {
+    const slack =
+      spec.difficulty === "easy" ? 6 : spec.difficulty === "medium" ? 8 : 10;
+    return Math.max(
+      spec.difficulty === "easy" ? 8 : spec.difficulty === "medium" ? 12 : 16,
+      wm * 3 + slack
+    );
+  }
   const slack =
     spec.difficulty === "easy" ? 10 : spec.difficulty === "medium" ? 14 : 18;
   return Math.max(

@@ -211,18 +211,31 @@ export function mountBotPuzzle(puzzle, helpers) {
       moveCounterEl.classList.remove("sach-move-counter--warn", "sach-move-counter--danger");
       if (freePlay) {
         var remaining = Math.max(0, maxMoves - moveCount);
-        moveCounterEl.textContent =
-          "Ťahy: " + moveCount + " / " + maxMoves + " · zostáva " + remaining;
-        moveCounterEl.setAttribute(
-          "aria-label",
-          "Vaše ťahy " +
-            moveCount +
-            " z " +
-            maxMoves +
-            ", zostáva " +
-            remaining +
-            ". Pri vyriešení platí bonus za menej ťahov."
-        );
+        if (maxMoves <= 5) {
+          moveCounterEl.textContent =
+            "Mat jedným ťahom · váš ťah " + (moveCount + 1) + " / max " + maxMoves;
+          moveCounterEl.setAttribute(
+            "aria-label",
+            "Mat jedným ťahom. Váš ťah " +
+              (moveCount + 1) +
+              " z maximálne " +
+              maxMoves +
+              "."
+          );
+        } else {
+          moveCounterEl.textContent =
+            "Ťahy: " + moveCount + " / " + maxMoves + " · zostáva " + remaining;
+          moveCounterEl.setAttribute(
+            "aria-label",
+            "Vaše ťahy " +
+              moveCount +
+              " z " +
+              maxMoves +
+              ", zostáva " +
+              remaining +
+              ". Pri vyriešení platí bonus za menej ťahov."
+          );
+        }
         if (remaining <= 1 || moveCount >= maxMoves) {
           moveCounterEl.classList.add("sach-move-counter--danger");
         } else if (remaining <= 3) {
