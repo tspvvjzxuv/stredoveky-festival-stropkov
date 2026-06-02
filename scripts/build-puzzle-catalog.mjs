@@ -127,10 +127,10 @@ function maxMovesFor(spec) {
   const pc = playerColorFromSpec(spec);
   const wm = countPlayerMovesInLine(spec.line, spec.fen, pc);
   const slack =
-    spec.difficulty === "easy" ? 4 : spec.difficulty === "medium" ? 6 : 10;
+    spec.difficulty === "easy" ? 10 : spec.difficulty === "medium" ? 14 : 18;
   return Math.max(
-    spec.difficulty === "easy" ? 6 : spec.difficulty === "medium" ? 10 : 14,
-    wm * 2 + slack
+    spec.difficulty === "easy" ? 12 : spec.difficulty === "medium" ? 18 : 24,
+    wm * 3 + slack
   );
 }
 
@@ -317,7 +317,7 @@ for (const entry of ENTRIES) {
     playerColor: playerColorFromSpec(entry),
     win: entry.win || "checkmate",
     maxMoves,
-    freePlay: entry.freePlay === true,
+    freePlay: entry.freePlay !== false,
     play,
     subtitle: entry.subtitle,
     solution: entry.solution,

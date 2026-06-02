@@ -15,10 +15,10 @@ export const DIFFICULTY_LABELS = {
 };
 
 export const WEEK_THEMES = [
-  { title: "Mat v dvoch", tagline: "Úvodné kombinácie — dva biele ťahy k matu" },
-  { title: "Mat v dvoch II", tagline: "Veža, dáma a jazdec — overené riešenia" },
-  { title: "Mat v dvoch III", tagline: "Taktika s dámou a vežou" },
-  { title: "Kombinácie", tagline: "Viacťahové finále — šachové pravidlá" },
+  { title: "Mat jedným ťahom", tagline: "Plná doska — nájdite okamžitý mat medzi figurkami" },
+  { title: "Mat dvoma ťahmi", tagline: "Veža, jazdec a strelec — taktické kombinácie z knihy" },
+  { title: "Mat dvoma ťahmi II", tagline: "Bohaté pozície — jazdec, dáma a viac figúr na doske" },
+  { title: "Taktika", tagline: "Mat, väzba a dvojitý úder — voľnejšia hra, viac ťahov" },
   { title: "Mat dvoma ťahmi", tagline: "Úlohy z knihy č. 175, 187–188" },
   { title: "Mat dvoma ťahmi II", tagline: "Veža, dáma a jazdec — legálne pozície, mat v 2" },
   { title: "Väzba", tagline: "Taktika z knihy — väzba" },
@@ -50,7 +50,7 @@ function buildFestivalPuzzle(entry) {
     subtitle: entry.subtitle,
     solution: entry.solution,
     maxMoves: entry.maxMoves,
-    freePlay: entry.freePlay === true,
+    freePlay: entry.freePlay !== false,
   };
 }
 

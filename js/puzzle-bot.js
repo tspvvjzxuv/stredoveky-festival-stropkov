@@ -790,8 +790,8 @@ export function mountBotPuzzle(puzzle, helpers) {
   if (freePlay) {
     setSubtitle(
       playerColor === "b"
-        ? "Voľná hra: pohybujte čiernymi figúrami. Prehra len po prekročení limitu ťahov."
-        : "Voľná hra: pohybujte bielymi figúrami. Prehra len po prekročení limitu ťahov."
+        ? "Voľná hra: ťahajte čiernymi podľa vlastného plánu. Cieľ splníte matom alebo zadaným víťazstvom — prehra len po prekročení limitu ťahov."
+        : "Voľná hra: ťahajte bielymi podľa vlastného plánu. Cieľ splníte matom alebo zadaným víťazstvom — prehra len po prekročení limitu ťahov."
     );
   }
   applyState(ground);
