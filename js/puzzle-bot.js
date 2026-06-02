@@ -17,7 +17,7 @@ import {
   groundColor,
 } from "./puzzle-engine.js";
 import { createWrongMoveOverlay } from "./puzzle-wrong-move-ui.js";
-import { syncChessBoardSize } from "./puzzle-board-size.js";
+import { syncChessBoardSize, isMobileBoardLayoutExport } from "./puzzle-board-size.js";
 import { isPuzzleRewardUnlocked } from "./puzzle-rewards.js";
 
 var DEFAULT_MAX_MISTAKES_OVERLAY = 8;
@@ -97,7 +97,7 @@ export function mountBotPuzzle(puzzle, helpers) {
   if (!el) return;
 
   destroyPuzzleGround(el);
-  syncChessBoardSize(el);
+  syncChessBoardSize(el, { skipRedraw: true });
 
   var playerColor = playerColorFromPuzzle(puzzle);
   var opponent = opponentColor(playerColor);
@@ -741,7 +741,7 @@ export function mountBotPuzzle(puzzle, helpers) {
     applyCorrectUserMove(ground, step, attempted, verdict);
   }
 
-  syncChessBoardSize(el);
+  var isMobileBoard = isMobileBoardLayoutExport();
 
   var isCoarsePointer =
     typeof window !== "undefined" &&
@@ -774,7 +774,7 @@ export function mountBotPuzzle(puzzle, helpers) {
     premovable: { enabled: false },
     drawable: { enabled: true, visible: true },
     highlight: { lastMove: true, check: true },
-    animation: { enabled: true },
+    animation: { enabled: isMobileBoard, duration: isMobileBoard ? 200 : 0 },
   });
   el._ptraChessground = ground;
 
@@ -798,22 +798,21 @@ export function mountBotPuzzle(puzzle, helpers) {
 
   function ensureBoardLayout(attempt) {
     attempt = attempt == null ? 0 : attempt;
-    syncChessBoardSize(el);
+    syncChessBoardSize(el, { skipRedraw: true });
     var rect = el.getBoundingClientRect();
+    var maxAttempts = isMobileBoard ? 24 : 4;
     if (rect.width < 2 || rect.height < 2) {
-      if (attempt < 24) {
+      if (attempt < maxAttempts) {
         requestAnimationFrame(function () {
           ensureBoardLayout(attempt + 1);
         });
       }
       return;
     }
-    ground.set({ fen: chess.fen() });
-    applyState(ground);
     if (typeof ground.redrawAll === "function") ground.redrawAll();
   }
 
-  if (typeof ResizeObserver !== "undefined") {
+  if (isMobileBoard && typeof ResizeObserver !== "undefined") {
     var resizeDebounce = null;
     var resizeObserver = new ResizeObserver(function () {
       clearTimeout(resizeDebounce);
@@ -826,11 +825,17 @@ export function mountBotPuzzle(puzzle, helpers) {
     if (host && host !== el) resizeObserver.observe(host);
   }
 
-  requestAnimationFrame(function () {
+  if (isMobileBoard) {
+    requestAnimationFrame(function () {
+      requestAnimationFrame(function () {
+        ensureBoardLayout(0);
+      });
+    });
+  } else {
     requestAnimationFrame(function () {
       ensureBoardLayout(0);
     });
-  });
+  }
 
   positionHistory = [snapshotNow()];
   saveRetrySnapshot();

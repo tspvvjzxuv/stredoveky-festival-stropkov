@@ -5383,6 +5383,22 @@ body.sach-page-body .page-main.sach-page {
     0 22px 56px rgba(0, 0, 0, 0.42);
 }
 
+@media (min-width: 901px) {
+  #sachove-hlavolamy .chessground-host {
+    width: min(100%, 300px);
+    max-width: 300px;
+    margin-inline: auto;
+    --cg-board-size: 280px;
+  }
+
+  #sachove-hlavolamy .cg-board {
+    width: var(--cg-board-size, 280px);
+    height: var(--cg-board-size, 280px);
+    max-width: 300px;
+    max-height: 300px;
+  }
+}
+
 /* Šachová stránka — širší layout na PC, väčšie dosky na tablete, mobil na celú šírku */
 .page-main.sach-page {
   max-width: min(1320px, calc(100vw - 1.25rem));

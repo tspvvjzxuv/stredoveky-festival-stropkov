@@ -1,26 +1,35 @@
 /**
- * Explicitné rozmery pre Chessground (mobil / Safari).
- * Meria sa z úzkeho rodiča (karta úlohy), nie z hosta rozšíreného doskou.
+ * Explicitné rozmery pre Chessground — stabilné na PC (bez zmenšovania po načítaní).
  */
+
+var boardSizeCache = typeof WeakMap !== "undefined" ? new WeakMap() : null;
 
 function viewportWidth() {
   if (typeof window === "undefined") return 360;
-  if (window.visualViewport && window.visualViewport.width > 0) {
-    return window.visualViewport.width;
-  }
   if (document.documentElement && document.documentElement.clientWidth > 0) {
     return document.documentElement.clientWidth;
   }
   return window.innerWidth || 360;
 }
 
+function isMobileBoardLayout() {
+  if (typeof window === "undefined" || !window.matchMedia) return false;
+  return window.matchMedia("(max-width: 900px)").matches;
+}
+
+function desktopColumnCount() {
+  if (typeof window === "undefined" || !window.matchMedia) return 3;
+  if (window.matchMedia("(max-width: 1100px)").matches) return 1;
+  return 3;
+}
+
 /** Najužší zmysluplný limit šírky dosky v px. */
 export function getChessBoardMaxWidth(boardEl) {
-  var pad = 32;
-  var cap = Math.floor(viewportWidth() - pad);
-  if (!boardEl) return Math.max(200, Math.min(cap, 720));
+  if (!boardEl) return 280;
 
   if (isMobileBoardLayout()) {
+    var pad = 32;
+    var cap = Math.floor(viewportWidth() - pad);
     var item = boardEl.closest(".sach-visual-item");
     var card = boardEl.closest(".sach-ulohy-card") || boardEl.closest(".card");
     var itemW = item && item.clientWidth > 20 ? item.clientWidth : 0;
@@ -31,42 +40,53 @@ export function getChessBoardMaxWidth(boardEl) {
   }
 
   var item = boardEl.closest(".sach-visual-item");
-  var week = boardEl.closest(".sach-puzzle-week");
-  var card = boardEl.closest(".card");
-  var grid = document.getElementById("sach-puzzle-grid");
-  var candidates = [item, week, card, grid, boardEl.parentElement];
-  var best = cap;
-
-  for (var i = 0; i < candidates.length; i++) {
-    var el = candidates[i];
-    if (!el) continue;
-    var cw = el.clientWidth;
-    if (cw > 16 && cw < best) best = cw;
+  if (item && item.clientWidth > 48) {
+    return Math.max(200, Math.min(item.clientWidth - 12, 300));
   }
 
-  return Math.max(200, Math.min(best - 8, cap, 720));
+  var row = boardEl.closest(".sach-week-puzzles");
+  if (row && row.clientWidth > 48) {
+    var cols = desktopColumnCount();
+    var gap = cols === 3 ? 22 : 18;
+    var colW = Math.floor((row.clientWidth - gap * (cols - 1)) / cols);
+    return Math.max(200, Math.min(colW - 12, 300));
+  }
+
+  return 280;
 }
 
-function isMobileBoardLayout() {
-  if (typeof window === "undefined" || !window.matchMedia) return false;
-  return window.matchMedia("(max-width: 900px)").matches;
-}
-
-export function syncChessBoardSize(boardEl) {
+export function syncChessBoardSize(boardEl, options) {
   if (!boardEl) return 0;
-  var host = boardEl.closest(".chessground-host");
+  options = options || {};
+
   var w = getChessBoardMaxWidth(boardEl);
+  if (!options.force && boardSizeCache) {
+    var prev = boardSizeCache.get(boardEl);
+    if (prev === w) return w;
+  }
+  if (boardSizeCache) boardSizeCache.set(boardEl, w);
+
+  var host = boardEl.closest(".chessground-host");
   var px = w + "px";
 
   if (host) {
     host.style.setProperty("--cg-board-size", px);
-    host.style.width = "100%";
-    host.style.maxWidth = px;
-    host.style.minHeight = px;
+    if (isMobileBoardLayout()) {
+      host.style.width = "100%";
+      host.style.maxWidth = px;
+      host.style.minHeight = px;
+      host.style.display = "flex";
+      host.style.justifyContent = "center";
+      host.style.alignItems = "flex-start";
+    } else {
+      host.style.width = "";
+      host.style.maxWidth = "100%";
+      host.style.minHeight = px;
+      host.style.display = "";
+      host.style.justifyContent = "";
+      host.style.alignItems = "";
+    }
     host.style.height = "auto";
-    host.style.display = "flex";
-    host.style.justifyContent = "center";
-    host.style.alignItems = "flex-start";
   }
 
   boardEl.style.setProperty("width", px, "important");
@@ -77,13 +97,13 @@ export function syncChessBoardSize(boardEl) {
   boardEl.style.boxSizing = "border-box";
   boardEl.style.flexShrink = "0";
 
-  var ground = boardEl._ptraChessground;
-  if (ground && typeof ground.redrawAll === "function") {
-    requestAnimationFrame(function () {
+  if (!options.skipRedraw) {
+    var ground = boardEl._ptraChessground;
+    if (ground && typeof ground.redrawAll === "function") {
       try {
         ground.redrawAll();
       } catch (e) {}
-    });
+    }
   }
 
   return w;
@@ -91,10 +111,21 @@ export function syncChessBoardSize(boardEl) {
 
 export function boardHasLayout(boardEl) {
   if (!boardEl) return false;
-  syncChessBoardSize(boardEl);
+  syncChessBoardSize(boardEl, { skipRedraw: true });
   var rect = boardEl.getBoundingClientRect();
   if (rect.width <= 20 || rect.height <= 20) return false;
   if (isMobileBoardLayout()) return true;
-  var maxW = getChessBoardMaxWidth(boardEl) + 4;
-  return rect.width <= maxW;
+  return true;
+}
+
+export function isMobileBoardLayoutExport() {
+  return isMobileBoardLayout();
+}
+
+export function presetGridBoardSizes(grid) {
+  if (!grid) return;
+  var boards = grid.querySelectorAll(".cg-board");
+  for (var i = 0; i < boards.length; i++) {
+    syncChessBoardSize(boards[i], { skipRedraw: true });
+  }
 }
