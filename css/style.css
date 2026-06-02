@@ -5168,7 +5168,7 @@ body.js-ready #sachove-hlavolamy .cg-board {
   position: relative;
   z-index: 2300;
   box-sizing: border-box;
-  width: 100%;
+  width: fit-content;
   max-width: 100%;
   margin-inline: auto;
   padding: 0.25rem;
@@ -5309,17 +5309,19 @@ body.js-ready #sachove-hlavolamy .cg-board {
 
 #sachove-hlavolamy .cg-board {
   position: relative;
-  box-sizing: border-box;
+  box-sizing: content-box;
   width: var(--cg-board-size, 280px);
   height: var(--cg-board-size, 280px);
   max-width: 100%;
-  min-width: 200px;
+  min-width: 0;
   min-height: 200px;
   margin-inline: auto;
+  margin-left: auto !important;
+  margin-right: auto !important;
   flex-shrink: 0;
   border-radius: 6px;
   border: 1px solid rgba(242, 204, 140, 0.5);
-  overflow: hidden;
+  overflow: visible;
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.28);
   background-color: #312e2b;
   background-image:
@@ -5338,6 +5340,11 @@ body.js-ready #sachove-hlavolamy .cg-board {
 #sachove-hlavolamy .cg-board.cg-board--mounted:has(piece),
 #sachove-hlavolamy .cg-board.cg-board--mounted:has(cg-board) {
   background: none;
+}
+
+#sachove-hlavolamy .cg-board.cg-wrap {
+  box-sizing: content-box !important;
+  overflow: visible !important;
 }
 
 #sachove-hlavolamy .sach-board-load-error {
@@ -5377,8 +5384,8 @@ body.sach-page-body .page-main.sach-page {
 
 @media (min-width: 901px) {
   #sachove-hlavolamy .chessground-host {
-    width: min(100%, 300px);
-    max-width: 300px;
+    width: fit-content;
+    max-width: min(100%, 300px);
     margin-inline: auto;
     --cg-board-size: 280px;
   }
@@ -5446,6 +5453,17 @@ body.sach-page-body .page-main.sach-page {
 
   #sachove-hlavolamy .sach-week-puzzles {
     grid-template-columns: 1fr;
+  }
+
+  #sachove-hlavolamy .chessground-host {
+    width: fit-content;
+    max-width: 100%;
+    margin-inline: auto;
+  }
+
+  #sachove-hlavolamy .cg-wrap coords.ranks,
+  #sachove-hlavolamy .cg-wrap coords.files {
+    display: none !important;
   }
 
   #sachove-hlavolamy .cg-board,

@@ -713,7 +713,8 @@ export function mountBotPuzzle(puzzle, helpers) {
   var ground = Chessground(el, {
     fen: chess.fen(),
     orientation: boardOrientation,
-    coordinates: true,
+    coordinates: !isCoarsePointer,
+    coordinatesOnSquares: false,
     viewOnly: false,
     disableContextMenu: true,
     blockTouchScroll: isCoarsePointer,
