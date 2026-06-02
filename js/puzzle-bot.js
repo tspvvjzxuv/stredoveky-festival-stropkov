@@ -17,7 +17,8 @@ import {
   groundColor,
 } from "./puzzle-engine.js";
 import { createWrongMoveOverlay } from "./puzzle-wrong-move-ui.js";
-import { syncChessBoardSize, isMobileBoardLayoutExport } from "./puzzle-board-size.js";
+import { syncChessBoardSize } from "./puzzle-board-size.js";
+import { isMobilePuzzleLayout } from "./puzzle-board-ui.js";
 import { isPuzzleRewardUnlocked } from "./puzzle-rewards.js";
 
 var DEFAULT_MAX_MISTAKES_OVERLAY = 8;
@@ -741,7 +742,7 @@ export function mountBotPuzzle(puzzle, helpers) {
     applyCorrectUserMove(ground, step, attempted, verdict);
   }
 
-  var isMobileBoard = isMobileBoardLayoutExport();
+  var isMobileBoard = isMobilePuzzleLayout();
 
   var isCoarsePointer =
     typeof window !== "undefined" &&
@@ -800,9 +801,8 @@ export function mountBotPuzzle(puzzle, helpers) {
     attempt = attempt == null ? 0 : attempt;
     syncChessBoardSize(el, { skipRedraw: true });
     var rect = el.getBoundingClientRect();
-    var maxAttempts = isMobileBoard ? 24 : 4;
     if (rect.width < 2 || rect.height < 2) {
-      if (attempt < maxAttempts) {
+      if (attempt < 6) {
         requestAnimationFrame(function () {
           ensureBoardLayout(attempt + 1);
         });
@@ -812,30 +812,9 @@ export function mountBotPuzzle(puzzle, helpers) {
     if (typeof ground.redrawAll === "function") ground.redrawAll();
   }
 
-  if (isMobileBoard && typeof ResizeObserver !== "undefined") {
-    var resizeDebounce = null;
-    var resizeObserver = new ResizeObserver(function () {
-      clearTimeout(resizeDebounce);
-      resizeDebounce = setTimeout(function () {
-        ensureBoardLayout(0);
-      }, 60);
-    });
-    resizeObserver.observe(el);
-    var host = el.closest(".chessground-host");
-    if (host && host !== el) resizeObserver.observe(host);
-  }
-
-  if (isMobileBoard) {
-    requestAnimationFrame(function () {
-      requestAnimationFrame(function () {
-        ensureBoardLayout(0);
-      });
-    });
-  } else {
-    requestAnimationFrame(function () {
-      ensureBoardLayout(0);
-    });
-  }
+  requestAnimationFrame(function () {
+    ensureBoardLayout(0);
+  });
 
   positionHistory = [snapshotNow()];
   saveRetrySnapshot();

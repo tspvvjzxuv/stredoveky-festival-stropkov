@@ -259,11 +259,6 @@ export function setPuzzleWeekVisible(weekIndex, options) {
     grid.dataset.activeWeek = String(weekIndex);
     syncTimelineSliderToWeek(weekIndex);
     emitPuzzleWeekVisible(weekIndex);
-    requestAnimationFrame(function () {
-      requestAnimationFrame(function () {
-        emitPuzzleWeekVisible(weekIndex);
-      });
-    });
     return;
   }
 

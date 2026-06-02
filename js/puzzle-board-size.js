@@ -111,15 +111,8 @@ export function syncChessBoardSize(boardEl, options) {
 
 export function boardHasLayout(boardEl) {
   if (!boardEl) return false;
-  syncChessBoardSize(boardEl, { skipRedraw: true });
   var rect = boardEl.getBoundingClientRect();
-  if (rect.width <= 20 || rect.height <= 20) return false;
-  if (isMobileBoardLayout()) return true;
-  return true;
-}
-
-export function isMobileBoardLayoutExport() {
-  return isMobileBoardLayout();
+  return rect.width > 20 && rect.height > 20;
 }
 
 export function presetGridBoardSizes(grid) {
