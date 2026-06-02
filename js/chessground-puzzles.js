@@ -30,6 +30,7 @@ import {
   applyPuzzleAccessUI,
   getActivePuzzleWeekIndex,
   isPuzzleBoardInActiveView,
+  isMobilePuzzleLayout,
 } from "./puzzle-board-ui.js";
 import { isPuzzleAccessUnlocked, syncPermanentFromSchedule, isDevUnlockAll } from "./puzzle-unlock.js";
 import { initPuzzleTimeline, bindPuzzleUnlockPrompts } from "./puzzle-timeline-ui.js";
@@ -355,9 +356,14 @@ function mountWeekPuzzles(weekIndex) {
 }
 
 function mountAllPlayablePuzzles() {
-  for (var i = 0; i < FESTIVAL_PUZZLES.length; i++) {
-    var p = FESTIVAL_PUZZLES[i];
-    if (p && p.id && p.fen && isPuzzleAccessUnlocked(p.id)) schedulePuzzleMount(p, 0);
+  if (isMobilePuzzleLayout()) {
+    var weekIndex = getActivePuzzleWeekIndex();
+    if (weekIndex != null) mountWeekPuzzles(weekIndex);
+  } else {
+    for (var i = 0; i < FESTIVAL_PUZZLES.length; i++) {
+      var p = FESTIVAL_PUZZLES[i];
+      if (p && p.id && p.fen && isPuzzleAccessUnlocked(p.id)) schedulePuzzleMount(p, 0);
+    }
   }
   for (var j = 0; j < FESTIVAL_PUZZLES.length; j++) {
     var pid = FESTIVAL_PUZZLES[j].id;
@@ -368,13 +374,75 @@ function mountAllPlayablePuzzles() {
   refreshScoreUI();
 }
 
+function clearAllMountedIds() {
+  for (var id in mountedIds) {
+    if (Object.prototype.hasOwnProperty.call(mountedIds, id)) {
+      clearPuzzleMountWatch(id);
+    }
+  }
+  mountedIds = {};
+}
+
+function activeWeekHasVisiblePieces() {
+  var weekIndex = getActivePuzzleWeekIndex();
+  if (weekIndex == null) return false;
+  var section = document.getElementById("sach-week-" + weekIndex);
+  if (!section) return false;
+  var boards = section.querySelectorAll(".cg-board");
+  for (var i = 0; i < boards.length; i++) {
+    if (boardHasPieces(boards[i])) return true;
+  }
+  return false;
+}
+
+function showMobileBoardHelp() {
+  var card = document.querySelector(".sach-ulohy-card");
+  if (!card || card.querySelector(".sach-mobile-help")) return;
+  var help = document.createElement("div");
+  help.className = "sach-mobile-help sach-module-fail";
+  help.setAttribute("role", "alert");
+  help.innerHTML =
+    "<p><strong>Šachovnica sa nenačítala.</strong> Skúste obnoviť stránku (potiahnutie nadol v Safari) alebo stlačte tlačidlo nižšie.</p>" +
+    '<button type="button" class="btn btn-primary sach-mobile-help__retry">Načítať znova</button>';
+  var grid = document.getElementById("sach-puzzle-grid");
+  if (grid && grid.parentNode) {
+    grid.parentNode.insertBefore(help, grid);
+  } else {
+    card.appendChild(help);
+  }
+  help.querySelector(".sach-mobile-help__retry").addEventListener("click", function () {
+    help.remove();
+    clearAllMountedIds();
+    remountActiveWeek();
+  });
+}
+
+function startMobileBoardWatchdog() {
+  if (!isMobilePuzzleLayout()) return;
+  var attempts = 0;
+  var timer = window.setInterval(function () {
+    attempts += 1;
+    if (activeWeekHasVisiblePieces()) {
+      window.clearInterval(timer);
+      var help = document.querySelector(".sach-mobile-help");
+      if (help) help.remove();
+      return;
+    }
+    remountActiveWeek();
+    if (attempts >= 8) {
+      window.clearInterval(timer);
+      showMobileBoardHelp();
+    }
+  }, 1500);
+}
+
 function remountActiveWeek() {
   var weekIndex = getActivePuzzleWeekIndex();
   if (weekIndex != null) mountWeekPuzzles(weekIndex);
 }
 
 function scheduleRemountBurst() {
-  var delays = [0, 80, 200, 500, 1200, 2500];
+  var delays = isMobilePuzzleLayout() ? [0, 200, 800, 2000] : [0, 80, 200, 500, 1200, 2500];
   for (var d = 0; d < delays.length; d++) {
     var timerId = setTimeout(remountActiveWeek, delays[d]);
     remountBurstTimerIds.push(timerId);
@@ -425,6 +493,10 @@ function initChessgroundPuzzles() {
 function initChessgroundPuzzlesCore() {
   syncPermanentFromSchedule();
 
+  window.addEventListener("ptra-puzzle-grid-rebuilt", function () {
+    clearAllMountedIds();
+  });
+
   window.addEventListener("ptra-puzzle-week-visible", function (ev) {
     var weekIndex = ev.detail && ev.detail.weekIndex;
     if (weekIndex == null) return;
@@ -471,6 +543,7 @@ function initChessgroundPuzzlesCore() {
   mountAllPlayablePuzzles();
   remountActiveWeek();
   scheduleRemountBurst();
+  startMobileBoardWatchdog();
 
   window.addEventListener("ptra-puzzle-access-changed", function () {
     refreshAfterAccessChange();

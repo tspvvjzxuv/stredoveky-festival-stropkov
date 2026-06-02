@@ -5328,8 +5328,24 @@ body.home-page {
     -12px 0;
 }
 
-#sachove-hlavolamy .cg-board.cg-board--mounted {
+#sachove-hlavolamy .cg-board.cg-board--mounted:has(piece),
+#sachove-hlavolamy .cg-board.cg-board--mounted:has(cg-board) {
   background: none;
+}
+
+#sachove-hlavolamy .sach-mobile-help {
+  margin: 0.75rem 0 1rem;
+  padding: 0.75rem 0.85rem;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 140, 100, 0.5);
+  background: rgba(80, 24, 24, 0.45);
+  color: #ffe8dc;
+  text-align: center;
+}
+
+#sachove-hlavolamy .sach-mobile-help p {
+  margin: 0 0 0.65rem;
+  font-size: 0.9rem;
 }
 
 #sachove-hlavolamy .sach-board-load-error {
@@ -5444,7 +5460,7 @@ body.sach-page-body .page-main.sach-page {
     width: 100%;
     max-width: 100%;
     padding: 0.25rem;
-    min-height: 0 !important;
+    min-height: var(--cg-board-size, 260px) !important;
     box-sizing: border-box;
     display: flex;
     justify-content: center;

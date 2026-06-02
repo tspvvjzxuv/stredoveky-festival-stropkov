@@ -151,7 +151,19 @@ function buildWeekSection(week) {
   return section;
 }
 
+function notifyGridRebuilt() {
+  window.dispatchEvent(new CustomEvent("ptra-puzzle-grid-rebuilt"));
+}
+
+function findWeekMeta(weekIndex) {
+  for (var w = 0; w < PUZZLE_WEEKS.length; w++) {
+    if (PUZZLE_WEEKS[w].weekIndex === weekIndex) return PUZZLE_WEEKS[w];
+  }
+  return PUZZLE_WEEKS[0] || null;
+}
+
 function renderDesktopPuzzleGrid(grid) {
+  notifyGridRebuilt();
   grid.innerHTML = "";
   for (var w = 0; w < PUZZLE_WEEKS.length; w++) {
     var week = PUZZLE_WEEKS[w];
@@ -161,15 +173,39 @@ function renderDesktopPuzzleGrid(grid) {
   }
 }
 
+/** Mobil: len jeden týždeň v DOM (Safari zlyháva pri 12× display:none sekciách). */
+function renderMobilePuzzleGrid(grid, weekIndex) {
+  notifyGridRebuilt();
+  grid.innerHTML = "";
+  var week = findWeekMeta(weekIndex);
+  if (!week) return;
+  var section = buildWeekSection(week);
+  section.classList.add("is-week-active");
+  grid.appendChild(section);
+}
+
 export function renderPuzzleGrid() {
   var grid = document.getElementById("sach-puzzle-grid");
   if (!grid) return;
 
-  renderDesktopPuzzleGrid(grid);
-
   var initialWeek = PUZZLE_WEEKS[getDefaultWeekIndex()];
   var weekNum = initialWeek ? initialWeek.weekIndex : 1;
-  setPuzzleWeekVisible(weekNum, { scroll: false });
+
+  if (isMobilePuzzleLayout()) {
+    renderMobilePuzzleGrid(grid, weekNum);
+    grid.dataset.activeWeek = String(weekNum);
+    syncTimelineSliderToWeek(weekNum);
+    emitPuzzleWeekVisible(weekNum);
+  } else {
+    renderDesktopPuzzleGrid(grid);
+    setPuzzleWeekVisible(weekNum, { scroll: false });
+  }
+}
+
+function emitPuzzleWeekVisible(weekIndex) {
+  window.dispatchEvent(
+    new CustomEvent("ptra-puzzle-week-visible", { detail: { weekIndex: weekIndex } })
+  );
 }
 
 function syncTimelineSliderToWeek(weekIndex) {
@@ -218,42 +254,30 @@ export function setPuzzleWeekVisible(weekIndex, options) {
   weekIndex = parseInt(weekIndex, 10);
   if (isNaN(weekIndex) || weekIndex < 1) weekIndex = 1;
 
+  if (isMobilePuzzleLayout()) {
+    renderMobilePuzzleGrid(grid, weekIndex);
+    grid.dataset.activeWeek = String(weekIndex);
+    syncTimelineSliderToWeek(weekIndex);
+    emitPuzzleWeekVisible(weekIndex);
+    requestAnimationFrame(function () {
+      requestAnimationFrame(function () {
+        emitPuzzleWeekVisible(weekIndex);
+      });
+    });
+    return;
+  }
+
   var scroll =
     options && options.scroll === true
       ? true
       : options && options.scroll === false
         ? false
-        : !isMobilePuzzleLayout();
+        : true;
 
   setDesktopWeekVisible(weekIndex, scroll);
-
   grid.dataset.activeWeek = String(weekIndex);
   syncTimelineSliderToWeek(weekIndex);
-
-  function emitWeekVisible() {
-    window.dispatchEvent(
-      new CustomEvent("ptra-puzzle-week-visible", { detail: { weekIndex: weekIndex } })
-    );
-  }
-
-  emitWeekVisible();
-  if (isMobilePuzzleLayout()) {
-    requestAnimationFrame(function () {
-      requestAnimationFrame(emitWeekVisible);
-    });
-  }
-
-  if (isMobilePuzzleLayout()) {
-    requestAnimationFrame(function () {
-      var weekEl = document.getElementById("sach-week-" + weekIndex);
-      var firstBoard = weekEl && weekEl.querySelector(".cg-board");
-      if (firstBoard) {
-        firstBoard.scrollIntoView({ behavior: "smooth", block: "center" });
-      } else if (weekEl) {
-        weekEl.scrollIntoView({ behavior: "smooth", block: "start" });
-      }
-    });
-  }
+  emitPuzzleWeekVisible(weekIndex);
 }
 
 export function getActivePuzzleWeekIndex() {
