@@ -15,7 +15,7 @@ export const DIFFICULTY_LABELS = {
 };
 
 export const WEEK_THEMES = [
-  { title: "Mat jedným ťahom", tagline: "Plná doska — nájdite okamžitý mat medzi figurkami" },
+  { title: "Taktický úvod", tagline: "Tri rôzne pozície — od matu jedným ťahom po dvojťahové kombinácie" },
   { title: "Mat dvoma ťahmi", tagline: "Veža, jazdec a strelec — taktické kombinácie z knihy" },
   { title: "Mat dvoma ťahmi II", tagline: "Bohaté pozície — jazdec, dáma a viac figúr na doske" },
   { title: "Taktika", tagline: "Mat, väzba a dvojitý úder — voľnejšia hra, viac ťahov" },
