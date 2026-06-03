@@ -215,6 +215,28 @@ function solveMainLine(puzzle) {
 
 let errors = 0;
 const results = [];
+const boardSeen = new Map();
+
+function countUserStepsInPlay(play) {
+  let n = 0;
+  for (const s of play || []) if (s.who === "user") n++;
+  return n;
+}
+
+for (const puzzle of FESTIVAL_PUZZLES) {
+  const board = puzzle.fen.split(" ")[0];
+  if (boardSeen.has(board)) {
+    errors++;
+    console.log("DUPLICATE FEN:", boardSeen.get(board), "a", puzzle.id, "→", board);
+  } else {
+    boardSeen.set(board, puzzle.id);
+  }
+  const userSteps = countUserStepsInPlay(puzzle.play);
+  if (typeof puzzle.maxMoves === "number" && userSteps > puzzle.maxMoves) {
+    errors++;
+    console.log("FAIL maxMoves", puzzle.id, "riešenie potrebuje", userSteps, "ťahov, limit je", puzzle.maxMoves);
+  }
+}
 
 for (const puzzle of FESTIVAL_PUZZLES) {
   const chess = new Chess(puzzle.fen);
@@ -233,6 +255,7 @@ for (const puzzle of FESTIVAL_PUZZLES) {
 console.log("\n--- Súhrn (" + FESTIVAL_PUZZLES.length + " úloh) ---");
 const ok = results.filter((r) => r.ok);
 console.log("Vyriešených (hlavná línia, legálne podľa chess.js): " + ok.length + "/" + FESTIVAL_PUZZLES.length);
+console.log("Jedinečných rozložení figúr (FEN): " + boardSeen.size + "/" + FESTIVAL_PUZZLES.length);
 
 if (process.env.VERBOSE === "1") {
   for (const r of ok) {

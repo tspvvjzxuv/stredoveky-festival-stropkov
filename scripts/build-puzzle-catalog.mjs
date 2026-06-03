@@ -28,12 +28,19 @@ const ENTRIES = PUZZLE_SPECS.map((spec) => ({
 
 const seenFen = new Set();
 const seenLine = new Set();
+const fenToEntry = new Map();
+let duplicateFenFailures = 0;
 for (const e of ENTRIES) {
   const board = e.fen.split(" ")[0];
   const lineKey = e.line.map((m) => m.join("")).join(",");
-  if (seenFen.has(board)) console.warn("WARN duplicate FEN:", board, "week", e.week, e.difficulty);
-  if (seenLine.has(lineKey)) console.warn("WARN duplicate line:", "week", e.week, e.difficulty);
+  const id = `w${e.week}-${e.difficulty}`;
+  if (seenFen.has(board)) {
+    console.error("DUPLICATE FEN:", board, "—", fenToEntry.get(board), "and", id);
+    duplicateFenFailures++;
+  }
   seenFen.add(board);
+  fenToEntry.set(board, id);
+  if (seenLine.has(lineKey)) console.warn("WARN duplicate line:", "week", e.week, e.difficulty);
   seenLine.add(lineKey);
 }
 
@@ -338,8 +345,8 @@ for (const entry of ENTRIES) {
   console.log("OK", `w${entry.week}`, entry.difficulty, v.sans.join(" "));
 }
 
-if (failures) {
-  console.error(failures, "failures — not writing catalog");
+if (failures || duplicateFenFailures) {
+  console.error(failures + duplicateFenFailures, "failures — not writing catalog");
   process.exit(1);
 }
 
