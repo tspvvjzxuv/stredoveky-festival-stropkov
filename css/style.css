@@ -5226,8 +5226,32 @@ body.js-ready #sachove-hlavolamy .cg-board {
 }
 
 #sachove-hlavolamy .sach-reset-btn {
-  width: 100%;
   min-height: 36px;
+}
+
+#sachove-hlavolamy .sach-puzzle-solution {
+  margin-top: 0.55rem;
+  padding: 0.55rem 0.65rem;
+  border-radius: 8px;
+  border: 1px solid rgba(201, 162, 39, 0.45);
+  background: rgba(201, 162, 39, 0.08);
+  text-align: left;
+}
+
+#sachove-hlavolamy .sach-puzzle-solution__text {
+  margin: 0;
+  font-size: 0.9rem;
+  color: rgba(238, 231, 218, 0.95) !important;
+}
+
+#sachove-hlavolamy .sach-puzzle-solution__warn {
+  margin: 0.45rem 0 0;
+  font-size: 0.82rem;
+  color: rgba(232, 196, 120, 0.95) !important;
+}
+
+#sachove-hlavolamy .sach-visual-item.is-solution-revealed .sach-solution-btn {
+  opacity: 0.65;
 }
 
 #sachove-hlavolamy .sach-visual-item.is-completed {

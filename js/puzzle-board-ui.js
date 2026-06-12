@@ -8,6 +8,7 @@ import {
   formatUnlockDateSk,
 } from "./puzzle-schedule.js";
 import { isPuzzleAccessUnlocked, getDefaultWeekIndex } from "./puzzle-unlock.js";
+import { bindSolutionRevealButtons } from "./puzzle-solution-ui.js";
 
 export function puzzleGridHasContent() {
   var grid = document.getElementById("sach-puzzle-grid");
@@ -45,6 +46,14 @@ export function renderInvesticiaGrid() {
       "</div>";
     grid.appendChild(article);
   }
+}
+
+function escapeHtml(s) {
+  return String(s)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;");
 }
 
 function difficultyBadge(difficulty) {
@@ -109,8 +118,21 @@ function renderPuzzleCard(puzzle) {
     '-subtitle">' +
     (puzzle.subtitle || "") +
     "</p>" +
+    '<div id="' +
+    puzzle.id +
+    '-solution" class="sach-puzzle-solution" hidden>' +
+    '<p class="sach-puzzle-solution__text"><strong>Riešenie:</strong> ' +
+    escapeHtml(puzzle.solution || "—") +
+    "</p>" +
+    '<p class="note sach-puzzle-solution__warn">Riešenie bolo zobrazené — za túto úlohu nezískate body.</p>' +
+    "</div>" +
     lockHtml +
     '<div class="sach-puzzle-actions">' +
+    '<button type="button" class="btn btn-outline sach-solution-btn" data-reveal-solution="' +
+    puzzle.id +
+    '"' +
+    (playable ? "" : " disabled") +
+    ">Zobraziť riešenie</button>" +
     '<button type="button" class="btn btn-outline sach-reset-btn" data-reset-puzzle="' +
     puzzle.id +
     '"' +
@@ -167,6 +189,7 @@ function renderActiveWeek(grid, weekIndex) {
   notifyGridRebuilt();
   grid.innerHTML = "";
   grid.appendChild(section);
+  bindSolutionRevealButtons(section);
   return true;
 }
 
@@ -243,6 +266,8 @@ export function applyPuzzleAccessUI() {
     }
     var resetBtn = item.querySelector('[data-reset-puzzle="' + puzzle.id + '"]');
     if (resetBtn) resetBtn.disabled = !playable;
+    var solutionBtn = item.querySelector('[data-reveal-solution="' + puzzle.id + '"]');
+    if (solutionBtn) solutionBtn.disabled = !playable;
   }
 }
 

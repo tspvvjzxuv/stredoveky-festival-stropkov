@@ -91,6 +91,15 @@ export function recordPuzzleSolve(puzzle, options) {
   var movesUsed = options.movesUsed;
   var maxMoves = options.maxMoves != null ? options.maxMoves : puzzle.maxMoves;
   var breakdown = computeScoreBreakdown(puzzle, movesUsed, maxMoves);
+  if (options.solutionRevealed) {
+    breakdown = {
+      base: breakdown.base,
+      bonus: 0,
+      total: 0,
+      movesUsed: breakdown.movesUsed,
+      maxMoves: breakdown.maxMoves,
+    };
+  }
 
   var store = readStore();
   var prev = store.puzzles[puzzle.id];
@@ -118,6 +127,7 @@ export function recordPuzzleSolve(puzzle, options) {
     difficulty: puzzle.difficulty,
     weekIndex: puzzle.weekIndex,
     solvedAt: new Date().toISOString(),
+    solutionRevealed: !!options.solutionRevealed,
   };
   store.totalPoints = sumPoints(store.puzzles);
   writeStore(store);
