@@ -18,6 +18,7 @@ import {
 import { createWrongMoveOverlay } from "./puzzle-wrong-move-ui.js";
 import { syncChessBoardSize } from "./puzzle-board-ui.js";
 import { isPuzzleRewardUnlocked } from "./puzzle-rewards.js";
+import { isSolutionRevealed } from "./puzzle-solution-ui.js";
 
 var DEFAULT_MAX_MISTAKES_OVERLAY = 8;
 
@@ -323,6 +324,7 @@ export function mountBotPuzzle(puzzle, helpers) {
           firstTry: attemptCount === 0,
           movesUsed: moveCount,
           maxMoves: freePlay ? maxMoves : puzzle.maxMoves,
+          solutionRevealed: isSolutionRevealed(puzzle.id),
         });
       }
       return;

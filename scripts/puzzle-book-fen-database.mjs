@@ -122,6 +122,14 @@ export const PUZZLE_BOOK_FENS = {
     note: "Bez strelcov g6/g4 podľa textu prílohy.",
   },
 
+  // —— Väzba (382) ——
+  382: {
+    fen: "n2q2k1/pr2b1B1/1p6/3pp3/P7/8/1P3RPP/5R1K w - - 0 1",
+    sideToMove: "w",
+    category: "pin",
+    note: "Čierna dáma d8, pešiak e5 (nie dáma); biely strelec g7.",
+  },
+
   // —— Dvojitý úder (409–412) ——
   409: {
     fen: "8/8/2k5/7R/r7/3K3p/8/8 b - - 0 1",

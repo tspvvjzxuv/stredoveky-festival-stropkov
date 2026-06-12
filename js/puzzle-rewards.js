@@ -6,6 +6,7 @@ import {
   formatPuzzleSolvePointsMessage,
 } from "./puzzle-score.js";
 import { buildChessgroundDests } from "./puzzle-engine.js";
+import { isSolutionRevealed } from "./puzzle-solution-ui.js";
 
 var STORAGE_KEY = "ptra-puzzle-rewards-v3";
 var LEGACY_V2 = "ptra-puzzle-rewards-v2";
@@ -291,6 +292,9 @@ function buildSolveBannerText(puzzleId, options, scoreResult) {
   var meta = getRewardMeta(puzzleId);
   var partial =
     options.firstTry === false ? " (boli chyby v riešení — body za ťahy platia rovnako)" : "";
+  if (options.solutionRevealed) {
+    return "🏆 Úloha splnená, ale riešenie bolo vopred zobrazené — 0 bodov.";
+  }
   var recordNote = "";
   if (scoreResult && !scoreResult.recorded && scoreResult.bestPoints != null) {
     recordNote =
@@ -324,10 +328,13 @@ export function handlePuzzleSolve(puzzleId, options) {
   var puzzle = getPuzzleById(puzzleId);
   var scoreResult = null;
   if (puzzle) {
+    var solutionRevealed = isSolutionRevealed(puzzleId);
     scoreResult = recordPuzzleSolve(puzzle, {
       movesUsed: options.movesUsed,
       maxMoves: options.maxMoves,
+      solutionRevealed: solutionRevealed,
     });
+    options.solutionRevealed = solutionRevealed;
     if (scoreResult) {
       options.points = scoreResult.recorded ? scoreResult.points : scoreResult.total;
       options.scoreResult = scoreResult;
