@@ -354,8 +354,20 @@ body.home-page .cookies-page h2 {
     zoom: 1.25;
   }
 
-  /* Chessground nesprávne umiestňuje figúrky pri CSS zoom na <html>. */
+  /*
+   * Šach: CSS zoom na <html> rozbije Chessground.
+   * Rovnaké 125 % cez transform — doska aj figúrky sa škálujú spolu.
+   */
   html.sach-html-root {
     zoom: 1;
+  }
+
+  body.sach-page-body {
+    transform: scale(1.25);
+    transform-origin: top center;
+    width: 80%;
+    max-width: 80%;
+    margin-inline: auto;
+    min-height: calc(100dvh / 1.25);
   }
 }
