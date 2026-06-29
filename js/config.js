@@ -35,6 +35,21 @@ window.FESTIVAL_CONFIG = {
     remeslo: "",
   },
 
+  /**
+   * Bankový prevod na dobrovoľný dar (zobrazí sa v sekcii Podporte festival).
+   * Vyplňte IBAN — zvyšok je voliteľný.
+   */
+  bankovyDar: {
+    iban: "SK75 1100 0000 0029 3642 0693",
+    banka: "Tatra banka",
+    prijemca: "PTRA",
+    variabilnySymbol: "",
+    sprava: "Dar na festival PTRA",
+    /** Krátka poznámka pod údajmi účtu (napr. že ide o osobný účet organizátora). */
+    poznamka:
+      "Dary sa dočasne prijímajú na osobný účet organizátora v prospech festivalu — OZ Sparta zatiaľ nemá vlastný bankový účet.",
+  },
+
   /** Priame Stripe Payment Links (keď platbyRezim === "stripe_links") */
   stripeVstupenky: "https://buy.stripe.com/test_REPLACE_ME",
   /** Žetóny sa v tomto ročníku predávajú len fyzicky na pokladnici (žiadny online odkaz). */

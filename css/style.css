@@ -1030,29 +1030,6 @@ a:hover {
     0 0 40px rgba(200, 100, 40, 0.45) !important;
 }
 
-/* Hero Šach — jemný šachovnicový vzor, rovnaká žiara ako ostatné outline */
-.home-page .hero .hero-btn--sach {
-  background-color: #12161e;
-  background-image:
-    repeating-conic-gradient(
-      from 0deg at 50% 50%,
-      #1a2030 0deg 90deg,
-      #12161e 90deg 180deg
-    );
-  background-size: 14px 14px;
-}
-
-.home-page .hero .hero-btn--sach:hover,
-.home-page .hero .hero-btn--sach:focus-visible {
-  background-color: #181c28;
-  background-image:
-    repeating-conic-gradient(
-      from 0deg at 50% 50%,
-      #242c3c 0deg 90deg,
-      #181c28 90deg 180deg
-    );
-}
-
 @media (prefers-reduced-motion: no-preference) {
   .home-page .hero .btn-outline:not(.hero-btn--register) {
     animation: heroGlowGold 3s ease-in-out infinite;
@@ -1235,11 +1212,6 @@ a:hover {
   margin-bottom: 0;
 }
 
-.home-page #vstupenky-rezervacie .choice-card:first-child #link-vstupenky.stripe-btn {
-  margin-top: auto;
-  margin-bottom: auto;
-}
-
 .home-page #vstupenky-rezervacie #link-vstupenky.stripe-btn {
   display: flex !important;
   align-items: center;
@@ -1286,6 +1258,137 @@ a:hover {
     0 0 22px rgba(230, 48, 32, 0.85),
     0 0 44px rgba(217, 36, 28, 0.6),
     0 10px 26px rgba(0, 0, 0, 0.42) !important;
+}
+
+.bank-dar {
+  margin-top: 1.25rem;
+  padding-top: 1.1rem;
+  border-top: 1px solid rgba(154, 124, 78, 0.38);
+}
+
+.bank-dar__lead {
+  margin: 0 0 0.75rem;
+  font-size: 0.95rem;
+  color: rgba(216, 224, 236, 0.88);
+}
+
+.bank-dar__details {
+  margin: 0;
+  display: grid;
+  gap: 0.55rem;
+}
+
+.bank-dar__row {
+  display: grid;
+  gap: 0.2rem;
+}
+
+.bank-dar__row dt {
+  margin: 0;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(200, 188, 160, 0.82);
+}
+
+.bank-dar__row dd {
+  margin: 0;
+  color: rgba(232, 226, 214, 0.95);
+}
+
+.bank-dar__row--iban dd {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.55rem 0.75rem;
+}
+
+.bank-dar__iban {
+  font-family: "Montserrat", system-ui, sans-serif;
+  font-size: 0.98rem;
+  letter-spacing: 0.04em;
+  color: #f0e6d4;
+  background: rgba(0, 0, 0, 0.28);
+  border: 1px solid rgba(154, 124, 78, 0.45);
+  border-radius: 4px;
+  padding: 0.35rem 0.55rem;
+}
+
+.bank-dar__copy.btn-sm {
+  padding: 0.35rem 0.7rem;
+  font-size: 0.78rem;
+  letter-spacing: 0.06em;
+}
+
+.bank-dar__note {
+  margin: 0.85rem 0 0;
+  font-size: 0.82rem;
+  line-height: 1.45;
+  color: rgba(200, 188, 160, 0.88);
+}
+
+.bank-dar__qr {
+  margin-top: 1.1rem;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(154, 124, 78, 0.32);
+}
+
+.bank-dar__qr-lead {
+  margin: 0 0 0.75rem;
+  font-size: 0.92rem;
+  color: rgba(216, 224, 236, 0.9);
+}
+
+.bank-dar__amount {
+  display: grid;
+  gap: 0.35rem;
+  margin-bottom: 0.85rem;
+  max-width: 16rem;
+}
+
+.bank-dar__amount-label {
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: rgba(200, 188, 160, 0.82);
+}
+
+.bank-dar__amount-input {
+  width: 100%;
+  padding: 0.45rem 0.6rem;
+  border: 1px solid rgba(154, 124, 78, 0.5);
+  border-radius: 4px;
+  background: rgba(0, 0, 0, 0.28);
+  color: #f0e6d4;
+  font-family: "Montserrat", system-ui, sans-serif;
+  font-size: 0.95rem;
+}
+
+.bank-dar__amount-input::placeholder {
+  color: rgba(200, 188, 160, 0.55);
+  font-size: 0.82rem;
+}
+
+.bank-dar__qr-canvas {
+  display: inline-block;
+  padding: 0.55rem;
+  background: #fff;
+  border-radius: 6px;
+  border: 1px solid rgba(154, 124, 78, 0.45);
+  line-height: 0;
+}
+
+.bank-dar__qr-canvas svg {
+  display: block;
+  width: min(11.5rem, 100%);
+  height: auto;
+}
+
+.home-page #vstupenky-rezervacie .choice-card:first-child #link-vstupenky.stripe-btn {
+  margin-top: 0.75rem;
+  margin-bottom: 0;
 }
 
 .home-page #vstupenky-rezervacie .choice-actions .btn {
@@ -3192,22 +3295,22 @@ a.stripe-btn.woo-pay-btn:hover {
 
 .home-page .site-header .header-brand-slot {
   display: block;
-  margin: 0 auto 0.36rem;
-  width: var(--header-icon-width, 148px);
-  height: var(--header-icon-height, calc(148px * 913 / 689));
-  padding: 0;
+  margin: 0 auto var(--header-emblem-gap, 1rem);
+  width: var(--header-icon-width, 160px);
+  height: var(--header-icon-height, calc(160px * 913 / 689));
+  padding: 0.4rem 0.65rem 0.3rem;
   clip-path: none;
   border-radius: 0;
   border: none;
   background: transparent;
-  overflow: hidden;
+  overflow: visible;
   box-shadow: none;
 }
 
 .home-page .site-header .header-brand-slot img {
   display: block;
-  width: var(--header-icon-width, 148px);
-  height: var(--header-icon-height, calc(148px * 913 / 689));
+  width: var(--header-icon-width, 160px);
+  height: var(--header-icon-height, calc(160px * 913 / 689));
   object-fit: contain;
   object-position: center top;
   clip-path: none;
@@ -3285,7 +3388,7 @@ body.home-page.header-compact .site-header {
 }
 
 body.home-page.header-compact .site-header .header-brand-slot {
-  margin-bottom: calc(0.16rem * var(--emblem-scale, 1));
+  margin-bottom: var(--header-emblem-gap, 1rem);
 }
 
 body.home-page.header-compact .site-header .nav {
@@ -3934,9 +4037,10 @@ body.home-page.header-compact .site-header {
 
 /* Header icon + nav — animácia erbu zo 20.5. (pred dnešnými zásahmi) */
 .home-page .site-header {
-  --header-icon-width: 148px;
+  --header-icon-width: 160px;
   --header-icon-height: calc(var(--header-icon-width) * 913 / 689);
   --header-icon-size: var(--header-icon-width);
+  --header-emblem-gap: 1rem;
   --emblem-scale: 1;
   --header-progress: 0;
   transform: translate3d(0, calc(-1 * var(--header-shift, 0px)), 0) !important;
@@ -3952,19 +4056,16 @@ body.home-page.header-compact .site-header {
   height: var(--header-icon-height) !important;
   min-height: 0 !important;
   max-height: var(--header-icon-height) !important;
-  margin: 0 auto calc(0.12rem * var(--emblem-scale, 1)) !important;
-  padding: 0 !important;
+  margin: 0 auto var(--header-emblem-gap, 1rem) !important;
+  padding: 0.4rem 0.65rem 0.3rem !important;
   line-height: 0 !important;
   overflow: visible !important;
   clip-path: none !important;
   border-radius: 0 !important;
   align-self: center !important;
   flex-shrink: 0 !important;
-  opacity: calc(1 - var(--emblem-hide, 0)) !important;
-  transform: scale3d(var(--emblem-scale, 1), var(--emblem-scale, 1), 1) !important;
-  transform-origin: center top !important;
   transition: none !important;
-  will-change: transform, opacity;
+  will-change: transform, opacity, filter;
   backface-visibility: hidden;
 }
 
@@ -4008,9 +4109,8 @@ body.home-page.header-hide-emblem .site-header .header-brand-slot {
   flex-shrink: 0 !important;
   object-fit: contain !important;
   object-position: center top !important;
-  transform: none !important;
-  animation: none !important;
-  filter: none !important;
+  transition: none !important;
+  backface-visibility: hidden;
   clip-path: none !important;
 }
 
@@ -4039,7 +4139,8 @@ body.home-page.header-hide-emblem .site-header .header-brand-slot {
 
 @media (max-width: 860px) {
   .home-page .site-header {
-    --header-icon-width: 118px;
+    --header-icon-width: 128px;
+    --header-emblem-gap: 0.85rem;
     --header-icon-height: calc(var(--header-icon-width) * 913 / 689);
     --header-icon-size: var(--header-icon-width);
   }
@@ -4176,14 +4277,18 @@ h4 {
 /* Header panel = footer: same gradient + stone; gold strips = footer ::before (top) + bottom edge */
 body.home-page .site-header {
   position: sticky;
-  background: radial-gradient(circle at 50% 50%, rgba(0, 0, 0, 0) 0%, rgba(0, 132, 255, 1) 100%) !important;
+  background:
+    radial-gradient(ellipse 72% 88% at 50% -8%, rgba(52, 68, 96, 0.38) 0%, transparent 58%),
+    radial-gradient(ellipse 38% 52% at 8% 48%, rgba(64, 44, 82, 0.2) 0%, transparent 54%),
+    radial-gradient(ellipse 38% 52% at 92% 48%, rgba(88, 48, 40, 0.16) 0%, transparent 54%),
+    linear-gradient(180deg, var(--ds-surface-dark) 0%, var(--ds-surface-dark-2) 58%, #070910 100%) !important;
   border-style: solid;
   border-width: 1px;
   border-color: rgba(0, 0, 0, 1);
   box-shadow:
     0 4px 28px rgba(0, 0, 0, 0.38),
     inset 0 -1px 0 rgba(242, 64, 64, 0.08);
-  overflow: hidden;
+  overflow: visible;
   isolation: isolate;
 }
 
@@ -4193,44 +4298,17 @@ body.home-page .site-header::before {
   position: absolute;
   inset: 0;
   pointer-events: none;
-  opacity: 0.18;
-  background: url("../images/stone-wall.svg") center/520px auto repeat;
+  opacity: 0.26;
+  background:
+    url("../images/stone-wall.svg") center/480px auto repeat,
+    radial-gradient(ellipse 90% 55% at 50% 0%, rgba(255, 203, 0, 0.07) 0%, transparent 62%);
   mix-blend-mode: soft-light;
   z-index: 0;
 }
 
 body.home-page .site-header::after {
-  content: "" !important;
-  display: block !important;
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  z-index: 2;
-  background-image:
-    linear-gradient(
-      90deg,
-      transparent,
-      rgba(142, 152, 112, 0.45),
-      var(--gold-dim),
-      var(--gold),
-      var(--gold-dim),
-      rgba(142, 152, 112, 0.45),
-      transparent
-    ),
-    linear-gradient(
-      90deg,
-      transparent,
-      rgba(142, 152, 112, 0.45),
-      var(--gold-dim),
-      var(--gold),
-      var(--gold-dim),
-      rgba(142, 152, 112, 0.45),
-      transparent
-    );
-  background-size: 100% 3px, 100% 3px;
-  background-position: top center, bottom center;
-  background-repeat: no-repeat;
-  opacity: 0.9;
+  content: none !important;
+  display: none !important;
 }
 
 body.home-page .site-header .header-inner {
@@ -4354,7 +4432,7 @@ body.home-page .site-header .nav::before {
 
 /* ===== FINAL HEADER/NAV SOURCE OF TRUTH ===== */
 body.home-page .site-header {
-  background: radial-gradient(circle at 50% 50%, rgba(0, 0, 0, 1) 0%, rgba(19, 24, 35, 1) 100%) !important;
+  background: var(--ds-surface-dark-2) !important;
   color: rgba(255, 203, 0, 1) !important;
   border-style: solid;
   border-width: 1px;
@@ -4390,8 +4468,8 @@ body.home-page .site-header .header-brand-slot__icon {
 }
 
 body.home-page .site-header .nav {
-  width: min(1120px, 100%) !important;
-  min-height: 58px !important;
+  width: 100% !important;
+  min-height: 72px !important;
   margin: 0 auto !important;
   padding-block: 0.1rem !important;
   padding-inline: 1rem !important;
@@ -4566,7 +4644,11 @@ body.home-page {
 }
 
 .home-page .site-header {
-  background: linear-gradient(180deg, var(--ds-surface-dark) 0%, var(--ds-surface-dark-2) 100%) !important;
+  background:
+    radial-gradient(ellipse 72% 88% at 50% -8%, rgba(52, 68, 96, 0.38) 0%, transparent 58%),
+    radial-gradient(ellipse 38% 52% at 8% 48%, rgba(64, 44, 82, 0.2) 0%, transparent 54%),
+    radial-gradient(ellipse 38% 52% at 92% 48%, rgba(88, 48, 40, 0.16) 0%, transparent 54%),
+    linear-gradient(180deg, var(--ds-surface-dark) 0%, var(--ds-surface-dark-2) 58%, #070910 100%) !important;
 }
 
 .home-page .page-main,
@@ -5782,8 +5864,12 @@ body.sach-page-body .page-main.sach-page {
    Header + menu — edge-to-edge, dekor cez <img> (spoľahlivé na iOS)
    =============================== */
 .home-page .site-header {
-  background: var(--ds-surface-dark-2) !important;
-  border-bottom: 1px solid rgba(255, 203, 0, 0.2) !important;
+  background:
+    radial-gradient(ellipse 72% 88% at 50% -8%, rgba(52, 68, 96, 0.38) 0%, transparent 58%),
+    radial-gradient(ellipse 38% 52% at 8% 48%, rgba(64, 44, 82, 0.2) 0%, transparent 54%),
+    radial-gradient(ellipse 38% 52% at 92% 48%, rgba(88, 48, 40, 0.16) 0%, transparent 54%),
+    linear-gradient(180deg, var(--ds-surface-dark) 0%, var(--ds-surface-dark-2) 58%, #070910 100%) !important;
+  border-bottom: none !important;
   box-shadow: none !important;
   overflow: visible !important;
   width: 100% !important;
@@ -5791,17 +5877,36 @@ body.sach-page-body .page-main.sach-page {
 }
 
 .home-page .site-header .header-inner {
+  position: relative !important;
+  isolation: isolate !important;
   width: 100% !important;
   max-width: none !important;
   margin-inline: 0 !important;
   padding-inline: 0 !important;
   padding-bottom: 0 !important;
-  background: transparent !important;
   overflow: visible !important;
+  background:
+    radial-gradient(ellipse 42% 68% at 50% 22%, rgba(255, 220, 120, 0.09) 0%, transparent 72%),
+    radial-gradient(ellipse 120% 80% at 50% 100%, rgba(0, 0, 0, 0.35) 0%, transparent 55%) !important;
+}
+
+.home-page .site-header .header-inner::before {
+  content: "" !important;
+  display: block !important;
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.85;
+  background:
+    linear-gradient(90deg, rgba(0, 0, 0, 0.28) 0%, transparent 18%, transparent 82%, rgba(0, 0, 0, 0.28) 100%),
+    linear-gradient(180deg, transparent 0%, rgba(7, 9, 14, 0.45) 100%);
 }
 
 body.home-page .site-header .nav,
 .home-page .site-header .nav {
+  --nav-deco-w: min(1200px, 100%);
+  --nav-deco-h: 72px;
   position: relative !important;
   display: block !important;
   width: 100% !important;
@@ -5810,11 +5915,17 @@ body.home-page .site-header .nav,
   padding: 0 !important;
   border: none !important;
   border-radius: 0 !important;
-  min-height: 58px !important;
-  background: var(--ds-surface-dark-2) !important;
+  min-height: var(--nav-deco-h) !important;
+  background: transparent !important;
   box-shadow: none !important;
   overflow: hidden !important;
   isolation: isolate !important;
+}
+
+body.home-page .site-header .header-brand-slot,
+.home-page .site-header .header-brand-slot {
+  position: relative !important;
+  z-index: 1 !important;
 }
 
 body.home-page .site-header .header-inner,
@@ -5835,17 +5946,18 @@ body.home-page .site-header .nav::after,
 
 .home-page .site-header .nav-deco-bg {
   position: absolute;
-  inset: 0;
+  left: 50%;
+  top: 50%;
   z-index: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+  width: var(--nav-deco-w, min(1200px, 100%));
+  height: var(--nav-deco-h, 72px);
+  transform: translate(-50%, -50%);
+  object-fit: contain;
   object-position: center center;
   pointer-events: none;
   user-select: none;
   -webkit-user-drag: none;
   border: none;
-  border-top: 1px solid rgba(255, 203, 0, 0.14);
   box-sizing: border-box;
 }
 
@@ -5858,11 +5970,10 @@ body.home-page .site-header .nav::after,
   flex-wrap: nowrap;
   gap: 1.1rem;
   box-sizing: border-box;
-  width: 100%;
-  min-width: 100%;
-  min-height: 58px;
-  margin: 0;
-  padding: 0.45rem 1.15rem;
+  width: var(--nav-deco-w, min(1200px, 100%));
+  min-height: var(--nav-deco-h, 72px);
+  margin-inline: auto;
+  padding: 0.5rem 1.35rem;
   background: transparent;
 }
 
@@ -5894,20 +6005,21 @@ body.home-page .site-header .nav a:hover,
 
   body.home-page .site-header .nav,
   .home-page .site-header .nav {
+    --nav-deco-h: 60px;
     width: 100% !important;
-    min-height: 52px !important;
+    min-height: var(--nav-deco-h) !important;
   }
 
   .home-page .site-header .nav-deco-bg {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
+    width: var(--nav-deco-w, 100%);
+    height: var(--nav-deco-h, 60px);
+    object-fit: contain;
   }
 
   .home-page .site-header .nav-track {
     justify-content: flex-start;
     gap: 0.55rem;
-    min-height: 52px;
+    min-height: var(--nav-deco-h, 60px);
     width: 100%;
     max-width: 100%;
     padding: 0.45rem 1.25rem;
@@ -5951,7 +6063,7 @@ body.home-page .site-header .nav a:hover,
   border-color: rgba(255, 203, 0, 0.16) !important;
 }
 
-/* Erb — scroll animácia (--emblem-hide + --header-shift, main.js) */
+/* Erb — scroll animácia (--emblem-hide + --header-shift, main.js); finálne pravidlá na konci súboru */
 
 /* ===============================
    Program (harmonogram + sprievodné) — DESIGN.md tokeny
@@ -6446,8 +6558,12 @@ body.home-page .site-header .nav a:hover,
     animation: none !important;
   }
 
-  .home-page .site-header .header-brand-slot {
+  body.home-page:not(.emblem-motion-js) .site-header .header-brand-slot,
+  body.home-page:not(.emblem-motion-js) .site-header .header-brand-slot__icon {
     transition: none !important;
+    animation: none !important;
+    filter: none !important;
+    transform: none !important;
   }
 }
 
@@ -6863,6 +6979,72 @@ body.reduced-motion.js-ready main section {
   50% {
     transform: translate(-50%, -58%);
   }
+}
+
+/* ===============================
+   Erb — finálna animácia (scroll + úvod), po všetkých header override
+   =============================== */
+@keyframes emblemLogoIntro {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, 32px, 0) scale3d(0.78, 0.78, 1);
+    filter: blur(10px) brightness(1.15);
+  }
+  55% {
+    opacity: 1;
+    filter: blur(0) brightness(1.05);
+  }
+  78% {
+    transform: translate3d(0, -6px, 0) scale3d(1.05, 1.05, 1);
+  }
+  100% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale3d(1, 1, 1);
+    filter: none;
+  }
+}
+
+body.home-page.emblem-motion-js .site-header .header-brand-slot {
+  transform-origin: center top !important;
+  transition: none !important;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  body.home-page.emblem-intro-active
+    .site-header
+    .header-brand-slot__icon.emblem-intro-run {
+    animation: emblemLogoIntro 1.05s cubic-bezier(0.22, 1.12, 0.36, 1) both !important;
+  }
+}
+
+/* Header — väčší blok okolo erbu, slot erbu ostáva 160×212 */
+body.home-page .site-header {
+  --header-emblem-gap: 1.2rem;
+  --header-zone-pad-top: 1.15rem;
+  --header-zone-pad-bottom: 0.45rem;
+}
+
+body.home-page .site-header .header-inner {
+  min-height: calc(
+    var(--header-zone-pad-top) + var(--header-icon-height) +
+      var(--header-emblem-gap) + var(--nav-deco-h, 72px) +
+      var(--header-zone-pad-bottom)
+  ) !important;
+  padding-top: var(--header-zone-pad-top) !important;
+  padding-bottom: var(--header-zone-pad-bottom) !important;
+}
+
+body.home-page .site-header .header-brand-slot,
+.home-page .site-header .header-brand-slot {
+  height: var(--header-icon-height) !important;
+  min-height: var(--header-icon-height) !important;
+  max-height: var(--header-icon-height) !important;
+  margin-bottom: var(--header-emblem-gap) !important;
+  flex-shrink: 0 !important;
+}
+
+body.home-page.header-compact .site-header .header-brand-slot {
+  margin-bottom: var(--header-emblem-gap) !important;
 }
 
 /* Print styles */

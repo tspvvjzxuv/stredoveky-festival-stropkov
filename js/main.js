@@ -30,10 +30,14 @@
     var nav = document.querySelector(".site-header .nav");
     if (!header || !nav) return;
     var isHome = body.classList.contains("home-page");
+    var emblemSlot = document.querySelector(".site-header .header-brand-slot");
+    var emblemIcon = document.querySelector(
+      ".site-header .header-brand-slot__icon"
+    );
     var cachedMaxShift = 0;
 
     var emblemHideStart = 0;
-    var emblemHideEnd = 72;
+    var emblemHideEnd = 120;
     var targetShift = 0;
     var currentShift = 0;
     var rafId = 0;
@@ -53,12 +57,39 @@
       return t * t * (3 - 2 * t);
     }
 
+    function paintEmblemMotion(eased) {
+      if (!emblemSlot) return;
+      var hide = Math.min(1, Math.max(0, eased));
+      var scale = 1 - hide * 0.88;
+      var y = -36 * hide;
+      var blur = 6 * hide;
+      var bright = 1 - hide * 0.28;
+      body.style.setProperty("--emblem-hide", hide.toFixed(4));
+      body.style.setProperty("--emblem-scale", scale.toFixed(4));
+      emblemSlot.style.setProperty("opacity", (1 - hide).toFixed(4), "important");
+      emblemSlot.style.setProperty(
+        "transform",
+        "translate3d(0," +
+          y.toFixed(2) +
+          "px,0) scale3d(" +
+          scale.toFixed(4) +
+          "," +
+          scale.toFixed(4) +
+          ",1)",
+        "important"
+      );
+      emblemSlot.style.setProperty(
+        "filter",
+        "blur(" + blur.toFixed(2) + "px) brightness(" + bright.toFixed(3) + ")",
+        "important"
+      );
+      body.classList.toggle("header-hide-emblem", hide >= 0.995);
+    }
+
     function setEmblemHide(scrollY) {
       if (reducedMotion) {
         var hidden = scrollY > emblemHideEnd;
-        body.style.setProperty("--emblem-hide", hidden ? "1" : "0");
-        body.style.setProperty("--emblem-scale", hidden ? "0.12" : "1");
-        body.classList.toggle("header-hide-emblem", hidden);
+        paintEmblemMotion(hidden ? 1 : 0);
         return;
       }
       var range = emblemHideEnd - emblemHideStart;
@@ -68,10 +99,7 @@
           : scrollY > emblemHideEnd
             ? 1
             : 0;
-      var eased = smoothstep(progress);
-      body.style.setProperty("--emblem-hide", eased.toFixed(4));
-      body.style.setProperty("--emblem-scale", (1 - eased * 0.88).toFixed(4));
-      body.classList.toggle("header-hide-emblem", eased >= 0.995);
+      paintEmblemMotion(smoothstep(progress));
     }
 
     function updateTargets(scrollY) {
@@ -150,9 +178,44 @@
       if (Math.abs(targetShift - currentShift) > 0.02) startLoop();
     }
 
+    function finishEmblemIntro() {
+      if (body.classList.contains("emblem-intro-done")) return;
+      body.classList.remove("emblem-intro-active");
+      if (emblemIcon) emblemIcon.classList.remove("emblem-intro-run");
+      body.classList.add("emblem-intro-done");
+    }
+
+    function startEmblemIntro() {
+      if (!isHome || !emblemIcon || reducedMotion) {
+        finishEmblemIntro();
+        return;
+      }
+      body.classList.add("emblem-intro-active");
+      emblemIcon.addEventListener(
+        "animationend",
+        function (e) {
+          if (e.animationName === "emblemLogoIntro") finishEmblemIntro();
+        },
+        { once: true }
+      );
+      requestAnimationFrame(function () {
+        requestAnimationFrame(function () {
+          emblemIcon.classList.add("emblem-intro-run");
+        });
+      });
+      window.setTimeout(finishEmblemIntro, 2200);
+    }
+
+    if (isHome && emblemSlot) {
+      body.classList.add("emblem-motion-js");
+    }
+
     measureLayout();
     syncImmediate();
-    if (isHome) startLoop();
+    if (isHome) {
+      startEmblemIntro();
+      startLoop();
+    }
 
     window.addEventListener("scroll", onScrollOrResize, { passive: true });
     window.addEventListener(
@@ -459,6 +522,86 @@
       "Nastavte platobný odkaz v js/config.js (stripeVstupenky) alebo zapnite platbyRezim: \"woocommerce\"."
     );
   }
+
+  function formatIbanDisplay(iban) {
+    return String(iban || "")
+      .replace(/\s+/g, "")
+      .replace(/(.{4})/g, "$1 ")
+      .trim();
+  }
+
+  function initBankovyDar() {
+    var bankCfg = cfg.bankovyDar || {};
+    var iban = String(bankCfg.iban || "").replace(/\s+/g, "").trim();
+    if (!iban) return;
+
+    var block = document.getElementById("bankovy-dar");
+    if (!block) return;
+
+    var prijemca = String(bankCfg.prijemca || "").trim();
+    var banka = String(bankCfg.banka || "").trim();
+    var vs = String(bankCfg.variabilnySymbol || "").trim();
+    var sprava = String(bankCfg.sprava || "").trim();
+    var poznamka = String(bankCfg.poznamka || "").trim();
+
+    var prijemcaEl = document.getElementById("bank-dar-prijemca");
+    var ibanEl = document.getElementById("bank-dar-iban");
+    if (prijemcaEl) prijemcaEl.textContent = prijemca || "PTRA";
+    if (ibanEl) ibanEl.textContent = formatIbanDisplay(iban);
+
+    if (banka) {
+      var bankaRow = document.getElementById("bank-dar-banka-row");
+      var bankaEl = document.getElementById("bank-dar-banka");
+      if (bankaRow) bankaRow.hidden = false;
+      if (bankaEl) bankaEl.textContent = banka;
+    }
+
+    if (vs) {
+      var vsRow = document.getElementById("bank-dar-vs-row");
+      var vsEl = document.getElementById("bank-dar-vs");
+      if (vsRow) vsRow.hidden = false;
+      if (vsEl) vsEl.textContent = vs;
+    }
+
+    if (sprava) {
+      var spravaRow = document.getElementById("bank-dar-sprava-row");
+      var spravaEl = document.getElementById("bank-dar-sprava");
+      if (spravaRow) spravaRow.hidden = false;
+      if (spravaEl) spravaEl.textContent = sprava;
+    }
+
+    if (poznamka) {
+      var poznamkaEl = document.getElementById("bank-dar-poznamka");
+      if (poznamkaEl) {
+        poznamkaEl.textContent = poznamka;
+        poznamkaEl.hidden = false;
+      }
+    }
+
+    block.hidden = false;
+
+    var copyBtn = document.getElementById("bank-dar-copy-iban");
+    if (copyBtn) {
+      copyBtn.addEventListener("click", function () {
+        var plainIban = iban;
+        function showCopied() {
+          copyBtn.textContent = "Skopírované";
+          window.setTimeout(function () {
+            copyBtn.textContent = "Kopírovať IBAN";
+          }, 2200);
+        }
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(plainIban).then(showCopied).catch(function () {
+            window.prompt("Skopírujte IBAN:", plainIban);
+          });
+          return;
+        }
+        window.prompt("Skopírujte IBAN:", plainIban);
+      });
+    }
+  }
+
+  initBankovyDar();
 
   var CONSENT_KEY = "festival_cookie_consent_v1";
   var analyticsLoaded = false;

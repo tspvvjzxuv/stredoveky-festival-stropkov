@@ -144,6 +144,7 @@
     <script src="js/harmonogram-data.js" defer></script>
     <script src="js/harmonogram-live.js" defer></script>
     <script src="js/main.js" defer></script>
+    <script type="module" src="js/vendor/bankovy-dar-qr.bundle.mjs" defer></script>
   </head>
   <body class="home-page">
     <a class="skip-link" href="#main-content">Preskočiť na obsah</a>
@@ -287,11 +288,65 @@
               <p class="choice-card__kicker">Podpora združenia</p>
               <h4>Dar na festival</h4>
               <p>
-                Výšku príspevku si určíte sami podľa možností.
+                Výšku príspevku si určíte sami — bankovým prevodom, QR kódom (Pay by Square) alebo kartou online.
               </p>
               <a id="link-vstupenky" class="btn btn-primary stripe-btn" href="#"
-                >Prispieť na festival</a
+                >Prispieť kartou online</a
               >
+              <div id="bankovy-dar" class="bank-dar" hidden>
+                <p class="bank-dar__lead">Alebo pošlite dar na účet:</p>
+                <dl class="bank-dar__details">
+                  <div class="bank-dar__row">
+                    <dt>Príjemca</dt>
+                    <dd id="bank-dar-prijemca"></dd>
+                  </div>
+                  <div class="bank-dar__row bank-dar__row--iban">
+                    <dt>IBAN</dt>
+                    <dd>
+                      <code id="bank-dar-iban" class="bank-dar__iban"></code>
+                      <button type="button" class="btn btn-outline btn-sm bank-dar__copy" id="bank-dar-copy-iban">
+                        Kopírovať IBAN
+                      </button>
+                    </dd>
+                  </div>
+                  <div class="bank-dar__row" id="bank-dar-banka-row" hidden>
+                    <dt>Banka</dt>
+                    <dd id="bank-dar-banka"></dd>
+                  </div>
+                  <div class="bank-dar__row" id="bank-dar-vs-row" hidden>
+                    <dt>Variabilný symbol</dt>
+                    <dd id="bank-dar-vs"></dd>
+                  </div>
+                  <div class="bank-dar__row" id="bank-dar-sprava-row" hidden>
+                    <dt>Správa pre príjemcu</dt>
+                    <dd id="bank-dar-sprava"></dd>
+                  </div>
+                </dl>
+                <div id="bank-dar-qr-wrap" class="bank-dar__qr" hidden>
+                  <p class="bank-dar__qr-lead">
+                    Alebo naskenujte QR kód v mobilnej bankovke (Pay by Square):
+                  </p>
+                  <label class="bank-dar__amount" for="bank-dar-amount">
+                    <span class="bank-dar__amount-label">Suma daru v EUR (voliteľné)</span>
+                    <input
+                      type="number"
+                      id="bank-dar-amount"
+                      class="bank-dar__amount-input"
+                      min="0.01"
+                      step="0.01"
+                      inputmode="decimal"
+                      placeholder="nechajte prázdne — zadáte v banke"
+                    />
+                  </label>
+                  <div
+                    id="bank-dar-qr"
+                    class="bank-dar__qr-canvas"
+                    role="img"
+                    aria-label="QR kód Pay by Square pre bankový prevod"
+                  ></div>
+                </div>
+                <p class="bank-dar__note" id="bank-dar-poznamka" hidden></p>
+              </div>
             </article>
             <article class="choice-card">
               <p class="choice-card__kicker">Prihlásenie na činnosti</p>
@@ -510,7 +565,8 @@
             <summary>Môžem platiť kartou alebo len žetónmi?</summary>
             <p>
               Strava a stánky na mieste fungujú na žetóny, ktoré si zakúpite pri pokladnici.
-              Online môžete prispieť dobrovoľným darom na podporu akcie združenia.
+              Online môžete prispieť dobrovoľným darom kartou alebo bankovým prevodom na účet združenia
+              (údaje v sekcii Podporte festival).
             </p>
           </details>
           <details class="faq-item">

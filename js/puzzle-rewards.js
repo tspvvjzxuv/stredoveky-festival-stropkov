@@ -14,11 +14,11 @@ var LEGACY_V1 = "ptra-puzzle-rewards-v1";
 var REWARD_BY_ID = PUZZLE_REWARD_META;
 
 var FULL_REWARD = {
-  title: "Investícia rytiera Andreasa je odkrytá!",
+  title: "Rytiersky poklad je kompletný!",
   text:
-    "Ste pripravení na turnaj. Po všetkých týždenných úlohách na festivale pri šachovej registrácii ukážte túto stránku alebo povedzte heslo:",
+    "Ste pripravení na turnaj. Po všetkých týždenných úlohách na festivale pri šachovej registrácii ukážte túto stránku alebo nadiktujte kód:",
   code: "PTRA–RYTIER–ŠACH",
-  note: "Organizátor vám pridelí pamätný rytiersky žetón naviac (podľa dostupnosti v deň podujatia).",
+  note: "Organizátor môže prideliť pamätný rytiersky žetón naviac (podľa dostupnosti v deň podujatia).",
 };
 
 function migrateLegacy() {
@@ -205,7 +205,7 @@ function updateInvesticiaUI() {
         if (bodyEl2) bodyEl2.appendChild(note);
       }
       note.textContent =
-        "Čiastočná pečať — vyriešte všetky tri úlohy týždňa bez chyby pre plnú časť hesla.";
+        "Čiastočná pečať — vyriešte všetky tri úlohy týždňa bez chyby pre plný symbol v kóde.";
       note.hidden = false;
     } else if (note) {
       note.hidden = true;
@@ -224,6 +224,11 @@ function updateInvesticiaUI() {
   var vault = root.querySelector(".sach-investicia__vault");
   var complete = allWeeksCompleteFull();
   if (vault) vault.hidden = !complete;
+  var codeEl = root.querySelector("[data-festival-code]");
+  if (codeEl) {
+    codeEl.textContent = complete ? FULL_REWARD.code : "";
+    codeEl.setAttribute("aria-label", complete ? "Kód pre registráciu na festivale" : "");
+  }
   root.classList.toggle("is-complete", complete);
 }
 

@@ -1,4 +1,4 @@
-import { FESTIVAL_PUZZLES, DIFFICULTY_LABELS } from "./puzzles-data.js";
+import { FESTIVAL_PUZZLES, DIFFICULTY_LABELS, puzzleGoalLabel } from "./puzzles-data.js";
 import {
   PUZZLE_REWARD_META,
   PUZZLE_WEEKS,
@@ -39,7 +39,7 @@ export function renderInvesticiaGrid() {
       "<p>" +
       meta.text +
       "</p>" +
-      '<p class="sach-investicia__clue"><span>Časť hesla:</span> <strong>' +
+      '<p class="sach-investicia__clue"><span>Symbol pečate:</span> <strong>' +
       meta.clue +
       "</strong></p>" +
       "</div>";
@@ -75,7 +75,7 @@ function renderPuzzleCard(puzzle) {
       "</time>.</p>" +
       '<button type="button" class="btn btn-outline" data-unlock-puzzle="' +
       puzzle.id +
-      '">Mám heslo</button>' +
+      '">Kód od organizátora</button>' +
       "</div>";
   }
 
@@ -104,6 +104,16 @@ function renderPuzzleCard(puzzle) {
     (puzzle.ariaLabel || puzzle.title || "Šachový hlavolam") +
     '"></div>' +
     "</div>" +
+    '<p class="sach-puzzle-goal" id="' +
+    puzzle.id +
+    '-goal"><strong>Cieľ:</strong> ' +
+    puzzleGoalLabel(puzzle) +
+    (puzzle.solution
+      ? ' · <strong>Postup:</strong> <span class="sach-puzzle-solution">' +
+        puzzle.solution +
+        "</span>"
+      : "") +
+    "</p>" +
     '<p id="' +
     puzzle.id +
     '-subtitle">' +
