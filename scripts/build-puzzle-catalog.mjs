@@ -287,6 +287,23 @@ function validatePieceCounts(chess) {
   return null;
 }
 
+function lineHasOpponentMoves(spec) {
+  const pc = playerColorFromSpec(spec);
+  const chess = new Chess(spec.fen);
+  for (const [from, to] of spec.line) {
+    if (chess.turn() !== pc) return true;
+    moveFromPair(chess, from, to);
+  }
+  return false;
+}
+
+/** Voľná hra len ak v riešení nie sú presné ťahy počítača (inak bot nehrá podľa skriptu). */
+function resolveFreePlay(spec) {
+  if (spec.freePlay === false) return false;
+  if (lineHasOpponentMoves(spec)) return false;
+  return spec.freePlay !== false;
+}
+
 function verifyEntry(spec) {
   const pc = playerColorFromSpec(spec);
   const opp = opponentColor(pc);
@@ -330,7 +347,7 @@ for (const entry of ENTRIES) {
     playerColor: playerColorFromSpec(entry),
     win: entry.win || "checkmate",
     maxMoves,
-    freePlay: entry.freePlay !== false,
+    freePlay: resolveFreePlay(entry),
     play,
     subtitle: entry.subtitle,
     solution: entry.solution,

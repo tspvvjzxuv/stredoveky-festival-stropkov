@@ -32,7 +32,7 @@ export const PUZZLE_CATALOG_ENTRIES = [
     "playerColor": "w",
     "win": "checkmate",
     "maxMoves": 14,
-    "freePlay": true,
+    "freePlay": false,
     "play": [
       {
         "who": "user",
@@ -80,7 +80,7 @@ export const PUZZLE_CATALOG_ENTRIES = [
     "playerColor": "w",
     "win": "checkmate",
     "maxMoves": 16,
-    "freePlay": true,
+    "freePlay": false,
     "play": [
       {
         "who": "user",
@@ -128,7 +128,7 @@ export const PUZZLE_CATALOG_ENTRIES = [
     "playerColor": "w",
     "win": "checkmate",
     "maxMoves": 12,
-    "freePlay": true,
+    "freePlay": false,
     "play": [
       {
         "who": "user",
@@ -176,7 +176,7 @@ export const PUZZLE_CATALOG_ENTRIES = [
     "playerColor": "w",
     "win": "checkmate",
     "maxMoves": 14,
-    "freePlay": true,
+    "freePlay": false,
     "play": [
       {
         "who": "user",
@@ -224,7 +224,7 @@ export const PUZZLE_CATALOG_ENTRIES = [
     "playerColor": "w",
     "win": "checkmate",
     "maxMoves": 16,
-    "freePlay": true,
+    "freePlay": false,
     "play": [
       {
         "who": "user",
@@ -272,7 +272,7 @@ export const PUZZLE_CATALOG_ENTRIES = [
     "playerColor": "w",
     "win": "checkmate",
     "maxMoves": 19,
-    "freePlay": true,
+    "freePlay": false,
     "play": [
       {
         "who": "user",
@@ -343,7 +343,7 @@ export const PUZZLE_CATALOG_ENTRIES = [
     "playerColor": "w",
     "win": "checkmate",
     "maxMoves": 14,
-    "freePlay": true,
+    "freePlay": false,
     "play": [
       {
         "who": "user",
@@ -391,7 +391,7 @@ export const PUZZLE_CATALOG_ENTRIES = [
     "playerColor": "w",
     "win": "black_queen_captured",
     "maxMoves": 16,
-    "freePlay": true,
+    "freePlay": false,
     "play": [
       {
         "who": "user",
@@ -439,7 +439,7 @@ export const PUZZLE_CATALOG_ENTRIES = [
     "playerColor": "w",
     "win": "checkmate",
     "maxMoves": 12,
-    "freePlay": true,
+    "freePlay": false,
     "play": [
       {
         "who": "user",
@@ -487,7 +487,7 @@ export const PUZZLE_CATALOG_ENTRIES = [
     "playerColor": "w",
     "win": "checkmate",
     "maxMoves": 23,
-    "freePlay": true,
+    "freePlay": false,
     "play": [
       {
         "who": "user",
@@ -558,7 +558,7 @@ export const PUZZLE_CATALOG_ENTRIES = [
     "playerColor": "w",
     "win": "decisive",
     "maxMoves": 16,
-    "freePlay": true,
+    "freePlay": false,
     "play": [
       {
         "who": "user",
@@ -605,7 +605,7 @@ export const PUZZLE_CATALOG_ENTRIES = [
     "playerColor": "w",
     "win": "checkmate",
     "maxMoves": 12,
-    "freePlay": true,
+    "freePlay": false,
     "play": [
       {
         "who": "user",
@@ -653,7 +653,7 @@ export const PUZZLE_CATALOG_ENTRIES = [
     "playerColor": "w",
     "win": "checkmate",
     "maxMoves": 26,
-    "freePlay": true,
+    "freePlay": false,
     "play": [
       {
         "who": "user",
@@ -748,7 +748,7 @@ export const PUZZLE_CATALOG_ENTRIES = [
     "playerColor": "w",
     "win": "black_queen_captured",
     "maxMoves": 16,
-    "freePlay": true,
+    "freePlay": false,
     "play": [
       {
         "who": "user",
@@ -795,7 +795,7 @@ export const PUZZLE_CATALOG_ENTRIES = [
     "playerColor": "w",
     "win": "checkmate",
     "maxMoves": 12,
-    "freePlay": true,
+    "freePlay": false,
     "play": [
       {
         "who": "user",
@@ -843,7 +843,7 @@ export const PUZZLE_CATALOG_ENTRIES = [
     "playerColor": "w",
     "win": "checkmate",
     "maxMoves": 14,
-    "freePlay": true,
+    "freePlay": false,
     "play": [
       {
         "who": "user",
@@ -891,7 +891,7 @@ export const PUZZLE_CATALOG_ENTRIES = [
     "playerColor": "w",
     "win": "black_queen_captured",
     "maxMoves": 16,
-    "freePlay": true,
+    "freePlay": false,
     "play": [
       {
         "who": "user",
@@ -938,7 +938,7 @@ export const PUZZLE_CATALOG_ENTRIES = [
     "playerColor": "w",
     "win": "black_queen_captured",
     "maxMoves": 12,
-    "freePlay": true,
+    "freePlay": false,
     "play": [
       {
         "who": "user",
@@ -985,7 +985,7 @@ export const PUZZLE_CATALOG_ENTRIES = [
     "playerColor": "w",
     "win": "checkmate",
     "maxMoves": 23,
-    "freePlay": true,
+    "freePlay": false,
     "play": [
       {
         "who": "user",
@@ -1056,7 +1056,7 @@ export const PUZZLE_CATALOG_ENTRIES = [
     "playerColor": "w",
     "win": "checkmate",
     "maxMoves": 27,
-    "freePlay": true,
+    "freePlay": false,
     "play": [
       {
         "who": "user",
@@ -1127,7 +1127,7 @@ export const PUZZLE_CATALOG_ENTRIES = [
     "playerColor": "w",
     "win": "checkmate",
     "maxMoves": 12,
-    "freePlay": true,
+    "freePlay": false,
     "play": [
       {
         "who": "user",
@@ -1175,7 +1175,7 @@ export const PUZZLE_CATALOG_ENTRIES = [
     "playerColor": "w",
     "win": "checkmate",
     "maxMoves": 14,
-    "freePlay": true,
+    "freePlay": false,
     "play": [
       {
         "who": "user",
@@ -1223,7 +1223,7 @@ export const PUZZLE_CATALOG_ENTRIES = [
     "playerColor": "w",
     "win": "black_queen_captured",
     "maxMoves": 16,
-    "freePlay": true,
+    "freePlay": false,
     "play": [
       {
         "who": "user",
@@ -1270,7 +1270,7 @@ export const PUZZLE_CATALOG_ENTRIES = [
     "playerColor": "w",
     "win": "decisive",
     "maxMoves": 12,
-    "freePlay": true,
+    "freePlay": false,
     "play": [
       {
         "who": "user",
@@ -1333,7 +1333,7 @@ export const PUZZLE_CATALOG_ENTRIES = [
     "playerColor": "w",
     "win": "decisive",
     "maxMoves": 14,
-    "freePlay": true,
+    "freePlay": false,
     "play": [
       {
         "who": "user",
@@ -1380,7 +1380,7 @@ export const PUZZLE_CATALOG_ENTRIES = [
     "playerColor": "w",
     "win": "decisive",
     "maxMoves": 16,
-    "freePlay": true,
+    "freePlay": false,
     "play": [
       {
         "who": "user",
@@ -1427,7 +1427,7 @@ export const PUZZLE_CATALOG_ENTRIES = [
     "playerColor": "w",
     "win": "checkmate",
     "maxMoves": 19,
-    "freePlay": true,
+    "freePlay": false,
     "play": [
       {
         "who": "user",
@@ -1498,7 +1498,7 @@ export const PUZZLE_CATALOG_ENTRIES = [
     "playerColor": "w",
     "win": "checkmate",
     "maxMoves": 23,
-    "freePlay": true,
+    "freePlay": false,
     "play": [
       {
         "who": "user",
@@ -1569,7 +1569,7 @@ export const PUZZLE_CATALOG_ENTRIES = [
     "playerColor": "w",
     "win": "checkmate",
     "maxMoves": 27,
-    "freePlay": true,
+    "freePlay": false,
     "play": [
       {
         "who": "user",
@@ -1640,7 +1640,7 @@ export const PUZZLE_CATALOG_ENTRIES = [
     "playerColor": "w",
     "win": "checkmate",
     "maxMoves": 19,
-    "freePlay": true,
+    "freePlay": false,
     "play": [
       {
         "who": "user",
@@ -1711,7 +1711,7 @@ export const PUZZLE_CATALOG_ENTRIES = [
     "playerColor": "w",
     "win": "checkmate",
     "maxMoves": 23,
-    "freePlay": true,
+    "freePlay": false,
     "play": [
       {
         "who": "user",
@@ -1782,7 +1782,7 @@ export const PUZZLE_CATALOG_ENTRIES = [
     "playerColor": "w",
     "win": "checkmate",
     "maxMoves": 27,
-    "freePlay": true,
+    "freePlay": false,
     "play": [
       {
         "who": "user",
@@ -1853,7 +1853,7 @@ export const PUZZLE_CATALOG_ENTRIES = [
     "playerColor": "w",
     "win": "checkmate",
     "maxMoves": 19,
-    "freePlay": true,
+    "freePlay": false,
     "play": [
       {
         "who": "user",
@@ -1924,7 +1924,7 @@ export const PUZZLE_CATALOG_ENTRIES = [
     "playerColor": "w",
     "win": "checkmate",
     "maxMoves": 23,
-    "freePlay": true,
+    "freePlay": false,
     "play": [
       {
         "who": "user",
@@ -1995,7 +1995,7 @@ export const PUZZLE_CATALOG_ENTRIES = [
     "playerColor": "w",
     "win": "checkmate",
     "maxMoves": 27,
-    "freePlay": true,
+    "freePlay": false,
     "play": [
       {
         "who": "user",
