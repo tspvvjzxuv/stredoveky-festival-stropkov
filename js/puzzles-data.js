@@ -33,7 +33,7 @@ export const WEEK_THEMES = [
   { title: "Mat dvoma ťahmi", tagline: "Úlohy z knihy č. 175, 187–188" },
   { title: "Mat dvoma ťahmi II", tagline: "Veža, dáma a jazdec — legálne pozície, mat v 2" },
   { title: "Väzba", tagline: "Taktika z knihy — väzba" },
-  { title: "Väzba II", tagline: "Pokračovanie motívu väzby" },
+  { title: "Väzba II", tagline: "Mat v dvoch, útok dámou a zisk materiálu" },
   { title: "Dvojitý úder", tagline: "Taktika z knihy" },
   { title: "Mat troma ťahmi", tagline: "Úlohy z knihy — mat v 3 ťahoch" },
   { title: "Mat troma ťahmi II", tagline: "Dámsko-jazdecké kombinácie" },
