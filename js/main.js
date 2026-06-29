@@ -546,9 +546,8 @@
 
     block.hidden = false;
 
-    if (window.BankovyDarQr && typeof window.BankovyDarQr.init === "function") {
-      window.BankovyDarQr.init();
-    }
+    var qrWrap = document.getElementById("bank-dar-qr-wrap");
+    if (qrWrap) qrWrap.hidden = false;
 
     var copyBtn = document.getElementById("bank-dar-copy-iban");
     if (copyBtn) {

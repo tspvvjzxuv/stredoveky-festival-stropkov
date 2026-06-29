@@ -1,4 +1,5 @@
 import { CurrencyCode, encode, PaymentOptions } from "./vendor/bysquare/lib/pay/index.js";
+import { Version } from "./vendor/bysquare/lib/types.js";
 import { QRCode } from "@lostinbrittany/qr-esm";
 
 function getBankCfg() {
@@ -9,14 +10,21 @@ function normalizeIban(iban) {
   return String(iban || "").replace(/\s+/g, "").trim().toUpperCase();
 }
 
+function resolvePayBySquareVersion(bankCfg) {
+  var key = String(bankCfg.payBySquareVerzia || "1.0.0").trim();
+  return Version[key] ?? Version["1.0.0"];
+}
+
 function buildPayBySquarePayload() {
   var bankCfg = getBankCfg();
   var iban = normalizeIban(bankCfg.iban);
   if (!iban) return null;
 
   var bankAccount = { iban: iban };
-  var bic = String(bankCfg.bic || "").replace(/\s+/g, "").trim().toUpperCase();
-  if (bic) bankAccount.bic = bic;
+  if (bankCfg.qrBic) {
+    var bic = String(bankCfg.bic || "").replace(/\s+/g, "").trim().toUpperCase();
+    if (bic) bankAccount.bic = bic;
+  }
 
   var payment = {
     type: PaymentOptions.PaymentOrder,
@@ -36,7 +44,14 @@ function buildPayBySquarePayload() {
     payment.amount = Math.round(suma * 100) / 100;
   }
 
-  return encode({ payments: [payment] });
+  return encode(
+    { payments: [payment] },
+    {
+      version: resolvePayBySquareVersion(bankCfg),
+      validate: true,
+      deburr: true,
+    }
+  );
 }
 
 function showQrError(target, message) {
@@ -54,16 +69,16 @@ function renderQr(payload) {
   target.replaceChildren();
 
   var url = QRCode.generatePNG(payload, {
-    ecclevel: "M",
+    ecclevel: "H",
     margin: 4,
-    modulesize: 8,
+    modulesize: 10,
   });
 
   var img = document.createElement("img");
   img.src = url;
   img.alt = "QR kód Pay by Square pre príspevok";
-  img.width = 220;
-  img.height = 220;
+  img.width = 256;
+  img.height = 256;
   img.decoding = "async";
   img.className = "bank-dar__qr-image";
   target.appendChild(img);
@@ -80,7 +95,10 @@ function updateQr() {
     renderQr(payload);
   } catch (err) {
     console.error("Pay by Square QR:", err);
-    showQrError(target, "QR kód sa nepodarilo vygenerovať.");
+    showQrError(
+      target,
+      err && err.message ? String(err.message) : "QR kód sa nepodarilo vygenerovať."
+    );
   }
 }
 

@@ -141,7 +141,6 @@
       }
     </script>
     <script src="js/config.js" defer></script>
-    <script src="js/vendor/bankovy-dar-qr.bundle.js" defer></script>
     <script src="js/harmonogram-data.js" defer></script>
     <script src="js/harmonogram-live.js" defer></script>
     <script src="js/main.js" defer></script>
@@ -323,12 +322,19 @@
                   <p class="bank-dar__qr-lead">
                     Naskenujte QR kód v mobilnej bankovke a pošlite príspevok:
                   </p>
-                  <div
+                  <img
                     id="bank-dar-qr"
-                    class="bank-dar__qr-canvas"
-                    role="img"
-                    aria-label="QR kód Pay by Square pre bankový prevod"
-                  ></div>
+                    class="bank-dar__qr-image"
+                    src="images/bank-dar-qr.png"
+                    alt="QR kód Pay by Square pre príspevok"
+                    width="300"
+                    height="300"
+                    decoding="async"
+                    loading="lazy"
+                  />
+                  <p class="bank-dar__qr-hint">
+                    Ak banková appka QR neprečíta, použite IBAN a údaje vyššie a zadajte prevod ručne.
+                  </p>
                 </div>
               </div>
             </article>

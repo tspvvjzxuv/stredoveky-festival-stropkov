@@ -4,11 +4,11 @@
   "scripts": {
     "dev": "live-server --port=5500 --open=/",
     "start": "npm run dev",
-    "build": "node scripts/build-bankovy-dar-qr.mjs && node scripts/build.mjs",
-    "build:qr": "node scripts/build-bankovy-dar-qr.mjs",
+    "build": "node scripts/generate-bank-qr-png.mjs && node scripts/build.mjs",
+    "build:qr": "node scripts/generate-bank-qr-png.mjs",
     "vendor:bysquare": "node scripts/copy-bysquare-vendor.mjs",
     "vendor:copy": "node scripts/copy-vendor.mjs",
-    "prebuild": "node scripts/copy-vendor.mjs && node scripts/build-sach-bundle.mjs && node scripts/build-bankovy-dar-qr.mjs",
+    "prebuild": "node scripts/copy-vendor.mjs && node scripts/build-sach-bundle.mjs && node scripts/generate-bank-qr-png.mjs",
     "test:puzzles": "node scripts/validate-puzzles.mjs",
     "test:puzzles:soundness": "node scripts/audit-puzzle-soundness.mjs",
     "test:puzzles:alt": "node scripts/test-puzzle-alternatives.mjs",
@@ -21,6 +21,7 @@
     "live-server": "^1.2.2",
     "lzma1": "0.3.0",
     "playwright": "^1.60.0",
+    "qrcode": "^1.5.4",
     "validator": "^13.15.35"
   },
   "dependencies": {

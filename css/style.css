@@ -1380,9 +1380,17 @@ a:hover {
   line-height: 0;
 }
 
+.bank-dar__qr-hint {
+  margin: 0.75rem 0 0;
+  font-size: 0.82rem;
+  line-height: 1.45;
+  color: rgba(200, 188, 160, 0.88);
+  max-width: 28ch;
+}
+
 .bank-dar__qr-image {
   display: block;
-  width: min(13.75rem, 100%);
+  width: min(16rem, 100%);
   height: auto;
   image-rendering: pixelated;
 }

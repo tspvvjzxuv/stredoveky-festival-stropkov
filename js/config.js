@@ -49,6 +49,10 @@ window.FESTIVAL_CONFIG = {
     sprava: "Dar PTRA",
     /** Suma zakódovaná v QR (EUR) — na stránke sa nezobrazuje. */
     suma: 35,
+    /** Pay by Square verzia pre QR: "1.0.0" (CSOB/STARŠIE APPKY) alebo "1.1.0". */
+    payBySquareVerzia: "1.0.0",
+    /** BIC do QR väčšinou netreba; IBAN stačí. */
+    qrBic: false,
   },
 
   /** Priame Stripe Payment Links (keď platbyRezim === "stripe_links") */
