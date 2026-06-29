@@ -353,4 +353,9 @@ body.home-page .cookies-page h2 {
   html {
     zoom: 1.25;
   }
+
+  /* Chessground nesprávne umiestňuje figúrky pri CSS zoom na <html>. */
+  html.sach-html-root {
+    zoom: 1;
+  }
 }

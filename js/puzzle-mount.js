@@ -196,6 +196,10 @@ export function initPuzzleMount() {
     window.visualViewport.addEventListener("resize", scheduleViewportSync);
   }
 
+  window.addEventListener("load", function () {
+    setTimeout(syncActiveWeekBoards, 120);
+  });
+
   var grid = document.getElementById("sach-puzzle-grid");
   if (grid) {
     grid.addEventListener(

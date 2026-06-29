@@ -5528,7 +5528,7 @@ body.js-ready #sachove-hlavolamy .cg-board {
   flex-shrink: 0;
   border-radius: 6px;
   border: 1px solid rgba(242, 204, 140, 0.5);
-  overflow: visible;
+  overflow: hidden;
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.28);
   background-color: #312e2b;
   background-image:
@@ -5551,7 +5551,7 @@ body.js-ready #sachove-hlavolamy .cg-board {
 
 #sachove-hlavolamy .cg-board.cg-wrap {
   box-sizing: content-box !important;
-  overflow: visible !important;
+  overflow: hidden !important;
 }
 
 #sachove-hlavolamy .sach-board-load-error {
