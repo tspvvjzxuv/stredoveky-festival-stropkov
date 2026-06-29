@@ -347,3 +347,10 @@ body.home-page .cookies-page h1,
 body.home-page .cookies-page h2 {
   color: var(--heading-on-dark);
 }
+
+/* Desktop: celostránkové priblíženie 125 % (ekvivalent Ctrl + v prehliadači). */
+@media (min-width: 900px) {
+  html {
+    zoom: 1.25;
+  }
+}

@@ -1386,6 +1386,12 @@ a:hover {
   height: auto;
 }
 
+.bank-dar__qr-error {
+  margin: 0;
+  font-size: 0.85rem;
+  color: #f0b0a8;
+}
+
 .home-page #vstupenky-rezervacie .choice-card:first-child #link-vstupenky.stripe-btn {
   margin-top: 0.75rem;
   margin-bottom: 0;

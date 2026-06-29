@@ -45,9 +45,8 @@ window.FESTIVAL_CONFIG = {
     prijemca: "PTRA",
     variabilnySymbol: "",
     sprava: "Dar na festival PTRA",
-    /** Krátka poznámka pod údajmi účtu (napr. že ide o osobný účet organizátora). */
-    poznamka:
-      "Dary sa dočasne prijímajú na osobný účet organizátora v prospech festivalu — OZ Sparta zatiaľ nemá vlastný bankový účet.",
+    /** Suma zakódovaná v QR (EUR) — na stránke sa nezobrazuje. */
+    suma: 35,
   },
 
   /** Priame Stripe Payment Links (keď platbyRezim === "stripe_links") */

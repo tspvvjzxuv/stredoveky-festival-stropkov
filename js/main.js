@@ -496,32 +496,7 @@
     }
   }
 
-  var payLinks = document.querySelectorAll(
-    "#vstupenky-rezervacie a.stripe-btn"
-  );
-  if (wcMode) {
-    for (var i = 0; i < payLinks.length; i++) {
-      payLinks[i].classList.add("woo-pay-btn");
-    }
-  }
-
   var prod = cfg.woocommerceProdukty || {};
-  var rezStripe = cfg.stripeRezervacia || {};
-
-  if (wcMode) {
-    var base = cfg.woocommerceZakladnaUrl.trim();
-    bindPaymentLink(
-      document.getElementById("link-vstupenky"),
-      resolveShopUrl(prod.vstupenky, base),
-      "WooCommerce: doplňte woocommerceZakladnaUrl a woocommerceProdukty.vstupenky v js/config.js."
-    );
-  } else {
-    bindPaymentLink(
-      document.getElementById("link-vstupenky"),
-      cfg.stripeVstupenky,
-      "Nastavte platobný odkaz v js/config.js (stripeVstupenky) alebo zapnite platbyRezim: \"woocommerce\"."
-    );
-  }
 
   function formatIbanDisplay(iban) {
     return String(iban || "")
@@ -542,7 +517,6 @@
     var banka = String(bankCfg.banka || "").trim();
     var vs = String(bankCfg.variabilnySymbol || "").trim();
     var sprava = String(bankCfg.sprava || "").trim();
-    var poznamka = String(bankCfg.poznamka || "").trim();
 
     var prijemcaEl = document.getElementById("bank-dar-prijemca");
     var ibanEl = document.getElementById("bank-dar-iban");
@@ -570,15 +544,11 @@
       if (spravaEl) spravaEl.textContent = sprava;
     }
 
-    if (poznamka) {
-      var poznamkaEl = document.getElementById("bank-dar-poznamka");
-      if (poznamkaEl) {
-        poznamkaEl.textContent = poznamka;
-        poznamkaEl.hidden = false;
-      }
-    }
-
     block.hidden = false;
+
+    if (window.BankovyDarQr && typeof window.BankovyDarQr.init === "function") {
+      window.BankovyDarQr.init();
+    }
 
     var copyBtn = document.getElementById("bank-dar-copy-iban");
     if (copyBtn) {
