@@ -1332,12 +1332,17 @@ a:hover {
   margin-top: 1.1rem;
   padding-top: 1rem;
   border-top: 1px solid rgba(154, 124, 78, 0.32);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
 }
 
 .bank-dar__qr-lead {
   margin: 0 0 0.75rem;
   font-size: 0.92rem;
   color: rgba(216, 224, 236, 0.9);
+  max-width: 26ch;
 }
 
 .bank-dar__amount {
@@ -1385,13 +1390,18 @@ a:hover {
   font-size: 0.82rem;
   line-height: 1.45;
   color: rgba(200, 188, 160, 0.88);
-  max-width: 28ch;
+  max-width: 32ch;
 }
 
 .bank-dar__qr-image {
   display: block;
   width: min(16rem, 100%);
   height: auto;
+  margin-inline: auto;
+  padding: 0.55rem;
+  background: #fff;
+  border-radius: 6px;
+  border: 1px solid rgba(154, 124, 78, 0.45);
   image-rendering: pixelated;
 }
 
