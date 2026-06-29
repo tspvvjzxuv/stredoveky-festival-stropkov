@@ -1,0 +1,71 @@
+{
+	"name": "bysquare",
+	"description": "It's a national standard for payment QR codes adopted by Slovak Banking Association (SBA)",
+	"type": "module",
+	"version": "4.0.0",
+	"license": "Apache-2.0",
+	"funding": "https://github.com/sponsors/xseman",
+	"homepage": "https://github.com/xseman/bysquare/tree/master/typescript#readme",
+	"author": "Filip Seman <filip.seman@pm.me>",
+	"keywords": [
+		"pay by square",
+		"qr string",
+		"paybysquare",
+		"bysquare"
+	],
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/xseman/bysquare.git"
+	},
+	"scripts": {
+		"prebuild": "tsc --build --clean",
+		"build": "tsc --build",
+		"fmt": "dprint fmt",
+		"fmt:check": "dprint check",
+		"typecheck": "tsc --noEmit",
+		"test": "bun test src/ --coverage --coverage-reporter=text --coverage-reporter=lcov --concurrent",
+		"test:watch": "bun test src/ --watch --coverage --concurrent"
+	},
+	"dependencies": {
+		"lzma1": "0.3.0",
+		"validator": "^13.15.35"
+	},
+	"devDependencies": {
+		"@types/bun": "^1.3.11",
+		"@types/node": "^25.5.2",
+		"@types/validator": "^13.15.10",
+		"dprint": "~0.53.2",
+		"typescript": "~6.0.2"
+	},
+	"sideEffects": false,
+	"bin": "./lib/cli.js",
+	"exports": {
+		"./package.json": "./package.json",
+		".": {
+			"types": "./lib/index.d.ts",
+			"bun": "./src/index.ts",
+			"import": "./lib/index.js",
+			"require": "./lib/index.js"
+		},
+		"./pay": {
+			"types": "./lib/pay/index.d.ts",
+			"bun": "./src/pay/index.ts",
+			"import": "./lib/pay/index.js",
+			"require": "./lib/pay/index.js"
+		},
+		"./invoice": {
+			"types": "./lib/invoice/index.d.ts",
+			"bun": "./src/invoice/index.ts",
+			"import": "./lib/invoice/index.js",
+			"require": "./lib/invoice/index.js"
+		}
+	},
+	"files": [
+		"lib/**/*.js",
+		"lib/**/*.d.ts",
+		"!lib/**/*test*",
+		"src/**/*.ts",
+		"!src/**/*_test.ts",
+		"!src/**/testdata"
+	]
+}

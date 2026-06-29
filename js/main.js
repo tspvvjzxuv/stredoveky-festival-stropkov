@@ -520,7 +520,7 @@
 
     var prijemcaEl = document.getElementById("bank-dar-prijemca");
     var ibanEl = document.getElementById("bank-dar-iban");
-    if (prijemcaEl) prijemcaEl.textContent = prijemca || "PTRA";
+    if (prijemcaEl) prijemcaEl.textContent = prijemca || "Sofia Klebanova";
     if (ibanEl) ibanEl.textContent = formatIbanDisplay(iban);
 
     if (banka) {

@@ -1,4 +1,4 @@
-import { CurrencyCode, encode, PaymentOptions } from "bysquare/pay";
+import { CurrencyCode, encode, PaymentOptions } from "./vendor/bysquare/lib/pay/index.js";
 import { QRCode } from "@lostinbrittany/qr-esm";
 
 function getBankCfg() {
@@ -14,11 +14,15 @@ function buildPayBySquarePayload() {
   var iban = normalizeIban(bankCfg.iban);
   if (!iban) return null;
 
+  var bankAccount = { iban: iban };
+  var bic = String(bankCfg.bic || "").replace(/\s+/g, "").trim().toUpperCase();
+  if (bic) bankAccount.bic = bic;
+
   var payment = {
     type: PaymentOptions.PaymentOrder,
     currencyCode: CurrencyCode.EUR,
-    beneficiary: { name: String(bankCfg.prijemca || "PTRA").trim() },
-    bankAccounts: [{ iban: iban }],
+    beneficiary: { name: String(bankCfg.prijemca || "Sofia Klebanova").trim() },
+    bankAccounts: [bankAccount],
   };
 
   var sprava = String(bankCfg.sprava || "").trim();
@@ -48,13 +52,21 @@ function renderQr(payload) {
   var target = document.getElementById("bank-dar-qr");
   if (!target) return;
   target.replaceChildren();
-  target.appendChild(
-    QRCode.generateSVG(payload, {
-      ecclevel: "M",
-      margin: 4,
-      modulesize: 5,
-    })
-  );
+
+  var url = QRCode.generatePNG(payload, {
+    ecclevel: "M",
+    margin: 4,
+    modulesize: 8,
+  });
+
+  var img = document.createElement("img");
+  img.src = url;
+  img.alt = "QR kód Pay by Square pre príspevok";
+  img.width = 220;
+  img.height = 220;
+  img.decoding = "async";
+  img.className = "bank-dar__qr-image";
+  target.appendChild(img);
 }
 
 function updateQr() {

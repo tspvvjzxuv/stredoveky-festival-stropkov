@@ -31,6 +31,7 @@ var required = [
   "js/harmonogram-live.js",
   "js/config.js",
   "js/vendor/bankovy-dar-qr.bundle.js",
+  "js/vendor/bysquare/lib/pay/index.js",
   "images/festival-map.webp",
   "images/logo-andreasa-shield.png",
   "images/hero-poster.webp",

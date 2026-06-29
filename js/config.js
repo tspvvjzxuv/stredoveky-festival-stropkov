@@ -41,10 +41,12 @@ window.FESTIVAL_CONFIG = {
    */
   bankovyDar: {
     iban: "SK75 1100 0000 0029 3642 0693",
+    bic: "TATRSKBX",
     banka: "Tatra banka",
-    prijemca: "PTRA",
+    /** Presné meno majiteľa účtu ako v banke (inak QR appka odmietne kód). */
+    prijemca: "Sofia Klebanova",
     variabilnySymbol: "",
-    sprava: "Dar na festival PTRA",
+    sprava: "Dar PTRA",
     /** Suma zakódovaná v QR (EUR) — na stránke sa nezobrazuje. */
     suma: 35,
   },

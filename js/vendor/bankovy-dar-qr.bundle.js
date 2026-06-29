@@ -36,7 +36,6 @@
   var __accessCheck = (obj, member, msg) => member.has(obj) || __typeError("Cannot " + msg);
   var __privateGet = (obj, member, getter) => (__accessCheck(obj, member, "read from private field"), getter ? getter.call(obj) : member.get(obj));
   var __privateAdd = (obj, member, value) => member.has(obj) ? __typeError("Cannot add the same private member more than once") : member instanceof WeakSet ? member.add(obj) : member.set(obj, value);
-  var __privateSet = (obj, member, value, setter) => (__accessCheck(obj, member, "write to private field"), setter ? setter.call(obj, value) : member.set(obj, value), value);
   var __privateMethod = (obj, member, method) => (__accessCheck(obj, member, "access private method"), method);
 
   // node_modules/validator/lib/util/assertString.js
@@ -6804,10 +6803,183 @@
     }
   });
 
+  // node_modules/lzma1/lib/lz-window.js
+  var LzOutWindow = class {
+    constructor(writer = null, windowSize = 4096) {
+      __publicField(this, "buffer", null);
+      __publicField(this, "pos", 0);
+      __publicField(this, "streamPos", 0);
+      __publicField(this, "stream", null);
+      __publicField(this, "windowSize", 0);
+      // Private Go-style properties
+      __publicField(this, "w", null);
+      __publicField(this, "buf");
+      this.w = writer;
+      this.stream = writer;
+      this.windowSize = windowSize;
+      this.buf = new Uint8Array(windowSize);
+      this.buffer = this.buf;
+      this.pos = 0;
+      this.streamPos = 0;
+    }
+    /**
+     * Copy a block of data from a previous position (LZ77-style)
+     */
+    copyBlock(distance, length) {
+      if (!this.buffer)
+        return;
+      for (let i2 = 0; i2 < length; i2++) {
+        let sourcePos = this.pos - distance - 1;
+        if (sourcePos < 0) {
+          sourcePos += this.windowSize;
+        }
+        const byte = this.buffer[sourcePos];
+        this.putByte(byte);
+      }
+    }
+    /**
+     * Put a single byte into the window
+     */
+    putByte(byte) {
+      if (!this.buffer)
+        return;
+      this.buffer[this.pos] = byte;
+      this.pos++;
+      this.streamPos++;
+      if (this.pos >= this.windowSize) {
+        this.flush();
+      }
+    }
+    /**
+     * Get a byte from a relative position
+     */
+    getByte(relativePos) {
+      if (!this.buffer)
+        return 0;
+      let pos = this.pos + relativePos;
+      if (pos < 0) {
+        pos += this.windowSize;
+      } else if (pos >= this.windowSize) {
+        pos -= this.windowSize;
+      }
+      return this.buffer[pos];
+    }
+    /**
+     * Flush buffered data to output writer
+     */
+    flush() {
+      if (this.w && this.buffer && this.pos > 0) {
+        this.w.writeBytes(this.buffer, 0, this.pos);
+        this.pos = 0;
+      }
+    }
+    /**
+     * Check if the window is empty
+     */
+    isEmpty() {
+      return this.streamPos === 0;
+    }
+    /**
+     * Reset the window
+     */
+    reset() {
+      this.pos = 0;
+      this.streamPos = 0;
+      if (this.buffer) {
+        this.buffer.fill(0);
+      }
+    }
+  };
+
+  // node_modules/lzma1/lib/range-decoder.js
+  var RangeDecoder = class {
+    constructor() {
+      __publicField(this, "stream", null);
+      __publicField(this, "code", 0);
+      __publicField(this, "rrange", 0);
+    }
+    /**
+     * Set input stream for decoding
+     */
+    setStream(stream) {
+      this.stream = stream;
+    }
+    /**
+     * Initialize range decoder
+     */
+    init() {
+      this.code = 0;
+      this.rrange = -1;
+      for (let i2 = 0; i2 < 5; ++i2) {
+        this.code = this.code << 8 | this.readFromStream();
+      }
+    }
+    /**
+     * Decode a single bit using probability model
+     */
+    decodeBit(probs, index) {
+      let newBound, prob = probs[index];
+      newBound = (this.rrange >>> 11) * prob;
+      if ((this.code ^ -2147483648) < (newBound ^ -2147483648)) {
+        this.rrange = newBound;
+        probs[index] = prob + (2048 - prob >>> 5);
+        if (!(this.rrange & -16777216)) {
+          this.code = this.code << 8 | this.readFromStream();
+          this.rrange <<= 8;
+        }
+        return 0;
+      } else {
+        this.rrange -= newBound;
+        this.code -= newBound;
+        probs[index] = prob - (prob >>> 5);
+        if (!(this.rrange & -16777216)) {
+          this.code = this.code << 8 | this.readFromStream();
+          this.rrange <<= 8;
+        }
+        return 1;
+      }
+    }
+    /**
+     * Decode direct bits (without probability model)
+     */
+    decodeDirectBits(numTotalBits) {
+      let result = 0;
+      for (let i2 = numTotalBits; i2 != 0; i2 -= 1) {
+        this.rrange >>>= 1;
+        let t = this.code - this.rrange >>> 31;
+        this.code -= this.rrange & t - 1;
+        result = result << 1 | 1 - t;
+        if (!(this.rrange & -16777216)) {
+          this.code = this.code << 8 | this.readFromStream();
+          this.rrange <<= 8;
+        }
+      }
+      return result;
+    }
+    /**
+     * Get current code value (for compatibility)
+     */
+    get currentCode() {
+      return this.code;
+    }
+    /**
+     * Get current range value (for compatibility)
+     */
+    get currentRange() {
+      return this.rrange;
+    }
+    /**
+     * Read a single byte from the input stream
+     */
+    readFromStream() {
+      if (!this.stream) {
+        return 0;
+      }
+      return this.stream.readByte();
+    }
+  };
+
   // node_modules/lzma1/lib/utils.js
-  var MAX_UINT32 = 4294967296;
-  var MAX_INT32 = 2147483647;
-  var MIN_INT32 = -2147483648;
   var INFINITY_PRICE = 268435455;
   var _MAX_UINT32 = 4294967295;
   var DICTIONARY_SIZE_THRESHOLD = 1073741823;
@@ -6820,9 +6992,6 @@
   var LITERAL_DECODER_SIZE = 768;
   var DEFAULT_WINDOW_SIZE = 4096;
   var CHOICE_ARRAY_SIZE = 2;
-  var N1_LONG_LIT = [4294967295, -MAX_UINT32];
-  var P0_LONG_LIT = [0, 0];
-  var P1_LONG_LIT = [1, 0];
   var CRC32_TABLE = [
     0,
     1996959894,
@@ -7093,92 +7262,8 @@
     }
     return array;
   }
-  function arraycopy(src, srcOfs, dest, destOfs, len) {
-    if (srcOfs < 0 || destOfs < 0 || len < 0 || srcOfs + len > src.length || destOfs + len > dest.length) {
-      return;
-    }
-    if (src === dest && srcOfs < destOfs && destOfs < srcOfs + len) {
-      for (let i2 = len - 1; i2 >= 0; i2--) {
-        dest[destOfs + i2] = src[srcOfs + i2];
-      }
-    } else {
-      for (let i2 = 0; i2 < len; i2++) {
-        dest[destOfs + i2] = src[srcOfs + i2];
-      }
-    }
-  }
   function getBitPrice(probability, bit) {
     return PROB_PRICES[((probability - bit ^ -bit) & 2047) >>> 2];
-  }
-  function create64(valueLow, valueHigh) {
-    let diffHigh, diffLow;
-    valueHigh %= 18446744073709552e3;
-    valueLow %= 18446744073709552e3;
-    diffHigh = valueHigh % MAX_UINT32;
-    diffLow = Math.floor(valueLow / MAX_UINT32) * MAX_UINT32;
-    valueHigh = valueHigh - diffHigh + diffLow;
-    valueLow = valueLow - diffLow + diffHigh;
-    while (valueLow < 0) {
-      valueLow += MAX_UINT32;
-      valueHigh -= MAX_UINT32;
-    }
-    while (valueLow > 4294967295) {
-      valueLow -= MAX_UINT32;
-      valueHigh += MAX_UINT32;
-    }
-    valueHigh = valueHigh % 18446744073709552e3;
-    while (valueHigh > 9223372032559809e3) {
-      valueHigh -= 18446744073709552e3;
-    }
-    while (valueHigh < -9223372036854776e3) {
-      valueHigh += 18446744073709552e3;
-    }
-    return [valueLow, valueHigh];
-  }
-  function add64(a2, b2) {
-    return create64(a2[0] + b2[0], a2[1] + b2[1]);
-  }
-  function sub64(a2, b2) {
-    return create64(a2[0] - b2[0], a2[1] - b2[1]);
-  }
-  function compare64(a2, b2) {
-    if (a2[0] == b2[0] && a2[1] == b2[1]) {
-      return 0;
-    }
-    const nega = a2[1] < 0;
-    const negb = b2[1] < 0;
-    if (nega && !negb) {
-      return -1;
-    }
-    if (!nega && negb) {
-      return 1;
-    }
-    if (sub64(a2, b2)[1] < 0) {
-      return -1;
-    }
-    return 1;
-  }
-  function lowBits64(a2) {
-    if (a2[0] >= 2147483648) {
-      return ~~Math.max(Math.min(a2[0] - MAX_UINT32, MAX_INT32), MIN_INT32);
-    }
-    return ~~Math.max(Math.min(a2[0], MAX_INT32), MIN_INT32);
-  }
-  function fromInt64(value) {
-    if (value >= 0) {
-      return [value, 0];
-    } else {
-      return [value + MAX_UINT32, -MAX_UINT32];
-    }
-  }
-  function shr64(a2, n) {
-    n &= 63;
-    if (n <= 30) {
-      const shiftFact2 = 1 << n;
-      return create64(Math.floor(a2[0] / shiftFact2), a2[1] / shiftFact2);
-    }
-    const shiftFact = (1 << 30) * (1 << n - 30);
-    return create64(Math.floor(a2[0] / shiftFact), a2[1] / shiftFact);
   }
   function initBitModels(probs) {
     for (let i2 = probs.length - 1; i2 >= 0; --i2) {
@@ -7192,7 +7277,11 @@
     }
     return 3;
   }
+  var STATE_UPDATE_CHAR_TABLE = [0, 0, 0, 0, 1, 2, 3, 4, 5, 6, 4, 5];
   function stateUpdateChar(index) {
+    if (index >= 0 && index < STATE_UPDATE_CHAR_TABLE.length) {
+      return STATE_UPDATE_CHAR_TABLE[index];
+    }
     if (index < 4) {
       return 0;
     }
@@ -7230,256 +7319,6 @@
     return gFastPos;
   }
 
-  // node_modules/lzma1/lib/chunker.js
-  var EncoderChunker = class {
-    constructor(lzma) {
-      __publicField(this, "encoder", null);
-      __publicField(this, "decoder", null);
-      __publicField(this, "alive", 0);
-      __publicField(this, "inBytesProcessed", [0, 0]);
-      __publicField(this, "lzma");
-      this.lzma = lzma;
-    }
-    /**
-     * Process one chunk of encoding
-     */
-    processChunk() {
-      if (!this.alive) {
-        throw new Error("bad state");
-      }
-      if (!this.encoder) {
-        throw new Error("No decoding");
-      }
-      this.lzma.codeOneBlock();
-      this.inBytesProcessed = this.encoder.processedInSize[0];
-      if (this.encoder.finished[0]) {
-        this.lzma.releaseStreams();
-        this.alive = 0;
-      }
-      return this.alive;
-    }
-  };
-  var DecoderChunker = class {
-    constructor(decoder) {
-      __publicField(this, "encoder", null);
-      __publicField(this, "decoder");
-      __publicField(this, "alive", 0);
-      __publicField(this, "inBytesProcessed", [0, 0]);
-      this.decoder = decoder;
-    }
-    /**
-     * Process one chunk of decoding
-     */
-    processChunk() {
-      if (!this.alive) {
-        throw new Error("Bad state");
-      }
-      if (this.encoder) {
-        throw new Error("No encoding");
-      }
-      const result = this.decoder.codeOneChunk();
-      if (result === -1) {
-        throw new Error("Corrupted input");
-      }
-      this.inBytesProcessed = this.decoder.nowPos64;
-      const isOutputComplete = compare64(this.decoder.outSize, P0_LONG_LIT) >= 0 && compare64(this.decoder.nowPos64, this.decoder.outSize) >= 0;
-      if (result || isOutputComplete) {
-        this.decoder.flush();
-        this.decoder.cleanup();
-        this.alive = 0;
-      }
-      return this.alive;
-    }
-  };
-
-  // node_modules/lzma1/lib/lz-window.js
-  var LzOutWindow = class {
-    constructor(writer = null, windowSize = 4096) {
-      __publicField(this, "buffer", null);
-      __publicField(this, "pos", 0);
-      __publicField(this, "streamPos", 0);
-      __publicField(this, "stream", null);
-      __publicField(this, "windowSize", 0);
-      // Private Go-style properties
-      __publicField(this, "w", null);
-      __publicField(this, "buf", []);
-      this.w = writer;
-      this.stream = writer;
-      this.windowSize = windowSize;
-      this.buf = new Array(windowSize);
-      this.buffer = this.buf;
-      this.pos = 0;
-      this.streamPos = 0;
-    }
-    /**
-     * Copy a block of data from a previous position (LZ77-style)
-     */
-    copyBlock(distance, length) {
-      if (!this.buffer)
-        return;
-      for (let i2 = 0; i2 < length; i2++) {
-        let sourcePos = this.pos - distance - 1;
-        if (sourcePos < 0) {
-          sourcePos += this.windowSize;
-        }
-        const byte = this.buffer[sourcePos];
-        this.putByte(byte);
-      }
-    }
-    /**
-     * Put a single byte into the window
-     */
-    putByte(byte) {
-      if (!this.buffer)
-        return;
-      this.buffer[this.pos] = byte;
-      this.pos++;
-      this.streamPos++;
-      if (this.pos >= this.windowSize) {
-        this.flush();
-      }
-    }
-    /**
-     * Get a byte from a relative position
-     */
-    getByte(relativePos) {
-      if (!this.buffer)
-        return 0;
-      let pos = this.pos + relativePos;
-      if (pos < 0) {
-        pos += this.windowSize;
-      } else if (pos >= this.windowSize) {
-        pos -= this.windowSize;
-      }
-      return this.buffer[pos];
-    }
-    /**
-     * Flush buffered data to output writer
-     */
-    flush() {
-      if (this.w && this.buffer && this.pos > 0) {
-        const dataToWrite = this.buffer.slice(0, this.pos);
-        this.w.write(dataToWrite);
-        this.pos = 0;
-      }
-    }
-    /**
-     * Check if the window is empty
-     */
-    isEmpty() {
-      return this.streamPos === 0;
-    }
-    /**
-     * Reset the window
-     */
-    reset() {
-      this.pos = 0;
-      this.streamPos = 0;
-      if (this.buffer) {
-        this.buffer.fill(0);
-      }
-    }
-  };
-
-  // node_modules/lzma1/lib/range-decoder.js
-  var RangeDecoder = class {
-    constructor() {
-      __publicField(this, "stream", null);
-      __publicField(this, "code", 0);
-      __publicField(this, "rrange", 0);
-    }
-    /**
-     * Set input stream for decoding
-     */
-    setStream(stream) {
-      this.stream = stream;
-    }
-    /**
-     * Initialize range decoder
-     */
-    init() {
-      this.code = 0;
-      this.rrange = -1;
-      for (let i2 = 0; i2 < 5; ++i2) {
-        this.code = this.code << 8 | this.readFromStream();
-      }
-    }
-    /**
-     * Decode a single bit using probability model
-     */
-    decodeBit(probs, index) {
-      let newBound, prob = probs[index];
-      newBound = (this.rrange >>> 11) * prob;
-      if ((this.code ^ -2147483648) < (newBound ^ -2147483648)) {
-        this.rrange = newBound;
-        probs[index] = prob + (2048 - prob >>> 5) << 16 >> 16;
-        if (!(this.rrange & -16777216)) {
-          this.code = this.code << 8 | this.readFromStream();
-          this.rrange <<= 8;
-        }
-        return 0;
-      } else {
-        this.rrange -= newBound;
-        this.code -= newBound;
-        probs[index] = prob - (prob >>> 5) << 16 >> 16;
-        if (!(this.rrange & -16777216)) {
-          this.code = this.code << 8 | this.readFromStream();
-          this.rrange <<= 8;
-        }
-        return 1;
-      }
-    }
-    /**
-     * Decode direct bits (without probability model)
-     */
-    decodeDirectBits(numTotalBits) {
-      let result = 0;
-      for (let i2 = numTotalBits; i2 != 0; i2 -= 1) {
-        this.rrange >>>= 1;
-        let t = this.code - this.rrange >>> 31;
-        this.code -= this.rrange & t - 1;
-        result = result << 1 | 1 - t;
-        if (!(this.rrange & -16777216)) {
-          this.code = this.code << 8 | this.readFromStream();
-          this.rrange <<= 8;
-        }
-      }
-      return result;
-    }
-    /**
-     * Get current code value (for compatibility)
-     */
-    get currentCode() {
-      return this.code;
-    }
-    /**
-     * Get current range value (for compatibility)
-     */
-    get currentRange() {
-      return this.rrange;
-    }
-    /**
-     * Read a single byte from the input stream
-     */
-    readFromStream() {
-      if (!this.stream) {
-        return 0;
-      }
-      if (this.stream.pos >= this.stream.count) {
-        return -1;
-      }
-      let value;
-      if (this.stream.buf instanceof ArrayBuffer) {
-        value = new Uint8Array(this.stream.buf)[this.stream.pos++];
-      } else if (this.stream.buf instanceof Uint8Array) {
-        value = this.stream.buf[this.stream.pos++];
-      } else {
-        value = this.stream.buf[this.stream.pos++];
-      }
-      return value & 255;
-    }
-  };
-
   // node_modules/lzma1/lib/decoder.js
   var Decoder = class {
     constructor() {
@@ -7492,8 +7331,8 @@
       __publicField(this, "rep2", 0);
       __publicField(this, "rep3", 0);
       __publicField(this, "prevByte", 0);
-      __publicField(this, "nowPos64", [0, 0]);
-      __publicField(this, "outSize", [0, 0]);
+      __publicField(this, "nowPos64", 0n);
+      __publicField(this, "outSize", 0n);
       // Decoder configuration
       __publicField(this, "posStateMask", 0);
       __publicField(this, "dictSizeCheck", 0);
@@ -7511,11 +7350,6 @@
       __publicField(this, "lenDecoder");
       __publicField(this, "repLenDecoder");
       __publicField(this, "posAlignDecoder");
-      // Chunker properties for compatibility
-      __publicField(this, "decoder");
-      __publicField(this, "encoder", null);
-      __publicField(this, "alive", 0);
-      __publicField(this, "inBytesProcessed", [0, 0]);
       this.rangeDecoder = new RangeDecoder();
       this.outWindow = new LzOutWindow(null, DEFAULT_WINDOW_SIZE);
       this.matchDecoders = initArray(MATCH_DECODERS_SIZE);
@@ -7538,11 +7372,75 @@
       this.lenDecoder = this.createLenDecoder();
       this.repLenDecoder = this.createLenDecoder();
       this.posAlignDecoder = createBitTree(4);
-      this.decoder = this;
     }
     // Alias for compatibility with LZMA class
     get literalCoder() {
       return this.literalDecoder;
+    }
+    /**
+     * Read LZMA header, configure decoder, and prepare for decompression.
+     */
+    initDecompression(input, output) {
+      const properties = [];
+      for (let i2 = 0; i2 < 5; ++i2) {
+        const r = input.readByte();
+        if (r === -1) {
+          throw new Error("truncated input");
+        }
+        properties[i2] = r << 24 >> 24;
+      }
+      if (!this.setDecoderProperties(properties)) {
+        throw new Error("corrupted input");
+      }
+      let outSize;
+      {
+        let value = 0n;
+        for (let i2 = 0; i2 < 8; i2++) {
+          const r = input.readByte();
+          if (r === -1) {
+            throw new Error("truncated input");
+          }
+          value += BigInt(r & 255) << BigInt(i2 * 8);
+        }
+        if (value === 0xffffffffffffffffn) {
+          outSize = -1n;
+        } else if (value > BigInt(_MAX_UINT32)) {
+          outSize = -1n;
+        } else {
+          outSize = value;
+        }
+      }
+      this.rangeDecoder.setStream(input);
+      this.flush();
+      this.outWindow.stream = null;
+      this.outWindow.stream = output;
+      this.init();
+      this.state = 0;
+      this.rep0 = 0;
+      this.rep1 = 0;
+      this.rep2 = 0;
+      this.rep3 = 0;
+      this.outSize = outSize;
+      this.nowPos64 = 0n;
+      this.prevByte = 0;
+    }
+    /**
+     * Full decompression: read header, decode all chunks, flush and cleanup.
+     */
+    decompress(input, output) {
+      this.initDecompression(input, output);
+      while (true) {
+        const result = this.codeOneChunk();
+        if (result === -1) {
+          throw new Error("corrupted input");
+        }
+        const isOutputComplete = this.outSize >= 0n && this.nowPos64 >= this.outSize;
+        if (result || isOutputComplete) {
+          this.flush();
+          this.cleanup();
+          return;
+        }
+      }
     }
     createLenDecoder() {
       const decoder = {
@@ -7577,7 +7475,7 @@
       this.dictSizeCheck = Math.max(dictSize, 1);
       if (dictSize > 0) {
         this.outWindow.windowSize = Math.max(dictSize, 4096);
-        this.outWindow.buffer = initArray(this.outWindow.windowSize);
+        this.outWindow.buffer = new Uint8Array(this.outWindow.windowSize);
       }
       const numStates = 1 << this.literalDecoder.numPrevBits + this.literalDecoder.numPosBits;
       this.literalDecoder.coders = [];
@@ -7755,9 +7653,9 @@
     }
     codeOneChunk() {
       let decoder2, distance, len, numDirectBits, positionSlot;
-      let posState = lowBits64(this.nowPos64) & this.posStateMask;
+      let posState = Number(this.nowPos64 & 0xffffffffn) & this.posStateMask;
       if (!this.decodeBit(this.matchDecoders, (this.state << 4) + posState)) {
-        decoder2 = this.getDecoder(lowBits64(this.nowPos64), this.prevByte);
+        decoder2 = this.getDecoder(Number(this.nowPos64 & 0xffffffffn), this.prevByte);
         if (this.state < 7) {
           this.prevByte = this.decodeNormalWithRangeDecoder(decoder2);
         } else {
@@ -7765,7 +7663,7 @@
         }
         this.putByte(this.prevByte);
         this.state = stateUpdateChar(this.state);
-        this.nowPos64 = add64(this.nowPos64, [1, 0]);
+        this.nowPos64 += 1n;
       } else {
         if (this.decodeBit(this.repDecoders, this.state)) {
           len = 0;
@@ -7819,73 +7717,17 @@
             this.rep0 = positionSlot;
           }
         }
-        if (compare64([this.rep0, 0], this.nowPos64) >= 0 || this.rep0 >= this.dictSizeCheck) {
+        if (BigInt(this.rep0) >= this.nowPos64 || this.rep0 >= this.dictSizeCheck) {
           return -1;
         }
         this.copyBlock(len);
-        this.nowPos64 = add64(this.nowPos64, [len, 0]);
+        this.nowPos64 += BigInt(len);
         this.prevByte = this.getByte(0);
       }
       return 0;
     }
-    // Setup decoder for chunk processing
-    setupForDecoding(inStream, outSize, outputBuffer) {
-      this.rangeDecoder.setStream(inStream);
-      this.outSize = outSize;
-      this.outWindowReleaseStream();
-      this.outWindow.stream = outputBuffer;
-      this.init();
-      this.state = 0;
-      this.rep0 = 0;
-      this.rep1 = 0;
-      this.rep2 = 0;
-      this.rep3 = 0;
-      this.outSize = outSize;
-      this.nowPos64 = [0, 0];
-      this.prevByte = 0;
-      this.decoder = this;
-      this.encoder = null;
-      this.alive = 1;
-    }
-    // Process chunk and return alive status
-    processChunk() {
-      if (!this.alive) {
-        throw new Error("Bad state");
-      }
-      if (this.encoder) {
-        throw new Error("No encoding");
-      }
-      const result = this.codeOneChunk();
-      if (result === -1) {
-        throw new Error("Corrupted input");
-      }
-      const isOutputComplete = compare64(this.outSize, [0, 0]) >= 0 && compare64(this.nowPos64, this.outSize) >= 0;
-      if (result || isOutputComplete) {
-        this.flush();
-        this.outWindowReleaseStream();
-        this.rangeDecoder.setStream(null);
-        this.alive = 0;
-      }
-      return this.alive;
-    }
     writeToOutput(buffer, data, offset, length) {
-      const requiredSize = buffer.count + length;
-      if (requiredSize > buffer.buf.length) {
-        const newSize = Math.max(buffer.buf.length * 2, requiredSize);
-        const newBuf = new Array(newSize);
-        for (let i2 = 0; i2 < buffer.count; i2++) {
-          newBuf[i2] = buffer.buf[i2];
-        }
-        buffer.buf = newBuf;
-      }
-      for (let i2 = 0; i2 < length; i2++) {
-        buffer.buf[buffer.count + i2] = data[offset + i2];
-      }
-      buffer.count += length;
-    }
-    isBufferWithCount(x) {
-      const s = x;
-      return !!s && Array.isArray(s.buf) && typeof s.count === "number" && typeof s.write === "function";
+      buffer.writeBytes(data, offset, length);
     }
     flush() {
       const size = this.outWindow.pos - this.outWindow.streamPos;
@@ -7893,13 +7735,7 @@
         return;
       }
       if (this.outWindow.stream && this.outWindow.buffer) {
-        const outputBuffer = this.outWindow.stream;
-        if (this.isBufferWithCount(outputBuffer)) {
-          this.writeToOutput(outputBuffer, this.outWindow.buffer, this.outWindow.streamPos, size);
-        } else if (typeof outputBuffer.write === "function") {
-          const slice = this.outWindow.buffer.slice(this.outWindow.streamPos, this.outWindow.streamPos + size);
-          outputBuffer.write(slice);
-        }
+        this.outWindow.stream.writeBytes(this.outWindow.buffer, this.outWindow.streamPos, size);
       }
       if (this.outWindow.pos >= this.outWindow.windowSize) {
         this.outWindow.pos = 0;
@@ -8231,13 +8067,391 @@
     }
   };
 
+  // node_modules/lzma1/lib/match-finder.js
+  var BinTreeMatchFinder = class {
+    constructor() {
+      // Input window fields
+      __publicField(this, "_posLimit", 0);
+      __publicField(this, "_bufferBase", new Uint8Array(0));
+      __publicField(this, "_pos", 0);
+      __publicField(this, "_streamPos", 0);
+      __publicField(this, "_streamEndWasReached", 0);
+      __publicField(this, "_bufferOffset", 0);
+      __publicField(this, "_blockSize", 0);
+      __publicField(this, "_keepSizeBefore", 0);
+      __publicField(this, "_keepSizeAfter", 0);
+      __publicField(this, "_pointerToLastSafePosition", 0);
+      __publicField(this, "_stream", null);
+      // Hash and tree fields
+      __publicField(this, "HASH_ARRAY", true);
+      __publicField(this, "kNumHashDirectBytes", 0);
+      __publicField(this, "kMinMatchCheck", 4);
+      __publicField(this, "kFixHashSize", 66560);
+      __publicField(this, "_hashMask", 0);
+      __publicField(this, "_hashSizeSum", 0);
+      __publicField(this, "_hash", new Int32Array(0));
+      __publicField(this, "_cyclicBufferSize", 0);
+      __publicField(this, "_cyclicBufferPos", 0);
+      __publicField(this, "_son", new Int32Array(0));
+      __publicField(this, "_matchMaxLen", 0);
+      __publicField(this, "_cutValue", 255);
+    }
+    // --- LzInWindow methods ---
+    getIndexByte(index) {
+      return this._bufferBase[this._bufferOffset + this._pos + index];
+    }
+    getMatchLen(index, distance, limit) {
+      if (this._streamEndWasReached) {
+        if (this._pos + index + limit > this._streamPos) {
+          limit = this._streamPos - (this._pos + index);
+        }
+      }
+      ++distance;
+      let i2;
+      const pby = this._bufferOffset + this._pos + index;
+      for (i2 = 0; i2 < limit && this._bufferBase[pby + i2] == this._bufferBase[pby + i2 - distance]; ++i2)
+        ;
+      return i2;
+    }
+    getNumAvailableBytes() {
+      return this._streamPos - this._pos;
+    }
+    moveBlock() {
+      let offset = this._bufferOffset + this._pos - this._keepSizeBefore;
+      if (offset > 0) {
+        --offset;
+      }
+      const numBytes = this._bufferOffset + this._streamPos - offset;
+      this._bufferBase.copyWithin(0, offset, offset + numBytes);
+      this._bufferOffset -= offset;
+    }
+    movePosInWindow() {
+      this._pos += 1;
+      if (this._pos > this._posLimit) {
+        const pointerToPosition = this._bufferOffset + this._pos;
+        if (pointerToPosition > this._pointerToLastSafePosition) {
+          this.moveBlock();
+        }
+        this.readBlock();
+      }
+    }
+    readBlock() {
+      if (this._streamEndWasReached) {
+        return;
+      }
+      while (true) {
+        const size = -this._bufferOffset + this._blockSize - this._streamPos;
+        if (!size) {
+          return;
+        }
+        const bytesRead = this.readFromStream(this._bufferOffset + this._streamPos, size);
+        if (bytesRead == -1) {
+          this._posLimit = this._streamPos;
+          const pointerToPosition = this._bufferOffset + this._posLimit;
+          if (pointerToPosition > this._pointerToLastSafePosition) {
+            this._posLimit = this._pointerToLastSafePosition - this._bufferOffset;
+          }
+          this._streamEndWasReached = 1;
+          return;
+        }
+        this._streamPos += bytesRead;
+        if (this._streamPos >= this._pos + this._keepSizeAfter) {
+          this._posLimit = this._streamPos - this._keepSizeAfter;
+        }
+      }
+    }
+    reduceOffsets(subValue) {
+      this._bufferOffset += subValue;
+      this._posLimit -= subValue;
+      this._pos -= subValue;
+      this._streamPos -= subValue;
+    }
+    readFromStream(off, len) {
+      const stream = this._stream;
+      const buffer = this._bufferBase;
+      return stream.readBytes(buffer, off, len);
+    }
+    // --- Match finder configuration methods ---
+    createBuffers(keepSizeBefore, keepSizeAfter, keepSizeReserv) {
+      this._keepSizeBefore = keepSizeBefore;
+      this._keepSizeAfter = keepSizeAfter;
+      const blockSize = keepSizeBefore + keepSizeAfter + keepSizeReserv;
+      if (this._blockSize != blockSize) {
+        this._bufferBase = new Uint8Array(blockSize);
+        this._blockSize = blockSize;
+      }
+      this._pointerToLastSafePosition = this._blockSize - keepSizeAfter;
+    }
+    create(dictionarySize, numFastBytes, keepAddBufferBefore, keepAddBufferAfter) {
+      if (dictionarySize < DICTIONARY_SIZE_THRESHOLD) {
+        this._cutValue = 16 + (numFastBytes >> 1);
+        const windowReservSize = ~~((dictionarySize + keepAddBufferBefore + numFastBytes + keepAddBufferAfter) / 2) + 256;
+        this.createBuffers(dictionarySize + keepAddBufferBefore, numFastBytes + keepAddBufferAfter, windowReservSize);
+        this._matchMaxLen = numFastBytes;
+        const cyclicBufferSize = dictionarySize + 1;
+        if (this._cyclicBufferSize !== cyclicBufferSize) {
+          this._cyclicBufferSize = cyclicBufferSize;
+          this._son = new Int32Array(cyclicBufferSize * 2);
+        }
+        let hs = 65536;
+        if (this.HASH_ARRAY) {
+          hs = dictionarySize - 1;
+          hs |= hs >> 1;
+          hs |= hs >> 2;
+          hs |= hs >> 4;
+          hs |= hs >> 8;
+          hs >>= 1;
+          hs |= 65535;
+          if (hs > 16777216) {
+            hs >>= 1;
+          }
+          this._hashMask = hs;
+          hs += 1;
+          const finalHashSizeSum = hs + this.kFixHashSize;
+          if (finalHashSizeSum !== this._hashSizeSum) {
+            this._hashSizeSum = finalHashSizeSum;
+            this._hash = new Int32Array(finalHashSizeSum);
+          }
+        } else {
+          if (hs !== this._hashSizeSum) {
+            this._hashSizeSum = hs;
+            this._hash = new Int32Array(hs);
+          }
+        }
+      }
+    }
+    // --- Match finding methods ---
+    getMatches(distances) {
+      let count, cur, curMatch, curMatch2, curMatch3, cyclicPos, delta, hash2Value, hash3Value, hashValue, len, len0, len1, lenLimit, matchMinPos, maxLen, offset, pby1, ptr0, ptr1, temp;
+      if (this._pos + this._matchMaxLen <= this._streamPos) {
+        lenLimit = this._matchMaxLen;
+      } else {
+        lenLimit = this._streamPos - this._pos;
+        if (lenLimit < this.kMinMatchCheck) {
+          this.movePos();
+          return 0;
+        }
+      }
+      offset = 0;
+      matchMinPos = this._pos > this._cyclicBufferSize ? this._pos - this._cyclicBufferSize : 0;
+      cur = this._bufferOffset + this._pos;
+      maxLen = 1;
+      hash2Value = 0;
+      hash3Value = 0;
+      if (this.HASH_ARRAY) {
+        temp = CRC32_TABLE[this._bufferBase[cur]] ^ this._bufferBase[cur + 1];
+        hash2Value = temp & 1023;
+        temp ^= this._bufferBase[cur + 2] << 8;
+        hash3Value = temp & 65535;
+        hashValue = (temp ^ CRC32_TABLE[this._bufferBase[cur + 3]] << 5) & this._hashMask;
+      } else {
+        hashValue = this._bufferBase[cur] ^ this._bufferBase[cur + 1] << 8;
+      }
+      curMatch = this._hash[this.kFixHashSize + hashValue] || 0;
+      if (this.HASH_ARRAY) {
+        curMatch2 = this._hash[hash2Value] || 0;
+        curMatch3 = this._hash[1024 + hash3Value] || 0;
+        this._hash[hash2Value] = this._pos;
+        this._hash[1024 + hash3Value] = this._pos;
+        if (curMatch2 > matchMinPos) {
+          if (this._bufferBase[this._bufferOffset + curMatch2] == this._bufferBase[cur]) {
+            distances[offset++] = maxLen = 2;
+            distances[offset++] = this._pos - curMatch2 - 1;
+          }
+        }
+        if (curMatch3 > matchMinPos) {
+          if (this._bufferBase[this._bufferOffset + curMatch3] == this._bufferBase[cur]) {
+            if (curMatch3 == curMatch2) {
+              offset -= 2;
+            }
+            distances[offset++] = maxLen = 3;
+            distances[offset++] = this._pos - curMatch3 - 1;
+            curMatch2 = curMatch3;
+          }
+        }
+        if (offset != 0 && curMatch2 == curMatch) {
+          offset -= 2;
+          maxLen = 1;
+        }
+      }
+      this._hash[this.kFixHashSize + hashValue] = this._pos;
+      ptr0 = (this._cyclicBufferPos << 1) + 1;
+      ptr1 = this._cyclicBufferPos << 1;
+      len0 = len1 = this.kNumHashDirectBytes;
+      if (this.kNumHashDirectBytes != 0) {
+        if (curMatch > matchMinPos) {
+          if (this._bufferBase[this._bufferOffset + curMatch + this.kNumHashDirectBytes] != this._bufferBase[cur + this.kNumHashDirectBytes]) {
+            distances[offset++] = maxLen = this.kNumHashDirectBytes;
+            distances[offset++] = this._pos - curMatch - 1;
+          }
+        }
+      }
+      count = this._cutValue;
+      while (1) {
+        if (curMatch <= matchMinPos || count == 0) {
+          count -= 1;
+          this._son[ptr0] = this._son[ptr1] = 0;
+          break;
+        }
+        delta = this._pos - curMatch;
+        cyclicPos = (delta <= this._cyclicBufferPos ? this._cyclicBufferPos - delta : this._cyclicBufferPos - delta + this._cyclicBufferSize) << 1;
+        pby1 = this._bufferOffset + curMatch;
+        len = len0 < len1 ? len0 : len1;
+        if (this._bufferBase[pby1 + len] == this._bufferBase[cur + len]) {
+          while ((len += 1) != lenLimit) {
+            if (this._bufferBase[pby1 + len] != this._bufferBase[cur + len]) {
+              break;
+            }
+          }
+          if (maxLen < len) {
+            distances[offset++] = maxLen = len;
+            distances[offset++] = delta - 1;
+            if (len == lenLimit) {
+              this._son[ptr1] = this._son[cyclicPos];
+              this._son[ptr0] = this._son[cyclicPos + 1];
+              break;
+            }
+          }
+        }
+        if (this._bufferBase[pby1 + len] < this._bufferBase[cur + len]) {
+          this._son[ptr1] = curMatch;
+          ptr1 = cyclicPos + 1;
+          curMatch = this._son[ptr1];
+          len1 = len;
+        } else {
+          this._son[ptr0] = curMatch;
+          ptr0 = cyclicPos;
+          curMatch = this._son[ptr0];
+          len0 = len;
+        }
+      }
+      this.movePos();
+      return offset;
+    }
+    skip(num) {
+      let count, cur, curMatch, cyclicPos, delta, hash2Value, hash3Value, hashValue, len, len0, len1, lenLimit, matchMinPos, pby1, ptr0, ptr1, temp;
+      do {
+        if (this._pos + this._matchMaxLen <= this._streamPos) {
+          lenLimit = this._matchMaxLen;
+        } else {
+          lenLimit = this._streamPos - this._pos;
+          if (lenLimit < this.kMinMatchCheck) {
+            this.movePos();
+            continue;
+          }
+        }
+        matchMinPos = this._pos > this._cyclicBufferSize ? this._pos - this._cyclicBufferSize : 0;
+        cur = this._bufferOffset + this._pos;
+        if (this.HASH_ARRAY) {
+          temp = CRC32_TABLE[this._bufferBase[cur]] ^ this._bufferBase[cur + 1];
+          hash2Value = temp & 1023;
+          this._hash[hash2Value] = this._pos;
+          temp ^= this._bufferBase[cur + 2] << 8;
+          hash3Value = temp & 65535;
+          this._hash[1024 + hash3Value] = this._pos;
+          hashValue = (temp ^ CRC32_TABLE[this._bufferBase[cur + 3]] << 5) & this._hashMask;
+        } else {
+          hashValue = this._bufferBase[cur] ^ this._bufferBase[cur + 1] << 8;
+        }
+        curMatch = this._hash[this.kFixHashSize + hashValue];
+        this._hash[this.kFixHashSize + hashValue] = this._pos;
+        ptr0 = (this._cyclicBufferPos << 1) + 1;
+        ptr1 = this._cyclicBufferPos << 1;
+        len0 = len1 = this.kNumHashDirectBytes;
+        count = this._cutValue;
+        while (1) {
+          if (curMatch <= matchMinPos || count == 0) {
+            count -= 1;
+            this._son[ptr0] = this._son[ptr1] = 0;
+            break;
+          }
+          delta = this._pos - curMatch;
+          cyclicPos = (delta <= this._cyclicBufferPos ? this._cyclicBufferPos - delta : this._cyclicBufferPos - delta + this._cyclicBufferSize) << 1;
+          pby1 = this._bufferOffset + curMatch;
+          len = len0 < len1 ? len0 : len1;
+          if (this._bufferBase[pby1 + len] == this._bufferBase[cur + len]) {
+            while ((len += 1) != lenLimit) {
+              if (this._bufferBase[pby1 + len] != this._bufferBase[cur + len]) {
+                break;
+              }
+            }
+            if (len == lenLimit) {
+              this._son[ptr1] = this._son[cyclicPos];
+              this._son[ptr0] = this._son[cyclicPos + 1];
+              break;
+            }
+          }
+          if (this._bufferBase[pby1 + len] < this._bufferBase[cur + len]) {
+            this._son[ptr1] = curMatch;
+            ptr1 = cyclicPos + 1;
+            curMatch = this._son[ptr1];
+            len1 = len;
+          } else {
+            this._son[ptr0] = curMatch;
+            ptr0 = cyclicPos;
+            curMatch = this._son[ptr0];
+            len0 = len;
+          }
+        }
+        this.movePos();
+      } while ((num -= 1) != 0);
+    }
+    movePos() {
+      if ((this._cyclicBufferPos += 1) >= this._cyclicBufferSize) {
+        this._cyclicBufferPos = 0;
+      }
+      this.movePosInWindow();
+      if (this._pos == DICTIONARY_SIZE_THRESHOLD) {
+        const subValue = this._pos - this._cyclicBufferSize;
+        this.normalizeLinks(this._son, this._cyclicBufferSize * 2, subValue);
+        this.normalizeLinks(this._hash, this._hashSizeSum, subValue);
+        this.reduceOffsets(subValue);
+      }
+    }
+    init() {
+      this._bufferOffset = 0;
+      this._pos = 0;
+      this._streamPos = 0;
+      this._streamEndWasReached = 0;
+      this.readBlock();
+      this._cyclicBufferPos = 0;
+      this.reduceOffsets(-1);
+    }
+    /**
+     * This is only called after reading one whole gigabyte.
+     */
+    normalizeLinks(items, numItems, subValue) {
+      for (let i2 = 0; i2 < numItems; ++i2) {
+        let value = items[i2];
+        if (value <= subValue) {
+          value = 0;
+        } else {
+          value -= subValue;
+        }
+        items[i2] = value;
+      }
+    }
+    setType(numHashBytes) {
+      this.HASH_ARRAY = numHashBytes > 2;
+      if (this.HASH_ARRAY) {
+        this.kNumHashDirectBytes = 0;
+        this.kMinMatchCheck = 4;
+        this.kFixHashSize = 66560;
+      } else {
+        this.kNumHashDirectBytes = 2;
+        this.kMinMatchCheck = 3;
+        this.kFixHashSize = 0;
+      }
+    }
+  };
+
   // node_modules/lzma1/lib/encoder.js
   var bitTreePriceCache = /* @__PURE__ */ new Map();
   function getDirectBitsPrice(numBits) {
     return numBits << 6;
   }
   function getBitTreePrice(bitTree, symbol) {
-    const cacheKey = `${bitTree.numBitLevels}-${symbol}`;
+    const cacheKey = bitTree.numBitLevels << 16 | symbol;
     if (bitTreePriceCache.has(cacheKey)) {
       return bitTreePriceCache.get(cacheKey);
     }
@@ -8258,7 +8472,7 @@
       // Core state
       __publicField(this, "state", 0);
       __publicField(this, "previousByte", 0);
-      __publicField(this, "position", [0, 0]);
+      __publicField(this, "position", 0n);
       // Repetition distances (LZ77 back-references)
       __publicField(this, "repDistances", [0, 0, 0, 0]);
       // Match finding state
@@ -8414,21 +8628,18 @@
       __publicField(this, "_needReleaseMFStream", 0);
       __publicField(this, "_inStream", null);
       __publicField(this, "_finished", 0);
-      __publicField(this, "nowPos64", [0, 0]);
+      __publicField(this, "nowPos64", 0n);
       // Distance and repetition arrays
       __publicField(this, "_repDistances", initArray(4));
       __publicField(this, "_optimum", []);
       // Range encoder
       __publicField(this, "_rangeEncoder", {
-        stream: {
-          buf: [],
-          count: 0
-        },
+        stream: null,
         rrange: 0,
         cache: 0,
-        low: [0, 0],
+        low: 0n,
         cacheSize: 0,
-        position: [0, 0],
+        position: 0n,
         encodeBit: () => {
         },
         encodeBitTree: () => {
@@ -8463,10 +8674,10 @@
       __publicField(this, "reps", initArray(4));
       __publicField(this, "repLens", initArray(4));
       // Processing counters
-      __publicField(this, "processedInSize", [[0, 0]]);
-      __publicField(this, "processedOutSize", [[0, 0]]);
+      __publicField(this, "processedInSize", [0n]);
+      __publicField(this, "processedOutSize", [0n]);
       __publicField(this, "finished", [0]);
-      __publicField(this, "properties", initArray(5));
+      __publicField(this, "properties", new Uint8Array(5));
       __publicField(this, "tempPrices", initArray(128));
       // 128
       // Match finding properties
@@ -8539,11 +8750,11 @@
      * Initialize encoder range coder
      */
     initEncoderState() {
-      this._rangeEncoder.low = [0, 0];
+      this._rangeEncoder.low = 0n;
       this._rangeEncoder.rrange = 4294967295;
       this._rangeEncoder.cacheSize = 1;
       this._rangeEncoder.cache = 0;
-      this._rangeEncoder.position = [0, 0];
+      this._rangeEncoder.position = 0n;
     }
     /**
      * Initialize literal encoder
@@ -8634,11 +8845,11 @@
       newBound = (rangeEncoder.rrange >>> 11) * prob;
       if (!symbol) {
         rangeEncoder.rrange = newBound;
-        probs[index] = prob + (2048 - prob >>> 5) << 16 >> 16;
+        probs[index] = prob + (2048 - prob >>> 5);
       } else {
-        rangeEncoder.low = add64(rangeEncoder.low, this.and64(fromInt64(newBound), [4294967295, 0]));
+        rangeEncoder.low += BigInt(newBound >>> 0);
         rangeEncoder.rrange -= newBound;
-        probs[index] = prob - (prob >>> 5) << 16 >> 16;
+        probs[index] = prob - (prob >>> 5);
       }
       if (!(rangeEncoder.rrange & -16777216)) {
         rangeEncoder.rrange <<= 8;
@@ -8699,7 +8910,7 @@
       for (let i2 = numTotalBits - 1; i2 >= 0; i2 -= 1) {
         rangeEncoder.rrange >>>= 1;
         if ((valueToEncode >>> i2 & 1) == 1) {
-          rangeEncoder.low = add64(rangeEncoder.low, fromInt64(rangeEncoder.rrange));
+          rangeEncoder.low += BigInt(rangeEncoder.rrange >>> 0);
         }
         if (!(rangeEncoder.rrange & -16777216)) {
           rangeEncoder.rrange <<= 8;
@@ -8754,71 +8965,24 @@
     encodeLengthWithPriceUpdate(encoder, symbol, posState) {
       encoder.encodeWithUpdate(symbol, posState, this);
     }
-    and64(a2, b2) {
-      const highBits = ~~Math.max(Math.min(a2[1] / 4294967296, 2147483647), -2147483648) & ~~Math.max(Math.min(b2[1] / 4294967296, 2147483647), -2147483648);
-      const lowBits = lowBits64(a2) & lowBits64(b2);
-      let high = highBits * 4294967296;
-      let low = lowBits;
-      if (lowBits < 0) {
-        low += 4294967296;
-      }
-      return [low, high];
-    }
-    shru64(a2, n) {
-      n &= 63;
-      let shiftFact = this.pwrAsDouble(n);
-      let sr = create64(Math.floor(a2[0] / shiftFact), a2[1] / shiftFact);
-      if (a2[1] < 0) {
-        sr = add64(sr, this.shl64([2, 0], 63 - n));
-      }
-      return sr;
-    }
-    shl64(a2, n) {
-      let diff, newHigh, newLow, twoToN;
-      n &= 63;
-      if (a2[0] == 0 && a2[1] == -9223372036854776e3) {
-        if (!n) {
-          return a2;
-        }
-        return [0, 0];
-      }
-      if (a2[1] < 0) {
-        throw new Error("Neg");
-      }
-      twoToN = this.pwrAsDouble(n);
-      newHigh = a2[1] * twoToN % 18446744073709552e3;
-      newLow = a2[0] * twoToN;
-      diff = newLow - newLow % 4294967296;
-      newHigh += diff;
-      newLow -= diff;
-      if (newHigh >= 9223372036854776e3) {
-        newHigh -= 18446744073709552e3;
-      }
-      return [newLow, newHigh];
-    }
-    pwrAsDouble(n) {
-      if (n <= 30) {
-        return 1 << n;
-      }
-      return this.pwrAsDouble(30) * this.pwrAsDouble(n - 30);
-    }
     /**
      * Shift low helper (proper implementation) - public method for external access
      */
     shiftLow() {
       const rangeEncoder = this._rangeEncoder;
-      const LowHi = lowBits64(this.shru64(rangeEncoder.low, 32));
-      if (LowHi != 0 || compare64(rangeEncoder.low, [4278190080, 0]) < 0) {
-        rangeEncoder.position = add64(rangeEncoder.position, fromInt64(rangeEncoder.cacheSize));
+      const lowHi = Number(rangeEncoder.low >> 32n & 0xffffffffn);
+      const lowLow = Number(rangeEncoder.low & 0xffffffffn);
+      if (lowHi != 0 || lowLow < 4278190080) {
+        rangeEncoder.position += BigInt(rangeEncoder.cacheSize);
         let temp = rangeEncoder.cache;
         do {
-          this.writeToStream(rangeEncoder.stream, temp + LowHi);
+          this.writeToStream(rangeEncoder.stream, temp + lowHi);
           temp = 255;
         } while ((rangeEncoder.cacheSize -= 1) != 0);
-        rangeEncoder.cache = lowBits64(rangeEncoder.low) >>> 24;
+        rangeEncoder.cache = lowLow >>> 24 & 255;
       }
       rangeEncoder.cacheSize += 1;
-      rangeEncoder.low = this.shl64(this.and64(rangeEncoder.low, [16777215, 0]), 8);
+      rangeEncoder.low = BigInt(lowLow & 16777215) << 8n;
     }
     /**
      * Write byte to stream
@@ -8826,19 +8990,11 @@
     writeToStream(stream, b2) {
       if (!stream)
         return;
-      if (stream.count >= stream.buf.length) {
-        const newSize = Math.max(stream.buf.length * 2, stream.count + 1);
-        const newBuf = new Array(newSize);
-        for (let i2 = 0; i2 < stream.count; i2++) {
-          newBuf[i2] = stream.buf[i2];
-        }
-        stream.buf = newBuf;
-      }
-      stream.buf[stream.count++] = b2 << 24 >> 24;
+      stream.writeByte(b2 << 24 >> 24);
     }
     initRangeEncoder() {
-      this._rangeEncoder.position = [0, 0];
-      this._rangeEncoder.low = [0, 0];
+      this._rangeEncoder.position = 0n;
+      this._rangeEncoder.low = 0n;
       this._rangeEncoder.rrange = -1;
       this._rangeEncoder.cacheSize = 1;
       this._rangeEncoder.cache = 0;
@@ -8867,7 +9023,7 @@
         bitTreeEncoder = this._posSlotEncoder[lenToPosState];
         st = lenToPosState << 6;
         for (posSlot = 0; posSlot < this._distTableSize; posSlot += 1) {
-          this._posSlotPrices[st + posSlot] = this.rangeCoder_Encoder_GetPrice_1(bitTreeEncoder, posSlot);
+          this._posSlotPrices[st + posSlot] = this.getEncoderBitTreePrice(bitTreeEncoder, posSlot);
         }
         for (posSlot = 14; posSlot < this._distTableSize; posSlot += 1) {
           this._posSlotPrices[st + posSlot] += (posSlot >> 1) - 1 - 4 << 6;
@@ -8910,12 +9066,12 @@
     /**
      * Get reverse price for array of models
      */
-    reverseGetPriceArray(Models, startIndex, NumBitLevels, symbol) {
+    reverseGetPriceArray(models, startIndex, numBitLevels, symbol) {
       let bit, m = 1, price = 0;
-      for (let i2 = NumBitLevels; i2 != 0; i2 -= 1) {
+      for (let i2 = numBitLevels; i2 != 0; i2 -= 1) {
         bit = symbol & 1;
         symbol >>>= 1;
-        price += PROB_PRICES[((Models[startIndex + m] - bit ^ -bit) & 2047) >>> 2];
+        price += PROB_PRICES[((models[startIndex + m] - bit ^ -bit) & 2047) >>> 2];
         m = m << 1 | bit;
       }
       return price;
@@ -8923,13 +9079,13 @@
     /**
      * Get price for probability model (optimized)
      */
-    getPrice(Prob, symbol) {
-      return getBitPrice(Prob, symbol);
+    getPrice(prob, symbol) {
+      return getBitPrice(prob, symbol);
     }
     /**
-     * Get price for bit tree encoder (optimized)
+     * Get price for bit tree encoder
      */
-    rangeCoder_Encoder_GetPrice_1(encoder, symbol) {
+    getEncoderBitTreePrice(encoder, symbol) {
       return getBitTreePrice(encoder, symbol);
     }
     /**
@@ -8949,50 +9105,6 @@
       }
     }
     /**
-     * Create match finder and encoder structures (replaces #Create_2)
-     */
-    createMatchFinderAndStructures() {
-      if (!this._matchFinder) {
-        const binTree = {};
-        let numHashBytes = 4;
-        if (!this._matchFinderType) {
-          numHashBytes = 2;
-        }
-        binTree.HASH_ARRAY = numHashBytes > 2;
-        if (binTree.HASH_ARRAY) {
-          binTree.kNumHashDirectBytes = 0;
-          binTree.kMinMatchCheck = 4;
-          binTree.kFixHashSize = 66560;
-        } else {
-          binTree.kNumHashDirectBytes = 2;
-          binTree.kMinMatchCheck = 3;
-          binTree.kFixHashSize = 0;
-        }
-        binTree._cyclicBufferSize = 0;
-        binTree._cyclicBufferPos = 0;
-        binTree._streamPos = 0;
-        binTree._cutValue = 255;
-        binTree._matchMaxLen = 0;
-        binTree._streamEndWasReached = 0;
-        binTree._pos = 0;
-        binTree._posLimit = 0;
-        binTree._son = [];
-        binTree._hash = [];
-        binTree._bufferBase = [];
-        binTree._blockSize = 0;
-        binTree._keepSizeAfter = 0;
-        binTree._keepSizeBefore = 0;
-        binTree._pointerToLastSafePosition = 0;
-        this._matchFinder = binTree;
-      }
-      this.createLiteralEncoder();
-      if (this._dictionarySize == this._dictionarySizePrev && this._numFastBytesPrev == this._numFastBytes) {
-        return;
-      }
-      this._dictionarySizePrev = this._dictionarySize;
-      this._numFastBytesPrev = this._numFastBytes;
-    }
-    /**
      * Get literal encoder subcoder (utility method)
      */
     getSubCoderUtility(pos, prevByte) {
@@ -9003,170 +9115,783 @@
       const coderIndex = posShifted + prevByteBits;
       return this._literalEncoder.coders[coderIndex];
     }
-  };
-
-  // node_modules/lzma1/lib/lz-in-window.js
-  var LzInWindow = class {
-    constructor(matchFinder) {
-      __publicField(this, "matchFinder");
-      this.matchFinder = matchFinder;
+    // ── Encoding orchestration methods (moved from LZMA) ──
+    makeAsChar(optimum) {
+      optimum.backPrev = -1;
+      optimum.prev1IsChar = 0;
     }
-    /**
-     * Get a byte at the specified index relative to current position
-     */
-    getIndexByte(index) {
-      const byte = this.matchFinder._bufferBase[this.matchFinder._bufferOffset + this.matchFinder._pos + index];
-      return byte;
+    makeAsShortRep(optimum) {
+      optimum.backPrev = 0;
+      optimum.prev1IsChar = 0;
     }
-    /**
-     * Calculate match length between current position and a previous position
-     */
-    getMatchLen(index, distance, limit) {
-      if (this.matchFinder._streamEndWasReached) {
-        if (this.matchFinder._pos + index + limit > this.matchFinder._streamPos) {
-          limit = this.matchFinder._streamPos - (this.matchFinder._pos + index);
+    releaseMFStream() {
+      if (this._matchFinder && this._needReleaseMFStream) {
+        this._matchFinder._stream = null;
+        this._needReleaseMFStream = 0;
+      }
+    }
+    releaseStreams() {
+      this.releaseMFStream();
+      this._rangeEncoder.stream = null;
+    }
+    getProcessedSizeAdd() {
+      return BigInt(this._rangeEncoder.cacheSize) + this._rangeEncoder.position + 4n;
+    }
+    getSubCoder(pos, prevByte) {
+      const subCoder = this._literalEncoder.getSubCoder(pos, prevByte);
+      return { decoders: subCoder.decoders };
+    }
+    getLiteralPrice(encoder, matchMode, matchByte, symbol) {
+      let bit, context = 1, i2 = 7, matchBit, price = 0;
+      if (matchMode) {
+        for (; i2 >= 0; --i2) {
+          matchBit = matchByte >> i2 & 1;
+          bit = symbol >> i2 & 1;
+          price += getBitPrice(encoder.decoders[(1 + matchBit << 8) + context], bit);
+          context = context << 1 | bit;
+          if (matchBit != bit) {
+            --i2;
+            break;
+          }
         }
       }
-      ++distance;
-      let i2;
-      const pby = this.matchFinder._bufferOffset + this.matchFinder._pos + index;
-      for (i2 = 0; i2 < limit && this.matchFinder._bufferBase[pby + i2] == this.matchFinder._bufferBase[pby + i2 - distance]; ++i2)
-        ;
-      return i2;
-    }
-    /**
-     * Get number of available bytes in the input window
-     */
-    getNumAvailableBytes() {
-      return this.matchFinder._streamPos - this.matchFinder._pos;
-    }
-    /**
-     * Move buffer block when reaching buffer boundaries
-     */
-    moveBlock() {
-      let offset = this.matchFinder._bufferOffset + this.matchFinder._pos - this.matchFinder._keepSizeBefore;
-      if (offset > 0) {
-        --offset;
+      for (; i2 >= 0; --i2) {
+        bit = symbol >> i2 & 1;
+        price += getBitPrice(encoder.decoders[context], bit);
+        context = context << 1 | bit;
       }
-      const numBytes = this.matchFinder._bufferOffset + this.matchFinder._streamPos - offset;
-      for (let i2 = 0; i2 < numBytes; ++i2) {
-        this.matchFinder._bufferBase[i2] = this.matchFinder._bufferBase[offset + i2];
-      }
-      this.matchFinder._bufferOffset -= offset;
+      return price;
     }
-    /**
-     * Move position by one and handle buffer management
-     */
-    movePos() {
-      this.matchFinder._pos += 1;
-      if (this.matchFinder._pos > this.matchFinder._posLimit) {
-        const pointerToPosition = this.matchFinder._bufferOffset + this.matchFinder._pos;
-        if (pointerToPosition > this.matchFinder._pointerToLastSafePosition) {
-          this.moveBlock();
+    getPosLenPrice(pos, len, posState) {
+      let price, lenToPosState = getLenToPosState(len);
+      if (pos < 128) {
+        price = this._distancesPrices[lenToPosState * 128 + pos];
+      } else {
+        const position = (lenToPosState << 6) + this.getPosSlot2(pos);
+        price = this._posSlotPrices[position] + this._alignPrices[pos & 15];
+      }
+      return price + this._lenEncoder.getPrice(len - 2, posState);
+    }
+    getPureRepPrice(repIndex, state, posState) {
+      let price;
+      if (!repIndex) {
+        price = PROB_PRICES[this._isRepG0[state] >>> 2];
+        price += PROB_PRICES[2048 - this._isRep0Long[(state << 4) + posState] >>> 2];
+      } else {
+        price = PROB_PRICES[2048 - this._isRepG0[state] >>> 2];
+        if (repIndex == 1) {
+          price += PROB_PRICES[this._isRepG1[state] >>> 2];
+        } else {
+          price += PROB_PRICES[2048 - this._isRepG1[state] >>> 2];
+          price += getBitPrice(this._isRepG2[state], repIndex - 2);
         }
-        this.readBlock();
+      }
+      return price;
+    }
+    getRepLen1Price(posState) {
+      const repG0Price = PROB_PRICES[this._isRepG0[this._state] >>> 2];
+      const rep0LongPrice = PROB_PRICES[this._isRep0Long[(this._state << 4) + posState] >>> 2];
+      return repG0Price + rep0LongPrice;
+    }
+    getPosSlot2(pos) {
+      if (pos < 131072) {
+        return G_FAST_POS[pos >> 6] + 12;
+      }
+      if (pos < 134217728) {
+        return G_FAST_POS[pos >> 16] + 32;
+      }
+      return G_FAST_POS[pos >> 26] + 52;
+    }
+    movePosHelper(num) {
+      if (num > 0) {
+        this._matchFinder.skip(num);
+        this._additionalOffset += num;
       }
     }
-    /**
-     * Read a block of data from the input stream
-     */
-    readBlock() {
-      if (this.matchFinder._streamEndWasReached) {
+    readMatchDistances() {
+      let lenRes = 0;
+      this._numDistancePairs = this._matchFinder.getMatches(this._matchDistances);
+      if (this._numDistancePairs > 0) {
+        lenRes = this._matchDistances[this._numDistancePairs - 2];
+        if (lenRes == this._numFastBytes) {
+          lenRes += this._matchFinder.getMatchLen(lenRes - 1, this._matchDistances[this._numDistancePairs - 1], 273 - lenRes);
+        }
+      }
+      this._additionalOffset += 1;
+      return lenRes;
+    }
+    flushEncoding(nowPos) {
+      this.releaseMFStream();
+      this.writeEndMarker(nowPos & this._posStateMask);
+      for (let i2 = 0; i2 < 5; ++i2) {
+        this.shiftLow();
+      }
+    }
+    backward(cur) {
+      let backCur, backMem, posMem, posPrev;
+      this._optimumEndIndex = cur;
+      posMem = this._optimum[cur].posPrev;
+      backMem = this._optimum[cur].backPrev;
+      do {
+        if (this._optimum[cur].prev1IsChar) {
+          this.makeAsChar(this._optimum[posMem]);
+          this._optimum[posMem].posPrev = posMem - 1;
+          if (this._optimum[cur].prev2) {
+            this._optimum[posMem - 1].prev1IsChar = 0;
+            this._optimum[posMem - 1].posPrev = this._optimum[cur].posPrev2;
+            this._optimum[posMem - 1].backPrev = this._optimum[cur].backPrev2;
+          }
+        }
+        posPrev = posMem;
+        backCur = backMem;
+        backMem = this._optimum[posPrev].backPrev;
+        posMem = this._optimum[posPrev].posPrev;
+        this._optimum[posPrev].backPrev = backCur;
+        this._optimum[posPrev].posPrev = cur;
+        cur = posPrev;
+      } while (cur > 0);
+      this.backRes = this._optimum[0].backPrev;
+      this._optimumCurrentIndex = this._optimum[0].posPrev;
+      return this._optimumCurrentIndex;
+    }
+    getOptimumLength(position) {
+      let cur, curAnd1Price, curAndLenCharPrice, curAndLenPrice, curBack, curPrice, currentByte, distance, len, lenEnd, lenMain, lenTest, lenTest2, lenTestTemp, matchByte, matchPrice, newLen, nextIsChar, nextMatchPrice, nextOptimum, nextRepMatchPrice, normalMatchPrice, numAvailableBytes, numAvailableBytesFull, numDistancePairs, offs, offset, opt, optimum, pos, posPrev, posState, posStateNext, price_4, repIndex, repLen, repMatchPrice, repMaxIndex, shortRepPrice, startLen, state, state2, t, price, price_0, price_1, price_2, price_3, lenRes;
+      if (this._optimumEndIndex != this._optimumCurrentIndex) {
+        lenRes = this._optimum[this._optimumCurrentIndex].posPrev - this._optimumCurrentIndex;
+        this.backRes = this._optimum[this._optimumCurrentIndex].backPrev;
+        this._optimumCurrentIndex = this._optimum[this._optimumCurrentIndex].posPrev;
+        return lenRes;
+      }
+      this._optimumCurrentIndex = this._optimumEndIndex = 0;
+      if (this._longestMatchWasFound) {
+        lenMain = this._longestMatchLength;
+        this._longestMatchWasFound = 0;
+      } else {
+        lenMain = this.readMatchDistances();
+      }
+      numDistancePairs = this._numDistancePairs;
+      numAvailableBytes = this._matchFinder.getNumAvailableBytes() + 1;
+      if (numAvailableBytes < 2) {
+        this.backRes = -1;
+        return 1;
+      }
+      if (numAvailableBytes > 273) {
+        numAvailableBytes = 273;
+      }
+      repMaxIndex = 0;
+      for (let i2 = 0; i2 < 4; ++i2) {
+        this.reps[i2] = this._repDistances[i2];
+        this.repLens[i2] = this._matchFinder.getMatchLen(-1, this.reps[i2], 273);
+        if (this.repLens[i2] > this.repLens[repMaxIndex]) {
+          repMaxIndex = i2;
+        }
+      }
+      if (this.repLens[repMaxIndex] >= this._numFastBytes) {
+        this.backRes = repMaxIndex;
+        lenRes = this.repLens[repMaxIndex];
+        this.movePosHelper(lenRes - 1);
+        return lenRes;
+      }
+      if (lenMain >= this._numFastBytes) {
+        this.backRes = this._matchDistances[numDistancePairs - 1] + 4;
+        this.movePosHelper(lenMain - 1);
+        return lenMain;
+      }
+      currentByte = this._matchFinder.getIndexByte(-1);
+      matchByte = this._matchFinder.getIndexByte(-this._repDistances[0] - 1 - 1);
+      if (lenMain < 2 && currentByte != matchByte && this.repLens[repMaxIndex] < 2) {
+        this.backRes = -1;
+        return 1;
+      }
+      this._optimum[0].state = this._state;
+      posState = position & this._posStateMask;
+      this._optimum[1].price = PROB_PRICES[this._isMatch[(this._state << 4) + posState] >>> 2] + this.getLiteralPrice(this.getSubCoder(position, this._previousByte), this._state >= 7, matchByte, currentByte);
+      this.makeAsChar(this._optimum[1]);
+      matchPrice = PROB_PRICES[2048 - this._isMatch[(this._state << 4) + posState] >>> 2];
+      repMatchPrice = matchPrice + PROB_PRICES[2048 - this._isRep[this._state] >>> 2];
+      if (matchByte == currentByte) {
+        shortRepPrice = repMatchPrice + this.getRepLen1Price(posState);
+        if (shortRepPrice < this._optimum[1].price) {
+          this._optimum[1].price = shortRepPrice;
+          this.makeAsShortRep(this._optimum[1]);
+        }
+      }
+      lenEnd = lenMain >= this.repLens[repMaxIndex] ? lenMain : this.repLens[repMaxIndex];
+      if (lenEnd < 2) {
+        this.backRes = this._optimum[1].backPrev;
+        return 1;
+      }
+      this._optimum[1].posPrev = 0;
+      this._optimum[0].backs0 = this.reps[0];
+      this._optimum[0].backs1 = this.reps[1];
+      this._optimum[0].backs2 = this.reps[2];
+      this._optimum[0].backs3 = this.reps[3];
+      len = lenEnd;
+      do {
+        this._optimum[len].price = INFINITY_PRICE;
+        len -= 1;
+      } while (len >= 2);
+      for (let i2 = 0; i2 < 4; ++i2) {
+        repLen = this.repLens[i2];
+        if (repLen < 2) {
+          continue;
+        }
+        price_4 = repMatchPrice + this.getPureRepPrice(i2, this._state, posState);
+        do {
+          curAndLenPrice = price_4 + this._repMatchLenEncoder.getPrice(repLen - 2, posState);
+          optimum = this._optimum[repLen];
+          if (curAndLenPrice < optimum.price) {
+            optimum.price = curAndLenPrice;
+            optimum.posPrev = 0;
+            optimum.backPrev = i2;
+            optimum.prev1IsChar = 0;
+          }
+        } while ((repLen -= 1) >= 2);
+      }
+      normalMatchPrice = matchPrice + PROB_PRICES[this._isRep[this._state] >>> 2];
+      len = this.repLens[0] >= 2 ? this.repLens[0] + 1 : 2;
+      if (len <= lenMain) {
+        offs = 0;
+        while (len > this._matchDistances[offs]) {
+          offs += 2;
+        }
+        for (; ; len += 1) {
+          distance = this._matchDistances[offs + 1];
+          curAndLenPrice = normalMatchPrice + this.getPosLenPrice(distance, len, posState);
+          optimum = this._optimum[len];
+          if (curAndLenPrice < optimum.price) {
+            optimum.price = curAndLenPrice;
+            optimum.posPrev = 0;
+            optimum.backPrev = distance + 4;
+            optimum.prev1IsChar = 0;
+          }
+          if (len == this._matchDistances[offs]) {
+            offs += 2;
+            if (offs == numDistancePairs) {
+              break;
+            }
+          }
+        }
+      }
+      cur = 0;
+      while (1) {
+        ++cur;
+        if (cur == lenEnd) {
+          return this.backward(cur);
+        }
+        newLen = this.readMatchDistances();
+        numDistancePairs = this._numDistancePairs;
+        if (newLen >= this._numFastBytes) {
+          this._longestMatchLength = newLen;
+          this._longestMatchWasFound = 1;
+          return this.backward(cur);
+        }
+        position += 1;
+        posPrev = this._optimum[cur].posPrev;
+        if (this._optimum[cur].prev1IsChar) {
+          posPrev -= 1;
+          if (this._optimum[cur].prev2) {
+            state = this._optimum[this._optimum[cur].posPrev2].state;
+            if (this._optimum[cur].backPrev2 < 4) {
+              state = state < 7 ? 8 : 11;
+            } else {
+              state = state < 7 ? 7 : 10;
+            }
+          } else {
+            state = this._optimum[posPrev].state;
+          }
+          state = stateUpdateChar(state);
+        } else {
+          state = this._optimum[posPrev].state;
+        }
+        if (posPrev == cur - 1) {
+          if (!this._optimum[cur].backPrev) {
+            state = state < 7 ? 9 : 11;
+          } else {
+            state = stateUpdateChar(state);
+          }
+        } else {
+          if (this._optimum[cur].prev1IsChar && this._optimum[cur].prev2) {
+            posPrev = this._optimum[cur].posPrev2;
+            pos = this._optimum[cur].backPrev2;
+            state = state < 7 ? 8 : 11;
+          } else {
+            pos = this._optimum[cur].backPrev;
+            if (pos < 4) {
+              state = state < 7 ? 8 : 11;
+            } else {
+              state = state < 7 ? 7 : 10;
+            }
+          }
+          opt = this._optimum[posPrev];
+          if (pos < 4) {
+            if (!pos) {
+              this.reps[0] = opt.backs0;
+              this.reps[1] = opt.backs1;
+              this.reps[2] = opt.backs2;
+              this.reps[3] = opt.backs3;
+            } else if (pos == 1) {
+              this.reps[0] = opt.backs1;
+              this.reps[1] = opt.backs0;
+              this.reps[2] = opt.backs2;
+              this.reps[3] = opt.backs3;
+            } else if (pos == 2) {
+              this.reps[0] = opt.backs2;
+              this.reps[1] = opt.backs0;
+              this.reps[2] = opt.backs1;
+              this.reps[3] = opt.backs3;
+            } else {
+              this.reps[0] = opt.backs3;
+              this.reps[1] = opt.backs0;
+              this.reps[2] = opt.backs1;
+              this.reps[3] = opt.backs2;
+            }
+          } else {
+            this.reps[0] = pos - 4;
+            this.reps[1] = opt.backs0;
+            this.reps[2] = opt.backs1;
+            this.reps[3] = opt.backs2;
+          }
+        }
+        this._optimum[cur].state = state;
+        this._optimum[cur].backs0 = this.reps[0];
+        this._optimum[cur].backs1 = this.reps[1];
+        this._optimum[cur].backs2 = this.reps[2];
+        this._optimum[cur].backs3 = this.reps[3];
+        curPrice = this._optimum[cur].price;
+        currentByte = this._matchFinder.getIndexByte(-1);
+        matchByte = this._matchFinder.getIndexByte(-this.reps[0] - 1 - 1);
+        posState = position & this._posStateMask;
+        curAnd1Price = curPrice + PROB_PRICES[this._isMatch[(state << 4) + posState] >>> 2] + this.getLiteralPrice(this.getSubCoder(position, this._matchFinder.getIndexByte(-2)), state >= 7, matchByte, currentByte);
+        nextOptimum = this._optimum[cur + 1];
+        nextIsChar = 0;
+        if (curAnd1Price < nextOptimum.price) {
+          nextOptimum.price = curAnd1Price;
+          nextOptimum.posPrev = cur;
+          nextOptimum.backPrev = -1;
+          nextOptimum.prev1IsChar = 0;
+          nextIsChar = 1;
+        }
+        matchPrice = curPrice + PROB_PRICES[2048 - this._isMatch[(state << 4) + posState] >>> 2];
+        repMatchPrice = matchPrice + PROB_PRICES[2048 - this._isRep[state] >>> 2];
+        if (matchByte == currentByte && !(nextOptimum.posPrev < cur && !nextOptimum.backPrev)) {
+          shortRepPrice = repMatchPrice + (PROB_PRICES[this._isRepG0[state] >>> 2] + PROB_PRICES[this._isRep0Long[(state << 4) + posState] >>> 2]);
+          if (shortRepPrice <= nextOptimum.price) {
+            nextOptimum.price = shortRepPrice;
+            nextOptimum.posPrev = cur;
+            nextOptimum.backPrev = 0;
+            nextOptimum.prev1IsChar = 0;
+            nextIsChar = 1;
+          }
+        }
+        numAvailableBytesFull = this._matchFinder.getNumAvailableBytes() + 1;
+        numAvailableBytesFull = 4095 - cur < numAvailableBytesFull ? 4095 - cur : numAvailableBytesFull;
+        numAvailableBytes = numAvailableBytesFull;
+        if (numAvailableBytes < 2) {
+          continue;
+        }
+        if (numAvailableBytes > this._numFastBytes) {
+          numAvailableBytes = this._numFastBytes;
+        }
+        if (!nextIsChar && matchByte != currentByte) {
+          t = Math.min(numAvailableBytesFull - 1, this._numFastBytes);
+          lenTest2 = this._matchFinder.getMatchLen(0, this.reps[0], t);
+          if (lenTest2 >= 2) {
+            state2 = stateUpdateChar(state);
+            posStateNext = position + 1 & this._posStateMask;
+            nextRepMatchPrice = curAnd1Price + PROB_PRICES[2048 - this._isMatch[(state2 << 4) + posStateNext] >>> 2] + PROB_PRICES[2048 - this._isRep[state2] >>> 2];
+            offset = cur + 1 + lenTest2;
+            while (lenEnd < offset) {
+              this._optimum[lenEnd += 1].price = INFINITY_PRICE;
+            }
+            curAndLenPrice = nextRepMatchPrice + (price = this._repMatchLenEncoder.getPrice(lenTest2 - 2, posStateNext), price + this.getPureRepPrice(0, state2, posStateNext));
+            optimum = this._optimum[offset];
+            if (curAndLenPrice < optimum.price) {
+              optimum.price = curAndLenPrice;
+              optimum.posPrev = cur + 1;
+              optimum.backPrev = 0;
+              optimum.prev1IsChar = 1;
+              optimum.prev2 = 0;
+            }
+          }
+        }
+        startLen = 2;
+        for (repIndex = 0; repIndex < 4; ++repIndex) {
+          lenTest = this._matchFinder.getMatchLen(-1, this.reps[repIndex], numAvailableBytes);
+          if (lenTest < 2) {
+            continue;
+          }
+          lenTestTemp = lenTest;
+          do {
+            while (lenEnd < cur + lenTest) {
+              this._optimum[lenEnd += 1].price = INFINITY_PRICE;
+            }
+            curAndLenPrice = repMatchPrice + (price_0 = this._repMatchLenEncoder.getPrice(lenTest - 2, posState), price_0 + this.getPureRepPrice(repIndex, state, posState));
+            optimum = this._optimum[cur + lenTest];
+            if (curAndLenPrice < optimum.price) {
+              optimum.price = curAndLenPrice;
+              optimum.posPrev = cur;
+              optimum.backPrev = repIndex;
+              optimum.prev1IsChar = 0;
+            }
+          } while ((lenTest -= 1) >= 2);
+          lenTest = lenTestTemp;
+          if (!repIndex) {
+            startLen = lenTest + 1;
+          }
+          if (lenTest < numAvailableBytesFull) {
+            t = Math.min(numAvailableBytesFull - 1 - lenTest, this._numFastBytes);
+            lenTest2 = this._matchFinder.getMatchLen(lenTest, this.reps[repIndex], t);
+            if (lenTest2 >= 2) {
+              state2 = state < 7 ? 8 : 11;
+              posStateNext = position + lenTest & this._posStateMask;
+              curAndLenCharPrice = repMatchPrice + (price_1 = this._repMatchLenEncoder.getPrice(lenTest - 2, posState), price_1 + this.getPureRepPrice(repIndex, state, posState)) + PROB_PRICES[this._isMatch[(state2 << 4) + posStateNext] >>> 2] + this.getLiteralPrice(this.getSubCoder(position + lenTest, this._matchFinder.getIndexByte(lenTest - 1 - 1)), true, this._matchFinder.getIndexByte(lenTest - 1 - (this.reps[repIndex] + 1)), this._matchFinder.getIndexByte(lenTest - 1));
+              state2 = stateUpdateChar(state2);
+              posStateNext = position + lenTest + 1 & this._posStateMask;
+              nextMatchPrice = curAndLenCharPrice + PROB_PRICES[2048 - this._isMatch[(state2 << 4) + posStateNext] >>> 2];
+              nextRepMatchPrice = nextMatchPrice + PROB_PRICES[2048 - this._isRep[state2] >>> 2];
+              offset = lenTest + 1 + lenTest2;
+              while (lenEnd < cur + offset) {
+                this._optimum[lenEnd += 1].price = INFINITY_PRICE;
+              }
+              curAndLenPrice = nextRepMatchPrice + (price_2 = this._repMatchLenEncoder.getPrice(lenTest2 - 2, posStateNext), price_2 + this.getPureRepPrice(0, state2, posStateNext));
+              optimum = this._optimum[cur + offset];
+              if (curAndLenPrice < optimum.price) {
+                optimum.price = curAndLenPrice;
+                optimum.posPrev = cur + lenTest + 1;
+                optimum.backPrev = 0;
+                optimum.prev1IsChar = 1;
+                optimum.prev2 = 1;
+                optimum.posPrev2 = cur;
+                optimum.backPrev2 = repIndex;
+              }
+            }
+          }
+        }
+        if (newLen > numAvailableBytes) {
+          newLen = numAvailableBytes;
+          for (numDistancePairs = 0; newLen > this._matchDistances[numDistancePairs]; numDistancePairs += 2) {
+          }
+          this._matchDistances[numDistancePairs] = newLen;
+          numDistancePairs += 2;
+        }
+        if (newLen >= startLen) {
+          normalMatchPrice = matchPrice + PROB_PRICES[this._isRep[state] >>> 2];
+          while (lenEnd < cur + newLen) {
+            this._optimum[lenEnd += 1].price = INFINITY_PRICE;
+          }
+          offs = 0;
+          while (startLen > this._matchDistances[offs]) {
+            offs += 2;
+          }
+          for (lenTest = startLen; ; lenTest += 1) {
+            curBack = this._matchDistances[offs + 1];
+            curAndLenPrice = normalMatchPrice + this.getPosLenPrice(curBack, lenTest, posState);
+            optimum = this._optimum[cur + lenTest];
+            if (curAndLenPrice < optimum.price) {
+              optimum.price = curAndLenPrice;
+              optimum.posPrev = cur;
+              optimum.backPrev = curBack + 4;
+              optimum.prev1IsChar = 0;
+            }
+            if (lenTest == this._matchDistances[offs]) {
+              if (lenTest < numAvailableBytesFull) {
+                t = Math.min(numAvailableBytesFull - 1 - lenTest, this._numFastBytes);
+                lenTest2 = this._matchFinder.getMatchLen(lenTest, curBack, t);
+                if (lenTest2 >= 2) {
+                  state2 = state < 7 ? 7 : 10;
+                  posStateNext = position + lenTest & this._posStateMask;
+                  curAndLenCharPrice = curAndLenPrice + PROB_PRICES[this._isMatch[(state2 << 4) + posStateNext] >>> 2] + this.getLiteralPrice(this.getSubCoder(position + lenTest, this._matchFinder.getIndexByte(lenTest - 1 - 1)), true, this._matchFinder.getIndexByte(lenTest - (curBack + 1) - 1), this._matchFinder.getIndexByte(lenTest - 1));
+                  state2 = stateUpdateChar(state2);
+                  posStateNext = position + lenTest + 1 & this._posStateMask;
+                  nextMatchPrice = curAndLenCharPrice + PROB_PRICES[2048 - this._isMatch[(state2 << 4) + posStateNext] >>> 2];
+                  nextRepMatchPrice = nextMatchPrice + PROB_PRICES[2048 - this._isRep[state2] >>> 2];
+                  offset = lenTest + 1 + lenTest2;
+                  while (lenEnd < cur + offset) {
+                    this._optimum[lenEnd += 1].price = INFINITY_PRICE;
+                  }
+                  curAndLenPrice = nextRepMatchPrice + (price_3 = this._repMatchLenEncoder.getPrice(lenTest2 - 2, posStateNext), price_3 + this.getPureRepPrice(0, state2, posStateNext));
+                  optimum = this._optimum[cur + offset];
+                  if (curAndLenPrice < optimum.price) {
+                    optimum.price = curAndLenPrice;
+                    optimum.posPrev = cur + lenTest + 1;
+                    optimum.backPrev = 0;
+                    optimum.prev1IsChar = 1;
+                    optimum.prev2 = 1;
+                    optimum.posPrev2 = cur;
+                    optimum.backPrev2 = curBack + 4;
+                  }
+                }
+              }
+              offs += 2;
+              if (offs == numDistancePairs) {
+                break;
+              }
+            }
+          }
+        }
+      }
+      return 1;
+    }
+    codeOneBlock() {
+      let baseVal, complexState, curByte, distance, footerBits, len, lenToPosState, matchByte, pos, posReduced, posSlot, posState, progressPosValuePrev, subCoder;
+      this.processedInSize[0] = 0n;
+      this.processedOutSize[0] = 0n;
+      this.finished[0] = 1;
+      progressPosValuePrev = this.nowPos64;
+      if (this._inStream) {
+        this._matchFinder._stream = this._inStream;
+        this._matchFinder.init();
+        this._needReleaseMFStream = 1;
+        this._inStream = null;
+      }
+      if (this._finished) {
         return;
       }
-      while (true) {
-        const size = -this.matchFinder._bufferOffset + this.matchFinder._blockSize - this.matchFinder._streamPos;
-        if (!size) {
+      this._finished = 1;
+      if (this.nowPos64 === 0n) {
+        if (!this._matchFinder.getNumAvailableBytes()) {
+          this.flushEncoding(Number(this.nowPos64 & 0xffffffffn));
           return;
         }
-        const bytesRead = this.readFromStream(this.matchFinder._bufferOffset + this.matchFinder._streamPos, size);
-        if (bytesRead == -1) {
-          this.matchFinder._posLimit = this.matchFinder._streamPos;
-          const pointerToPosition = this.matchFinder._bufferOffset + this.matchFinder._posLimit;
-          if (pointerToPosition > this.matchFinder._pointerToLastSafePosition) {
-            this.matchFinder._posLimit = this.matchFinder._pointerToLastSafePosition - this.matchFinder._bufferOffset;
+        this.readMatchDistances();
+        posState = Number(this.nowPos64 & 0xffffffffn) & this._posStateMask;
+        this.encodeBit(this._isMatch, (this._state << 4) + posState, 0);
+        this._state = stateUpdateChar(this._state);
+        curByte = this._matchFinder.getIndexByte(-this._additionalOffset);
+        this.encodeLiteral(this.getSubCoder(Number(this.nowPos64 & 0xffffffffn), this._previousByte), curByte);
+        this._previousByte = curByte;
+        this._additionalOffset -= 1;
+        this.nowPos64 += 1n;
+      }
+      if (!this._matchFinder.getNumAvailableBytes()) {
+        this.flushEncoding(Number(this.nowPos64 & 0xffffffffn));
+        return;
+      }
+      while (1) {
+        len = this.getOptimumLength(Number(this.nowPos64 & 0xffffffffn));
+        pos = this.backRes;
+        posState = Number(this.nowPos64 & 0xffffffffn) & this._posStateMask;
+        complexState = (this._state << 4) + posState;
+        if (len == 1 && pos == -1) {
+          this.encodeBit(this._isMatch, complexState, 0);
+          curByte = this._matchFinder.getIndexByte(-this._additionalOffset);
+          subCoder = this.getSubCoder(Number(this.nowPos64 & 0xffffffffn), this._previousByte);
+          if (this._state < 7) {
+            this.encodeLiteral(subCoder, curByte);
+          } else {
+            matchByte = this._matchFinder.getIndexByte(-this._repDistances[0] - 1 - this._additionalOffset);
+            this.encodeMatched(subCoder, matchByte, curByte);
           }
-          this.matchFinder._streamEndWasReached = 1;
-          return;
+          this._previousByte = curByte;
+          this._state = stateUpdateChar(this._state);
+        } else {
+          this.encodeBit(this._isMatch, complexState, 1);
+          if (pos < 4) {
+            this.encodeBit(this._isRep, this._state, 1);
+            if (!pos) {
+              this.encodeBit(this._isRepG0, this._state, 0);
+              if (len == 1) {
+                this.encodeBit(this._isRep0Long, complexState, 0);
+              } else {
+                this.encodeBit(this._isRep0Long, complexState, 1);
+              }
+            } else {
+              this.encodeBit(this._isRepG0, this._state, 1);
+              if (pos == 1) {
+                this.encodeBit(this._isRepG1, this._state, 0);
+              } else {
+                this.encodeBit(this._isRepG1, this._state, 1);
+                this.encodeBit(this._isRepG2, this._state, pos - 2);
+              }
+            }
+            if (len == 1) {
+              this._state = this._state < 7 ? 9 : 11;
+            } else {
+              this.encodeLength(this._repMatchLenEncoder, len - 2, posState);
+              this._state = this._state < 7 ? 8 : 11;
+            }
+            distance = this._repDistances[pos];
+            if (pos != 0) {
+              for (let i2 = pos; i2 >= 1; --i2) {
+                this._repDistances[i2] = this._repDistances[i2 - 1];
+              }
+              this._repDistances[0] = distance;
+            }
+          } else {
+            this.encodeBit(this._isRep, this._state, 0);
+            this._state = this._state < 7 ? 7 : 10;
+            this.encodeLength(this._lenEncoder, len - 2, posState);
+            pos -= 4;
+            posSlot = this.getPosSlot(pos);
+            lenToPosState = getLenToPosState(len);
+            this.encodeBitTree(this._posSlotEncoder[lenToPosState], posSlot);
+            if (posSlot >= 4) {
+              footerBits = (posSlot >> 1) - 1;
+              baseVal = (2 | posSlot & 1) << footerBits;
+              posReduced = pos - baseVal;
+              if (posSlot < 14) {
+                this.reverseEncodeRange(baseVal - posSlot - 1, footerBits, posReduced);
+              } else {
+                this.encodeDirectBits(posReduced >> 4, footerBits - 4);
+                this.reverseEncode(posReduced & 15);
+                this._alignPriceCount += 1;
+              }
+            }
+            distance = pos;
+            for (let i2 = 3; i2 >= 1; --i2) {
+              this._repDistances[i2] = this._repDistances[i2 - 1];
+            }
+            this._repDistances[0] = distance;
+            this._matchPriceCount += 1;
+          }
+          this._previousByte = this._matchFinder.getIndexByte(len - 1 - this._additionalOffset);
         }
-        this.matchFinder._streamPos += bytesRead;
-        if (this.matchFinder._streamPos >= this.matchFinder._pos + this.matchFinder._keepSizeAfter) {
-          this.matchFinder._posLimit = this.matchFinder._streamPos - this.matchFinder._keepSizeAfter;
+        this._additionalOffset -= len;
+        this.nowPos64 += BigInt(len);
+        if (!this._additionalOffset) {
+          if (this._matchPriceCount >= 128) {
+            this.fillDistancesPrices();
+          }
+          if (this._alignPriceCount >= 16) {
+            this.fillAlignPrices();
+          }
+          this.processedInSize[0] = this.nowPos64;
+          this.processedOutSize[0] = this.getProcessedSizeAdd();
+          if (!this._matchFinder.getNumAvailableBytes()) {
+            this.flushEncoding(Number(this.nowPos64 & 0xffffffffn));
+            return;
+          }
+          if (this.nowPos64 - progressPosValuePrev >= 0x1000n) {
+            this._finished = 0;
+            this.finished[0] = 0;
+            return;
+          }
         }
       }
     }
-    /**
-     * Reduce all position offsets by the specified value
-     */
-    reduceOffsets(subValue) {
-      this.matchFinder._bufferOffset += subValue;
-      this.matchFinder._posLimit -= subValue;
-      this.matchFinder._pos -= subValue;
-      this.matchFinder._streamPos -= subValue;
+    createMatchFinder() {
+      if (!this._matchFinder) {
+        const binTree = new BinTreeMatchFinder();
+        let numHashBytes = 4;
+        if (!this._matchFinderType) {
+          numHashBytes = 2;
+        }
+        binTree.setType(numHashBytes);
+        this._matchFinder = binTree;
+      }
+      this.createLiteralEncoder();
+      if (this._dictionarySize == this._dictionarySizePrev && this._numFastBytesPrev == this._numFastBytes) {
+        return;
+      }
+      this._matchFinder.create(this._dictionarySize, this._numFastBytes, 4096, 274);
+      this._dictionarySizePrev = this._dictionarySize;
+      this._numFastBytesPrev = this._numFastBytes;
     }
-    /**
-     * Read data from the input stream into the buffer
-     */
-    readFromStream(off, len) {
-      const stream = this.matchFinder._stream;
-      const buffer = this.matchFinder._bufferBase;
-      if (stream.pos >= stream.count) {
-        return -1;
+    writeHeaderProperties(output) {
+      this.properties[0] = (this._posStateBits * 5 + this._numLiteralPosStateBits) * 9 + this._numLiteralContextBits & 255;
+      for (let byteIndex = 0; byteIndex < 4; byteIndex++) {
+        this.properties[1 + byteIndex] = this._dictionarySize >> 8 * byteIndex & 255;
       }
-      let srcBuf;
-      if (stream.buf instanceof Uint8Array) {
-        srcBuf = Array.from(stream.buf);
-      } else if (stream.buf instanceof ArrayBuffer) {
-        srcBuf = Array.from(new Uint8Array(stream.buf));
-      } else {
-        srcBuf = stream.buf;
+      for (let i2 = 0; i2 < 5; i2++) {
+        output.writeByte(this.properties[i2]);
       }
-      len = Math.min(len, stream.count - stream.pos);
-      arraycopy(srcBuf, stream.pos, buffer, off, len);
-      stream.pos += len;
-      return len;
+    }
+    initCompression(input, output, len, mode) {
+      if (len < -1n) {
+        throw new Error("invalid length " + len);
+      }
+      this.initialize();
+      this.configure(mode);
+      this.writeHeaderProperties(output);
+      for (let i2 = 0; i2 < 64; i2 += 8) {
+        output.writeByte(Number(len >> BigInt(i2) & 0xffn) << 24 >> 24);
+      }
+      this._needReleaseMFStream = 0;
+      this._inStream = input;
+      this._finished = 0;
+      this.createMatchFinder();
+      this._rangeEncoder.stream = output;
+      this.init();
+      this.fillDistancesPrices();
+      this.fillAlignPrices();
+      this._lenEncoder.setTableSize(this._numFastBytes + 1 - 2);
+      this._lenEncoder.updateTables(1 << this._posStateBits);
+      this._repMatchLenEncoder.setTableSize(this._numFastBytes + 1 - 2);
+      this._repMatchLenEncoder.updateTables(1 << this._posStateBits);
+      this.nowPos64 = 0n;
+    }
+    compress(input, output, mode) {
+      this.initCompression(input, output, BigInt(input.count), mode);
+      do {
+        this.codeOneBlock();
+        if (this.finished[0]) {
+          this.releaseStreams();
+          break;
+        }
+      } while (true);
     }
   };
 
-  // node_modules/lzma1/lib/match-finder-config.js
-  function computeWindowReservSize(dictionarySize, keepBefore, numFastBytes, keepAfter) {
-    return ~~((dictionarySize + keepBefore + numFastBytes + keepAfter) / 2) + 256;
-  }
-  function ensureCyclicBuffer(matchFinder, dictionarySize) {
-    const cyclicBufferSize = dictionarySize + 1;
-    if (matchFinder._cyclicBufferSize !== cyclicBufferSize) {
-      const doubledCyclicBufferSize = (matchFinder._cyclicBufferSize = cyclicBufferSize) * 2;
-      matchFinder._son = initArray(doubledCyclicBufferSize);
+  // node_modules/lzma1/lib/streams.js
+  var InputBuffer = class {
+    constructor(data) {
+      __publicField(this, "buf");
+      __publicField(this, "pos", 0);
+      __publicField(this, "count");
+      this.buf = data;
+      this.count = data.length;
     }
-  }
-  function computeHashSize(dictionarySize, hashArrayEnabled) {
-    let hs = 65536;
-    let hashMask = 0;
-    if (hashArrayEnabled) {
-      hs = dictionarySize - 1;
-      hs |= hs >> 1;
-      hs |= hs >> 2;
-      hs |= hs >> 4;
-      hs |= hs >> 8;
-      hs >>= 1;
-      hs |= 65535;
-      if (hs > 16777216) {
-        hs >>= 1;
+    readByte() {
+      if (this.pos >= this.count)
+        return -1;
+      return this.buf[this.pos++] & 255;
+    }
+    readBytes(dest, off, len) {
+      if (this.pos >= this.count)
+        return -1;
+      len = Math.min(len, this.count - this.pos);
+      dest.set(this.buf.subarray(this.pos, this.pos + len), off);
+      this.pos += len;
+      return len;
+    }
+    get remaining() {
+      return this.count - this.pos;
+    }
+  };
+  var OutputBuffer = class {
+    constructor(capacity = 32) {
+      __publicField(this, "buf");
+      __publicField(this, "count", 0);
+      this.buf = new Uint8Array(capacity);
+    }
+    grow(requiredSize) {
+      const newSize = Math.max(this.buf.length * 2, requiredSize);
+      const newBuf = new Uint8Array(newSize);
+      newBuf.set(this.buf.subarray(0, this.count));
+      this.buf = newBuf;
+    }
+    writeByte(b2) {
+      if (this.count >= this.buf.length) {
+        this.grow(this.count + 1);
       }
-      hashMask = hs;
-      hs += 1;
+      this.buf[this.count++] = b2;
     }
-    return { hashMask, hashSizeSum: hs };
-  }
-  function setCutValue(numFastBytes) {
-    return 16 + (numFastBytes >> 1);
-  }
-  function setMatchMaxLen(numFastBytes) {
-    return numFastBytes;
-  }
-  function isDictionarySizeBelowThreshold(dictionarySize) {
-    return dictionarySize < DICTIONARY_SIZE_THRESHOLD;
-  }
+    writeBytes(src, off, len) {
+      const requiredSize = this.count + len;
+      if (requiredSize > this.buf.length) {
+        this.grow(requiredSize);
+      }
+      this.buf.set(src.subarray(off, off + len), this.count);
+      this.count += len;
+    }
+    write(buf) {
+      this.writeBytes(buf, 0, buf.length);
+    }
+    toArray() {
+      return this.buf.slice(0, this.count);
+    }
+  };
 
   // node_modules/lzma1/lib/lzma.js
   var MODES = {
@@ -9180,1319 +9905,90 @@
     8: { searchDepth: 24, filterStrength: 255, modeIndex: 1 },
     9: { searchDepth: 25, filterStrength: 255, modeIndex: 1 }
   };
-  var _encoder, _decoder, _lzInWindow, _compressor, _decompressor, _LZMA_instances, initCompressor_fn, initDecompressor_fn, read_fn, toByteArray_fn, write_fn, write_0_fn, getChars_fn, configure_fn, initCompression_fn, byteArrayCompressor_fn, initDecompression_fn, byteArrayDecompressor_fn, Create_4_fn, MovePos_1_fn, Create_3_fn, GetMatches_fn, Init_5_fn, MovePos_0_fn, NormalizeLinks_fn, SetType_fn, Skip_fn, CodeInChunks_fn, Init_1_fn, Backward_fn, CodeOneBlock_fn, Create_2_fn, Encoder_fn, FillAlignPrices_fn, Flush_fn, GetOptimum_fn, LZMA_Encoder_GetPosLenPrice_fn, GetPureRepPrice_fn, GetRepLen1Price_fn, MovePos_fn, ReadMatchDistances_fn, ReleaseMFStream_fn, ReleaseStreams_fn, LZMA_Encoder_GetSubCoder_fn, RangeCoder_Encoder_GetPrice_0_fn, MakeAsChar_fn, MakeAsShortRep_fn, ReverseGetPrice_fn, GetProcessedSizeAdd_fn, decodeString_fn;
+  var _encoder, _decoder, _LZMA_instances, encodeString_fn, decodeUTF8_fn;
   var LZMA = class {
     constructor() {
       __privateAdd(this, _LZMA_instances);
-      __privateAdd(this, _encoder);
-      __privateAdd(this, _decoder);
-      __privateAdd(this, _lzInWindow, null);
-      __privateAdd(this, _compressor);
-      __privateAdd(this, _decompressor);
-      __privateSet(this, _encoder, new Encoder());
-      __privateSet(this, _decoder, new Decoder());
-      __privateSet(this, _compressor, __privateMethod(this, _LZMA_instances, initCompressor_fn).call(this));
-      __privateSet(this, _decompressor, __privateMethod(this, _LZMA_instances, initDecompressor_fn).call(this));
-    }
-    writeHeaderProperties() {
-      const HEADER_SIZE = 5;
-      __privateGet(this, _encoder).properties[0] = (__privateGet(this, _encoder)._posStateBits * 5 + __privateGet(this, _encoder)._numLiteralPosStateBits) * 9 + __privateGet(this, _encoder)._numLiteralContextBits & 255;
-      for (let byteIndex = 0; byteIndex < 4; byteIndex++) {
-        __privateGet(this, _encoder).properties[1 + byteIndex] = __privateGet(this, _encoder)._dictionarySize >> 8 * byteIndex & 255;
-      }
-      __privateMethod(this, _LZMA_instances, write_0_fn).call(this, __privateGet(this, _compressor).output, __privateGet(this, _encoder).properties, 0, HEADER_SIZE);
-    }
-    GetPosSlot2(pos) {
-      if (pos < 131072) {
-        return G_FAST_POS[pos >> 6] + 12;
-      }
-      if (pos < 134217728) {
-        return G_FAST_POS[pos >> 16] + 32;
-      }
-      return G_FAST_POS[pos >> 26] + 52;
-    }
-    ReverseEncode(startIndex, NumBitLevels, symbol) {
-      let bit, m = 1;
-      for (let i2 = 0; i2 < NumBitLevels; ++i2) {
-        bit = symbol & 1;
-        __privateGet(this, _compressor).chunker.encoder.encodeBit(__privateGet(this, _compressor).chunker.encoder._posEncoders, startIndex + m, bit);
-        m = m << 1 | bit;
-        symbol >>= 1;
-      }
-    }
-    encodeString(inputString) {
-      let ch, chars = [], elen = 0, l = inputString.length;
-      __privateMethod(this, _LZMA_instances, getChars_fn).call(this, inputString, 0, l, chars, 0);
-      for (let i2 = 0; i2 < l; ++i2) {
-        ch = chars[i2];
-        if (ch >= 1 && ch <= 127) {
-          ++elen;
-        } else if (!ch || ch >= 128 && ch <= 2047) {
-          elen += 2;
-        } else {
-          elen += 3;
-        }
-      }
-      const data = [];
-      elen = 0;
-      for (let i2 = 0; i2 < l; ++i2) {
-        ch = chars[i2];
-        if (ch >= 1 && ch <= 127) {
-          data[elen++] = ch << 24 >> 24;
-        } else if (!ch || ch >= 128 && ch <= 2047) {
-          data[elen++] = (192 | ch >> 6 & 31) << 24 >> 24;
-          data[elen++] = (128 | ch & 63) << 24 >> 24;
-        } else {
-          data[elen++] = (224 | ch >> 12 & 15) << 24 >> 24;
-          data[elen++] = (128 | ch >> 6 & 63) << 24 >> 24;
-          data[elen++] = (128 | ch & 63) << 24 >> 24;
-        }
-      }
-      return data;
+      __privateAdd(this, _encoder, new Encoder());
+      __privateAdd(this, _decoder, new Decoder());
     }
     compress(data, mode = 5) {
-      const compressionMode = MODES[mode];
-      __privateMethod(this, _LZMA_instances, byteArrayCompressor_fn).call(this, data, compressionMode);
-      while (__privateGet(this, _compressor).chunker.processChunk())
-        ;
-      const result = __privateMethod(this, _LZMA_instances, toByteArray_fn).call(this, __privateGet(this, _compressor).output);
-      return new Int8Array(result);
+      const inputData = data instanceof ArrayBuffer ? new Uint8Array(data) : data;
+      const output = new OutputBuffer(Math.max(32, Math.ceil(inputData.length * 1.2)));
+      const input = new InputBuffer(inputData);
+      __privateGet(this, _encoder).compress(input, output, MODES[mode]);
+      const result = output.toArray();
+      return new Int8Array(result.buffer, result.byteOffset, result.byteLength);
     }
     compressString(data, mode = 5) {
-      const encodedData = this.encodeString(data);
-      return this.compress(new Uint8Array(encodedData), mode);
+      return this.compress(new Uint8Array(__privateMethod(this, _LZMA_instances, encodeString_fn).call(this, data)), mode);
     }
     decompress(bytearray) {
-      __privateMethod(this, _LZMA_instances, byteArrayDecompressor_fn).call(this, bytearray);
-      while (__privateGet(this, _decompressor).chunker.processChunk())
-        ;
-      return __privateMethod(this, _LZMA_instances, toByteArray_fn).call(this, __privateGet(this, _decompressor).output);
+      const inputData = bytearray instanceof ArrayBuffer ? new Uint8Array(bytearray) : bytearray;
+      const output = new OutputBuffer(Math.max(32, inputData.length * 2));
+      const input = new InputBuffer(inputData);
+      __privateGet(this, _decoder).decompress(input, output);
+      return output.toArray();
     }
     decompressString(bytearray) {
-      __privateMethod(this, _LZMA_instances, byteArrayDecompressor_fn).call(this, bytearray);
-      while (__privateGet(this, _decompressor).chunker.processChunk())
-        ;
-      const decodedByteArray = __privateMethod(this, _LZMA_instances, toByteArray_fn).call(this, __privateGet(this, _decompressor).output);
-      const result = __privateMethod(this, _LZMA_instances, decodeString_fn).call(this, decodedByteArray);
+      const decodedByteArray = this.decompress(bytearray);
+      const result = __privateMethod(this, _LZMA_instances, decodeUTF8_fn).call(this, decodedByteArray);
       if (typeof result === "string") {
         return result;
-      } else {
-        return String.fromCharCode(...result);
       }
-    }
-    // Public methods for chunker access
-    codeOneBlock() {
-      __privateMethod(this, _LZMA_instances, CodeOneBlock_fn).call(this);
-    }
-    releaseStreams() {
-      __privateMethod(this, _LZMA_instances, ReleaseStreams_fn).call(this);
+      return String.fromCharCode(...result);
     }
   };
   _encoder = new WeakMap();
   _decoder = new WeakMap();
-  _lzInWindow = new WeakMap();
-  _compressor = new WeakMap();
-  _decompressor = new WeakMap();
   _LZMA_instances = new WeakSet();
-  initCompressor_fn = function() {
-    const encoderChunker = new EncoderChunker(this);
-    return {
-      chunker: encoderChunker,
-      output: {
-        buf: initArray(32),
-        count: 0,
-        write: () => {
-        }
-      }
-    };
-  };
-  initDecompressor_fn = function() {
-    const decoderChunker = new DecoderChunker(__privateGet(this, _decoder));
-    return {
-      chunker: decoderChunker,
-      output: {
-        buf: initArray(32),
-        count: 0,
-        write: () => {
-        }
-      }
-    };
-  };
-  read_fn = function(inputStream) {
-    if (inputStream.pos >= inputStream.count) {
-      return -1;
+  encodeString_fn = function(inputString) {
+    const l = inputString.length;
+    const chars = [];
+    for (let i2 = 0; i2 < l; ++i2) {
+      chars[i2] = inputString.charCodeAt(i2);
     }
-    let value;
-    if (inputStream.buf instanceof ArrayBuffer) {
-      value = new Uint8Array(inputStream.buf)[inputStream.pos++];
-    } else if (inputStream.buf instanceof Uint8Array) {
-      value = inputStream.buf[inputStream.pos++];
-    } else {
-      value = inputStream.buf[inputStream.pos++];
+    const data = [];
+    let elen = 0;
+    for (let i2 = 0; i2 < l; ++i2) {
+      const ch = chars[i2];
+      if (ch >= 1 && ch <= 127) {
+        data[elen++] = ch << 24 >> 24;
+      } else if (!ch || ch >= 128 && ch <= 2047) {
+        data[elen++] = (192 | ch >> 6 & 31) << 24 >> 24;
+        data[elen++] = (128 | ch & 63) << 24 >> 24;
+      } else {
+        data[elen++] = (224 | ch >> 12 & 15) << 24 >> 24;
+        data[elen++] = (128 | ch >> 6 & 63) << 24 >> 24;
+        data[elen++] = (128 | ch & 63) << 24 >> 24;
+      }
     }
-    return value & 255;
-  };
-  toByteArray_fn = function(output) {
-    const data = output.buf.slice(0, output.count);
     return data;
   };
-  write_fn = function(buffer, b2) {
-    if (!buffer)
-      return;
-    if (buffer.count >= buffer.buf.length) {
-      const newSize = Math.max(buffer.buf.length * 2, buffer.count + 1);
-      const newBuf = new Array(newSize);
-      for (let i2 = 0; i2 < buffer.count; i2++) {
-        newBuf[i2] = buffer.buf[i2];
-      }
-      buffer.buf = newBuf;
-    }
-    buffer.buf[buffer.count++] = b2 << 24 >> 24;
-  };
-  write_0_fn = function(buffer, buf, off, len) {
-    const requiredSize = buffer.count + len;
-    if (requiredSize > buffer.buf.length) {
-      const newSize = Math.max(buffer.buf.length * 2, requiredSize);
-      const newBuf = new Array(newSize);
-      for (let i2 = 0; i2 < buffer.count; i2++) {
-        newBuf[i2] = buffer.buf[i2];
-      }
-      buffer.buf = newBuf;
-    }
-    arraycopy(buf, off, buffer.buf, buffer.count, len);
-    buffer.count += len;
-  };
-  getChars_fn = function(inputString, srcBegin, srcEnd, dst, dstBegin) {
-    for (let srcIdx = srcBegin; srcIdx < srcEnd; ++srcIdx) {
-      dst[dstBegin++] = inputString.charCodeAt(srcIdx);
-    }
-  };
-  configure_fn = function(mode) {
-    __privateGet(this, _encoder).initialize();
-    __privateGet(this, _encoder).configure(mode);
-  };
-  initCompression_fn = function(input, len, mode) {
-    if (compare64(len, N1_LONG_LIT) < 0) {
-      throw new Error("invalid length " + len);
-    }
-    __privateGet(this, _compressor).length_0 = len;
-    __privateMethod(this, _LZMA_instances, Encoder_fn).call(this);
-    __privateMethod(this, _LZMA_instances, configure_fn).call(this, mode);
-    this.writeHeaderProperties();
-    for (let i2 = 0; i2 < 64; i2 += 8) {
-      __privateMethod(this, _LZMA_instances, write_fn).call(this, __privateGet(this, _compressor).output, lowBits64(shr64(len, i2)) & 255);
-    }
-    __privateGet(this, _encoder)._needReleaseMFStream = 0;
-    __privateGet(this, _encoder)._inStream = input;
-    __privateGet(this, _encoder)._finished = 0;
-    __privateMethod(this, _LZMA_instances, Create_2_fn).call(this);
-    __privateGet(this, _encoder)._rangeEncoder.stream = __privateGet(this, _compressor).output;
-    __privateGet(this, _encoder).init();
-    __privateGet(this, _encoder).fillDistancesPrices();
-    __privateGet(this, _encoder).fillAlignPrices();
-    __privateGet(this, _encoder)._lenEncoder.setTableSize(__privateGet(this, _encoder)._numFastBytes + 1 - 2);
-    __privateGet(this, _encoder)._lenEncoder.updateTables(1 << __privateGet(this, _encoder)._posStateBits);
-    __privateGet(this, _encoder)._repMatchLenEncoder.setTableSize(__privateGet(this, _encoder)._numFastBytes + 1 - 2);
-    __privateGet(this, _encoder)._repMatchLenEncoder.updateTables(1 << __privateGet(this, _encoder)._posStateBits);
-    __privateGet(this, _encoder).nowPos64 = P0_LONG_LIT;
-    __privateGet(this, _compressor).chunker.encoder = __privateGet(this, _encoder);
-    __privateGet(this, _compressor).chunker.alive = 1;
-  };
-  byteArrayCompressor_fn = function(data, mode) {
-    const inputSize = data instanceof ArrayBuffer ? data.byteLength : data.length;
-    const estimatedOutputSize = Math.max(32, Math.ceil(inputSize * 1.2));
-    __privateGet(this, _compressor).output = {
-      buf: initArray(estimatedOutputSize),
-      count: 0,
-      write: () => {
-      }
-    };
-    const inputBuffer = {
-      pos: 0,
-      buf: data instanceof ArrayBuffer ? new Uint8Array(data) : data,
-      count: data instanceof ArrayBuffer ? new Uint8Array(data).length : data.length
-    };
-    __privateMethod(this, _LZMA_instances, initCompression_fn).call(this, inputBuffer, fromInt64(data instanceof ArrayBuffer ? data.byteLength : data.length), mode);
-  };
-  initDecompression_fn = function(input) {
-    let hex_length = "", properties = [], r, tmp_length;
-    for (let i2 = 0; i2 < 5; ++i2) {
-      r = __privateMethod(this, _LZMA_instances, read_fn).call(this, input);
-      if (r == -1) {
-        throw new Error("truncated input");
-      }
-      properties[i2] = r << 24 >> 24;
-    }
-    const isDecoderInitialized = !__privateGet(this, _decoder).setDecoderProperties(properties) ? 1 : 0;
-    if (isDecoderInitialized) {
-      throw new Error("corrupted input");
-    }
-    for (let i2 = 0; i2 < 64; i2 += 8) {
-      r = __privateMethod(this, _LZMA_instances, read_fn).call(this, input);
-      if (r == -1) {
-        throw new Error("truncated input");
-      }
-      r = r.toString(16);
-      if (r.length == 1)
-        r = "0" + r;
-      hex_length = r + "" + hex_length;
-    }
-    if (/^0+$|^f+$/i.test(hex_length)) {
-      __privateGet(this, _compressor).length_0 = N1_LONG_LIT;
-    } else {
-      tmp_length = parseInt(hex_length, 16);
-      if (tmp_length > _MAX_UINT32) {
-        __privateGet(this, _compressor).length_0 = N1_LONG_LIT;
-      } else {
-        __privateGet(this, _compressor).length_0 = fromInt64(tmp_length);
-      }
-    }
-    __privateGet(this, _decompressor).chunker = __privateMethod(this, _LZMA_instances, CodeInChunks_fn).call(this, input, __privateGet(this, _compressor).length_0);
-  };
-  byteArrayDecompressor_fn = function(data) {
-    const inputDataSize = data instanceof ArrayBuffer ? data.byteLength : data.length;
-    const minBufferSize = 32;
-    const estimatedOutputSize = inputDataSize * 2;
-    const initialBufferSize = Math.max(minBufferSize, estimatedOutputSize);
-    __privateGet(this, _decompressor).output = {
-      buf: initArray(initialBufferSize),
-      count: 0,
-      write: () => {
-      }
-    };
-    const inputBuffer = {
-      buf: data,
-      pos: 0,
-      count: data instanceof ArrayBuffer ? data.byteLength : data.length
-    };
-    __privateMethod(this, _LZMA_instances, initDecompression_fn).call(this, inputBuffer);
-  };
-  Create_4_fn = function(keepSizeBefore, keepSizeAfter, keepSizeReserv) {
-    let blockSize;
-    __privateGet(this, _encoder)._matchFinder._keepSizeBefore = keepSizeBefore;
-    __privateGet(this, _encoder)._matchFinder._keepSizeAfter = keepSizeAfter;
-    blockSize = keepSizeBefore + keepSizeAfter + keepSizeReserv;
-    if (__privateGet(this, _encoder)._matchFinder._bufferBase == null || __privateGet(this, _encoder)._matchFinder._blockSize != blockSize) {
-      __privateGet(this, _encoder)._matchFinder._bufferBase = initArray(blockSize);
-      __privateGet(this, _encoder)._matchFinder._blockSize = blockSize;
-    }
-    __privateGet(this, _encoder)._matchFinder._pointerToLastSafePosition = __privateGet(this, _encoder)._matchFinder._blockSize - keepSizeAfter;
-  };
-  MovePos_1_fn = function() {
-    const matchFinder = __privateGet(this, _compressor).chunker.encoder._matchFinder;
-    let pointerToPostion;
-    matchFinder._pos += 1;
-    if (matchFinder._pos > matchFinder._posLimit) {
-      pointerToPostion = matchFinder._bufferOffset + matchFinder._pos;
-      if (pointerToPostion > matchFinder._pointerToLastSafePosition) {
-        __privateGet(this, _lzInWindow).moveBlock();
-      }
-      __privateGet(this, _lzInWindow).readBlock();
-    }
-  };
-  Create_3_fn = function(keepAddBufferBefore, keepAddBufferAfter) {
-    const dictionarySize = __privateGet(this, _encoder)._dictionarySize;
-    const numFastBytes = __privateGet(this, _encoder)._numFastBytes;
-    if (isDictionarySizeBelowThreshold(dictionarySize)) {
-      __privateGet(this, _encoder)._matchFinder._cutValue = setCutValue(numFastBytes);
-      const windowReservSize = computeWindowReservSize(dictionarySize, keepAddBufferBefore, numFastBytes, keepAddBufferAfter);
-      __privateMethod(this, _LZMA_instances, Create_4_fn).call(this, dictionarySize + keepAddBufferBefore, numFastBytes + keepAddBufferAfter, windowReservSize);
-      __privateGet(this, _encoder)._matchFinder._matchMaxLen = setMatchMaxLen(numFastBytes);
-      ensureCyclicBuffer(__privateGet(this, _encoder)._matchFinder, dictionarySize);
-      const { hashMask, hashSizeSum } = computeHashSize(dictionarySize, __privateGet(this, _encoder)._matchFinder.HASH_ARRAY);
-      if (__privateGet(this, _encoder)._matchFinder.HASH_ARRAY) {
-        __privateGet(this, _encoder)._matchFinder._hashMask = hashMask;
-        const finalHashSizeSum = hashSizeSum + __privateGet(this, _encoder)._matchFinder.kFixHashSize;
-        if (finalHashSizeSum !== __privateGet(this, _encoder)._matchFinder._hashSizeSum) {
-          __privateGet(this, _encoder)._matchFinder._hashSizeSum = finalHashSizeSum;
-          __privateGet(this, _encoder)._matchFinder._hash = initArray(finalHashSizeSum);
-        }
-      } else {
-        if (hashSizeSum !== __privateGet(this, _encoder)._matchFinder._hashSizeSum) {
-          __privateGet(this, _encoder)._matchFinder._hashSizeSum = hashSizeSum;
-          __privateGet(this, _encoder)._matchFinder._hash = initArray(hashSizeSum);
-        }
-      }
-    }
-  };
-  GetMatches_fn = function() {
-    let count, cur, curMatch, curMatch2, curMatch3, cyclicPos, delta, hash2Value, hash3Value, hashValue, len, len0, len1, lenLimit, matchMinPos, maxLen, offset, pby1, ptr0, ptr1, temp;
-    const matchFinder = __privateGet(this, _compressor).chunker.encoder._matchFinder;
-    const distances = __privateGet(this, _compressor).chunker.encoder._matchDistances;
-    if (matchFinder._pos + matchFinder._matchMaxLen <= matchFinder._streamPos) {
-      lenLimit = matchFinder._matchMaxLen;
-    } else {
-      lenLimit = matchFinder._streamPos - matchFinder._pos;
-      if (lenLimit < matchFinder.kMinMatchCheck) {
-        __privateMethod(this, _LZMA_instances, MovePos_0_fn).call(this);
-        return 0;
-      }
-    }
-    offset = 0;
-    matchMinPos = matchFinder._pos > matchFinder._cyclicBufferSize ? matchFinder._pos - matchFinder._cyclicBufferSize : 0;
-    cur = matchFinder._bufferOffset + matchFinder._pos;
-    maxLen = 1;
-    hash2Value = 0;
-    hash3Value = 0;
-    if (matchFinder.HASH_ARRAY) {
-      temp = CRC32_TABLE[matchFinder._bufferBase[cur] & 255] ^ matchFinder._bufferBase[cur + 1] & 255;
-      hash2Value = temp & 1023;
-      temp ^= (matchFinder._bufferBase[cur + 2] & 255) << 8;
-      hash3Value = temp & 65535;
-      hashValue = (temp ^ CRC32_TABLE[matchFinder._bufferBase[cur + 3] & 255] << 5) & matchFinder._hashMask;
-    } else {
-      hashValue = matchFinder._bufferBase[cur] & 255 ^ (matchFinder._bufferBase[cur + 1] & 255) << 8;
-    }
-    curMatch = matchFinder._hash[matchFinder.kFixHashSize + hashValue] || 0;
-    if (matchFinder.HASH_ARRAY) {
-      curMatch2 = matchFinder._hash[hash2Value] || 0;
-      curMatch3 = matchFinder._hash[1024 + hash3Value] || 0;
-      matchFinder._hash[hash2Value] = matchFinder._pos;
-      matchFinder._hash[1024 + hash3Value] = matchFinder._pos;
-      if (curMatch2 > matchMinPos) {
-        if (matchFinder._bufferBase[matchFinder._bufferOffset + curMatch2] == matchFinder._bufferBase[cur]) {
-          distances[offset++] = maxLen = 2;
-          distances[offset++] = matchFinder._pos - curMatch2 - 1;
-        }
-      }
-      if (curMatch3 > matchMinPos) {
-        if (matchFinder._bufferBase[matchFinder._bufferOffset + curMatch3] == matchFinder._bufferBase[cur]) {
-          if (curMatch3 == curMatch2) {
-            offset -= 2;
-          }
-          distances[offset++] = maxLen = 3;
-          distances[offset++] = matchFinder._pos - curMatch3 - 1;
-          curMatch2 = curMatch3;
-        }
-      }
-      if (offset != 0 && curMatch2 == curMatch) {
-        offset -= 2;
-        maxLen = 1;
-      }
-    }
-    matchFinder._hash[matchFinder.kFixHashSize + hashValue] = matchFinder._pos;
-    ptr0 = (matchFinder._cyclicBufferPos << 1) + 1;
-    ptr1 = matchFinder._cyclicBufferPos << 1;
-    len0 = len1 = matchFinder.kNumHashDirectBytes;
-    if (matchFinder.kNumHashDirectBytes != 0) {
-      if (curMatch > matchMinPos) {
-        if (matchFinder._bufferBase[matchFinder._bufferOffset + curMatch + matchFinder.kNumHashDirectBytes] != matchFinder._bufferBase[cur + matchFinder.kNumHashDirectBytes]) {
-          distances[offset++] = maxLen = matchFinder.kNumHashDirectBytes;
-          distances[offset++] = matchFinder._pos - curMatch - 1;
-        }
-      }
-    }
-    count = matchFinder._cutValue;
-    while (1) {
-      if (curMatch <= matchMinPos || count == 0) {
-        count -= 1;
-        matchFinder._son[ptr0] = matchFinder._son[ptr1] = 0;
-        break;
-      }
-      delta = matchFinder._pos - curMatch;
-      cyclicPos = (delta <= matchFinder._cyclicBufferPos ? matchFinder._cyclicBufferPos - delta : matchFinder._cyclicBufferPos - delta + matchFinder._cyclicBufferSize) << 1;
-      pby1 = matchFinder._bufferOffset + curMatch;
-      len = len0 < len1 ? len0 : len1;
-      if (matchFinder._bufferBase[pby1 + len] == matchFinder._bufferBase[cur + len]) {
-        while ((len += 1) != lenLimit) {
-          if (matchFinder._bufferBase[pby1 + len] != matchFinder._bufferBase[cur + len]) {
-            break;
-          }
-        }
-        if (maxLen < len) {
-          distances[offset++] = maxLen = len;
-          distances[offset++] = delta - 1;
-          if (len == lenLimit) {
-            matchFinder._son[ptr1] = matchFinder._son[cyclicPos];
-            matchFinder._son[ptr0] = matchFinder._son[cyclicPos + 1];
-            break;
-          }
-        }
-      }
-      if ((matchFinder._bufferBase[pby1 + len] & 255) < (matchFinder._bufferBase[cur + len] & 255)) {
-        matchFinder._son[ptr1] = curMatch;
-        ptr1 = cyclicPos + 1;
-        curMatch = matchFinder._son[ptr1];
-        len1 = len;
-      } else {
-        matchFinder._son[ptr0] = curMatch;
-        ptr0 = cyclicPos;
-        curMatch = matchFinder._son[ptr0];
-        len0 = len;
-      }
-    }
-    __privateMethod(this, _LZMA_instances, MovePos_0_fn).call(this);
-    return offset;
-  };
-  Init_5_fn = function() {
-    __privateGet(this, _compressor).chunker.encoder._matchFinder._bufferOffset = 0;
-    __privateGet(this, _compressor).chunker.encoder._matchFinder._pos = 0;
-    __privateGet(this, _compressor).chunker.encoder._matchFinder._streamPos = 0;
-    __privateGet(this, _compressor).chunker.encoder._matchFinder._streamEndWasReached = 0;
-    __privateGet(this, _lzInWindow).readBlock();
-    __privateGet(this, _compressor).chunker.encoder._matchFinder._cyclicBufferPos = 0;
-    __privateGet(this, _lzInWindow).reduceOffsets(-1);
-  };
-  MovePos_0_fn = function() {
-    let subValue;
-    const matchFinder = __privateGet(this, _compressor).chunker.encoder._matchFinder;
-    if ((matchFinder._cyclicBufferPos += 1) >= matchFinder._cyclicBufferSize) {
-      matchFinder._cyclicBufferPos = 0;
-    }
-    __privateMethod(this, _LZMA_instances, MovePos_1_fn).call(this);
-    if (matchFinder._pos == DICTIONARY_SIZE_THRESHOLD) {
-      subValue = matchFinder._pos - matchFinder._cyclicBufferSize;
-      __privateMethod(this, _LZMA_instances, NormalizeLinks_fn).call(this, matchFinder._cyclicBufferSize * 2, subValue);
-      __privateMethod(this, _LZMA_instances, NormalizeLinks_fn).call(this, matchFinder._hashSizeSum, subValue);
-      __privateGet(this, _lzInWindow).reduceOffsets(subValue);
-    }
-  };
-  /**
-   * This is only called after reading one whole gigabyte.
-   */
-  NormalizeLinks_fn = function(numItems, subValue) {
-    const items = __privateGet(this, _compressor).chunker.encoder._matchFinder._son;
-    for (let i2 = 0, value; i2 < numItems; ++i2) {
-      value = items[i2] || 0;
-      if (value <= subValue) {
-        value = 0;
-      } else {
-        value -= subValue;
-      }
-      items[i2] = value;
-    }
-  };
-  SetType_fn = function(binTree, numHashBytes) {
-    binTree.HASH_ARRAY = numHashBytes > 2;
-    if (binTree.HASH_ARRAY) {
-      binTree.kNumHashDirectBytes = 0;
-      binTree.kMinMatchCheck = 4;
-      binTree.kFixHashSize = 66560;
-    } else {
-      binTree.kNumHashDirectBytes = 2;
-      binTree.kMinMatchCheck = 3;
-      binTree.kFixHashSize = 0;
-    }
-  };
-  Skip_fn = function(num) {
-    const matchFinder = __privateGet(this, _compressor).chunker.encoder._matchFinder;
-    let count, cur, curMatch, cyclicPos, delta, hash2Value, hash3Value, hashValue, len, len0, len1, lenLimit, matchMinPos, pby1, ptr0, ptr1, temp;
-    do {
-      if (matchFinder._pos + matchFinder._matchMaxLen <= matchFinder._streamPos) {
-        lenLimit = matchFinder._matchMaxLen;
-      } else {
-        lenLimit = matchFinder._streamPos - matchFinder._pos;
-        if (lenLimit < matchFinder.kMinMatchCheck) {
-          __privateMethod(this, _LZMA_instances, MovePos_0_fn).call(this);
-          continue;
-        }
-      }
-      matchMinPos = matchFinder._pos > matchFinder._cyclicBufferSize ? matchFinder._pos - matchFinder._cyclicBufferSize : 0;
-      cur = matchFinder._bufferOffset + matchFinder._pos;
-      if (matchFinder.HASH_ARRAY) {
-        temp = CRC32_TABLE[matchFinder._bufferBase[cur] & 255] ^ matchFinder._bufferBase[cur + 1] & 255;
-        hash2Value = temp & 1023;
-        matchFinder._hash[hash2Value] = matchFinder._pos;
-        temp ^= (matchFinder._bufferBase[cur + 2] & 255) << 8;
-        hash3Value = temp & 65535;
-        matchFinder._hash[1024 + hash3Value] = matchFinder._pos;
-        hashValue = (temp ^ CRC32_TABLE[matchFinder._bufferBase[cur + 3] & 255] << 5) & matchFinder._hashMask;
-      } else {
-        hashValue = matchFinder._bufferBase[cur] & 255 ^ (matchFinder._bufferBase[cur + 1] & 255) << 8;
-      }
-      curMatch = matchFinder._hash[matchFinder.kFixHashSize + hashValue];
-      matchFinder._hash[matchFinder.kFixHashSize + hashValue] = matchFinder._pos;
-      ptr0 = (matchFinder._cyclicBufferPos << 1) + 1;
-      ptr1 = matchFinder._cyclicBufferPos << 1;
-      len0 = len1 = matchFinder.kNumHashDirectBytes;
-      count = matchFinder._cutValue;
-      while (1) {
-        if (curMatch <= matchMinPos || count == 0) {
-          count -= 1;
-          matchFinder._son[ptr0] = matchFinder._son[ptr1] = 0;
-          break;
-        }
-        delta = matchFinder._pos - curMatch;
-        cyclicPos = (delta <= matchFinder._cyclicBufferPos ? matchFinder._cyclicBufferPos - delta : matchFinder._cyclicBufferPos - delta + matchFinder._cyclicBufferSize) << 1;
-        pby1 = matchFinder._bufferOffset + curMatch;
-        len = len0 < len1 ? len0 : len1;
-        if (matchFinder._bufferBase[pby1 + len] == matchFinder._bufferBase[cur + len]) {
-          while ((len += 1) != lenLimit) {
-            if (matchFinder._bufferBase[pby1 + len] != matchFinder._bufferBase[cur + len]) {
-              break;
-            }
-          }
-          if (len == lenLimit) {
-            matchFinder._son[ptr1] = matchFinder._son[cyclicPos];
-            matchFinder._son[ptr0] = matchFinder._son[cyclicPos + 1];
-            break;
-          }
-        }
-        if ((matchFinder._bufferBase[pby1 + len] & 255) < (matchFinder._bufferBase[cur + len] & 255)) {
-          matchFinder._son[ptr1] = curMatch;
-          ptr1 = cyclicPos + 1;
-          curMatch = matchFinder._son[ptr1];
-          len1 = len;
-        } else {
-          matchFinder._son[ptr0] = curMatch;
-          ptr0 = cyclicPos;
-          curMatch = matchFinder._son[ptr0];
-          len0 = len;
-        }
-      }
-      __privateMethod(this, _LZMA_instances, MovePos_0_fn).call(this);
-    } while ((num -= 1) != 0);
-  };
-  CodeInChunks_fn = function(inStream, outSize) {
-    __privateGet(this, _decoder).rangeDecoder.stream = inStream;
-    __privateGet(this, _decoder).flush();
-    __privateGet(this, _decoder).outWindow.stream = null;
-    __privateGet(this, _decoder).outWindow.stream = __privateGet(this, _decompressor).output;
-    __privateMethod(this, _LZMA_instances, Init_1_fn).call(this);
-    __privateGet(this, _decoder).state = 0;
-    __privateGet(this, _decoder).rep0 = 0;
-    __privateGet(this, _decoder).rep1 = 0;
-    __privateGet(this, _decoder).rep2 = 0;
-    __privateGet(this, _decoder).rep3 = 0;
-    __privateGet(this, _decoder).outSize = outSize;
-    __privateGet(this, _decoder).nowPos64 = P0_LONG_LIT;
-    __privateGet(this, _decoder).prevByte = 0;
-    const decoderChunker = new DecoderChunker(__privateGet(this, _decoder));
-    decoderChunker.alive = 1;
-    return decoderChunker;
-  };
-  Init_1_fn = function() {
-    __privateGet(this, _decoder).init();
-  };
-  Backward_fn = function(cur) {
-    const encoder = __privateGet(this, _compressor).chunker.encoder;
-    let backCur, backMem, posMem, posPrev;
-    encoder._optimumEndIndex = cur;
-    posMem = encoder._optimum[cur].posPrev;
-    backMem = encoder._optimum[cur].backPrev;
-    do {
-      if (encoder._optimum[cur].prev1IsChar) {
-        __privateMethod(this, _LZMA_instances, MakeAsChar_fn).call(this, encoder._optimum[posMem]);
-        encoder._optimum[posMem].posPrev = posMem - 1;
-        if (encoder._optimum[cur].prev2) {
-          encoder._optimum[posMem - 1].prev1IsChar = 0;
-          encoder._optimum[posMem - 1].posPrev = encoder._optimum[cur].posPrev2;
-          encoder._optimum[posMem - 1].backPrev = encoder._optimum[cur].backPrev2;
-        }
-      }
-      posPrev = posMem;
-      backCur = backMem;
-      backMem = encoder._optimum[posPrev].backPrev;
-      posMem = encoder._optimum[posPrev].posPrev;
-      encoder._optimum[posPrev].backPrev = backCur;
-      encoder._optimum[posPrev].posPrev = cur;
-      cur = posPrev;
-    } while (cur > 0);
-    encoder.backRes = encoder._optimum[0].backPrev;
-    encoder._optimumCurrentIndex = encoder._optimum[0].posPrev;
-    return encoder._optimumCurrentIndex;
-  };
-  CodeOneBlock_fn = function() {
-    let baseVal, complexState, curByte, distance, footerBits, len, lenToPosState, matchByte, pos, posReduced, posSlot, posState, progressPosValuePrev, subCoder;
-    __privateGet(this, _compressor).chunker.encoder.processedInSize[0] = P0_LONG_LIT;
-    __privateGet(this, _compressor).chunker.encoder.processedOutSize[0] = P0_LONG_LIT;
-    __privateGet(this, _compressor).chunker.encoder.finished[0] = 1;
-    progressPosValuePrev = __privateGet(this, _compressor).chunker.encoder.nowPos64;
-    if (__privateGet(this, _compressor).chunker.encoder._inStream) {
-      __privateGet(this, _compressor).chunker.encoder._matchFinder._stream = __privateGet(this, _compressor).chunker.encoder._inStream;
-      __privateMethod(this, _LZMA_instances, Init_5_fn).call(this);
-      __privateGet(this, _compressor).chunker.encoder._needReleaseMFStream = 1;
-      __privateGet(this, _compressor).chunker.encoder._inStream = null;
-    }
-    if (__privateGet(this, _compressor).chunker.encoder._finished) {
-      return;
-    }
-    __privateGet(this, _compressor).chunker.encoder._finished = 1;
-    if (compare64(__privateGet(this, _compressor).chunker.encoder.nowPos64, P0_LONG_LIT) === 0) {
-      if (!__privateGet(this, _lzInWindow).getNumAvailableBytes()) {
-        __privateMethod(this, _LZMA_instances, Flush_fn).call(this, lowBits64(__privateGet(this, _compressor).chunker.encoder.nowPos64));
-        return;
-      }
-      __privateMethod(this, _LZMA_instances, ReadMatchDistances_fn).call(this);
-      posState = lowBits64(__privateGet(this, _compressor).chunker.encoder.nowPos64) & __privateGet(this, _compressor).chunker.encoder._posStateMask;
-      __privateGet(this, _compressor).chunker.encoder.encodeBit(__privateGet(this, _compressor).chunker.encoder._isMatch, (__privateGet(this, _compressor).chunker.encoder._state << 4) + posState, 0);
-      __privateGet(this, _compressor).chunker.encoder._state = stateUpdateChar(__privateGet(this, _compressor).chunker.encoder._state);
-      curByte = __privateGet(this, _lzInWindow).getIndexByte(-__privateGet(this, _compressor).chunker.encoder._additionalOffset);
-      __privateGet(this, _compressor).chunker.encoder.encodeLiteral(__privateMethod(this, _LZMA_instances, LZMA_Encoder_GetSubCoder_fn).call(this, lowBits64(__privateGet(this, _compressor).chunker.encoder.nowPos64), __privateGet(this, _compressor).chunker.encoder._previousByte), curByte);
-      __privateGet(this, _compressor).chunker.encoder._previousByte = curByte;
-      __privateGet(this, _compressor).chunker.encoder._additionalOffset -= 1;
-      __privateGet(this, _compressor).chunker.encoder.nowPos64 = add64(__privateGet(this, _compressor).chunker.encoder.nowPos64, P1_LONG_LIT);
-    }
-    if (!__privateGet(this, _lzInWindow).getNumAvailableBytes()) {
-      __privateMethod(this, _LZMA_instances, Flush_fn).call(this, lowBits64(__privateGet(this, _compressor).chunker.encoder.nowPos64));
-      return;
-    }
-    while (1) {
-      len = __privateMethod(this, _LZMA_instances, GetOptimum_fn).call(this, lowBits64(__privateGet(this, _compressor).chunker.encoder.nowPos64));
-      pos = __privateGet(this, _compressor).chunker.encoder.backRes;
-      posState = lowBits64(__privateGet(this, _compressor).chunker.encoder.nowPos64) & __privateGet(this, _compressor).chunker.encoder._posStateMask;
-      complexState = (__privateGet(this, _compressor).chunker.encoder._state << 4) + posState;
-      if (len == 1 && pos == -1) {
-        __privateGet(this, _compressor).chunker.encoder.encodeBit(__privateGet(this, _compressor).chunker.encoder._isMatch, complexState, 0);
-        curByte = __privateGet(this, _lzInWindow).getIndexByte(-__privateGet(this, _compressor).chunker.encoder._additionalOffset);
-        subCoder = __privateMethod(this, _LZMA_instances, LZMA_Encoder_GetSubCoder_fn).call(this, lowBits64(__privateGet(this, _compressor).chunker.encoder.nowPos64), __privateGet(this, _compressor).chunker.encoder._previousByte);
-        if (__privateGet(this, _compressor).chunker.encoder._state < 7) {
-          __privateGet(this, _compressor).chunker.encoder.encodeLiteral(subCoder, curByte);
-        } else {
-          matchByte = __privateGet(this, _lzInWindow).getIndexByte(-__privateGet(this, _compressor).chunker.encoder._repDistances[0] - 1 - __privateGet(this, _compressor).chunker.encoder._additionalOffset);
-          __privateGet(this, _compressor).chunker.encoder.encodeMatched(subCoder, matchByte, curByte);
-        }
-        __privateGet(this, _compressor).chunker.encoder._previousByte = curByte;
-        __privateGet(this, _compressor).chunker.encoder._state = stateUpdateChar(__privateGet(this, _compressor).chunker.encoder._state);
-      } else {
-        __privateGet(this, _compressor).chunker.encoder.encodeBit(__privateGet(this, _compressor).chunker.encoder._isMatch, complexState, 1);
-        if (pos < 4) {
-          __privateGet(this, _compressor).chunker.encoder.encodeBit(__privateGet(this, _compressor).chunker.encoder._isRep, __privateGet(this, _compressor).chunker.encoder._state, 1);
-          if (!pos) {
-            __privateGet(this, _compressor).chunker.encoder.encodeBit(__privateGet(this, _compressor).chunker.encoder._isRepG0, __privateGet(this, _compressor).chunker.encoder._state, 0);
-            if (len == 1) {
-              __privateGet(this, _compressor).chunker.encoder.encodeBit(__privateGet(this, _compressor).chunker.encoder._isRep0Long, complexState, 0);
-            } else {
-              __privateGet(this, _compressor).chunker.encoder.encodeBit(__privateGet(this, _compressor).chunker.encoder._isRep0Long, complexState, 1);
-            }
-          } else {
-            __privateGet(this, _compressor).chunker.encoder.encodeBit(__privateGet(this, _compressor).chunker.encoder._isRepG0, __privateGet(this, _compressor).chunker.encoder._state, 1);
-            if (pos == 1) {
-              __privateGet(this, _compressor).chunker.encoder.encodeBit(__privateGet(this, _compressor).chunker.encoder._isRepG1, __privateGet(this, _compressor).chunker.encoder._state, 0);
-            } else {
-              __privateGet(this, _compressor).chunker.encoder.encodeBit(__privateGet(this, _compressor).chunker.encoder._isRepG1, __privateGet(this, _compressor).chunker.encoder._state, 1);
-              __privateGet(this, _compressor).chunker.encoder.encodeBit(__privateGet(this, _compressor).chunker.encoder._isRepG2, __privateGet(this, _compressor).chunker.encoder._state, pos - 2);
-            }
-          }
-          if (len == 1) {
-            __privateGet(this, _compressor).chunker.encoder._state = __privateGet(this, _compressor).chunker.encoder._state < 7 ? 9 : 11;
-          } else {
-            __privateGet(this, _compressor).chunker.encoder.encodeLength(__privateGet(this, _compressor).chunker.encoder._repMatchLenEncoder, len - 2, posState);
-            __privateGet(this, _compressor).chunker.encoder._state = __privateGet(this, _compressor).chunker.encoder._state < 7 ? 8 : 11;
-          }
-          distance = __privateGet(this, _compressor).chunker.encoder._repDistances[pos];
-          if (pos != 0) {
-            const encoder = __privateGet(this, _compressor).chunker.encoder;
-            for (let i2 = pos; i2 >= 1; --i2) {
-              encoder._repDistances[i2] = encoder._repDistances[i2 - 1];
-            }
-            encoder._repDistances[0] = distance;
-          }
-        } else {
-          __privateGet(this, _compressor).chunker.encoder.encodeBit(__privateGet(this, _compressor).chunker.encoder._isRep, __privateGet(this, _compressor).chunker.encoder._state, 0);
-          __privateGet(this, _compressor).chunker.encoder._state = __privateGet(this, _compressor).chunker.encoder._state < 7 ? 7 : 10;
-          __privateGet(this, _compressor).chunker.encoder.encodeLength(__privateGet(this, _compressor).chunker.encoder._lenEncoder, len - 2, posState);
-          pos -= 4;
-          posSlot = __privateGet(this, _compressor).chunker.encoder.getPosSlot(pos);
-          lenToPosState = getLenToPosState(len);
-          __privateGet(this, _compressor).chunker.encoder.encodeBitTree(__privateGet(this, _compressor).chunker.encoder._posSlotEncoder[lenToPosState], posSlot);
-          if (posSlot >= 4) {
-            footerBits = (posSlot >> 1) - 1;
-            baseVal = (2 | posSlot & 1) << footerBits;
-            posReduced = pos - baseVal;
-            if (posSlot < 14) {
-              __privateGet(this, _compressor).chunker.encoder.reverseEncodeRange(baseVal - posSlot - 1, footerBits, posReduced);
-            } else {
-              __privateGet(this, _compressor).chunker.encoder.encodeDirectBits(posReduced >> 4, footerBits - 4);
-              __privateGet(this, _compressor).chunker.encoder.reverseEncode(posReduced & 15);
-              __privateGet(this, _compressor).chunker.encoder._alignPriceCount += 1;
-            }
-          }
-          distance = pos;
-          const encoder2 = __privateGet(this, _compressor).chunker.encoder;
-          for (let i2 = 3; i2 >= 1; --i2) {
-            encoder2._repDistances[i2] = encoder2._repDistances[i2 - 1];
-          }
-          encoder2._repDistances[0] = distance;
-          encoder2._matchPriceCount += 1;
-        }
-        __privateGet(this, _compressor).chunker.encoder._previousByte = __privateGet(this, _lzInWindow).getIndexByte(len - 1 - __privateGet(this, _compressor).chunker.encoder._additionalOffset);
-      }
-      __privateGet(this, _compressor).chunker.encoder._additionalOffset -= len;
-      __privateGet(this, _compressor).chunker.encoder.nowPos64 = add64(__privateGet(this, _compressor).chunker.encoder.nowPos64, fromInt64(len));
-      if (!__privateGet(this, _compressor).chunker.encoder._additionalOffset) {
-        if (__privateGet(this, _compressor).chunker.encoder._matchPriceCount >= 128) {
-          __privateGet(this, _compressor).chunker.encoder.fillDistancesPrices();
-        }
-        if (__privateGet(this, _compressor).chunker.encoder._alignPriceCount >= 16) {
-          __privateMethod(this, _LZMA_instances, FillAlignPrices_fn).call(this, __privateGet(this, _compressor).chunker.encoder);
-        }
-        __privateGet(this, _compressor).chunker.encoder.processedInSize[0] = __privateGet(this, _compressor).chunker.encoder.nowPos64;
-        __privateGet(this, _compressor).chunker.encoder.processedOutSize[0] = __privateMethod(this, _LZMA_instances, GetProcessedSizeAdd_fn).call(this);
-        if (!__privateGet(this, _lzInWindow).getNumAvailableBytes()) {
-          __privateMethod(this, _LZMA_instances, Flush_fn).call(this, lowBits64(__privateGet(this, _compressor).chunker.encoder.nowPos64));
-          return;
-        }
-        if (compare64(sub64(__privateGet(this, _compressor).chunker.encoder.nowPos64, progressPosValuePrev), [4096, 0]) >= 0) {
-          __privateGet(this, _compressor).chunker.encoder._finished = 0;
-          __privateGet(this, _compressor).chunker.encoder.finished[0] = 0;
-          return;
-        }
-      }
-    }
-  };
-  Create_2_fn = function() {
-    let binTree, numHashBytes;
-    if (!__privateGet(this, _encoder)._matchFinder) {
-      binTree = {};
-      numHashBytes = 4;
-      if (!__privateGet(this, _encoder)._matchFinderType) {
-        numHashBytes = 2;
-      }
-      __privateMethod(this, _LZMA_instances, SetType_fn).call(this, binTree, numHashBytes);
-      __privateGet(this, _encoder)._matchFinder = binTree;
-      __privateSet(this, _lzInWindow, new LzInWindow(binTree));
-    }
-    __privateGet(this, _encoder).createLiteralEncoder();
-    if (__privateGet(this, _encoder)._dictionarySize == __privateGet(this, _encoder)._dictionarySizePrev && __privateGet(this, _encoder)._numFastBytesPrev == __privateGet(this, _encoder)._numFastBytes) {
-      return;
-    }
-    __privateMethod(this, _LZMA_instances, Create_3_fn).call(this, 4096, 274);
-    __privateGet(this, _encoder)._dictionarySizePrev = __privateGet(this, _encoder)._dictionarySize;
-    __privateGet(this, _encoder)._numFastBytesPrev = __privateGet(this, _encoder)._numFastBytes;
-  };
-  Encoder_fn = function() {
-    for (let i2 = 0; i2 < 4096; ++i2) {
-      __privateGet(this, _encoder)._optimum[i2] = {};
-    }
-    for (let i2 = 0; i2 < 4; ++i2) {
-      __privateGet(this, _encoder)._posSlotEncoder[i2] = createBitTree(6);
-    }
-  };
-  FillAlignPrices_fn = function(encoder) {
-    for (let i2 = 0; i2 < 16; ++i2) {
-      encoder._alignPrices[i2] = __privateMethod(this, _LZMA_instances, ReverseGetPrice_fn).call(this, encoder._posAlignEncoder, i2);
-    }
-    encoder._alignPriceCount = 0;
-  };
-  Flush_fn = function(nowPos) {
-    __privateMethod(this, _LZMA_instances, ReleaseMFStream_fn).call(this);
-    __privateGet(this, _compressor).chunker.encoder.writeEndMarker(nowPos & __privateGet(this, _compressor).chunker.encoder._posStateMask);
-    for (let i2 = 0; i2 < 5; ++i2) {
-      __privateGet(this, _compressor).chunker.encoder.shiftLow();
-    }
-  };
-  GetOptimum_fn = function(position) {
-    let cur, curAnd1Price, curAndLenCharPrice, curAndLenPrice, curBack, curPrice, currentByte, distance, len, lenEnd, lenMain, lenTest, lenTest2, lenTestTemp, matchByte, matchPrice, newLen, nextIsChar, nextMatchPrice, nextOptimum, nextRepMatchPrice, normalMatchPrice, numAvailableBytes, numAvailableBytesFull, numDistancePairs, offs, offset, opt, optimum, pos, posPrev, posState, posStateNext, price_4, repIndex, repLen, repMatchPrice, repMaxIndex, shortRepPrice, startLen, state, state2, t, price, price_0, price_1, price_2, price_3, lenRes;
-    const encoder = __privateGet(this, _compressor).chunker.encoder;
-    if (encoder._optimumEndIndex != encoder._optimumCurrentIndex) {
-      lenRes = encoder._optimum[encoder._optimumCurrentIndex].posPrev - encoder._optimumCurrentIndex;
-      encoder.backRes = encoder._optimum[encoder._optimumCurrentIndex].backPrev;
-      encoder._optimumCurrentIndex = encoder._optimum[encoder._optimumCurrentIndex].posPrev;
-      return lenRes;
-    }
-    encoder._optimumCurrentIndex = encoder._optimumEndIndex = 0;
-    if (encoder._longestMatchWasFound) {
-      lenMain = encoder._longestMatchLength;
-      encoder._longestMatchWasFound = 0;
-    } else {
-      lenMain = __privateMethod(this, _LZMA_instances, ReadMatchDistances_fn).call(this);
-    }
-    numDistancePairs = encoder._numDistancePairs;
-    numAvailableBytes = __privateGet(this, _lzInWindow).getNumAvailableBytes() + 1;
-    if (numAvailableBytes < 2) {
-      encoder.backRes = -1;
-      return 1;
-    }
-    if (numAvailableBytes > 273) {
-      numAvailableBytes = 273;
-    }
-    repMaxIndex = 0;
-    for (let i2 = 0; i2 < 4; ++i2) {
-      encoder.reps[i2] = encoder._repDistances[i2];
-      encoder.repLens[i2] = __privateGet(this, _lzInWindow).getMatchLen(-1, encoder.reps[i2], 273);
-      if (encoder.repLens[i2] > encoder.repLens[repMaxIndex]) {
-        repMaxIndex = i2;
-      }
-    }
-    if (encoder.repLens[repMaxIndex] >= encoder._numFastBytes) {
-      encoder.backRes = repMaxIndex;
-      lenRes = encoder.repLens[repMaxIndex];
-      __privateMethod(this, _LZMA_instances, MovePos_fn).call(this, lenRes - 1);
-      return lenRes;
-    }
-    if (lenMain >= encoder._numFastBytes) {
-      encoder.backRes = __privateGet(this, _compressor).chunker.encoder._matchDistances[numDistancePairs - 1] + 4;
-      __privateMethod(this, _LZMA_instances, MovePos_fn).call(this, lenMain - 1);
-      return lenMain;
-    }
-    currentByte = __privateGet(this, _lzInWindow).getIndexByte(-1);
-    matchByte = __privateGet(this, _lzInWindow).getIndexByte(-encoder._repDistances[0] - 1 - 1);
-    if (lenMain < 2 && currentByte != matchByte && encoder.repLens[repMaxIndex] < 2) {
-      encoder.backRes = -1;
-      return 1;
-    }
-    encoder._optimum[0].state = encoder._state;
-    posState = position & encoder._posStateMask;
-    encoder._optimum[1].price = PROB_PRICES[encoder._isMatch[(encoder._state << 4) + posState] >>> 2] + __privateMethod(this, _LZMA_instances, RangeCoder_Encoder_GetPrice_0_fn).call(this, __privateMethod(this, _LZMA_instances, LZMA_Encoder_GetSubCoder_fn).call(this, position, encoder._previousByte), encoder._state >= 7, matchByte, currentByte);
-    __privateMethod(this, _LZMA_instances, MakeAsChar_fn).call(this, encoder._optimum[1]);
-    matchPrice = PROB_PRICES[2048 - encoder._isMatch[(encoder._state << 4) + posState] >>> 2];
-    repMatchPrice = matchPrice + PROB_PRICES[2048 - encoder._isRep[encoder._state] >>> 2];
-    if (matchByte == currentByte) {
-      shortRepPrice = repMatchPrice + __privateMethod(this, _LZMA_instances, GetRepLen1Price_fn).call(this, posState);
-      if (shortRepPrice < encoder._optimum[1].price) {
-        encoder._optimum[1].price = shortRepPrice;
-        __privateMethod(this, _LZMA_instances, MakeAsShortRep_fn).call(this, encoder._optimum[1]);
-      }
-    }
-    lenEnd = lenMain >= encoder.repLens[repMaxIndex] ? lenMain : encoder.repLens[repMaxIndex];
-    if (lenEnd < 2) {
-      encoder.backRes = encoder._optimum[1].backPrev;
-      return 1;
-    }
-    encoder._optimum[1].posPrev = 0;
-    encoder._optimum[0].backs0 = encoder.reps[0];
-    encoder._optimum[0].backs1 = encoder.reps[1];
-    encoder._optimum[0].backs2 = encoder.reps[2];
-    encoder._optimum[0].backs3 = encoder.reps[3];
-    len = lenEnd;
-    do {
-      encoder._optimum[len].price = INFINITY_PRICE;
-      len -= 1;
-    } while (len >= 2);
-    for (let i2 = 0; i2 < 4; ++i2) {
-      repLen = encoder.repLens[i2];
-      if (repLen < 2) {
-        continue;
-      }
-      price_4 = repMatchPrice + __privateMethod(this, _LZMA_instances, GetPureRepPrice_fn).call(this, i2, encoder._state, posState);
-      do {
-        curAndLenPrice = price_4 + encoder._repMatchLenEncoder.getPrice(repLen - 2, posState);
-        optimum = encoder._optimum[repLen];
-        if (curAndLenPrice < optimum.price) {
-          optimum.price = curAndLenPrice;
-          optimum.posPrev = 0;
-          optimum.backPrev = i2;
-          optimum.prev1IsChar = 0;
-        }
-      } while ((repLen -= 1) >= 2);
-    }
-    normalMatchPrice = matchPrice + PROB_PRICES[encoder._isRep[encoder._state] >>> 2];
-    len = encoder.repLens[0] >= 2 ? encoder.repLens[0] + 1 : 2;
-    if (len <= lenMain) {
-      offs = 0;
-      while (len > encoder._matchDistances[offs]) {
-        offs += 2;
-      }
-      for (; ; len += 1) {
-        distance = encoder._matchDistances[offs + 1];
-        curAndLenPrice = normalMatchPrice + __privateMethod(this, _LZMA_instances, LZMA_Encoder_GetPosLenPrice_fn).call(this, distance, len, posState);
-        optimum = encoder._optimum[len];
-        if (curAndLenPrice < optimum.price) {
-          optimum.price = curAndLenPrice;
-          optimum.posPrev = 0;
-          optimum.backPrev = distance + 4;
-          optimum.prev1IsChar = 0;
-        }
-        if (len == encoder._matchDistances[offs]) {
-          offs += 2;
-          if (offs == numDistancePairs) {
-            break;
-          }
-        }
-      }
-    }
-    cur = 0;
-    while (1) {
-      ++cur;
-      if (cur == lenEnd) {
-        return __privateMethod(this, _LZMA_instances, Backward_fn).call(this, cur);
-      }
-      newLen = __privateMethod(this, _LZMA_instances, ReadMatchDistances_fn).call(this);
-      numDistancePairs = encoder._numDistancePairs;
-      if (newLen >= encoder._numFastBytes) {
-        encoder._longestMatchLength = newLen;
-        encoder._longestMatchWasFound = 1;
-        return __privateMethod(this, _LZMA_instances, Backward_fn).call(this, cur);
-      }
-      position += 1;
-      posPrev = encoder._optimum[cur].posPrev;
-      if (encoder._optimum[cur].prev1IsChar) {
-        posPrev -= 1;
-        if (encoder._optimum[cur].prev2) {
-          state = encoder._optimum[encoder._optimum[cur].posPrev2].state;
-          if (encoder._optimum[cur].backPrev2 < 4) {
-            state = state < 7 ? 8 : 11;
-          } else {
-            state = state < 7 ? 7 : 10;
-          }
-        } else {
-          state = encoder._optimum[posPrev].state;
-        }
-        state = stateUpdateChar(state);
-      } else {
-        state = encoder._optimum[posPrev].state;
-      }
-      if (posPrev == cur - 1) {
-        if (!encoder._optimum[cur].backPrev) {
-          state = state < 7 ? 9 : 11;
-        } else {
-          state = stateUpdateChar(state);
-        }
-      } else {
-        if (encoder._optimum[cur].prev1IsChar && encoder._optimum[cur].prev2) {
-          posPrev = encoder._optimum[cur].posPrev2;
-          pos = encoder._optimum[cur].backPrev2;
-          state = state < 7 ? 8 : 11;
-        } else {
-          pos = encoder._optimum[cur].backPrev;
-          if (pos < 4) {
-            state = state < 7 ? 8 : 11;
-          } else {
-            state = state < 7 ? 7 : 10;
-          }
-        }
-        opt = encoder._optimum[posPrev];
-        if (pos < 4) {
-          if (!pos) {
-            encoder.reps[0] = opt.backs0;
-            encoder.reps[1] = opt.backs1;
-            encoder.reps[2] = opt.backs2;
-            encoder.reps[3] = opt.backs3;
-          } else if (pos == 1) {
-            encoder.reps[0] = opt.backs1;
-            encoder.reps[1] = opt.backs0;
-            encoder.reps[2] = opt.backs2;
-            encoder.reps[3] = opt.backs3;
-          } else if (pos == 2) {
-            encoder.reps[0] = opt.backs2;
-            encoder.reps[1] = opt.backs0;
-            encoder.reps[2] = opt.backs1;
-            encoder.reps[3] = opt.backs3;
-          } else {
-            encoder.reps[0] = opt.backs3;
-            encoder.reps[1] = opt.backs0;
-            encoder.reps[2] = opt.backs1;
-            encoder.reps[3] = opt.backs2;
-          }
-        } else {
-          encoder.reps[0] = pos - 4;
-          encoder.reps[1] = opt.backs0;
-          encoder.reps[2] = opt.backs1;
-          encoder.reps[3] = opt.backs2;
-        }
-      }
-      encoder._optimum[cur].state = state;
-      encoder._optimum[cur].backs0 = encoder.reps[0];
-      encoder._optimum[cur].backs1 = encoder.reps[1];
-      encoder._optimum[cur].backs2 = encoder.reps[2];
-      encoder._optimum[cur].backs3 = encoder.reps[3];
-      curPrice = encoder._optimum[cur].price;
-      currentByte = __privateGet(this, _lzInWindow).getIndexByte(-1);
-      matchByte = __privateGet(this, _lzInWindow).getIndexByte(-encoder.reps[0] - 1 - 1);
-      posState = position & encoder._posStateMask;
-      curAnd1Price = curPrice + PROB_PRICES[encoder._isMatch[(state << 4) + posState] >>> 2] + __privateMethod(this, _LZMA_instances, RangeCoder_Encoder_GetPrice_0_fn).call(this, __privateMethod(this, _LZMA_instances, LZMA_Encoder_GetSubCoder_fn).call(this, position, __privateGet(this, _lzInWindow).getIndexByte(-2)), state >= 7, matchByte, currentByte);
-      nextOptimum = encoder._optimum[cur + 1];
-      nextIsChar = 0;
-      if (curAnd1Price < nextOptimum.price) {
-        nextOptimum.price = curAnd1Price;
-        nextOptimum.posPrev = cur;
-        nextOptimum.backPrev = -1;
-        nextOptimum.prev1IsChar = 0;
-        nextIsChar = 1;
-      }
-      matchPrice = curPrice + PROB_PRICES[2048 - encoder._isMatch[(state << 4) + posState] >>> 2];
-      repMatchPrice = matchPrice + PROB_PRICES[2048 - encoder._isRep[state] >>> 2];
-      if (matchByte == currentByte && !(nextOptimum.posPrev < cur && !nextOptimum.backPrev)) {
-        shortRepPrice = repMatchPrice + (PROB_PRICES[encoder._isRepG0[state] >>> 2] + PROB_PRICES[encoder._isRep0Long[(state << 4) + posState] >>> 2]);
-        if (shortRepPrice <= nextOptimum.price) {
-          nextOptimum.price = shortRepPrice;
-          nextOptimum.posPrev = cur;
-          nextOptimum.backPrev = 0;
-          nextOptimum.prev1IsChar = 0;
-          nextIsChar = 1;
-        }
-      }
-      numAvailableBytesFull = __privateGet(this, _lzInWindow).getNumAvailableBytes() + 1;
-      numAvailableBytesFull = 4095 - cur < numAvailableBytesFull ? 4095 - cur : numAvailableBytesFull;
-      numAvailableBytes = numAvailableBytesFull;
-      if (numAvailableBytes < 2) {
-        continue;
-      }
-      if (numAvailableBytes > encoder._numFastBytes) {
-        numAvailableBytes = encoder._numFastBytes;
-      }
-      if (!nextIsChar && matchByte != currentByte) {
-        t = Math.min(numAvailableBytesFull - 1, encoder._numFastBytes);
-        lenTest2 = __privateGet(this, _lzInWindow).getMatchLen(0, encoder.reps[0], t);
-        if (lenTest2 >= 2) {
-          state2 = stateUpdateChar(state);
-          posStateNext = position + 1 & encoder._posStateMask;
-          nextRepMatchPrice = curAnd1Price + PROB_PRICES[2048 - encoder._isMatch[(state2 << 4) + posStateNext] >>> 2] + PROB_PRICES[2048 - encoder._isRep[state2] >>> 2];
-          offset = cur + 1 + lenTest2;
-          while (lenEnd < offset) {
-            encoder._optimum[lenEnd += 1].price = INFINITY_PRICE;
-          }
-          curAndLenPrice = nextRepMatchPrice + (price = encoder._repMatchLenEncoder.getPrice(lenTest2 - 2, posStateNext), price + __privateMethod(this, _LZMA_instances, GetPureRepPrice_fn).call(this, 0, state2, posStateNext));
-          optimum = encoder._optimum[offset];
-          if (curAndLenPrice < optimum.price) {
-            optimum.price = curAndLenPrice;
-            optimum.posPrev = cur + 1;
-            optimum.backPrev = 0;
-            optimum.prev1IsChar = 1;
-            optimum.prev2 = 0;
-          }
-        }
-      }
-      startLen = 2;
-      for (repIndex = 0; repIndex < 4; ++repIndex) {
-        lenTest = __privateGet(this, _lzInWindow).getMatchLen(-1, encoder.reps[repIndex], numAvailableBytes);
-        if (lenTest < 2) {
-          continue;
-        }
-        lenTestTemp = lenTest;
-        do {
-          while (lenEnd < cur + lenTest) {
-            encoder._optimum[lenEnd += 1].price = INFINITY_PRICE;
-          }
-          curAndLenPrice = repMatchPrice + (price_0 = encoder._repMatchLenEncoder.getPrice(lenTest - 2, posState), price_0 + __privateMethod(this, _LZMA_instances, GetPureRepPrice_fn).call(this, repIndex, state, posState));
-          optimum = encoder._optimum[cur + lenTest];
-          if (curAndLenPrice < optimum.price) {
-            optimum.price = curAndLenPrice;
-            optimum.posPrev = cur;
-            optimum.backPrev = repIndex;
-            optimum.prev1IsChar = 0;
-          }
-        } while ((lenTest -= 1) >= 2);
-        lenTest = lenTestTemp;
-        if (!repIndex) {
-          startLen = lenTest + 1;
-        }
-        if (lenTest < numAvailableBytesFull) {
-          t = Math.min(numAvailableBytesFull - 1 - lenTest, encoder._numFastBytes);
-          lenTest2 = __privateGet(this, _lzInWindow).getMatchLen(lenTest, encoder.reps[repIndex], t);
-          if (lenTest2 >= 2) {
-            state2 = state < 7 ? 8 : 11;
-            posStateNext = position + lenTest & encoder._posStateMask;
-            curAndLenCharPrice = repMatchPrice + (price_1 = encoder._repMatchLenEncoder.getPrice(lenTest - 2, posState), price_1 + __privateMethod(this, _LZMA_instances, GetPureRepPrice_fn).call(this, repIndex, state, posState)) + PROB_PRICES[encoder._isMatch[(state2 << 4) + posStateNext] >>> 2] + __privateMethod(this, _LZMA_instances, RangeCoder_Encoder_GetPrice_0_fn).call(this, __privateMethod(this, _LZMA_instances, LZMA_Encoder_GetSubCoder_fn).call(this, position + lenTest, __privateGet(this, _lzInWindow).getIndexByte(lenTest - 1 - 1)), true, __privateGet(this, _lzInWindow).getIndexByte(lenTest - 1 - (encoder.reps[repIndex] + 1)), __privateGet(this, _lzInWindow).getIndexByte(lenTest - 1));
-            state2 = stateUpdateChar(state2);
-            posStateNext = position + lenTest + 1 & encoder._posStateMask;
-            nextMatchPrice = curAndLenCharPrice + PROB_PRICES[2048 - encoder._isMatch[(state2 << 4) + posStateNext] >>> 2];
-            nextRepMatchPrice = nextMatchPrice + PROB_PRICES[2048 - encoder._isRep[state2] >>> 2];
-            offset = lenTest + 1 + lenTest2;
-            while (lenEnd < cur + offset) {
-              encoder._optimum[lenEnd += 1].price = INFINITY_PRICE;
-            }
-            curAndLenPrice = nextRepMatchPrice + (price_2 = encoder._repMatchLenEncoder.getPrice(lenTest2 - 2, posStateNext), price_2 + __privateMethod(this, _LZMA_instances, GetPureRepPrice_fn).call(this, 0, state2, posStateNext));
-            optimum = encoder._optimum[cur + offset];
-            if (curAndLenPrice < optimum.price) {
-              optimum.price = curAndLenPrice;
-              optimum.posPrev = cur + lenTest + 1;
-              optimum.backPrev = 0;
-              optimum.prev1IsChar = 1;
-              optimum.prev2 = 1;
-              optimum.posPrev2 = cur;
-              optimum.backPrev2 = repIndex;
-            }
-          }
-        }
-      }
-      if (newLen > numAvailableBytes) {
-        newLen = numAvailableBytes;
-        for (numDistancePairs = 0; newLen > encoder._matchDistances[numDistancePairs]; numDistancePairs += 2) {
-        }
-        encoder._matchDistances[numDistancePairs] = newLen;
-        numDistancePairs += 2;
-      }
-      if (newLen >= startLen) {
-        normalMatchPrice = matchPrice + PROB_PRICES[encoder._isRep[state] >>> 2];
-        while (lenEnd < cur + newLen) {
-          encoder._optimum[lenEnd += 1].price = INFINITY_PRICE;
-        }
-        offs = 0;
-        while (startLen > encoder._matchDistances[offs]) {
-          offs += 2;
-        }
-        for (lenTest = startLen; ; lenTest += 1) {
-          curBack = encoder._matchDistances[offs + 1];
-          curAndLenPrice = normalMatchPrice + __privateMethod(this, _LZMA_instances, LZMA_Encoder_GetPosLenPrice_fn).call(this, curBack, lenTest, posState);
-          optimum = encoder._optimum[cur + lenTest];
-          if (curAndLenPrice < optimum.price) {
-            optimum.price = curAndLenPrice;
-            optimum.posPrev = cur;
-            optimum.backPrev = curBack + 4;
-            optimum.prev1IsChar = 0;
-          }
-          if (lenTest == encoder._matchDistances[offs]) {
-            if (lenTest < numAvailableBytesFull) {
-              t = Math.min(numAvailableBytesFull - 1 - lenTest, encoder._numFastBytes);
-              lenTest2 = __privateGet(this, _lzInWindow).getMatchLen(lenTest, curBack, t);
-              if (lenTest2 >= 2) {
-                state2 = state < 7 ? 7 : 10;
-                posStateNext = position + lenTest & encoder._posStateMask;
-                curAndLenCharPrice = curAndLenPrice + PROB_PRICES[encoder._isMatch[(state2 << 4) + posStateNext] >>> 2] + __privateMethod(this, _LZMA_instances, RangeCoder_Encoder_GetPrice_0_fn).call(this, __privateMethod(this, _LZMA_instances, LZMA_Encoder_GetSubCoder_fn).call(this, position + lenTest, __privateGet(this, _lzInWindow).getIndexByte(lenTest - 1 - 1)), true, __privateGet(this, _lzInWindow).getIndexByte(lenTest - (curBack + 1) - 1), __privateGet(this, _lzInWindow).getIndexByte(lenTest - 1));
-                state2 = stateUpdateChar(state2);
-                posStateNext = position + lenTest + 1 & encoder._posStateMask;
-                nextMatchPrice = curAndLenCharPrice + PROB_PRICES[2048 - encoder._isMatch[(state2 << 4) + posStateNext] >>> 2];
-                nextRepMatchPrice = nextMatchPrice + PROB_PRICES[2048 - encoder._isRep[state2] >>> 2];
-                offset = lenTest + 1 + lenTest2;
-                while (lenEnd < cur + offset) {
-                  encoder._optimum[lenEnd += 1].price = INFINITY_PRICE;
-                }
-                curAndLenPrice = nextRepMatchPrice + (price_3 = encoder._repMatchLenEncoder.getPrice(lenTest2 - 2, posStateNext), price_3 + __privateMethod(this, _LZMA_instances, GetPureRepPrice_fn).call(this, 0, state2, posStateNext));
-                optimum = encoder._optimum[cur + offset];
-                if (curAndLenPrice < optimum.price) {
-                  optimum.price = curAndLenPrice;
-                  optimum.posPrev = cur + lenTest + 1;
-                  optimum.backPrev = 0;
-                  optimum.prev1IsChar = 1;
-                  optimum.prev2 = 1;
-                  optimum.posPrev2 = cur;
-                  optimum.backPrev2 = curBack + 4;
-                }
-              }
-            }
-            offs += 2;
-            if (offs == numDistancePairs) {
-              break;
-            }
-          }
-        }
-      }
-    }
-    return 1;
-  };
-  LZMA_Encoder_GetPosLenPrice_fn = function(pos, len, posState) {
-    const encoder = __privateGet(this, _compressor).chunker.encoder;
-    let price, lenToPosState = getLenToPosState(len);
-    if (pos < 128) {
-      price = encoder._distancesPrices[lenToPosState * 128 + pos];
-    } else {
-      const position = (lenToPosState << 6) + this.GetPosSlot2(pos);
-      price = encoder._posSlotPrices[position] + encoder._alignPrices[pos & 15];
-    }
-    return price + encoder._lenEncoder.getPrice(len - 2, posState);
-  };
-  GetPureRepPrice_fn = function(repIndex, state, posState) {
-    const encoder = __privateGet(this, _compressor).chunker.encoder;
-    let price;
-    if (!repIndex) {
-      price = PROB_PRICES[encoder._isRepG0[state] >>> 2];
-      price += PROB_PRICES[2048 - __privateGet(this, _compressor).chunker.encoder._isRep0Long[(state << 4) + posState] >>> 2];
-    } else {
-      price = PROB_PRICES[2048 - __privateGet(this, _compressor).chunker.encoder._isRepG0[state] >>> 2];
-      if (repIndex == 1) {
-        price += PROB_PRICES[__privateGet(this, _compressor).chunker.encoder._isRepG1[state] >>> 2];
-      } else {
-        price += PROB_PRICES[2048 - __privateGet(this, _compressor).chunker.encoder._isRepG1[state] >>> 2];
-        price += getBitPrice(__privateGet(this, _compressor).chunker.encoder._isRepG2[state], repIndex - 2);
-      }
-    }
-    return price;
-  };
-  GetRepLen1Price_fn = function(posState) {
-    const encoder = __privateGet(this, _compressor).chunker.encoder;
-    const repG0Price = PROB_PRICES[encoder._isRepG0[encoder._state] >>> 2];
-    const rep0LongPrice = PROB_PRICES[encoder._isRep0Long[(encoder._state << 4) + posState] >>> 2];
-    return repG0Price + rep0LongPrice;
-  };
-  MovePos_fn = function(num) {
-    if (num > 0) {
-      __privateMethod(this, _LZMA_instances, Skip_fn).call(this, num);
-      __privateGet(this, _compressor).chunker.encoder._additionalOffset += num;
-    }
-  };
-  ReadMatchDistances_fn = function() {
-    let lenRes = 0;
-    const encoder = __privateGet(this, _compressor).chunker.encoder;
-    encoder._numDistancePairs = __privateMethod(this, _LZMA_instances, GetMatches_fn).call(this);
-    if (encoder._numDistancePairs > 0) {
-      lenRes = encoder._matchDistances[encoder._numDistancePairs - 2];
-      if (lenRes == encoder._numFastBytes) {
-        lenRes += __privateGet(this, _lzInWindow).getMatchLen(lenRes - 1, encoder._matchDistances[encoder._numDistancePairs - 1], 273 - lenRes);
-      }
-    }
-    encoder._additionalOffset += 1;
-    return lenRes;
-  };
-  ReleaseMFStream_fn = function() {
-    const encoder = __privateGet(this, _compressor).chunker.encoder;
-    if (encoder._matchFinder && encoder._needReleaseMFStream) {
-      encoder._matchFinder._stream = null;
-      encoder._needReleaseMFStream = 0;
-    }
-  };
-  ReleaseStreams_fn = function() {
-    __privateMethod(this, _LZMA_instances, ReleaseMFStream_fn).call(this);
-    __privateGet(this, _compressor).chunker.encoder._rangeEncoder.stream = null;
-  };
-  LZMA_Encoder_GetSubCoder_fn = function(pos, prevByte) {
-    const subCoder = __privateGet(this, _compressor).chunker.encoder._literalEncoder.getSubCoder(pos, prevByte);
-    return { decoders: subCoder.decoders };
-  };
-  RangeCoder_Encoder_GetPrice_0_fn = function(encoder, matchMode, matchByte, symbol) {
-    let bit, context = 1, i2 = 7, matchBit, price = 0;
-    if (matchMode) {
-      for (; i2 >= 0; --i2) {
-        matchBit = matchByte >> i2 & 1;
-        bit = symbol >> i2 & 1;
-        price += getBitPrice(encoder.decoders[(1 + matchBit << 8) + context], bit);
-        context = context << 1 | bit;
-        if (matchBit != bit) {
-          --i2;
-          break;
-        }
-      }
-    }
-    for (; i2 >= 0; --i2) {
-      bit = symbol >> i2 & 1;
-      price += getBitPrice(encoder.decoders[context], bit);
-      context = context << 1 | bit;
-    }
-    return price;
-  };
-  MakeAsChar_fn = function(optimum) {
-    optimum.backPrev = -1;
-    optimum.prev1IsChar = 0;
-  };
-  MakeAsShortRep_fn = function(optimum) {
-    optimum.backPrev = 0;
-    optimum.prev1IsChar = 0;
-  };
-  ReverseGetPrice_fn = function(encoder, symbol) {
-    let bit, m = 1, price = 0;
-    for (let i2 = encoder.numBitLevels; i2 != 0; i2 -= 1) {
-      bit = symbol & 1;
-      symbol >>>= 1;
-      price += getBitPrice(encoder.models[m], bit);
-      m = m << 1 | bit;
-    }
-    return price;
-  };
-  GetProcessedSizeAdd_fn = function() {
-    const processedCacheSize = add64(fromInt64(__privateGet(this, _compressor).chunker.encoder._rangeEncoder.cacheSize), __privateGet(this, _compressor).chunker.encoder._rangeEncoder.position);
-    return add64(processedCacheSize, [4, 0]);
-  };
-  decodeString_fn = function(utf) {
+  decodeUTF8_fn = function(utf) {
     let j2 = 0, x, y, z, l = utf.length, buf = [], charCodes = [];
     for (let i2 = 0; i2 < l; ++i2, ++j2) {
       x = utf[i2] & 255;
       if (!(x & 128)) {
-        if (!x) {
+        if (!x)
           return utf;
-        }
         charCodes[j2] = x;
       } else if ((x & 224) == 192) {
-        if (i2 + 1 >= l) {
+        if (i2 + 1 >= l)
           return String.fromCharCode(...utf);
-        }
         y = utf[++i2] & 255;
-        if ((y & 192) != 128) {
+        if ((y & 192) != 128)
           return String.fromCharCode(...utf);
-        }
         charCodes[j2] = (x & 31) << 6 | y & 63;
       } else if ((x & 240) == 224) {
-        if (i2 + 2 >= l) {
+        if (i2 + 2 >= l)
           return utf;
-        }
         y = utf[++i2] & 255;
-        if ((y & 192) != 128) {
+        if ((y & 192) != 128)
           return utf;
-        }
         z = utf[++i2] & 255;
-        if ((z & 192) != 128) {
+        if ((z & 192) != 128)
           return utf;
-        }
         charCodes[j2] = (x & 15) << 12 | (y & 63) << 6 | z & 63;
       } else {
         return utf;
@@ -10516,7 +10012,7 @@
     return new Uint8Array(result);
   }
 
-  // node_modules/bysquare/lib/base32hex.js
+  // js/vendor/bysquare/lib/base32hex.js
   var base32Hex = {
     chars: "0123456789ABCDEFGHIJKLMNOPQRSTUV",
     bits: 5,
@@ -10548,7 +10044,7 @@
     return base32hex;
   }
 
-  // node_modules/bysquare/lib/crc32.js
+  // js/vendor/bysquare/lib/crc32.js
   function crc32(data) {
     let crc = 0 ^ -1;
     const encoded = new TextEncoder().encode(data);
@@ -10558,7 +10054,7 @@
     return (crc ^ -1) >>> 0;
   }
 
-  // node_modules/bysquare/lib/header.js
+  // js/vendor/bysquare/lib/header.js
   var EncodeErrorMessage = {
     /**
      * @description - find invalid value in extensions
@@ -10640,7 +10136,7 @@
     ]);
   }
 
-  // node_modules/bysquare/lib/types.js
+  // js/vendor/bysquare/lib/types.js
   var Version = {
     /**
      * Created this document from original by square specifications.
@@ -10662,7 +10158,7 @@
     "1.2.0": 2
   };
 
-  // node_modules/bysquare/lib/pay/types.js
+  // js/vendor/bysquare/lib/pay/types.js
   var Month = {
     January: 1,
     February: 2,
@@ -10851,7 +10347,7 @@
     ZWL: "ZWL"
   };
 
-  // node_modules/bysquare/lib/deburr.js
+  // js/vendor/bysquare/lib/deburr.js
   var deburredLettersMap = {
     // Latin-1 Supplement block.
     "\xC0": "A",
@@ -11065,10 +10561,10 @@
     return result;
   }
 
-  // node_modules/bysquare/lib/pay/validations.js
+  // js/vendor/bysquare/lib/pay/validations.js
   var import_validator = __toESM(require_validator(), 1);
 
-  // node_modules/bysquare/lib/errors.js
+  // js/vendor/bysquare/lib/errors.js
   var ValidationError = class extends Error {
     /**
      * @param message - explains, what is wrong on the specific field
@@ -11082,7 +10578,7 @@
     }
   };
 
-  // node_modules/bysquare/lib/pay/validations.js
+  // js/vendor/bysquare/lib/pay/validations.js
   var ErrorMessages = {
     IBAN: "Invalid IBAN. Make sure ISO 13616 format is used.",
     BIC: "Invalid BIC. Make sure ISO 9362 format is used.",
@@ -11139,7 +10635,7 @@
     return dataModel;
   }
 
-  // node_modules/bysquare/lib/pay/encode.js
+  // js/vendor/bysquare/lib/pay/encode.js
   function sanitize(value) {
     return value?.replaceAll("	", " ");
   }
@@ -11832,11 +11328,14 @@
     var bankCfg = getBankCfg();
     var iban = normalizeIban(bankCfg.iban);
     if (!iban) return null;
+    var bankAccount = { iban };
+    var bic = String(bankCfg.bic || "").replace(/\s+/g, "").trim().toUpperCase();
+    if (bic) bankAccount.bic = bic;
     var payment = {
       type: PaymentOptions.PaymentOrder,
       currencyCode: CurrencyCode.EUR,
-      beneficiary: { name: String(bankCfg.prijemca || "PTRA").trim() },
-      bankAccounts: [{ iban }]
+      beneficiary: { name: String(bankCfg.prijemca || "Sofia Klebanova").trim() },
+      bankAccounts: [bankAccount]
     };
     var sprava = String(bankCfg.sprava || "").trim();
     if (sprava) payment.paymentNote = sprava;
@@ -11860,13 +11359,19 @@
     var target = document.getElementById("bank-dar-qr");
     if (!target) return;
     target.replaceChildren();
-    target.appendChild(
-      QRCode.generateSVG(payload, {
-        ecclevel: "M",
-        margin: 4,
-        modulesize: 5
-      })
-    );
+    var url = QRCode.generatePNG(payload, {
+      ecclevel: "M",
+      margin: 4,
+      modulesize: 8
+    });
+    var img = document.createElement("img");
+    img.src = url;
+    img.alt = "QR k\xF3d Pay by Square pre pr\xEDspevok";
+    img.width = 220;
+    img.height = 220;
+    img.decoding = "async";
+    img.className = "bank-dar__qr-image";
+    target.appendChild(img);
   }
   function updateQr() {
     var target = document.getElementById("bank-dar-qr");
@@ -11890,6 +11395,11 @@
   }
   window.BankovyDarQr = { init: initBankovyDarQr };
 })();
+/**
+ * @license
+ * Copyright Filip Seman
+ * SPDX-License-Identifier: Apache-2.0
+ */
 /*! Bundled license information:
 
 lzma1/lib/index.js:
@@ -11897,12 +11407,5 @@ lzma1/lib/index.js:
    * @license
    * Copyright Filip Seman
    * SPDX-License-Identifier: MIT
-   *)
-
-bysquare/lib/pay/index.js:
-  (**
-   * @license
-   * Copyright Filip Seman
-   * SPDX-License-Identifier: Apache-2.0
    *)
 */

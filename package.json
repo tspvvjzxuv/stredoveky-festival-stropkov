@@ -6,6 +6,7 @@
     "start": "npm run dev",
     "build": "node scripts/build-bankovy-dar-qr.mjs && node scripts/build.mjs",
     "build:qr": "node scripts/build-bankovy-dar-qr.mjs",
+    "vendor:bysquare": "node scripts/copy-bysquare-vendor.mjs",
     "vendor:copy": "node scripts/copy-vendor.mjs",
     "prebuild": "node scripts/copy-vendor.mjs && node scripts/build-sach-bundle.mjs && node scripts/build-bankovy-dar-qr.mjs",
     "test:puzzles": "node scripts/validate-puzzles.mjs",
@@ -18,12 +19,13 @@
   "devDependencies": {
     "esbuild": "^0.28.1",
     "live-server": "^1.2.2",
-    "playwright": "^1.60.0"
+    "lzma1": "0.3.0",
+    "playwright": "^1.60.0",
+    "validator": "^13.15.35"
   },
   "dependencies": {
     "@lichess-org/chessground": "^10.1.1",
     "@lostinbrittany/qr-esm": "^1.2.0",
-    "bysquare": "^4.0.0",
     "chess.js": "^1.4.0"
   }
 }
