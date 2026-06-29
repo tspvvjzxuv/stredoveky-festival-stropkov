@@ -288,8 +288,22 @@ function isMobilePuzzleLayout() {
   );
 }
 
+/** Na sach.html bez html zoom — dosky zväčšíme v JS, aby sedeli s 125 % UI. */
+function sachDesktopBoardScale() {
+  if (typeof document === "undefined" || !document.documentElement.classList.contains("sach-html-root")) {
+    return 1;
+  }
+  if (typeof window === "undefined" || !window.matchMedia) return 1;
+  if (!window.matchMedia("(min-width: 900px)").matches) return 1;
+  return 1.25;
+}
+
 export function getChessBoardMaxWidth(boardEl) {
-  if (!boardEl) return 280;
+  var uiScale = sachDesktopBoardScale();
+  var boardCap = Math.round(300 * uiScale);
+  var boardDefault = Math.round(280 * uiScale);
+
+  if (!boardEl) return boardDefault;
 
   var cap = Math.max(200, Math.floor(viewportWidth() - 32));
   var item = boardEl.closest(".sach-visual-item");
@@ -300,7 +314,7 @@ export function getChessBoardMaxWidth(boardEl) {
     var border =
       (styles ? parseFloat(styles.borderLeftWidth) + parseFloat(styles.borderRightWidth) : 0) || 2;
     var inset = isMobilePuzzleLayout() ? pad + border : 12;
-    return Math.max(200, Math.min(Math.floor(item.clientWidth - inset), cap, 300));
+    return Math.max(200, Math.min(Math.floor(item.clientWidth - inset), cap, boardCap));
   }
 
   var row = boardEl.closest(".sach-week-puzzles");
@@ -308,10 +322,10 @@ export function getChessBoardMaxWidth(boardEl) {
     var cols = desktopColumnCount();
     var gap = cols === 3 ? 22 : 18;
     var colW = Math.floor((row.clientWidth - gap * (cols - 1)) / cols);
-    return Math.max(200, Math.min(colW - 12, cap, 300));
+    return Math.max(200, Math.min(colW - 12, cap, boardCap));
   }
 
-  return Math.max(200, Math.min(cap, 280));
+  return Math.max(200, Math.min(cap, boardDefault));
 }
 
 export function syncChessBoardSize(boardEl, options) {

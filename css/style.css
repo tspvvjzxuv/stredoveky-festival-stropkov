@@ -5603,6 +5603,16 @@ body.sach-page-body .page-main.sach-page {
     max-width: 300px;
     max-height: 300px;
   }
+
+  html.sach-html-root #sachove-hlavolamy .chessground-host {
+    max-width: min(100%, 375px);
+    --cg-board-size: 350px;
+  }
+
+  html.sach-html-root #sachove-hlavolamy .cg-board {
+    max-width: 375px;
+    max-height: 375px;
+  }
 }
 
 /* Šachová stránka — širší layout na PC, väčšie dosky na tablete, mobil na celú šírku */
@@ -5610,9 +5620,19 @@ body.sach-page-body .page-main.sach-page {
   max-width: min(1320px, calc(100vw - 1.25rem));
 }
 
+@media (min-width: 900px) {
+  html.sach-html-root .page-main.sach-page {
+    max-width: min(1650px, calc(100vw - 1.5625rem));
+  }
+}
+
 @media (min-width: 1101px) {
   .page-main.sach-page {
     max-width: min(1380px, calc(100vw - 2rem));
+  }
+
+  html.sach-html-root .page-main.sach-page {
+    max-width: min(1725px, calc(100vw - 2.5rem));
   }
 
   #sachove-hlavolamy .sach-week-puzzles {

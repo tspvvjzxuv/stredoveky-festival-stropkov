@@ -14,6 +14,17 @@ export const DIFFICULTY_LABELS = {
   hard: "Najťažšia",
 };
 
+const WIN_GOAL_LABELS = {
+  checkmate: "Dosiahnuť mat",
+  black_queen_captured: "Zoberte čiernu dámu",
+  decisive: "Získajte rozhodujúcu výhodu",
+};
+
+export function puzzleGoalLabel(puzzle) {
+  if (!puzzle) return "Splniť úlohu";
+  return WIN_GOAL_LABELS[puzzle.win] || "Splniť úlohu";
+}
+
 export const WEEK_THEMES = [
   { title: "Taktický úvod", tagline: "Tri rôzne pozície — od matu jedným ťahom po dvojťahové kombinácie" },
   { title: "Mat dvoma ťahmi", tagline: "Veža, jazdec a strelec — taktické kombinácie z knihy" },

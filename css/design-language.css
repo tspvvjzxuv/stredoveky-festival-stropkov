@@ -354,20 +354,12 @@ body.home-page .cookies-page h2 {
     zoom: 1.25;
   }
 
-  /*
-   * Šach: CSS zoom na <html> rozbije Chessground.
-   * Rovnaké 125 % cez transform — doska aj figúrky sa škálujú spolu.
-   */
+  /* Šach: html zoom rozbije Chessground — rovnaký efekt cez font-size a väčšie dosky. */
   html.sach-html-root {
     zoom: 1;
   }
 
   body.sach-page-body {
-    transform: scale(1.25);
-    transform-origin: top center;
-    width: 80%;
-    max-width: 80%;
-    margin-inline: auto;
-    min-height: calc(100dvh / 1.25);
+    font-size: calc(1.0625rem * 1.25);
   }
 }
